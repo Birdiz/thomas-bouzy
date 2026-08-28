@@ -46,19 +46,24 @@ canvas.
 
 Everything else in the copy is the canvas's, verbatim in both languages.
 
-## Raised, not changed
+## Raised and settled
 
-Flagged for Thomas; the page still says what the canvas said.
+Flagged during implementation; the resolution is recorded here so it is not
+re-litigated on the next pass.
 
-1. **April → August 2026.** Socios is dated "– April 2026". Four months are not
-   accounted for anywhere on the page. A recruiter will notice.
+1. **April → August 2026.** Socios is dated "– April 2026" and nothing on the
+   page covers the months since. Reviewed with Thomas and deliberately left
+   alone: the hero already says "Available now", and the reason is a
+   conversation for the call, not a line on a public page.
 2. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
-   and Université de Reims overlap in "earlier experience". Probably accurate
-   (teaching in parallel), but it reads as confused. Worth ordering or
-   annotating.
-3. **`linkedin.com/in/thomas-bouzy`** is unverified. Implemented as
-   `https://www.linkedin.com/in/thomas-bouzy`. A dead link in the contact block
-   is expensive.
-4. **The locality is published in full** — "Grandrupt, Grand Est (88)". Kept as
+   and Université de Reims overlap in "earlier experience". Accurate — the
+   teaching ran in parallel — and accepted as-is.
+3. **LinkedIn URL.** Verified by Thomas. Implemented as
+   `https://www.linkedin.com/in/thomas-bouzy`; `links.spec.ts` does not check
+   it, because it is the one reference that leaves the origin.
+
+## Still open
+
+1. **The locality is published in full** — "Grandrupt, Grand Est (88)". Kept as
    designed; the JSON-LD carries the region only. Narrowing the visible line to
    "Grand Est, France" would cost nothing and give away less.
