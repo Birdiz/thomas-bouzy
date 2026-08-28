@@ -103,16 +103,16 @@ export const en = {
       stack: ['Symfony 4 & 5', 'API Platform', 'Docker', 'GitLab CI'],
     },
     {
-      title: 'Delivery app for low-connectivity routes',
-      org: 'ZOL',
-      period: '2018',
+      title: 'Association directories from open data',
+      org: 'Personal project',
+      period: '2026',
       context:
-        "Delivery drivers working in areas where the network simply isn't there — an app that assumes connectivity is an app that fails in the field.",
+        "Building a département's association directory is done by hand today — commune by commune, copy-pasted from town-hall sites. Slow, not reproducible, and nobody can say where any given line came from.",
       approach:
-        'Built an Android app with an offline-first data model — local queueing, deferred sync, conflict handling — paired with a logistics dashboard for the dispatch side.',
+        "An eight-stage cost funnel over open data (the RNA and the government directory), enriched by crawling the public sources of the collectivités themselves, with the provenance of every value kept beside it. Local-first by design: one process, one SQLite file, an interface on localhost — requests leave the user's machine, never mine.",
       result:
-        'Drivers kept working through dead zones and the dashboard stayed accurate once they came back online.',
-      stack: ['Android', 'PHP', 'Offline-first', 'REST'],
+        'On Ille-et-Vilaine: 332 of 353 communes resolved and 31,273 associations in 40 seconds, then 36,170 classified and 748 mail domains verified in four. A measured pre-filter cut the volume that would need inference from 40.3% to 6.5% — the target was 20% — without dropping one page that had produced a contact, and before a line of inference existed.',
+      stack: ['TypeScript', 'Node 24', 'SQLite', 'Local-first', 'Docker', 'ADR'],
     },
   ],
 

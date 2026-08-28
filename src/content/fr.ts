@@ -103,16 +103,16 @@ export const fr = {
       stack: ['Symfony 4 & 5', 'API Platform', 'Docker', 'GitLab CI'],
     },
     {
-      title: 'Application livreurs en zone blanche',
-      org: 'ZOL',
-      period: '2018',
+      title: "Annuaires associatifs depuis l'open data",
+      org: 'Projet personnel',
+      period: '2026',
       context:
-        "Des livreurs qui travaillent là où le réseau n'existe pas — une app qui suppose la connectivité est une app qui échoue sur le terrain.",
+        "Constituer l'annuaire des associations d'un département se fait à la main, commune par commune, par copier-coller depuis les sites de mairie. C'est long, non reproductible, et personne ne peut dire d'où vient une ligne.",
       approach:
-        'Application Android avec un modèle de données offline-first — file locale, synchronisation différée, gestion des conflits — et un tableau de bord logistique côté dispatch.',
+        "Un entonnoir de coût en huit étages sur les données ouvertes (RNA, Annuaire de l'administration), enrichies en explorant les sources publiques des collectivités, avec la provenance de chaque valeur conservée à côté d'elle. Local-first : un process, un fichier SQLite, une interface sur localhost — les requêtes partent de la machine de l'utilisateur, jamais de la mienne.",
       result:
-        'Les livreurs continuaient de travailler en zone blanche et le tableau de bord restait juste au retour du réseau.',
-      stack: ['Android', 'PHP', 'Offline-first', 'REST'],
+        "Sur l'Ille-et-Vilaine : 332 communes résolues sur 353 et 31 273 associations en 40 secondes, puis 36 170 classées et 748 domaines de messagerie vérifiés en quatre. Un pré-filtre mesuré ramène le volume appelant une inférence de 40,3 % à 6,5 % — l'objectif était 20 % — sans écarter une seule page ayant produit un contact, et avant qu'une ligne d'inférence n'existe.",
+      stack: ['TypeScript', 'Node 24', 'SQLite', 'Local-first', 'Docker', 'ADR'],
     },
   ],
 

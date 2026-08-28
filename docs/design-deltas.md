@@ -43,6 +43,7 @@ canvas.
 | 16 | "Open to full-time roles & freelance — from May 2026" | "Available now — full-time roles & freelance" | It is August 2026; the page read as stale |
 | 17 | "Fully remote for 6+ years" / "depuis 6 ans" | "8+ years" / "depuis 8 ans" | Remote freelance starts January 2018 → 8 years |
 | 18 | One PDF (`-EN`) linked from both languages | One per locale | The FR page offered an English CV |
+| 20 | Project 05: "Delivery app for low-connectivity routes" (ZOL, 2018) | "Association directories from open data" (2026) | The ZOL card was the oldest, shortest and furthest from a senior backend brief — and the same engagement is already listed under earlier experience, so nothing is lost. The replacement is dated 2026, is entirely Thomas's, and argues for the same instinct as project 01: provenance kept beside every value, so you can say how it got there. Section still reads "Five things worth opening" |
 | 19 | "Grandrupt, Grand Est (88), France" | "Grand Est, France" | A commune of a few hundred people, plus a name and a job title, is a near-deducible home address. A recruiter needs the region and the timezone; the village tells them nothing they will act on. Matches the JSON-LD, which already carried the region only |
 
 Everything else in the copy is the canvas's, verbatim in both languages.
