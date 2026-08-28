@@ -17,7 +17,7 @@ is still missing.
 | What | Where | Effect while missing |
 | --- | --- | --- |
 | Portrait photo | `src/assets/portrait.jpg` (or `.png` / `.webp` / `.avif`) — see [src/assets/README.md](src/assets/README.md) | Hero shows a labelled placeholder |
-| Domain | `src/site.ts` → `SITE.domain` + `domainConfirmed`, and `public/CNAME` | Canonical URLs, `hreflang` and the sitemap point at the placeholder, **and CI skips the Pages deploy** |
+| Domain | `SITE_DOMAIN` at build time (Railway), or `SITE.domain` + `public/CNAME` (Pages) | Canonical URLs, `hreflang`, the sitemap and `robots.txt` point at the placeholder, and the Pages deploy is skipped |
 
 The domain lives in one place: change `SITE.domain`, then `public/CNAME` and
 `public/robots.txt` to match. `npm run assets:check` fails if the three disagree.
@@ -41,6 +41,7 @@ npm run verify         # everything CI runs, in the same order
 | `npm run assets:check` | Missing files and CNAME/domain drift |
 | `npm run fonts` / `fonts:check` | Copy the woff2 faces out of `@fontsource` / verify they match |
 | `npm run og` | Regenerate `public/og.png` and the touch icon |
+| `docker build --build-arg SITE_DOMAIN=… -t cv .` | Build the deployment image locally |
 | `npm run contrast` | Print WCAG ratios for the Organic palette |
 
 ## Layout
@@ -82,11 +83,35 @@ tests/
 
 ## Deployment
 
-`.github/workflows/ci.yml` verifies every push and pull request. On `main`, a
-green run uploads `dist/` and deploys it to GitHub Pages — **but only once
-`SITE.domainConfirmed` is true**. `public/CNAME` makes Pages serve the site at
-that hostname and nowhere else, so deploying against a placeholder produces a
-site reachable from no address at all. Until then CI verifies and stops.
+### Railway (current target)
+
+Railway builds the `Dockerfile` and runs `scripts/serve-dist.mjs`. Two stages:
+the site is built, then `dist/` and the server are copied into a runtime that
+carries **no `node_modules`** — the server uses Node built-ins only.
+
+Set one service variable:
+
+```
+SITE_DOMAIN=your-service.up.railway.app
+```
+
+It is a **build** argument: canonical URLs, `hreflang`, the sitemap, `robots.txt`
+and the JSON-LD are baked into the output, so changing it needs a rebuild, not a
+restart. Point a real domain at the service later and change this one value.
+
+Because a process replaces a CDN, the server does what the CDN was doing —
+brotli/gzip, immutable caching on fingerprinted assets, a hash-based CSP,
+security headers, a real 404. All of it is asserted in
+[tests/e2e/serving.spec.ts](tests/e2e/serving.spec.ts), and the e2e suite runs
+against that same server, so what is tested is what ships. See
+[ADR 7](docs/adr/0007-serving-the-site-ourselves-on-railway.md).
+
+### GitHub Pages (kept, dormant)
+
+`.github/workflows/ci.yml` verifies every push and pull request. On `main` it
+also deploys to Pages — but only once `SITE.domainConfirmed` is true.
+`public/CNAME` makes Pages serve at that hostname and nowhere else, so deploying
+against a placeholder produces a site reachable from no address at all.
 
 Repository settings need **Pages → Build and deployment → Source: GitHub
 Actions**, and the custom domain pointed at GitHub Pages by DNS.

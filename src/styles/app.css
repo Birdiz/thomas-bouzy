@@ -1088,3 +1088,36 @@ a {
     font-size: 13px;
   }
 }
+
+/* — 404 ——————————————————————————————————————————————————————————————————— */
+
+.notfound {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 64px;
+}
+.notfound__title {
+  font-size: clamp(46px, 6.4vw, 86px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+}
+.notfound__lead {
+  font-size: 16.5px;
+  line-height: 1.7;
+  opacity: 0.9;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+.notfound__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.notfound__actions .btn {
+  padding: 11px 22px;
+  font-size: 15px;
+}

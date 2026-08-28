@@ -102,3 +102,14 @@ test('the sitemap lists both locales', async ({ request }) => {
   expect(body).toMatch(/<loc>https:\/\/[^<]*\/<\/loc>/);
   expect(body).toMatch(/<loc>https:\/\/[^<]*\/fr\/<\/loc>/);
 });
+
+test('references no insecure absolute URL', async ({ request }) => {
+  // The invariant that `upgrade-insecure-requests` would otherwise stand in for:
+  // nothing on the page points at http://, so there is no mixed content to fix.
+  // See the CSP comment in scripts/serve-dist.mjs.
+  for (const path of ['/', '/fr/', '/404.html'] as const) {
+    const html = await (await request.get(path)).text();
+    const insecure = [...html.matchAll(/["'(](http:\/\/[^"')\s]+)/g)].map((m) => m[1]);
+    expect(insecure, `${path} references an insecure URL`).toEqual([]);
+  }
+});

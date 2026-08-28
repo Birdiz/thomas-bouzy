@@ -1,0 +1,44 @@
+---
+import { LOCALE_PATH, SITE } from '../site.ts';
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/app.css';
+
+// A 404 has no locale — the URL that produced it told us nothing. So it says
+// its piece twice, briefly, and offers the way back in both languages.
+const title = 'Page not found · Page introuvable';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} — {SITE.author}</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/fonts/caprasimo-latin-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+  <body>
+    <main id="main" class="notfound container">
+      <p class="kicker">404</p>
+      <h1 class="notfound__title">Nothing here</h1>
+      <p class="notfound__lead">
+        This address does not point at a page. It may have moved, or never existed.
+      </p>
+      <p class="notfound__lead" lang="fr">
+        Cette adresse ne pointe vers aucune page. Elle a peut-être changé, ou n'a jamais existé.
+      </p>
+      <div class="notfound__actions">
+        <a class="btn btn-primary" href={LOCALE_PATH.en}>Back to the résumé</a>
+        <a class="btn btn-secondary" href={LOCALE_PATH.fr} lang="fr">Revenir au CV</a>
+      </div>
+    </main>
+  </body>
+</html>

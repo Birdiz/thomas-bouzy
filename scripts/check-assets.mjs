@@ -28,7 +28,6 @@ const required = [
   'public/favicon.svg',
   'public/apple-touch-icon.png',
   'public/og.png',
-  'public/robots.txt',
   'public/CNAME',
 ];
 for (const file of required) {
@@ -37,19 +36,15 @@ for (const file of required) {
 
 // CNAME, robots.txt and SITE.domain must agree, or canonical URLs and the
 // sitemap point somewhere GitHub Pages does not serve.
-if (existsSync(path('public/CNAME'))) {
+if (existsSync(path('public/CNAME')) && !process.env.SITE_DOMAIN) {
   const cname = readFileSync(path('public/CNAME'), 'utf8').trim();
   if (cname !== SITE.domain) {
     errors.push(`public/CNAME is "${cname}" but SITE.domain is "${SITE.domain}"`);
   }
 }
-if (existsSync(path('public/robots.txt'))) {
-  const robots = readFileSync(path('public/robots.txt'), 'utf8');
-  const expected = `${SITE.origin}/sitemap-index.xml`;
-  if (!robots.includes(expected)) {
-    errors.push(`public/robots.txt does not point at ${expected}`);
-  }
-}
+// robots.txt is generated from SITE (src/pages/robots.txt.ts), so it cannot
+// drift. public/CNAME is static and GitHub Pages-specific: it only has to agree
+// with SITE.domain when no SITE_DOMAIN override is in play.
 
 // Content still to come.
 for (const locale of ['en', 'fr']) {

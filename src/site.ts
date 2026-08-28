@@ -6,14 +6,25 @@
  * `public/CNAME` (kept in sync by `npm run check:cname`).
  */
 export const SITE = {
-  domain: 'thomasbouzy.dev',
   /**
-   * Flip to true once `domain` is registered and its DNS points at GitHub
-   * Pages. Until then CI verifies every push but skips the deploy: Pages would
-   * serve the site at a hostname that does not resolve, so it would be
-   * reachable nowhere at all.
+   * Where the site is served from. Everything derived from it — canonical URLs,
+   * hreflang, the sitemap, robots.txt, the JSON-LD — follows automatically.
+   *
+   * `SITE_DOMAIN` at build time wins, which is how Railway passes its own
+   * hostname (the same variable name the Caddyfile of the other projects uses).
+   * The fallback is a placeholder, and a placeholder never deploys.
    */
-  domainConfirmed: false,
+  domain: process.env.SITE_DOMAIN?.trim() || 'thomasbouzy.dev',
+
+  /**
+   * True once the domain above actually resolves to this site. GitHub Pages
+   * reads public/CNAME and then serves at that hostname and nowhere else, so
+   * deploying against a placeholder yields a site reachable from no address.
+   * Setting SITE_DOMAIN counts as confirming it.
+   */
+  get domainConfirmed(): boolean {
+    return Boolean(process.env.SITE_DOMAIN?.trim());
+  },
   get origin(): string {
     return `https://${this.domain}`;
   },

@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 /**
@@ -15,7 +15,10 @@ import { join } from 'node:path';
  */
 const publicDir = join(process.cwd(), 'public');
 
-if (!existsSync(join(publicDir, 'robots.txt'))) {
+// The directory itself is the sentinel: dist/public/ — where the old
+// import.meta.url walk landed — never exists. Naming a file here would just
+// move the trap (removing public/robots.txt once broke the build this way).
+if (!statSync(publicDir, { throwIfNoEntry: false })?.isDirectory()) {
   throw new Error(
     `public/ not found at ${publicDir}. publicAssetExists() resolves from the working ` +
       'directory, so the build has to run from the project root.',
