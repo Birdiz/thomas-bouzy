@@ -79,18 +79,6 @@ export const fr = {
       stack: ['PHP', 'Symfony', 'Redis', 'Event-driven', 'Kubernetes'],
     },
     {
-      title: 'Intégrations financières tierces',
-      org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
-      context:
-        "Custodians d'actifs numériques et protocoles d'échange arrivent chacun avec leur authentification, leur sémantique et leurs modes de panne — et toutes les équipes en voulaient un.",
-      approach:
-        'Intégrations construites derrière un contrat interne unique : un adaptateur par partenaire, retries et réconciliation intégrés, puis ouverture en service partagé avec documentation et astreinte.',
-      result:
-        "Les intégrations partenaires sont passées d'un travail sur-mesure par squad à un service consommé directement par les autres équipes.",
-      stack: ['PHP', 'Symfony', "Design d'API", 'DDD', 'AWS'],
-    },
-    {
       title: 'Legacy → API Platform',
       org: 'Kiss The Bride',
       period: '2018–2022',
@@ -101,6 +89,18 @@ export const fr = {
       result:
         'Une couche API maintenable pour les grands comptes, des déploiements plus rapides, et quatre développeurs juniors capables de porter leurs propres fonctionnalités.',
       stack: ['Symfony 4 & 5', 'API Platform', 'Docker', 'GitLab CI'],
+    },
+    {
+      title: "Auditer une base de code qui n'est pas la mienne",
+      org: 'Civic tech, bénévolat',
+      period: '2026',
+      context:
+        'Une équipe bénévole qui livre vite, sur un monorepo de trois applications — un site public, une boutique qui encaisse, un back-office. Aucun test automatisé, une CI qui ne vérifiait que le build, et aucune carte de ce que ça coûtait.',
+      approach:
+        "D'abord en lecture seule, sans rien corriger : quatre rapports priorisés — 17 findings de sécurité, 11 de qualité et de dette, 6 sur le poids de déploiement, et un audit SEO à 56/100 sur 34 findings — chaque item rédigé comme une carte prête à prendre, avec sévérité, effort et critères d'acceptation. Puis j'ai traité les critiques moi-même.",
+      result:
+        "Le panier gratuit qui faisait confiance au client est revalidé côté serveur, le contenu éditorial injecté dans les données structurées est échappé, les en-têtes de sécurité sont globaux, et les actions CI comme l'image de base sont épinglées. La plateforme est passée de zéro test automatisé à la couverture de ses flux de paiement et de l'authentification admin, avec CodeQL dans le pipeline.",
+      stack: ['Next.js', 'TypeScript', 'Turborepo', 'Docker', 'GitHub Actions', 'CodeQL'],
     },
     {
       title: "Annuaires associatifs depuis l'open data",

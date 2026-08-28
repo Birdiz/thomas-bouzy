@@ -79,18 +79,6 @@ export const en = {
       stack: ['PHP', 'Symfony', 'Redis', 'Event-driven', 'Kubernetes'],
     },
     {
-      title: 'Third-party financial integrations',
-      org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
-      context:
-        'Digital asset custodians and exchange protocols each arrive with their own auth, semantics and failure modes — and every team wanted one.',
-      approach:
-        'Built the integrations behind a single internal contract: adapters per partner, retries and reconciliation built in, then opened it up as a shared service with documentation and an on-call story.',
-      result:
-        'Partner integrations went from bespoke per-squad work to a service other teams consumed directly — new partners onboarded without touching consumer code.',
-      stack: ['PHP', 'Symfony', 'API design', 'DDD', 'AWS'],
-    },
-    {
       title: 'Legacy system → API Platform',
       org: 'Kiss The Bride',
       period: '2018–2022',
@@ -101,6 +89,18 @@ export const en = {
       result:
         'A maintainable API layer serving enterprise accounts, faster deploys, and four junior developers who came out of it able to own features themselves.',
       stack: ['Symfony 4 & 5', 'API Platform', 'Docker', 'GitLab CI'],
+    },
+    {
+      title: "Auditing a codebase I didn't write",
+      org: 'Civic tech, volunteer',
+      period: '2026',
+      context:
+        'A volunteer team shipping fast across a three-app monorepo — a public site, a shop taking real payments, a back-office. No automated tests anywhere, a CI that only checked the build, and no map of what that was costing.',
+      approach:
+        'Read-only first, fixing nothing: four prioritised reports — 17 security findings, 11 on quality and debt, 6 on deployment weight, and an SEO audit scoring 56/100 across 34 findings — each item written as a card the team could pick up, with severity, effort and acceptance criteria. Then I took the critical ones myself.',
+      result:
+        'A free-cart path that trusted the client is now revalidated server-side, editorial content injected into structured data is escaped, security headers are global, and both the CI actions and the base image are pinned. The platform went from zero automated tests to covering its payment flows and admin authentication, with CodeQL in the pipeline.',
+      stack: ['Next.js', 'TypeScript', 'Turborepo', 'Docker', 'GitHub Actions', 'CodeQL'],
     },
     {
       title: 'Association directories from open data',
