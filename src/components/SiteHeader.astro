@@ -1,0 +1,55 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import {
+  LOCALE_ENDONYM,
+  LOCALE_LABEL,
+  LOCALE_PATH,
+  LOCALE_TAG,
+  LOCALES,
+  type Locale,
+  SITE,
+} from '../site.ts';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+}
+
+const { locale, t } = Astro.props;
+const home = LOCALE_PATH[locale];
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__brand" href={`${home}#top`}>
+      <span class="site-header__dot" aria-hidden="true"></span>
+      <span>{SITE.author}</span>
+    </a>
+
+    <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
+      <a href="#work">{t.nav.work}</a>
+      <a href="#experience">{t.nav.experience}</a>
+      <a href="#skills">{t.nav.skills}</a>
+      <a href="#about">{t.nav.about}</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
+        {
+          LOCALES.map((code) => (
+            <a
+              href={LOCALE_PATH[code]}
+              hreflang={LOCALE_TAG[code]}
+              lang={LOCALE_TAG[code]}
+              aria-label={LOCALE_ENDONYM[code]}
+              aria-current={code === locale ? 'true' : undefined}
+            >
+              {LOCALE_LABEL[code]}
+            </a>
+          ))
+        }
+      </nav>
+      <a class="btn btn-primary" href="#contact">{t.nav.contact}</a>
+    </div>
+  </div>
+</header>

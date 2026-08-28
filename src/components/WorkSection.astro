@@ -1,0 +1,64 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="work" class="work container">
+  <p class="kicker">{t.work.kicker}</p>
+  <h2 class="section-title">{t.work.title}</h2>
+  <p class="work__intro">{t.work.intro}</p>
+
+  <div class="work__list">
+    {
+      t.projects.map((project, index) => (
+        /* `name` makes the browser enforce one-open-at-a-time. That was three
+           lines of component state in the design; here it costs no JavaScript
+           and comes with correct aria-expanded for free. */
+        <details class="project" name="projects" open={index === 0}>
+          <summary class="project__summary">
+            <span class="project__num" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3 class="project__heading">
+              <span class="project__title">{project.title}</span>
+              <span class="project__meta">
+                <span>{project.org}</span>
+                <span aria-hidden="true">·</span>
+                <span>{project.period}</span>
+              </span>
+            </h3>
+            <span class="project__chevron" aria-hidden="true">↓</span>
+          </summary>
+
+          <div class="project__panel">
+            <div class="project__rule" aria-hidden="true" />
+            <div class="project__facets">
+              <div class="project__facet">
+                <p class="kicker project__facet-label">{t.work.labelContext}</p>
+                <p class="project__facet-text">{project.context}</p>
+              </div>
+              <div class="project__facet">
+                <p class="kicker project__facet-label">{t.work.labelApproach}</p>
+                <p class="project__facet-text">{project.approach}</p>
+              </div>
+              <div class="project__facet">
+                <p class="kicker project__facet-label">{t.work.labelResult}</p>
+                <p class="project__facet-text">{project.result}</p>
+              </div>
+            </div>
+            <ul class="stack">
+              {project.stack.map((tech) => (
+                <li class="tag tag-neutral">{tech}</li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</section>

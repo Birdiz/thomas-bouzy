@@ -1,0 +1,52 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { publicAssetExists } from '../lib/public-assets.ts';
+import { CONTACT, CV, type Locale } from '../site.ts';
+import RevealPhone from './RevealPhone.astro';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+}
+
+const { locale, t } = Astro.props;
+const cvHref = CV.path(locale);
+const hasCv = publicAssetExists(cvHref);
+---
+
+<section id="contact" class="contact container">
+  <div class="contact__panel">
+    <div class="contact__blob" aria-hidden="true"></div>
+    <div class="contact__body">
+      <p class="kicker">{t.contact.kicker}</p>
+      <h2 class="contact__title">{t.contact.title}</h2>
+      <p class="contact__blurb">{t.contact.blurb}</p>
+
+      <div class="contact__actions">
+        <a class="btn btn-primary" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        <RevealPhone label={t.contact.revealPhone} />
+        <a
+          class="btn btn-outline-invert"
+          href={CONTACT.linkedin}
+          target="_blank"
+          rel="noopener"
+        >
+          LinkedIn
+        </a>
+        {
+          hasCv && (
+            <a
+              class="btn btn-outline-invert"
+              href={cvHref}
+              download={CV.downloadName(locale)}
+            >
+              <span aria-hidden="true">↓</span> {t.contact.pdfLabel}
+            </a>
+          )
+        }
+      </div>
+
+      <p class="contact__location">{t.contact.locationLine}</p>
+    </div>
+  </div>
+</section>

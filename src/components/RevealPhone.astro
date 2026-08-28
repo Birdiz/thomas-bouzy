@@ -1,0 +1,60 @@
+---
+import { CONTACT } from '../site.ts';
+
+interface Props {
+  label: string;
+  /** Class applied to both the button and the link it becomes. */
+  buttonClass?: string;
+}
+
+const { label, buttonClass = 'btn btn-outline-invert' } = Astro.props;
+
+/**
+ * The number never reaches the HTML source.
+ *
+ * The design hard-coded a personal mobile into a page built to be indexed,
+ * which is a standing invitation to every address harvester on the web. Here it
+ * ships reversed-then-base64'd and is assembled in the browser on click: a
+ * visitor gets it in one tap, a crawler that does not execute JavaScript never
+ * sees it. The button starts hidden and is revealed by the same script, so a
+ * no-JS visitor is shown no dead control at all — email and LinkedIn still work.
+ */
+const payload = Buffer.from(
+  JSON.stringify({ tel: CONTACT.phoneE164, label: CONTACT.phoneDisplay }),
+  'utf8',
+)
+  .toString('base64')
+  .split('')
+  .reverse()
+  .join('');
+---
+
+<span class="reveal-phone" data-reveal-phone data-payload={payload}>
+  <button type="button" class={buttonClass} hidden>{label}</button>
+</span>
+
+<script>
+  for (const host of document.querySelectorAll<HTMLElement>('[data-reveal-phone]')) {
+    const button = host.querySelector('button');
+    const payload = host.dataset.payload;
+    if (!button || !payload) continue;
+
+    button.hidden = false;
+    button.addEventListener(
+      'click',
+      () => {
+        const { tel, label } = JSON.parse(
+          atob(payload.split('').reverse().join('')),
+        ) as { tel: string; label: string };
+
+        const link = document.createElement('a');
+        link.className = button.className;
+        link.href = `tel:${tel}`;
+        link.textContent = label;
+        button.replaceWith(link);
+        link.focus();
+      },
+      { once: true },
+    );
+  }
+</script>

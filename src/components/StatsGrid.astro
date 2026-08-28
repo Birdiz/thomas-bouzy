@@ -1,0 +1,22 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+---
+
+<section class="stats container" aria-label={t.work.kicker}>
+  <ul class="stats__grid">
+    {
+      t.stats.map((stat) => (
+        <li class="card elev-sm stats__item">
+          <span class="stats__n">{stat.n}</span>
+          <p class="stats__label">{stat.label}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

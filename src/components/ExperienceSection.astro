@@ -1,0 +1,64 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="experience" class="experience">
+  <div class="container">
+    <p class="kicker">{t.experience.kicker}</p>
+    <h2 class="section-title">{t.experience.title}</h2>
+
+    <div class="experience__list">
+      {
+        t.jobs.map((job) => (
+          <article class="job">
+            <div class="job__when">
+              <span class="job__period">{job.period}</span>
+              <span class="job__duration">{job.duration}</span>
+              <span class="job__place">{job.place}</span>
+            </div>
+            <div class="job__card">
+              <h3 class="job__title">{job.title}</h3>
+              <p class="job__company">{job.company}</p>
+              <p class="job__summary">{job.summary}</p>
+              <ul class="job__bullets">
+                {job.bullets.map((bullet) => (
+                  <li>{bullet}</li>
+                ))}
+              </ul>
+              <ul class="stack">
+                {job.stack.map((tech) => (
+                  <li class="tag tag-accent-2">{tech}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <details class="earlier">
+      <summary class="btn btn-secondary earlier__toggle">
+        <span class="earlier__label--closed">{t.experience.earlierShow}</span>
+        <span class="earlier__label--open">{t.experience.earlierHide}</span>
+      </summary>
+      <ul class="earlier__grid">
+        {
+          t.earlier.map((role) => (
+            <li class="card earlier__card">
+              <span class="card-kicker">{role.period}</span>
+              <h3 class="card-title">{role.title}</h3>
+              <span class="earlier__org">{role.org}</span>
+              <p class="card-body">{role.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
+  </div>
+</section>

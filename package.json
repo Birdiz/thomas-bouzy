@@ -1,0 +1,42 @@
+{
+  "name": "thomas-bouzy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive r\u00e9sum\u00e9 \u2014 Thomas Bouzy",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "verify": "npm run fonts:check && npm run lint && npm run check && npm run assets:check && npm run test && npm run build && npm run test:e2e",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "fonts": "node scripts/sync-fonts.mjs",
+    "og": "node scripts/build-og.mjs",
+    "fonts:check": "node scripts/sync-fonts.mjs --check",
+    "assets:check": "node scripts/check-assets.mjs",
+    "contrast": "node scripts/contrast.mjs --audit"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/caprasimo": "^5.2.10",
+    "@fontsource/figtree": "^5.2.11",
+    "astro": "^7.2.9",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@biomejs/biome": "^2.5.11",
+    "@playwright/test": "^1.62.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

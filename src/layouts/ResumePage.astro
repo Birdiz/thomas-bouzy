@@ -1,0 +1,33 @@
+---
+import AboutSection from '../components/AboutSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import ExperienceSection from '../components/ExperienceSection.astro';
+import Hero from '../components/Hero.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SkillsSection from '../components/SkillsSection.astro';
+import StatsGrid from '../components/StatsGrid.astro';
+import WorkSection from '../components/WorkSection.astro';
+import { RESUME } from '../content/index.ts';
+import type { Locale } from '../site.ts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = RESUME[locale];
+---
+
+<BaseLayout locale={locale}>
+  <SiteHeader locale={locale} t={t} />
+  <main id="main">
+    <Hero locale={locale} t={t} />
+    <StatsGrid t={t} />
+    <WorkSection t={t} />
+    <ExperienceSection t={t} />
+    <SkillsSection t={t} />
+    <AboutSection t={t} />
+    <ContactSection locale={locale} t={t} />
+  </main>
+</BaseLayout>

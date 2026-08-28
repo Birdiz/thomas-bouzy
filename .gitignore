@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.astro/
+
+# test artifacts
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+.lighthouseci/
+
+# claude code scratch
+.claude/worktrees/
+
+# env & editor
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
