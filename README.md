@@ -16,7 +16,7 @@ is still missing.
 
 | What | Where | Effect while missing |
 | --- | --- | --- |
-| Portrait photo | `src/assets/portrait.jpg` (or `.png` / `.webp` / `.avif`) | Hero shows a labelled placeholder |
+| Portrait photo | `src/assets/portrait.jpg` (or `.png` / `.webp` / `.avif`) — see [src/assets/README.md](src/assets/README.md) | Hero shows a labelled placeholder |
 | Domain | `src/site.ts` → `SITE.domain` + `domainConfirmed`, and `public/CNAME` | Canonical URLs, `hreflang` and the sitemap point at the placeholder, **and CI skips the Pages deploy** |
 
 The domain lives in one place: change `SITE.domain`, then `public/CNAME` and

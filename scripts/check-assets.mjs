@@ -21,6 +21,10 @@ const errors = [];
 const pending = [];
 
 const required = [
+  // Git does not track empty directories, so src/assets/ only survives a clone
+  // because of the README inside it — and the docs tell Thomas to drop the
+  // portrait there. Without this, that instruction silently points nowhere.
+  'src/assets/README.md',
   'public/favicon.svg',
   'public/apple-touch-icon.png',
   'public/og.png',
