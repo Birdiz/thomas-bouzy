@@ -1,9 +1,14 @@
 /**
  * Single source of truth for everything that is site-wide rather than content.
  *
- * The domain below is a placeholder until the custom domain is registered.
- * Changing it here updates: canonical URLs, hreflang, sitemap, JSON-LD and
- * `public/CNAME` (kept in sync by `npm run check:cname`).
+ * Two environment variables drive deployment, both read at BUILD time because
+ * everything derived from them is baked into the static output:
+ *
+ *   SITE_DOMAIN     the hostname the site is served from
+ *   SITE_INDEXABLE  whether that hostname is the canonical one
+ *
+ * `scripts/check-assets.mjs` fails a production build that leaves SITE_DOMAIN
+ * unset, so the placeholder below can only ever be a development convenience.
  */
 export const SITE = {
   /**
@@ -12,19 +17,28 @@ export const SITE = {
    *
    * `SITE_DOMAIN` at build time wins, which is how Railway passes its own
    * hostname (the same variable name the Caddyfile of the other projects uses).
-   * The fallback is a placeholder, and a placeholder never deploys.
+   * The fallback is a placeholder for local development only: a production
+   * build without SITE_DOMAIN is a build error, not a site quietly pointing its
+   * canonical URLs at a domain that does not resolve.
    */
   domain: process.env.SITE_DOMAIN?.trim() || 'thomasbouzy.dev',
 
   /**
-   * True once the domain above actually resolves to this site. GitHub Pages
-   * reads public/CNAME and then serves at that hostname and nowhere else, so
-   * deploying against a placeholder yields a site reachable from no address.
-   * Setting SITE_DOMAIN counts as confirming it.
+   * True only on the canonical deployment.
+   *
+   * While the site lives on a temporary *.up.railway.app hostname it must not
+   * be indexed: whatever Google learns about that host becomes a duplicate of
+   * the real domain the day it lands, and a brand-new site has no authority to
+   * spend on a redirect-and-reindex cycle. False therefore means robots.txt
+   * disallows everything, the pages carry `<meta name="robots" content="noindex">`
+   * and the server adds `X-Robots-Tag`.
+   *
+   * Set SITE_INDEXABLE=true on the service once SITE_DOMAIN is the real domain.
    */
-  get domainConfirmed(): boolean {
-    return Boolean(process.env.SITE_DOMAIN?.trim());
+  get indexable(): boolean {
+    return /^(1|true|yes)$/i.test((process.env.SITE_INDEXABLE ?? '').trim());
   },
+
   get origin(): string {
     return `https://${this.domain}`;
   },

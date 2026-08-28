@@ -40,3 +40,17 @@ Plus: every stylesheet is same-origin, and no request leaves the origin at all
 - Lab metrics (LCP, CLS, TBT) are not scored here. Run Lighthouse by hand
   against the deployed site when that question comes up; field data will come
   from CrUX once the domain has traffic.
+
+## Postscript, 2026-08-28
+
+The budget spent its first weeks asserting nothing. It summed `content-length`,
+and `scripts/serve-dist.mjs` omits that header on everything it compresses —
+which is exactly the document, the CSS and the JavaScript the budget exists to
+watch. All three measured zero and every assertion passed by default; only the
+font total and the request count were real.
+
+It now reads `response.body()`, which returns the decoded bytes and cannot be
+absent. The thresholds turned out to be honest — the FR document runs at 30.5 kB
+against 34 kB — but that was luck, not proof. The lesson generalises: a test
+whose assertion can be satisfied by a missing measurement is not a test. Where a
+budget is derived from a header, assert that the header is there.

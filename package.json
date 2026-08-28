@@ -22,8 +22,7 @@
     "og": "node scripts/build-og.mjs",
     "fonts:check": "node scripts/sync-fonts.mjs --check",
     "assets:check": "node scripts/check-assets.mjs",
-    "contrast": "node scripts/contrast.mjs --audit",
-    "pages:ready": "node scripts/pages-ready.mjs"
+    "contrast": "node scripts/contrast.mjs --audit"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

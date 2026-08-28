@@ -7,6 +7,7 @@ import {
   LOCALE_TAG,
   LOCALES,
   type Locale,
+  otherLocale,
   SITE,
 } from '../site.ts';
 import '../styles/fonts.css';
@@ -23,15 +24,25 @@ const t = RESUME[locale];
 const canonical = absoluteUrl(LOCALE_PATH[locale]);
 const ogImage = absoluteUrl('/og.png');
 
+/** Open Graph wants the underscored form, not the BCP 47 tag. */
+const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', fr: 'fr_FR' };
+
 /**
- * Person schema for rich results. Deliberately carries no telephone: the number
- * is behind a click on the page, and repeating it here would hand it straight
- * back to any crawler. See docs/design-deltas.md.
+ * Person schema for rich results, wrapped in the ProfilePage that Google
+ * documents for pages *about* a person — the page and its subject are two
+ * things, and conflating them is why so many profile pages get no entity out of
+ * their markup.
+ *
+ * Deliberately carries no telephone: the number is behind a click on the page,
+ * and repeating it here would hand it straight back to any crawler. See
+ * docs/design-deltas.md.
  */
 const personSchema = {
-  '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': `${SITE.origin}/#person`,
   name: SITE.author,
+  givenName: 'Thomas',
+  familyName: 'Bouzy',
   jobTitle: t.hero.role,
   description: t.meta.description,
   url: canonical,
@@ -51,6 +62,17 @@ const personSchema = {
   },
   worksFor: t.jobs[0] ? { '@type': 'Organization', name: t.jobs[0].company } : undefined,
 };
+
+const profilePageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': canonical,
+  url: canonical,
+  name: t.meta.title,
+  description: t.meta.description,
+  inLanguage: LOCALE_TAG[locale],
+  mainEntity: personSchema,
+};
 ---
 
 <!doctype html>
@@ -61,7 +83,15 @@ const personSchema = {
 
     <title>{t.meta.title}</title>
     <meta name="description" content={t.meta.description} />
+    <meta name="author" content={SITE.author} />
     <link rel="canonical" href={canonical} />
+
+    {
+      /* A temporary hostname must not be indexed — see SITE.indexable. The
+         header served alongside this (scripts/serve-dist.mjs) says the same
+         thing to crawlers that never parse the HTML. */
+      !SITE.indexable && <meta name="robots" content="noindex, nofollow" />
+    }
 
     {
       LOCALES.map((other) => (
@@ -76,11 +106,18 @@ const personSchema = {
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#f5ead8" />
+    <meta name="theme-color" content="#f5ead8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#201e1d" media="(prefers-color-scheme: dark)" />
+
+    {/* Consolidates the profile with the sameAs above, for anything reading rel=me. */}
+    <link rel="me" href={CONTACT.linkedin} />
 
     <meta property="og:type" content="profile" />
+    <meta property="profile:first_name" content="Thomas" />
+    <meta property="profile:last_name" content="Bouzy" />
     <meta property="og:site_name" content={SITE.author} />
-    <meta property="og:locale" content={locale === 'fr' ? 'fr_FR' : 'en_GB'} />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    <meta property="og:locale:alternate" content={OG_LOCALE[otherLocale(locale)]} />
     <meta property="og:title" content={t.meta.title} />
     <meta property="og:description" content={t.meta.description} />
     <meta property="og:url" content={canonical} />
@@ -109,7 +146,7 @@ const personSchema = {
     <script
       type="application/ld+json"
       is:inline
-      set:html={JSON.stringify(personSchema)}
+      set:html={JSON.stringify(profilePageSchema)}
     />
   </head>
   <body>

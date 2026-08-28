@@ -10,9 +10,11 @@ import { expect, test } from './fixtures.ts';
 const SECURITY_HEADERS = [
   'content-security-policy',
   'x-content-type-options',
+  'x-frame-options',
   'referrer-policy',
   'permissions-policy',
   'cross-origin-opener-policy',
+  'cross-origin-resource-policy',
   'strict-transport-security',
 ];
 
@@ -31,8 +33,10 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
   request,
 }) => {
   const csp = (await request.get('/')).headers()['content-security-policy'] ?? '';
-  expect(csp).not.toContain("'unsafe-inline' 'sha256"); // script-src must be hash-only
+  // Both script-src and style-src are hash-only: no 'unsafe-inline' anywhere.
+  expect(csp).not.toContain("'unsafe-inline'");
   expect(csp).toMatch(/script-src 'self' 'sha256-/);
+  expect(csp).toMatch(/style-src 'self' 'sha256-/);
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("base-uri 'none'");
 
@@ -92,6 +96,90 @@ test('refuses to serve anything outside the site root', async ({ request }) => {
   for (const path of ['/../package.json', '/..%2Fpackage.json', '/%2e%2e/package.json']) {
     const response = await request.get(path, { maxRedirects: 0 });
     expect([404, 400], `${path} returned ${response.status()}`).toContain(response.status());
+  }
+});
+
+test('answers a malformed URL with 400 and keeps serving', async ({ request }) => {
+  // `GET /%` used to end the deploy. decodeURIComponent threw inside an async
+  // handler, Node saw an unhandled rejection and exited; Railway's restart
+  // policy then had three tries before giving up. The status matters less than
+  // the line after the loop: the process is still there.
+  for (const path of ['/%', '/%zz', '/%E0%A4%A', '/fr/%%']) {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(response.status(), `${path} returned ${response.status()}`).toBe(400);
+  }
+
+  expect((await request.get('/')).status()).toBe(200);
+});
+
+test('serves one URL per page, and 301s the other spellings', async ({ baseURL, request }) => {
+  const redirects: Record<string, string> = {
+    '/index.html': '/',
+    '/fr': '/fr/',
+    '/fr/index.html': '/fr/',
+    '/fr//': '/fr/',
+    '//fr/': '/fr/',
+    '///': '/',
+  };
+
+  for (const [from, to] of Object.entries(redirects)) {
+    // Absolute, not relative: a path starting with `//` is a protocol-relative
+    // URL to any URL parser, so `request.get('//fr/')` would resolve to the host
+    // `fr`. That is the same trap the server itself had to stop falling into.
+    const response = await request.get(`${baseURL}${from}`, { maxRedirects: 0 });
+    expect(response.status(), `${from} was not redirected`).toBe(301);
+
+    const target = new URL(response.headers().location ?? '', baseURL);
+    expect(target.pathname).toBe(to);
+
+    // One hop, not a chain: the target must answer, not redirect again.
+    const followed = await request.get(target.href, { maxRedirects: 0 });
+    expect(followed.status(), `${from} -> ${to} redirected again`).toBe(200);
+  }
+
+  // The canonical spellings still answer directly.
+  for (const path of ['/', '/fr/']) {
+    expect((await request.get(path, { maxRedirects: 0 })).status()).toBe(200);
+  }
+});
+
+test('keeps the query string across a normalising redirect', async ({ request }) => {
+  const response = await request.get('/fr?utm_source=x', { maxRedirects: 0 });
+  expect(response.status()).toBe(301);
+  expect(response.headers().location).toContain('/fr/?utm_source=x');
+});
+
+test('revalidates with a 304 instead of resending the document', async ({ request }) => {
+  const first = await request.get('/');
+  const etag = first.headers().etag ?? '';
+  const lastModified = first.headers()['last-modified'] ?? '';
+  expect(etag, 'no ETag to revalidate against').toBeTruthy();
+
+  const byEtag = await request.get('/', { headers: { 'If-None-Match': etag } });
+  expect(byEtag.status()).toBe(304);
+  expect((await byEtag.body()).length).toBe(0);
+
+  const byDate = await request.get('/', { headers: { 'If-Modified-Since': lastModified } });
+  expect(byDate.status()).toBe(304);
+
+  // A stale validator still gets the document.
+  const stale = await request.get('/', { headers: { 'If-None-Match': 'W/"stale"' } });
+  expect(stale.status()).toBe(200);
+});
+
+test('tells crawlers to stay away while the hostname is not the canonical one', async ({
+  request,
+}) => {
+  // The e2e suite builds without SITE_INDEXABLE, which is the state the site
+  // deploys in until the custom domain is live — so this asserts the guard is
+  // wired end to end: header, robots.txt and the page itself.
+  expect((await request.get('/')).headers()['x-robots-tag']).toBe('noindex, nofollow');
+
+  const robots = await request.get('/robots.txt');
+  expect(await robots.text()).toContain('Disallow: /');
+
+  for (const path of ['/', '/fr/']) {
+    expect(await (await request.get(path)).text()).toContain('name="robots" content="noindex');
   }
 });
 

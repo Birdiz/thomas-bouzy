@@ -1,6 +1,6 @@
 # 7. Serving the site ourselves, on Railway
 
-- Status: accepted
+- Status: accepted; the deploy-target half is amended by [ADR 8](0008-railway-is-the-only-deploy-target.md)
 - Date: 2026-08-28
 - Supersedes the deploy half of [ADR 1](0001-astro-static-site.md); its build
   decisions stand.
@@ -20,7 +20,9 @@ immediately.
 ## Decision
 
 Deploy the container to Railway. The Pages workflow stays, gated on
-`SITE.domainConfirmed`, and costs nothing while it is skipped.
+`SITE.domainConfirmed`, and costs nothing while it is skipped. *(Reversed by
+[ADR 8](0008-railway-is-the-only-deploy-target.md): a gate armed by the same
+variable that makes the Railway build correct is not a gate.)*
 
 A two-stage Dockerfile builds the site and copies `dist/` plus
 `scripts/serve-dist.mjs` into a runtime stage. **The runtime carries no

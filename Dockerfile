@@ -19,10 +19,18 @@ RUN npm ci
 COPY . .
 
 # Everything derived from the hostname — canonical URLs, hreflang, the sitemap,
-# robots.txt, the JSON-LD — is baked in here, so this has to be a build
-# variable rather than a runtime one. Railway passes it from the service config.
+# robots.txt, the JSON-LD — is baked in here, so these have to be build
+# variables rather than runtime ones. Railway passes them from the service
+# config. SITE_INDEXABLE gates indexing: leave it unset while the site lives on
+# a temporary *.up.railway.app hostname.
 ARG SITE_DOMAIN
+ARG SITE_INDEXABLE
 ENV SITE_DOMAIN=${SITE_DOMAIN}
+ENV SITE_INDEXABLE=${SITE_INDEXABLE}
+
+# Turns "SITE_DOMAIN is missing" from a site that silently canonicalises itself
+# to a placeholder domain into a failed build. See scripts/check-assets.mjs.
+ENV SITE_STRICT=1
 
 RUN npm run fonts:check \
   && npm run assets:check \
@@ -34,7 +42,13 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=8080
-ENV HOSTNAME=0.0.0.0
+# HOST, not HOSTNAME: container runtimes and shells set HOSTNAME to the machine
+# name, which would make listen() bind somewhere unintended.
+ENV HOST=0.0.0.0
+
+# The server reads this at runtime too, for the X-Robots-Tag header.
+ARG SITE_INDEXABLE
+ENV SITE_INDEXABLE=${SITE_INDEXABLE}
 
 RUN addgroup --system --gid 1001 web \
   && adduser --system --uid 1001 --ingroup web web

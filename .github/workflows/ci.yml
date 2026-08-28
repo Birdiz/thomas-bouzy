@@ -17,8 +17,6 @@ jobs:
   verify:
     name: Verify
     runs-on: ubuntu-latest
-    outputs:
-      pages_ready: ${{ steps.domain.outputs.ready }}
     steps:
       - uses: actions/checkout@v5
 
@@ -40,8 +38,9 @@ jobs:
       - name: Type-check
         run: npm run check
 
-      # Missing CV PDFs and portrait are reported as warnings; a CNAME that
-      # disagrees with SITE.domain is an error.
+      # Missing CV PDFs and portrait are reported as warnings. SITE_DOMAIN is
+      # only required of a deployment build (SITE_STRICT=1, set by the
+      # Dockerfile), so CI verifies against the placeholder.
       - name: Assets
         run: npm run assets:check
 
@@ -50,12 +49,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      # A CNAME pointing at a hostname that does not resolve makes the deployed
-      # site reachable nowhere, so the deploy waits for the real domain.
-      - name: Is the custom domain live?
-        id: domain
-        run: npm run pages:ready
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -76,24 +69,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
-
-      - name: Upload site
-        if: github.ref == 'refs/heads/main' && steps.domain.outputs.ready == 'true'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: verify
-    if: github.ref == 'refs/heads/main' && needs.verify.outputs.pages_ready == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4

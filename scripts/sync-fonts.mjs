@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { createHash } from 'node:crypto';
+import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
 /**
  * Copies the woff2 faces we actually use from @fontsource into public/fonts/.
  *
@@ -11,8 +13,7 @@
  *   node scripts/sync-fonts.mjs          copy
  *   node scripts/sync-fonts.mjs --check  fail if public/fonts is out of date
  */
-import { createHash } from 'node:crypto';
-import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,6 +30,14 @@ const FACES = [
   '@fontsource/figtree/files/figtree-latin-ext-700-normal.woff2',
 ];
 
+/**
+ * Resolved the way Node resolves, rather than assumed to sit at <root>/node_modules:
+ * a git worktree, a workspace or a hoisted install all put it somewhere else, and
+ * the old join() reported every face as stale instead of saying it could not find them.
+ */
+const require = createRequire(import.meta.url);
+const resolveFace = (face) => require.resolve(face);
+
 const digest = (path) => createHash('sha256').update(readFileSync(path)).digest('hex');
 const checkOnly = process.argv.includes('--check');
 const stale = [];
@@ -36,7 +45,7 @@ const stale = [];
 mkdirSync(dest, { recursive: true });
 
 for (const face of FACES) {
-  const from = join(root, 'node_modules', face);
+  const from = resolveFace(face);
   const name = face.split('/').pop();
   const to = join(dest, name);
 

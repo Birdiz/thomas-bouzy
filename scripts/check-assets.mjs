@@ -10,9 +10,10 @@
  *             degrades on purpose rather than shipping a dead link, so this
  *             reports loudly and exits 0.
  */
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 import { SITE } from '../src/site.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -28,23 +29,31 @@ const required = [
   'public/favicon.svg',
   'public/apple-touch-icon.png',
   'public/og.png',
-  'public/CNAME',
 ];
 for (const file of required) {
   if (!existsSync(path(file))) errors.push(`missing ${file}`);
 }
 
-// CNAME, robots.txt and SITE.domain must agree, or canonical URLs and the
-// sitemap point somewhere GitHub Pages does not serve.
-if (existsSync(path('public/CNAME')) && !process.env.SITE_DOMAIN) {
-  const cname = readFileSync(path('public/CNAME'), 'utf8').trim();
-  if (cname !== SITE.domain) {
-    errors.push(`public/CNAME is "${cname}" but SITE.domain is "${SITE.domain}"`);
-  }
+// A deployment build must name its own hostname. Without this, a missing or
+// renamed SITE_DOMAIN still produces a *successful* build whose canonical URLs,
+// hreflang, sitemap and JSON-LD all point at the placeholder — a site that
+// tells every crawler it lives at an address that does not resolve. The
+// Dockerfile sets SITE_STRICT, so this only ever bites a real deployment.
+if (process.env.SITE_STRICT === '1' && !process.env.SITE_DOMAIN?.trim()) {
+  errors.push(
+    'SITE_DOMAIN is empty in a deployment build — canonical URLs, hreflang, the ' +
+      `sitemap and the JSON-LD would all point at the placeholder "${SITE.domain}"`,
+  );
 }
+
 // robots.txt is generated from SITE (src/pages/robots.txt.ts), so it cannot
-// drift. public/CNAME is static and GitHub Pages-specific: it only has to agree
-// with SITE.domain when no SITE_DOMAIN override is in play.
+// drift. Indexing follows SITE_INDEXABLE; say out loud which way it is set,
+// because shipping a noindex by accident is a silent and expensive mistake.
+console.log(
+  SITE.indexable
+    ? `Indexable: ${SITE.origin} is served to crawlers.`
+    : `NOT indexable (SITE_INDEXABLE unset): robots.txt disallows all, pages carry noindex.`,
+);
 
 // Content still to come.
 for (const locale of ['en', 'fr']) {
@@ -54,13 +63,35 @@ for (const locale of ['en', 'fr']) {
   }
 }
 const assetsDir = path('src/assets');
-const hasPortrait =
-  existsSync(assetsDir) &&
-  readdirSync(assetsDir).some((f) => /^portrait\.(jpe?g|png|webp|avif)$/i.test(f));
-if (!hasPortrait) {
+const portrait = existsSync(assetsDir)
+  ? readdirSync(assetsDir).find((f) => /^portrait\.(jpe?g|png|webp|avif)$/i.test(f))
+  : undefined;
+
+if (!portrait) {
   pending.push(
     'src/assets/portrait.{jpg,png,webp,avif} — the hero shows a placeholder until this lands',
   );
+} else {
+  // Largest width Hero.astro asks for: a 290 CSS px box at DPR 2. A source
+  // narrower than this is upscaled, and the `width={580}` in the markup is a
+  // claim the file cannot back.
+  const WIDEST = 580;
+  const { width, height, format } = await sharp(path('src/assets', portrait)).metadata();
+
+  // The file that shipped was called portrait.jpg and was a PNG. The glob in
+  // Hero.astro matches on the name, so nothing complained.
+  const claimed = portrait.split('.').pop().toLowerCase();
+  const actual = format === 'jpeg' ? 'jpg' : format;
+  if (actual !== claimed && !(actual === 'jpg' && claimed === 'jpeg')) {
+    errors.push(`src/assets/${portrait} is actually a ${format}, not a ${claimed}`);
+  }
+
+  if (width < WIDEST || height < WIDEST) {
+    pending.push(
+      `src/assets/${portrait} is ${width}×${height} — the hero asks for ${WIDEST}×${WIDEST}, ` +
+        'so the largest variant is upscaled. A bigger source is the only fix.',
+    );
+  }
 }
 
 const inCi = Boolean(process.env.CI);

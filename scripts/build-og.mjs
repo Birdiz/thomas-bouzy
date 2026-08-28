@@ -65,8 +65,14 @@ await page.evaluate(() => document.fonts.ready);
 const png = await page.screenshot({ type: 'png' });
 await browser.close();
 
-writeFileSync(join(root, 'public/og.png'), png);
-console.log('Wrote public/og.png (1200×630)');
+// The card is four flat colours and two typefaces — a palette PNG is visually
+// identical and a third of the size. Chromium's screenshot is truecolour, so
+// this step is what keeps og.png off the performance budget.
+const optimised = await sharp(png).png({ palette: true, quality: 90, effort: 10 }).toBuffer();
+writeFileSync(join(root, 'public/og.png'), optimised);
+console.log(
+  `Wrote public/og.png (1200×630, ${(optimised.length / 1024).toFixed(1)} kB, was ${(png.length / 1024).toFixed(1)} kB truecolour)`,
+);
 
 // The touch icon is plain shapes, so sharp can rasterise the favicon directly.
 await sharp(join(root, 'public/favicon.svg'))
