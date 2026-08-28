@@ -17,6 +17,8 @@ jobs:
   verify:
     name: Verify
     runs-on: ubuntu-latest
+    outputs:
+      pages_ready: ${{ steps.domain.outputs.ready }}
     steps:
       - uses: actions/checkout@v5
 
@@ -49,6 +51,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # A CNAME pointing at a hostname that does not resolve makes the deployed
+      # site reachable nowhere, so the deploy waits for the real domain.
+      - name: Is the custom domain live?
+        id: domain
+        run: npm run pages:ready
+
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         id: playwright-cache
@@ -70,7 +78,7 @@ jobs:
           retention-days: 7
 
       - name: Upload site
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && steps.domain.outputs.ready == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -78,7 +86,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: verify
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && needs.verify.outputs.pages_ready == 'true'
     runs-on: ubuntu-latest
     permissions:
       pages: write

@@ -17,9 +17,7 @@ is still missing.
 | What | Where | Effect while missing |
 | --- | --- | --- |
 | Portrait photo | `src/assets/portrait.jpg` (or `.png` / `.webp` / `.avif`) | Hero shows a labelled placeholder |
-| English CV | `public/assets/cv-thomas-bouzy-en.pdf` | The EN download buttons are not rendered |
-| French CV | `public/assets/cv-thomas-bouzy-fr.pdf` | The FR download buttons are not rendered |
-| Domain | `src/site.ts` → `SITE.domain`, and `public/CNAME` | Canonical URLs, `hreflang` and the sitemap point at the placeholder `thomasbouzy.dev` |
+| Domain | `src/site.ts` → `SITE.domain` + `domainConfirmed`, and `public/CNAME` | Canonical URLs, `hreflang` and the sitemap point at the placeholder, **and CI skips the Pages deploy** |
 
 The domain lives in one place: change `SITE.domain`, then `public/CNAME` and
 `public/robots.txt` to match. `npm run assets:check` fails if the three disagree.
@@ -85,7 +83,10 @@ tests/
 ## Deployment
 
 `.github/workflows/ci.yml` verifies every push and pull request. On `main`, a
-green run uploads `dist/` and deploys it to GitHub Pages.
+green run uploads `dist/` and deploys it to GitHub Pages — **but only once
+`SITE.domainConfirmed` is true**. `public/CNAME` makes Pages serve the site at
+that hostname and nowhere else, so deploying against a placeholder produces a
+site reachable from no address at all. Until then CI verifies and stops.
 
 Repository settings need **Pages → Build and deployment → Source: GitHub
 Actions**, and the custom domain pointed at GitHub Pages by DNS.

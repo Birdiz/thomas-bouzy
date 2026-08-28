@@ -34,5 +34,9 @@ read it. The point is that nearly none of them do.
 - The number is not in the HTML source of either page — asserted for `/` and
   `/fr/`, in the structured data, and in every content string.
 - One click for a human; the tel: link keeps working on mobile.
-- No-JavaScript visitors do not get the number from the site at all. It is in
-  the CV PDF, which is how it reaches people who ask.
+- No-JavaScript visitors do not get the number from the site at all.
+- **The protection stops at the HTML.** Both CV PDFs are public downloads and
+  carry the number, the email and the full commune in plain text — the same
+  details the page deliberately hides or narrows. A harvester that fetches PDFs
+  gets all three. Closing that gap means regenerating the PDFs without them,
+  which is a decision about how Thomas wants to be reached, not a code change.

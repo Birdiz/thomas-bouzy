@@ -7,6 +7,13 @@
  */
 export const SITE = {
   domain: 'thomasbouzy.dev',
+  /**
+   * Flip to true once `domain` is registered and its DNS points at GitHub
+   * Pages. Until then CI verifies every push but skips the deploy: Pages would
+   * serve the site at a hostname that does not resolve, so it would be
+   * reachable nowhere at all.
+   */
+  domainConfirmed: false,
   get origin(): string {
     return `https://${this.domain}`;
   },
