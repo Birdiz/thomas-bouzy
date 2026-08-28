@@ -117,6 +117,15 @@ describe('content corrections applied against the design', () => {
     expect(fr.contact.locationLine).not.toMatch(/6 ans/);
   });
 
+  it('gives the location as a region, not a commune', () => {
+    // A village name plus a name and a job title is a near-deducible address.
+    for (const content of [en, fr]) {
+      expect(content.contact.locationLine).toMatch(/Grand Est, France/);
+      expect(content.contact.locationLine).not.toMatch(/Grandrupt|\(88\)/);
+      expect(content.contact.blurb).not.toMatch(/Grandrupt/);
+    }
+  });
+
   it('never inlines the phone number in content', () => {
     // It reaches the page encoded, through RevealPhone.astro. If it ever leaks
     // into a content string it would be served in the HTML source again.

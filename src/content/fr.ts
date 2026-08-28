@@ -266,6 +266,6 @@ export const fr = {
       "Disponible pour des postes backend senior et tech lead, ainsi que pour des missions freelance d'architecture. Remote-first, basé dans le Grand Est — je me déplace volontiers quand il faut une salle.",
     revealPhone: 'Afficher le numéro',
     pdfLabel: 'PDF',
-    locationLine: 'Grandrupt, Grand Est (88), France · Full remote depuis 8 ans · CET',
+    locationLine: 'Grand Est, France · Full remote depuis 8 ans · CET',
   },
 } satisfies ResumeContent;

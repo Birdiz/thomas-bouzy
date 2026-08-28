@@ -43,6 +43,7 @@ canvas.
 | 16 | "Open to full-time roles & freelance — from May 2026" | "Available now — full-time roles & freelance" | It is August 2026; the page read as stale |
 | 17 | "Fully remote for 6+ years" / "depuis 6 ans" | "8+ years" / "depuis 8 ans" | Remote freelance starts January 2018 → 8 years |
 | 18 | One PDF (`-EN`) linked from both languages | One per locale | The FR page offered an English CV |
+| 19 | "Grandrupt, Grand Est (88), France" | "Grand Est, France" | A commune of a few hundred people, plus a name and a job title, is a near-deducible home address. A recruiter needs the region and the timezone; the village tells them nothing they will act on. Matches the JSON-LD, which already carried the region only |
 
 Everything else in the copy is the canvas's, verbatim in both languages.
 
@@ -61,9 +62,3 @@ re-litigated on the next pass.
 3. **LinkedIn URL.** Verified by Thomas. Implemented as
    `https://www.linkedin.com/in/thomas-bouzy`; `links.spec.ts` does not check
    it, because it is the one reference that leaves the origin.
-
-## Still open
-
-1. **The locality is published in full** — "Grandrupt, Grand Est (88)". Kept as
-   designed; the JSON-LD carries the region only. Narrowing the visible line to
-   "Grand Est, France" would cost nothing and give away less.
