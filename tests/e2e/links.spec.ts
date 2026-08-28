@@ -66,19 +66,32 @@ test('fonts are served from this origin, never from Google', async ({ page }) =>
   expect(woff2).toBeGreaterThan(0);
 });
 
-test('the CV download, once present, is served as a PDF', async ({ page, request }) => {
-  await page.goto('/');
-  const link = page.locator('a[href$="cv-thomas-bouzy-en.pdf"]').first();
+test("links each locale's CV exactly when its PDF is present", async ({ page, request }) => {
+  // The earlier version of this test skipped when the link was absent, which
+  // could not tell "not supplied yet" from "supplied but not linked" — and the
+  // second is what actually happened: a path-resolution bug hid both buttons
+  // while the PDFs were sitting in public/assets/.
+  for (const [locale, path] of [
+    ['en', '/'],
+    ['fr', '/fr/'],
+  ] as const) {
+    const href = `/assets/cv-thomas-bouzy-${locale}.pdf`;
+    const response = await request.get(href);
+    await page.goto(path);
+    const links = page.locator(`a[href="${href}"]`);
 
-  if ((await link.count()) === 0) {
-    test.skip(true, 'public/assets/cv-thomas-bouzy-en.pdf not supplied yet');
-    return;
+    if (response.status() === 404) {
+      // Not supplied: the page must not offer a dead link either.
+      await expect(links).toHaveCount(0);
+      continue;
+    }
+
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toBe('application/pdf');
+    // Present on disk means the hero and the contact panel both link it.
+    await expect(links).toHaveCount(2);
+    await expect(links.first()).toHaveAttribute('download', /\.pdf$/);
   }
-
-  await expect(link).toHaveAttribute('download', /\.pdf$/);
-  const response = await request.get('/assets/cv-thomas-bouzy-en.pdf');
-  expect(response.status()).toBe(200);
-  expect(response.headers()['content-type']).toBe('application/pdf');
 });
 
 test('the sitemap lists both locales', async ({ request }) => {
