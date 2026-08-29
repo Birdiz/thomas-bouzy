@@ -265,7 +265,14 @@ a {
   line-height: 1.2;
   text-decoration: none;
   color: var(--color-text);
-  opacity: 0.65;
+  /* 0.75, not the design's 0.65. The header is --color-bg at 86% over a blur,
+     so its effective background is whatever scrolls under it. Over the page
+     ground 0.65 measures 4.84:1; over the dark contact panel the header
+     composites to #d9cfbf and it drops to 4.29:1 — the inactive language is
+     AA or not depending on scroll position. 0.75 holds 6.61:1 over the ground
+     and 5.70:1 over the panel, and keeps the dimming the design wanted.
+     Measured with `node scripts/contrast.mjs --audit`. */
+  opacity: 0.75;
 }
 .lang-switch a:hover {
   opacity: 1;
@@ -432,7 +439,10 @@ a {
 }
 .stats__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  /* Six tiles: three throughput figures on the first row, three impact figures
+     on the second. An explicit three-up rather than auto-fit — at the 1160px
+     container auto-fit lands five per row and orphans the sixth. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin: 0;
   padding: 0;
@@ -988,6 +998,11 @@ a {
 }
 
 @media (max-width: 860px) {
+  /* Two stat tiles per row: three no longer leaves the longest figure
+     ("17s → 3s") room beside its label. */
+  .stats__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   /* Below this width the nav always wraps to its own row. Measured: ~97px here,
      ~127px once the brand row wraps too (see the 480px block). A few pixels of
      headroom absorbs the reflow while the heading face is still loading. */
@@ -1018,6 +1033,11 @@ a {
 }
 
 @media (max-width: 640px) {
+  /* Two tiles still fit here, but not at the display size: "1,000/min" is the
+     widest figure and overruns a half-width tile at 34px. */
+  .stats__n {
+    font-size: 28px;
+  }
   .experience {
     padding-block: 48px;
   }
@@ -1065,6 +1085,11 @@ a {
 }
 
 @media (max-width: 480px) {
+  /* One tile per row: two columns cannot hold a figure and a two-line label. */
+  .stats__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   :root {
     --header-h: 132px;
   }

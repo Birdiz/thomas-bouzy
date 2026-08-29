@@ -6,6 +6,13 @@ file `Thomas Bouzy - Interactive Résumé.dc.html`.
 Every deviation below is deliberate. Anything not listed here matches the
 canvas.
 
+**Scope, since 2026-08-29.** The canvas owns the design; the copy is owned by
+`Pitch_Master_Thomas_Bouzy_{EN,FR}.md` — see
+[ADR 9](adr/0009-the-pitch-master-owns-the-copy.md). This file therefore records
+structural, accessibility and privacy departures only. Wording differences
+against the canvas are no longer deviations, they are the other source
+speaking.
+
 ## Structural
 
 | # | Canvas | Here | Why |
@@ -27,6 +34,7 @@ canvas.
 | 10 | Animations always run | Cut under `prefers-reduced-motion: reduce` | Vestibular safety; also makes programmatic scrolling deterministic |
 | 11 | — | Skip link, `scroll-padding-top` on the scroll container | Keyboard access; nothing lands under the sticky header |
 | 12 | `<button style="all:unset">` | `<summary>` with a real focus ring | `all: unset` removed the focus outline |
+| 22 | Inactive language switch at `opacity: 0.65` | `0.75` | The header is `--color-bg` at 86% over a blur, so its effective background is whatever scrolls beneath. Over the page ground 0.65 measures 4.84:1; over the dark contact panel the header composites to `#d9cfbf` and it drops to 4.29:1 — AA or not depending on scroll position. 0.75 holds 6.61 / 5.70. `contrast.mjs --audit` now models the header explicitly, which the solid-background block above could not |
 
 ## Privacy and performance
 
@@ -38,16 +46,32 @@ canvas.
 
 ## Content
 
-| # | Canvas | Here | Why |
-| --- | --- | --- | --- |
-| 16 | "Open to full-time roles & freelance — from May 2026" | "Available now — full-time roles & freelance" | It is August 2026; the page read as stale |
-| 17 | "Fully remote for 6+ years" / "depuis 6 ans" | "8+ years" / "depuis 8 ans" | Remote freelance starts January 2018 → 8 years |
-| 18 | One PDF (`-EN`) linked from both languages | One per locale | The FR page offered an English CV |
-| 21 | Project 03: "Third-party financial integrations" (Socios) | "Auditing a codebase I didn't write" (2026) | Three of five cards came from one employer. This was the least distinctive of the three, and its API-design/DDD substance is already in the Socios job bullets, so the page keeps it. The replacement is the one card that shows what Thomas does in a codebase he did not write — four prioritised audit reports, then closing the criticals himself — which is what a senior hire actually does in month one. The client is described, not named: the engineering is the point, and naming it would filter who calls back |
-| 20 | Project 05: "Delivery app for low-connectivity routes" (ZOL, 2018) | "Association directories from open data" (2026) | The ZOL card was the oldest, shortest and furthest from a senior backend brief — and the same engagement is already listed under earlier experience, so nothing is lost. The replacement is dated 2026, is entirely Thomas's, and argues for the same instinct as project 01: provenance kept beside every value, so you can say how it got there. Section still reads "Five things worth opening" |
-| 19 | "Grandrupt, Grand Est (88), France" | "Grand Est, France" | A commune of a few hundred people, plus a name and a job title, is a near-deducible home address. A recruiter needs the region and the timezone; the village tells them nothing they will act on. Matches the JSON-LD, which already carried the region only |
+Superseded on 2026-08-29. Entries 16 to 21 recorded corrections against the
+canvas's copy: a stale availability date, the remote track record counted from
+2018, one PDF per locale, two project cards swapped, the location published as a
+region rather than a commune.
 
-Everything else in the copy is the canvas's, verbatim in both languages.
+The copy now derives from the pitch master rather than the canvas
+([ADR 9](adr/0009-the-pitch-master-owns-the-copy.md)), so those entries no longer
+describe a deviation — they describe a document the site is no longer downstream
+of. What each of them protected is still protected, and now by a test rather
+than by a table:
+
+| Was | Now enforced by |
+| --- | --- |
+| 16 — no availability date that has already passed | `tests/content.spec.ts`, which allows a date only while it is still ahead |
+| 17 — remote track record counted from 2018 | `tests/content.spec.ts` |
+| 18 — one CV PDF per locale | `src/site.ts` `CV.path(locale)`, `tests/e2e/links.spec.ts` |
+| 19 — a département, never a commune | `tests/content.spec.ts`; the JSON-LD stays region-level |
+| 20, 21 — the project set | Owned by the pitch master; six cards, chosen there |
+
+One privacy judgement moved rather than disappeared. Entry 19 rejected
+"Grandrupt, Grand Est (88)" because a commune of a few hundred people, beside a
+name and a job title, is a near-deducible home address. The pitch master
+publishes "the Vosges" in its own LinkedIn section, and a département of 360,000
+is not an address — so the page now says *Vosges, Grand Est, France* while the
+structured data still carries the region alone. The original reasoning holds
+against the commune, which is what it was aimed at.
 
 ## Raised and settled
 
@@ -56,11 +80,25 @@ re-litigated on the next pass.
 
 1. **April → August 2026.** Socios is dated "– April 2026" and nothing on the
    page covers the months since. Reviewed with Thomas and deliberately left
-   alone: the hero already says "Available now", and the reason is a
-   conversation for the call, not a line on a public page.
-2. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
+   alone: the reason is a conversation for the call, not a line on a public
+   page. The hero now carries the two availabilities the pitch master states —
+   freelance immediately, permanent from September 2026 — which is the part a
+   reader can act on.
+2. **The exit is not on the page.** The pitch master says to state the
+   collective economic redundancy plainly (§5). That instruction is written for
+   an interview, and the availability line already answers the question it
+   would raise. Excluded from the site on purpose, not overlooked.
+3. **Project dates inside the Socios period.** The API redesign and the DeFi
+   microservice are both dated `2022–2026`, the full engagement, because the
+   pitch master dates neither. Narrower dates would be invented. Worth
+   tightening if Thomas remembers them.
+4. **The PDFs are behind the page.** `public/assets/cv-thomas-bouzy-{en,fr}.pdf`
+   predate this rebase and carry none of its numbers — the pitch master's §10
+   item 1. A visitor who downloads the CV gets less than the page showed them.
+   Tracked, not fixed here.
+5. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
    and Université de Reims overlap in "earlier experience". Accurate — the
    teaching ran in parallel — and accepted as-is.
-3. **LinkedIn URL.** Verified by Thomas. Implemented as
+6. **LinkedIn URL.** Verified by Thomas. Implemented as
    `https://www.linkedin.com/in/thomas-bouzy`; `links.spec.ts` does not check
    it, because it is the one reference that leaves the origin.

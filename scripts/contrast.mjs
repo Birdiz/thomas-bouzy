@@ -104,6 +104,29 @@ if (process.argv.includes('--audit')) {
     }
   }
 
+  // The sticky header is `--color-bg` at 86% over a blur, so its effective
+  // background is whatever scrolls beneath it. The worst case is not a card:
+  // it is the dark contact panel (--color-neutral-900), which composites the
+  // header down to #d9cfbf — the exact value axe reports when it fails the
+  // language switch. The block above, which assumes a solid ground, is what let
+  // that switch ship at 0.65 and measure 4.29:1 in place.
+  console.log('\n— sticky header: `text` over the 86% header, by what is beneath —');
+  {
+    const beneath = [
+      ['ground', T.bg],
+      ['surface', T.surface],
+      ['dark panel', T['neutral-900']],
+    ];
+    for (const a of [0.65, 0.7, 0.75, 0.8]) {
+      const cells = beneath.map(([name, under]) => {
+        const bg = blend(T.bg, under, 0.86);
+        const r = ratio(blend(T.text, bg, a), bg);
+        return `${name} ${fmt(r)} ${verdict(r)}`;
+      });
+      console.log(`  text @ ${a.toFixed(2)}   ${cells.join('   ')}`);
+    }
+  }
+
   console.log('\n— dark contact panel —');
   for (const a of [0.6, 0.7, 0.75, 0.8, 0.9, 1]) {
     const r = ratio(blend(T['neutral-100'], T['neutral-900'], a), T['neutral-900']);
