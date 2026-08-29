@@ -6,13 +6,15 @@ file `Thomas Bouzy - Interactive Résumé.dc.html`.
 Every deviation below is deliberate. Anything not listed here matches the
 canvas.
 
-**Verified against the canvas on 2026-08-29.** `styles.css` is unchanged
+**Verified against the canvas on 2026-08-29, twice.** `styles.css` is unchanged
 upstream — normalised for comments and whitespace it is character-for-character
 `src/styles/tokens.css`, down to an identical length, with one cosmetic quote
-style biome rewrote. The `.dc.html` is unchanged too: it still carries the May
-2026 availability, "Grandrupt, Grand Est (88)", "6+ years" remote and the
-original five projects. Nothing upstream needed porting; entries 23 to 25 below
-are gaps the first pass left unrecorded, found by this diff.
+style biome rewrote. The `.dc.html`'s data is unchanged too: it still carries
+the May 2026 availability, "Grandrupt, Grand Est (88)", "6+ years" remote and
+the original five projects, so nothing it says needed porting. Between the two
+checks it gained exactly one thing — the PDF download handler of entry 26 —
+which is deliberately not ported. Entries 23 to 25 are gaps the first pass left
+unrecorded, found by the same diff.
 
 **Scope, since 2026-08-29.** The canvas owns the design; the copy is owned by
 `Pitch_Master_Thomas_Bouzy_{EN,FR}.md` — see
@@ -54,6 +56,7 @@ speaking.
 | 13 | Mobile number in the HTML source | Click-to-reveal, absent from JSON-LD | [ADR 5](adr/0005-phone-number-is-not-in-the-html.md) |
 | 14 | `@import url(fonts.googleapis.com/...)` | Self-hosted woff2 from `@fontsource` | Render-blocking third party on the critical path, and every visitor's browser calling Google — the well-documented CNIL problem for a site aimed at a French audience |
 | 15 | — | `og.png`, JSON-LD `Person`, canonical, `hreflang`, sitemap, `robots.txt` | The canvas has no `<head>` |
+| 26 | `downloadPdf()` — `fetch` the PDF, build a blob, click a synthetic `<a>`, `window.open` on failure | `<a href download>`, no script | A workaround for the canvas viewer's sandbox, where `<a download>` is inert. The site serves its own PDFs from its own origin, where the plain link works. Porting it would add script to a page that ships 364 B of inline JS and pins every hash in the CSP, break the download with JS off, buffer the whole file in memory first, and degrade the failure case to opening a PDF in a tab. Same category as `image-slot.js` and `support.js` in entry 5: canvas-runtime scaffolding, not design |
 
 ## Content
 
