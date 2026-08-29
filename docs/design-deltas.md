@@ -16,6 +16,13 @@ checks it gained exactly one thing — the PDF download handler of entry 26 —
 which is deliberately not ported. Entries 23 to 25 are gaps the first pass left
 unrecorded, found by the same diff.
 
+Corroborated by the project's own export. Unzipped, `styles.css` differs from
+what the API served by a single trailing newline, and the `.dc.html` is the
+post-reload version down to the `downloadPdf` handler — same May 2026, same
+"Grandrupt", same five projects, and still nothing rendering `skills`, `langs`
+or `eduText`. The API was not serving a stale copy; the canvas simply holds
+this.
+
 **Scope, since 2026-08-29.** The canvas owns the design; the copy is owned by
 `Pitch_Master_Thomas_Bouzy_{EN,FR}.md` — see
 [ADR 9](adr/0009-the-pitch-master-owns-the-copy.md). This file therefore records
