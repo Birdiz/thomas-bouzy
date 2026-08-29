@@ -62,16 +62,17 @@ than by a table:
 | 16 — no availability date that has already passed | `tests/content.spec.ts`, which allows a date only while it is still ahead |
 | 17 — remote track record counted from 2018 | `tests/content.spec.ts` |
 | 18 — one CV PDF per locale | `src/site.ts` `CV.path(locale)`, `tests/e2e/links.spec.ts` |
-| 19 — a département, never a commune | `tests/content.spec.ts`; the JSON-LD stays region-level |
+| 19 — a region, never narrower | `tests/content.spec.ts`, which now also rejects the département; the JSON-LD is region-level too |
 | 20, 21 — the project set | Owned by the pitch master; six cards, chosen there |
 
-One privacy judgement moved rather than disappeared. Entry 19 rejected
+One entry is a judgement rather than a rule, and it stands. Entry 19 rejected
 "Grandrupt, Grand Est (88)" because a commune of a few hundred people, beside a
 name and a job title, is a near-deducible home address. The pitch master
-publishes "the Vosges" in its own LinkedIn section, and a département of 360,000
-is not an address — so the page now says *Vosges, Grand Est, France* while the
-structured data still carries the region alone. The original reasoning holds
-against the commune, which is what it was aimed at.
+publishes "the Vosges" in its own LinkedIn section, so the département was put
+to Thomas as a possible middle ground; he chose to stay at the region. The page
+says *Grand Est, France*, the structured data agrees, and the test now rejects
+the département as well as the commune — this is the one place where the pitch
+master does not win, because it is his call to make and not the document's.
 
 ## Raised and settled
 
@@ -85,17 +86,18 @@ re-litigated on the next pass.
    freelance immediately, permanent from September 2026 — which is the part a
    reader can act on.
 2. **The exit is not on the page.** The pitch master says to state the
-   collective economic redundancy plainly (§5). That instruction is written for
-   an interview, and the availability line already answers the question it
-   would raise. Excluded from the site on purpose, not overlooked.
-3. **Project dates inside the Socios period.** The API redesign and the DeFi
-   microservice are both dated `2022–2026`, the full engagement, because the
-   pitch master dates neither. Narrower dates would be invented. Worth
-   tightening if Thomas remembers them.
+   collective economic redundancy plainly (§5). Raised with Thomas, who does not
+   want it mentioned. That instruction is written for an interview anyway, and
+   the availability line already answers the question it would raise.
+3. **Project dates.** Confirmed by Thomas: the Socios cards all carry the full
+   engagement, May 2022 – April 2026. Each project card now spells out the
+   period of the engagement it belongs to, rather than a short year range, so
+   the KTB card reads in the same register as the three beside it.
 4. **The PDFs are behind the page.** `public/assets/cv-thomas-bouzy-{en,fr}.pdf`
    predate this rebase and carry none of its numbers — the pitch master's §10
    item 1. A visitor who downloads the CV gets less than the page showed them.
-   Tracked, not fixed here.
+   Thomas is reworking both; they land as a drop-in replacement at the same two
+   paths, and `npm run assets:check` says so if one goes missing.
 5. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
    and Université de Reims overlap in "earlier experience". Accurate — the
    teaching ran in parallel — and accepted as-is.

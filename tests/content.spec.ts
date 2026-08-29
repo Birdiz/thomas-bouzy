@@ -125,17 +125,19 @@ describe('content corrections applied against the design', () => {
     expect(fr.contact.locationLine).not.toMatch(/6 ans/);
   });
 
-  it('gives the location as a département, never a commune', () => {
-    // A village of a few hundred people, plus a name and a job title, is a
-    // near-deducible home address. A département of 360,000 is not, which is
-    // why the pitch master's "Vosges" is publishable where "Grandrupt" was not.
+  it('gives the location as a region, never narrower', () => {
+    // A commune of a few hundred people, beside a name and a job title, is a
+    // near-deducible home address. Thomas's call is to stop at the region and
+    // not publish the département either: a recruiter needs the timezone and
+    // the country, and neither Grandrupt nor the Vosges tells them more.
     for (const content of [en, fr]) {
-      expect(content.contact.locationLine).toMatch(/Vosges, Grand Est, France/);
-      expect(content.contact.locationLine).not.toMatch(/Grandrupt|\(88\)/);
-      expect(content.contact.blurb).not.toMatch(/Grandrupt/);
-      for (const paragraph of content.about.paragraphs) {
-        expect(paragraph).not.toMatch(/Grandrupt/);
-      }
+      expect(content.contact.locationLine).toMatch(/Grand Est, France/);
+      const everywhere = [
+        content.contact.locationLine,
+        content.contact.blurb,
+        ...content.about.paragraphs,
+      ].join(' ');
+      expect(everywhere).not.toMatch(/Grandrupt|Vosges|\(88\)/);
     }
   });
 

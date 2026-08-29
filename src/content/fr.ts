@@ -64,7 +64,7 @@ export const fr = {
     {
       title: 'Event Sourcing sur les transactions wallet',
       org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
+      period: 'Mai 2022 – Avril 2026',
       context:
         "Les wallets de fan tokens manipulaient de l'argent et des actifs réels. Le modèle basé état rendait impossible de répondre à « comment ce solde est-il arrivé là ? » — une question que posent la finance, le support et le régulateur.",
       approach:
@@ -76,7 +76,7 @@ export const fr = {
     {
       title: "Refaire une API de production sans que l'utilisateur s'en aperçoive",
       org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
+      period: 'Mai 2022 – Avril 2026',
       context:
         "Le produit FanTokens destiné aux traders était lent, instable et coûteux. Les endpoints livraient des payloads trop lourdes et pas assez orientées métier, les erreurs 500 étaient récurrentes, et la page mettait 17 secondes à devenir utilisable. Sur ce type de produit, une donnée incohérente n'est pas un défaut d'affichage : c'est une décision d'investissement prise sur une information fausse.",
       approach:
@@ -88,7 +88,7 @@ export const fr = {
     {
       title: 'Des transactions on-chain qui engagent des fonds réels',
       org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
+      period: 'Mai 2022 – Avril 2026',
       context:
         "Il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
       approach:
@@ -100,7 +100,7 @@ export const fr = {
     {
       title: 'Legacy → API Platform',
       org: 'Kiss The Bride',
-      period: '2018–2022',
+      period: 'Janv. 2018 – Avril 2022',
       context:
         'Une agence digitale au service de grands comptes, sur une base de code legacy qui ne suivait plus les attentes des clients sur leurs données.',
       approach:
@@ -296,7 +296,7 @@ export const fr = {
     paragraphs: [
       "Je suis un ingénieur backend qui aime les sujets peu glamour : intégrité transactionnelle, journaux d'événements rejouables, migrations que personne ne remarque. Sur douze ans, la ligne directrice n'est pas la stack, c'est la criticité croissante de ce qui casse — un dashboard BI qui tombe est un incident ; un wallet qui double une transaction est un problème comptable, réglementaire et de confiance.",
       "La transmission fait partie du métier, pas à côté. Une décision d'architecture que l'équipe ne comprend pas n'est pas une décision, c'est une dépendance — c'est pour ça que les RFC, les ADR et la culture de la revue comptent plus, à mes yeux, que n'importe quel framework.",
-      "Hors écran : les Vosges, en pleine campagne, sur une propriété que je rénove. Full remote depuis 2018 — ce n'est pas une préférence de confort récente, c'est huit ans de pratique. L'écrit, l'asynchrone et la trace sont ici le mode par défaut, pas une contrainte subie.",
+      "Hors écran : le Grand Est, en pleine campagne, sur une propriété que je rénove. Full remote depuis 2018 — ce n'est pas une préférence de confort récente, c'est huit ans de pratique. L'écrit, l'asynchrone et la trace sont ici le mode par défaut, pas une contrainte subie.",
     ],
     mentoringKicker: 'Mentorat & enseignement — un fil rouge',
     languagesKicker: 'Langues',
@@ -333,6 +333,6 @@ export const fr = {
       "Disponible pour des postes backend senior et tech lead, et pour des missions freelance bornées : audits d'architecture event-driven, migrations Symfony sur des systèmes qui ne s'arrêtent pas, mise en place de l'observabilité, refonte de contrats d'API sans rupture de service, audits de coût infra et fournisseurs de données. Remote-first — je me déplace volontiers quand il faut une salle.",
     revealPhone: 'Afficher le numéro',
     pdfLabel: 'PDF',
-    locationLine: 'Vosges, Grand Est, France · Full remote depuis 8 ans · CET',
+    locationLine: 'Grand Est, France · Full remote depuis 8 ans · CET',
   },
 } satisfies ResumeContent;

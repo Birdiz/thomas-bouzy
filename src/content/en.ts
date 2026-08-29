@@ -64,7 +64,7 @@ export const en = {
     {
       title: 'Event Sourcing on wallet transactions',
       org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
+      period: 'May 2022 – April 2026',
       context:
         'Fan-token wallets moved real money and real assets. The existing state-based model made it impossible to answer "how did this balance get here?" — a hard problem when finance, support and regulators all ask that question.',
       approach:
@@ -76,7 +76,7 @@ export const en = {
     {
       title: 'Rebuilding a live API without users noticing',
       org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
+      period: 'May 2022 – April 2026',
       context:
         'The trader-facing FanTokens product was slow, unstable and expensive. Endpoints shipped payloads that were too heavy and not domain-oriented enough, 500 errors were recurring, and the page took 17 seconds to become usable. On this kind of product an inconsistent number is not a display defect — it is an investment decision taken on false information.',
       approach:
@@ -88,7 +88,7 @@ export const en = {
     {
       title: 'On-chain transactions that commit real funds',
       org: 'Socios.com (Chiliz)',
-      period: '2022–2026',
+      period: 'May 2022 – April 2026',
       context:
         'DeFi operations on Solana had to be run from the platform: swaps, pool creation, opening and closing liquidity positions, claiming rewards, rebalancing. A mistake here does not cost a retry — it costs money that has already gone.',
       approach:
@@ -100,7 +100,7 @@ export const en = {
     {
       title: 'Legacy system → API Platform',
       org: 'Kiss The Bride',
-      period: '2018–2022',
+      period: 'Jan 2018 – April 2022',
       context:
         "A digital agency serving large enterprise accounts on a legacy codebase that couldn't keep up with what clients now needed from their data.",
       approach:
@@ -296,7 +296,7 @@ export const en = {
     paragraphs: [
       "I'm a backend engineer who likes the unglamorous parts: transaction integrity, replayable event logs, migrations nobody notices. Across twelve years the through-line isn't the stack, it's the rising criticality of what breaks — a BI dashboard going down is an incident; a wallet double-crediting a transaction is an accounting, regulatory and trust problem.",
       "Teaching is part of the job rather than adjacent to it. An architecture decision the team doesn't understand isn't a decision, it's a dependency — which is why RFCs, ADRs and review culture matter to me more than any particular framework.",
-      'Off-screen: rural Vosges, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
+      'Off-screen: the Grand Est countryside, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
     ],
     mentoringKicker: 'Mentoring & teaching — a thread through all of it',
     languagesKicker: 'Languages',
@@ -330,6 +330,6 @@ export const en = {
       'Available for senior backend and tech-lead roles, and for bounded freelance work: event-driven architecture audits, Symfony migrations on systems that never stop, observability rollouts, API contract redesigns without downtime, infrastructure and data-provider cost audits. Remote-first — happy to travel for the parts that need a room.',
     revealPhone: 'Show phone number',
     pdfLabel: 'PDF',
-    locationLine: 'Vosges, Grand Est, France · Fully remote for 8+ years · CET',
+    locationLine: 'Grand Est, France · Fully remote for 8+ years · CET',
   },
 } satisfies ResumeContent;
