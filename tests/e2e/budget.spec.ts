@@ -11,15 +11,21 @@ import { expect, test } from './fixtures.ts';
  *
  * Sizes are uncompressed; the wire is roughly a quarter of this after brotli.
  *
- * Measured on 2026-08-28, with the measurement bug below fixed:
- *   document  29.3 kB (EN) / 30.5 kB (FR)      css 25.2 kB
+ * Re-measured on 2026-08-29, after the content was rebased on the pitch master
+ * (two more project cards, four more Socios bullets, two more stat tiles):
+ *   document  35.7 kB (EN) / 37.6 kB (FR)      css 25.3 kB
  *   external js 0 (nothing is external)        inline js 364 B
  *   fonts 43.6 kB (four faces)                 images 13.4 kB      6 requests
- * The FR document is the tight one — 3.5 kB of headroom, which is roughly one
- * more project card.
+ * On the wire that FR document is 8.9 kB brotli — the growth is prose, and
+ * prose compresses. The document limit moved 34 kB → 42 kB to match, keeping
+ * the same ~4 kB of headroom the original left: about one more project card.
+ *
+ * The limit is raised only for content the résumé actually gained. It is not a
+ * dial to turn when a library or an unoptimised asset pushes a number over —
+ * that is the failure this file exists to produce.
  */
 const BUDGET = {
-  documentBytes: 34_000,
+  documentBytes: 42_000,
   cssBytes: 34_000,
   externalJsBytes: 4_000,
   inlineJsBytes: 2_000,

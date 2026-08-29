@@ -21,7 +21,7 @@ Drop Lighthouse CI. Assert the budget's *inputs* directly in
 
 | Budget | Limit | Actual |
 | --- | --- | --- |
-| Document | 34 KB | ~25 KB |
+| Document | 42 KB | ~37 KB |
 | CSS | 34 KB | ~26 KB |
 | External JS | 4 KB | 0 |
 | Inline JS | 2 KB | 364 B |
@@ -54,3 +54,19 @@ absent. The thresholds turned out to be honest — the FR document runs at 30.5 
 against 34 kB — but that was luck, not proof. The lesson generalises: a test
 whose assertion can be satisfied by a missing measurement is not a test. Where a
 budget is derived from a header, assert that the header is there.
+
+## Postscript, 2026-08-29
+
+The document limit moved from 34 kB to 42 kB. Rebasing the content on the pitch
+master added two project cards, four Socios bullets and two stat tiles; the FR
+document went from 30.5 kB to 37.6 kB and blew the limit — exactly the "roughly
+one more project card" of headroom the original note predicted, spent twice.
+
+Raised rather than absorbed by cutting, because the growth is prose and prose
+compresses: that FR document is **8.9 kB brotli on the wire**. The new limit
+leaves the same ~4 kB of headroom the old one did.
+
+Worth saying plainly, since this is the move that quietly kills a budget: the
+number was raised for content the résumé genuinely gained, measured before and
+after. A library, a stray polyfill or an unoptimised asset pushing it over is
+the failure the file exists to produce, and is not a reason to touch it again.
