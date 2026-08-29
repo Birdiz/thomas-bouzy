@@ -137,14 +137,30 @@ re-litigated on the next pass.
    true for the real domain: the header disappears for everything, and search
    engines do extract PDF text.
 
-   Not changed, because a CV handed to a recruiter is a different audience from
-   an indexed page, and that trade is Thomas's to make. Noted here so it is a
-   decision rather than a surprise. If he wants the page's posture to hold, the
-   fix is one line in the header block: keep `x-robots-tag` on `.pdf` responses
-   even when `INDEXABLE`.
-8. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
+   **Settled: the PDFs are never indexed.** `robotsFor()` in
+   `scripts/serve-dist.mjs` puts `x-robots-tag: noindex, noarchive` on every
+   `application/pdf` response regardless of the flag. There was no trade to
+   weigh: a PDF that ranks competes with the page it belongs to, taking
+   authority that should land on the résumé and dropping the visitor into a
+   document with no navigation. Better privacy and better SEO, same line.
+
+   The number stays in the CV, reachable by anyone who chooses to open it —
+   which is a recruiter, not a search result.
+
+   `serving.spec.ts` asserts it by starting a second server with
+   `SITE_INDEXABLE=true`, because the suite's own build has the flag off and
+   every response there already carries `noindex, nofollow`: the assertion
+   would have passed with the rule deleted. Verified by deleting it.
+
+10. **The email on the page is not the email in the PDFs.** The site now uses
+   `birdiz@proton.me` (`src/site.ts`); both reference CVs still print
+   `tom.bouzy@gmail.com`, as does the pitch master's §9.3. A visitor who reads
+   the page and a recruiter who opens the CV get different addresses.
+   Deliberate on the page's side and trivially fixed on the other — the CVs are
+   regenerated upstream, not here.
+11. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
    and Université de Reims overlap in "earlier experience". Accurate — the
    teaching ran in parallel — and accepted as-is.
-9. **LinkedIn URL.** Verified by Thomas. Implemented as
+12. **LinkedIn URL.** Verified by Thomas. Implemented as
    `https://www.linkedin.com/in/thomas-bouzy`; `links.spec.ts` does not check
    it, because it is the one reference that leaves the origin.

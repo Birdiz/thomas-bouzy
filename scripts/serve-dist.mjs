@@ -127,6 +127,31 @@ const SECURITY_HEADERS = {
 };
 
 /**
+ * The CV PDFs stay out of the index even on the canonical deployment.
+ *
+ * Two reasons, and neither is a trade-off:
+ *
+ * A PDF that ranks is a PDF competing with the page it belongs to. It takes
+ * authority that should land on the résumé itself, offers no navigation, and
+ * drops the visitor into a document instead of the site.
+ *
+ * And a crawler does not "download" a PDF — it is one GET, exactly like the
+ * HTML. Search engines extract the text, so an indexed CV makes its phone
+ * number and its street-level location answerable by a search query. The page
+ * withholds both on purpose: the number reaches it encoded, after a click and
+ * never in the source (docs/adr/0005), and the location stops at the region.
+ * Without this the whole posture would end at the download button the day
+ * SITE_INDEXABLE goes true.
+ *
+ * Applied after SECURITY_HEADERS so it holds whatever that object does.
+ */
+const NEVER_INDEXED = /^application\/pdf$/;
+
+function robotsFor(mime) {
+  return NEVER_INDEXED.test(mime) ? { 'x-robots-tag': 'noindex, noarchive' } : {};
+}
+
+/**
  * Astro fingerprints what it emits into /_astro/, and the font filenames carry
  * their version. Those can be cached for a year. HTML must revalidate, or a
  * deploy would not reach anyone still holding a copy — which is exactly why the
@@ -341,7 +366,7 @@ async function handle(req, res) {
   if (encoding) headers['content-encoding'] = encoding;
   else headers['content-length'] = file.size;
 
-  res.writeHead(hit ? 200 : 404, { ...headers, ...SECURITY_HEADERS });
+  res.writeHead(hit ? 200 : 404, { ...headers, ...SECURITY_HEADERS, ...robotsFor(mime) });
   if (req.method === 'HEAD') {
     res.end();
     return;

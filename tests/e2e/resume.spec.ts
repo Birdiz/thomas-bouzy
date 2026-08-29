@@ -130,7 +130,7 @@ test.describe('phone number is not harvestable', () => {
     await page.goto('/');
     await expect(page.getByRole('button', { name: 'Show phone number' })).toHaveCount(0);
     // Email and LinkedIn still get the visitor there.
-    await expect(page.getByRole('link', { name: 'tom.bouzy@gmail.com' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'birdiz@proton.me' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
     await context.close();
   });

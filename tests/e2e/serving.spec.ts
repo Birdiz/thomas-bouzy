@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process';
 import { expect, test } from './fixtures.ts';
 
 /**
@@ -196,6 +197,65 @@ test('gives each encoding its own strong validator', async ({ request }) => {
     headers: { 'Accept-Encoding': 'br', 'If-None-Match': brotli ?? '' },
   });
   expect(revalidated.status()).toBe(304);
+});
+
+/**
+ * Runs a second copy of the server with SITE_INDEXABLE=true and hands its
+ * origin to `body`.
+ *
+ * The suite's own server is built without the flag, which is the state the site
+ * deploys in today — so every response there carries `noindex, nofollow` and an
+ * assertion about PDFs would pass whether or not the rule exists. That is the
+ * failure docs/adr/0006 already recorded once: an assertion satisfied by a
+ * missing measurement is not a test. The guarantee only becomes observable in
+ * the state the site is heading for, so the test creates it.
+ */
+async function withIndexableServer(workerIndex: number, body: (origin: string) => Promise<void>) {
+  const port = 4400 + workerIndex;
+  const server = spawn('node', ['scripts/serve-dist.mjs', '--port', String(port)], {
+    env: { ...process.env, SITE_INDEXABLE: 'true', PORT: String(port) },
+    stdio: 'ignore',
+  });
+  try {
+    const origin = `http://localhost:${port}`;
+    const deadline = Date.now() + 20_000;
+    for (;;) {
+      try {
+        await fetch(origin, { signal: AbortSignal.timeout(1_000) });
+        break;
+      } catch {
+        if (Date.now() > deadline) throw new Error(`indexable server never came up on ${port}`);
+        await new Promise((r) => setTimeout(r, 100));
+      }
+    }
+    await body(origin);
+  } finally {
+    server.kill('SIGTERM');
+  }
+}
+
+test('keeps the CV PDFs out of the index even once the site is indexable', async () => {
+  // The PDFs carry a phone number and a street-level location that the page
+  // deliberately withholds — the number never reaches the HTML source at all
+  // (docs/adr/0005). A crawler does not "download" a PDF, it GETs it like any
+  // document, and search engines extract the text: indexed, the CV would make
+  // both answerable by a search query. See docs/design-deltas.md.
+  await withIndexableServer(test.info().workerIndex, async (origin) => {
+    // The flag really is on: the page itself is now indexable.
+    const page = await fetch(`${origin}/`);
+    expect(page.status).toBe(200);
+    expect(page.headers.get('x-robots-tag')).toBeNull();
+
+    for (const locale of ['en', 'fr']) {
+      const pdf = await fetch(`${origin}/assets/cv-thomas-bouzy-${locale}.pdf`);
+      expect(pdf.status).toBe(200);
+      expect(pdf.headers.get('content-type')).toBe('application/pdf');
+      expect(
+        pdf.headers.get('x-robots-tag'),
+        `cv-thomas-bouzy-${locale}.pdf is indexable`,
+      ).toContain('noindex');
+    }
+  });
 });
 
 test('tells crawlers to stay away while the hostname is not the canonical one', async ({

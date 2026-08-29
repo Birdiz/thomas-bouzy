@@ -49,7 +49,7 @@ export const SITE = {
 } as const;
 
 export const CONTACT = {
-  email: 'tom.bouzy@gmail.com',
+  email: 'birdiz@proton.me',
   /** Never rendered into the HTML source — see components/RevealPhone.astro. */
   phoneE164: '+33632134547',
   phoneDisplay: '06 32 13 45 47',
