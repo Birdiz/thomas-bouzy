@@ -16,6 +16,13 @@ checks it gained exactly one thing — the PDF download handler of entry 26 —
 which is deliberately not ported. Entries 23 to 25 are gaps the first pass left
 unrecorded, found by the same diff.
 
+**Third read, and the first real change.** On the 2026-08-29 re-import the
+canvas had finally moved: the About aside is restyled so the mentoring card
+fills the column instead of floating at the top of it — `align-items: stretch`,
+`flex: 1`, `justify-content: center`, and every type size in the card stepped
+up. Ported in full. The `DATA` block is still untouched, so the copy question
+is unchanged and ADR 9 still holds.
+
 Corroborated by the project's own export. Unzipped, `styles.css` differs from
 what the API served by a single trailing newline, and the `.dc.html` is the
 post-reload version down to the `downloadPdf` handler — same May 2026, same
@@ -41,7 +48,7 @@ speaking.
 | 5 | `<image-slot>` placeholder | `<Image>` with responsive `widths`, labelled placeholder until a photo lands | The slot was empty in the canvas |
 | 6 | Hero is the 1160px container | Full-bleed section wrapping the container | Lets the decorative blob bleed as designed without widening the document |
 | 23 | No skills section, and no `#skills` in the nav | `SkillsSection.astro`, plus a fifth nav link | The canvas's data carries `skills`, `kickerSkills` and `skillsTitle`, and `renderVals` returns them — the markup that would render them is simply absent. Built as the data intends |
-| 24 | About's aside renders the mentoring card only | Mentoring, plus languages and education | Same shape: `langs`, `langKicker`, `eduKicker` and `eduText` all exist in the data and reach `renderVals`, and nothing renders them |
+| 24 | ~~About's aside renders the mentoring card only~~ | **Retired 2026-08-29.** The aside now renders the mentoring card alone, as the canvas does | Built originally because `langs`, `eduKicker` and `eduText` sit unrendered in the canvas's data. The canvas then restyled that card to fill the column, which only reads right with one card in it, and Thomas chose the canvas. `languages` stays in the content contract but off the page: `BaseLayout` feeds `knowsLanguage` from it, and `alumniOf` carries the university independently — structured data was not part of the decision |
 | 25 | Stat figure at 23px | 34px | The canvas's four stats are words — "Event-driven", "Tech lead" — at a size that suits a phrase. They are figures here, and a figure carries the tile; below 640px it steps back to 28px, where "1,000/min" stops fitting a half-width tile |
 
 ## Accessibility

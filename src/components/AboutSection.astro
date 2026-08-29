@@ -31,24 +31,6 @@ const { t } = Astro.props;
         </ul>
       </div>
 
-      <div class="about__pair">
-        <div class="card">
-          <h3 class="card-kicker">{t.about.languagesKicker}</h3>
-          <ul class="langs">
-            {
-              t.languages.map((language) => (
-                <li>
-                  <strong>{language.name}</strong> <span>{language.level}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-        <div class="card">
-          <h3 class="card-kicker">{t.about.educationKicker}</h3>
-          <p class="education">{t.about.educationText}</p>
-        </div>
-      </div>
     </div>
   </div>
 </section>

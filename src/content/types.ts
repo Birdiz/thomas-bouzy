@@ -53,6 +53,12 @@ export interface MentoringEntry {
   text: string;
 }
 
+/**
+ * Not rendered. The About aside shows the mentoring card alone, as the canvas
+ * does — see docs/design-deltas.md entry 24. This survives it because
+ * BaseLayout feeds `knowsLanguage` on the Person schema from it, which is a
+ * different surface from the page and was not part of that decision.
+ */
 export interface LanguageSkill {
   name: string;
   level: string;
@@ -126,9 +132,6 @@ export interface ResumeContent {
     title: string;
     paragraphs: string[];
     mentoringKicker: string;
-    languagesKicker: string;
-    educationKicker: string;
-    educationText: string;
   };
   mentoring: MentoringEntry[];
   languages: LanguageSkill[];

@@ -320,9 +320,6 @@ export const en = {
       'Off-screen: the Grand Est countryside, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
     ],
     mentoringKicker: 'Mentoring & teaching — a thread through all of it',
-    languagesKicker: 'Languages',
-    educationKicker: 'Education',
-    educationText: 'DUT Computer Science — University of Reims Champagne-Ardenne, 2011–2013',
   },
 
   mentoring: [
