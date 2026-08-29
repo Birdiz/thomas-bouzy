@@ -147,9 +147,23 @@ function negotiateEncoding(header = '') {
   return null;
 }
 
-/** Weak, because the bytes on the wire vary with the negotiated encoding. */
-function etagFor(file) {
-  return `W/"${file.size.toString(16)}-${file.mtime.getTime().toString(16)}"`;
+/**
+ * Strong, and distinct per encoding.
+ *
+ * The obvious implementation is one weak ETag per file, since the bytes on the
+ * wire vary with the negotiated encoding. It is also useless behind a CDN:
+ * Cloudflare propagates strong validators only — it dropped the weak one
+ * outright, so no visitor ever revalidated and every repeat view refetched the
+ * whole document.
+ *
+ * Folding the encoding into the tag is the better answer anyway. HTTP wants a
+ * validator per *representation*, and `identity`, `gzip` and `br` are three
+ * representations of one file. Each now gets its own strong tag, which is both
+ * more correct than the weak one and something a CDN will carry.
+ */
+function etagFor(file, encoding) {
+  const suffix = encoding ? `-${encoding}` : '';
+  return `"${file.size.toString(16)}-${file.mtime.getTime().toString(16)}${suffix}"`;
 }
 
 function isFresh(req, etag, mtime) {
@@ -302,7 +316,13 @@ async function handle(req, res) {
   }
 
   const mime = TYPES[extname(file.path).toLowerCase()] ?? 'application/octet-stream';
-  const etag = etagFor(file);
+
+  // Negotiated before the validator is built, because the validator names the
+  // representation and the representation depends on the encoding.
+  const encoding = COMPRESSIBLE.test(mime)
+    ? negotiateEncoding(req.headers['accept-encoding'])
+    : null;
+  const etag = etagFor(file, encoding);
 
   const headers = {
     'content-type': mime,
@@ -318,9 +338,6 @@ async function handle(req, res) {
     return;
   }
 
-  const encoding = COMPRESSIBLE.test(mime)
-    ? negotiateEncoding(req.headers['accept-encoding'])
-    : null;
   if (encoding) headers['content-encoding'] = encoding;
   else headers['content-length'] = file.size;
 

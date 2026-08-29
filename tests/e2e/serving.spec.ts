@@ -163,8 +163,39 @@ test('revalidates with a 304 instead of resending the document', async ({ reques
   expect(byDate.status()).toBe(304);
 
   // A stale validator still gets the document.
-  const stale = await request.get('/', { headers: { 'If-None-Match': 'W/"stale"' } });
+  const stale = await request.get('/', { headers: { 'If-None-Match': '"stale"' } });
   expect(stale.status()).toBe(200);
+});
+
+test('gives each encoding its own strong validator', async ({ request }) => {
+  // Weak validators are correct HTTP for one-tag-per-file, and useless behind a
+  // CDN: Cloudflare drops them, so nothing revalidates and every repeat view
+  // refetches the document. One strong tag per representation is both more
+  // correct and something a CDN carries.
+  const tagFor = async (encoding: string) =>
+    (await request.get('/', { headers: { 'Accept-Encoding': encoding } })).headers().etag;
+
+  const [identity, gzip, brotli] = await Promise.all([
+    tagFor('identity'),
+    tagFor('gzip'),
+    tagFor('br'),
+  ]);
+
+  for (const [name, tag] of [
+    ['identity', identity],
+    ['gzip', gzip],
+    ['br', brotli],
+  ] as const) {
+    expect(tag, `${name} has no ETag`).toBeTruthy();
+    expect(tag, `${name} ETag is weak`).not.toMatch(/^W\//);
+  }
+  expect(new Set([identity, gzip, brotli]).size, 'encodings share one ETag').toBe(3);
+
+  // And each one still revalidates against its own representation.
+  const revalidated = await request.get('/', {
+    headers: { 'Accept-Encoding': 'br', 'If-None-Match': brotli ?? '' },
+  });
+  expect(revalidated.status()).toBe(304);
 });
 
 test('tells crawlers to stay away while the hostname is not the canonical one', async ({
