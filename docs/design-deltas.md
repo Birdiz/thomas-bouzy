@@ -114,14 +114,37 @@ re-litigated on the next pass.
    engagement, May 2022 – April 2026. Each project card now spells out the
    period of the engagement it belongs to, rather than a short year range, so
    the KTB card reads in the same register as the three beside it.
-4. **The PDFs are behind the page.** `public/assets/cv-thomas-bouzy-{en,fr}.pdf`
-   predate this rebase and carry none of its numbers — the pitch master's §10
-   item 1. A visitor who downloads the CV gets less than the page showed them.
-   Thomas is reworking both; they land as a drop-in replacement at the same two
-   paths, and `npm run assets:check` says so if one goes missing.
-5. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
+4. **The PDFs are behind the page — closed 2026-08-29.** Both reference CVs
+   were rebased and dropped in at the same two paths. They now carry the same
+   material as the page: the API redesign with its numbers, the cost ownership,
+   the observability result, and the rebuilt Kiss The Bride block.
+
+   They also settled the KTB context doc's one open question. §7 asked whether
+   the Mercure work reached production; the CVs state it as shipped —
+   "diffusion temps réel des classements et résultats de forces de vente" — so
+   it is a bullet on the page and on the project card, not a maybe.
+
+7. **The downloadable CV publishes what the page withholds.** The PDFs carry
+   `06 32 13 45 47 · … · Grandrupt, Grand Est (88)`. The page carries neither:
+   the number reaches it encoded, after a click and never in the source
+   ([ADR 5](adr/0005-phone-number-is-not-in-the-html.md)), and the location
+   stops at the region by Thomas's own call. One click on "Download CV" undoes
+   both.
+
+   Today this is contained — `SITE_INDEXABLE` is unset, so
+   `scripts/serve-dist.mjs` puts `x-robots-tag: noindex, nofollow` on *every*
+   response, PDFs included. It stops being contained the moment that flag goes
+   true for the real domain: the header disappears for everything, and search
+   engines do extract PDF text.
+
+   Not changed, because a CV handed to a recruiter is a different audience from
+   an indexed page, and that trade is Thomas's to make. Noted here so it is a
+   decision rather than a surprise. If he wants the page's posture to hold, the
+   fix is one line in the header block: keep `x-robots-tag` on `.pdf` responses
+   even when `INDEXABLE`.
+8. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
    and Université de Reims overlap in "earlier experience". Accurate — the
    teaching ran in parallel — and accepted as-is.
-6. **LinkedIn URL.** Verified by Thomas. Implemented as
+9. **LinkedIn URL.** Verified by Thomas. Implemented as
    `https://www.linkedin.com/in/thomas-bouzy`; `links.spec.ts` does not check
    it, because it is the one reference that leaves the origin.

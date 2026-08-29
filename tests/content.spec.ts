@@ -177,6 +177,18 @@ describe('content corrections applied against the design', () => {
     }
   });
 
+  it('claims no technology the reference CVs do not', () => {
+    // MongoDB rode the file for months on a misremembered Kiss The Bride
+    // stack — it was MariaDB, and MongoDB appears nowhere in twelve years.
+    // The attribution had grown a rule of its own before being traced back,
+    // which is exactly why an unverifiable line is worth a test and not care.
+    for (const content of [en, fr]) {
+      for (const [path, text] of walkStrings(content)) {
+        expect(text, `MongoDB claimed at ${path}`).not.toMatch(/MongoDB/);
+      }
+    }
+  });
+
   it('never inlines the phone number in content', () => {
     // It reaches the page encoded, through RevealPhone.astro. If it ever leaks
     // into a content string it would be served in the HTML source again.

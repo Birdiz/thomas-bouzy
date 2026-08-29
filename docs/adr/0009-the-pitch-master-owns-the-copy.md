@@ -37,6 +37,15 @@ Two sources, two scopes, no overlap:
 - **The pitch master owns the copy.** Everything in `src/content/en.ts` and
   `src/content/fr.ts`. Where the two disagree on words, the pitch master wins.
 
+The pitch master is a set, not a file: the two positioning documents, the
+subject briefs that extend them (the Kiss The Bride context of 2026-08-29 is
+the first), and the two reference CVs derived from all of it. The CVs are the
+tie-breaker, because they are what Thomas actually sends. That is how the KTB
+block's Mercure work moved from "to confirm" to a bullet, and how MongoDB —
+carried for months on a misremembered stack, and long enough to grow a rule of
+its own — left the file: the CVs say MariaDB, and MongoDB appears nowhere in
+twelve years. `tests/content.spec.ts` now fails if it comes back.
+
 `docs/design-deltas.md` therefore stops recording content differences against
 the canvas. It records structural, accessibility and privacy departures — the
 things the canvas still governs — plus one line naming this decision.

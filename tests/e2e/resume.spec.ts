@@ -86,7 +86,7 @@ test.describe('projects accordion', () => {
 });
 
 test.describe('earlier experience disclosure', () => {
-  test('reveals four earlier roles and swaps its label', async ({ page }) => {
+  test('reveals the earlier roles and swaps its label', async ({ page }) => {
     await gotoHome(page, '/');
     const earlier = page.locator('details.earlier');
     const cards = earlier.locator('.earlier__card');
@@ -95,7 +95,7 @@ test.describe('earlier experience disclosure', () => {
     await expect(earlier.getByText('Show earlier experience (2014–2018)')).toBeVisible();
 
     await earlier.locator('summary').click();
-    await expect(cards).toHaveCount(4);
+    await expect(cards).toHaveCount(5);
     await expect(cards.first()).toBeVisible();
     await expect(earlier.getByText('Hide earlier experience')).toBeVisible();
     await expect(earlier.getByText('Show earlier experience (2014–2018)')).not.toBeVisible();
