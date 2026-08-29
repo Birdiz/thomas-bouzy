@@ -6,6 +6,14 @@ file `Thomas Bouzy - Interactive Résumé.dc.html`.
 Every deviation below is deliberate. Anything not listed here matches the
 canvas.
 
+**Verified against the canvas on 2026-08-29.** `styles.css` is unchanged
+upstream — normalised for comments and whitespace it is character-for-character
+`src/styles/tokens.css`, down to an identical length, with one cosmetic quote
+style biome rewrote. The `.dc.html` is unchanged too: it still carries the May
+2026 availability, "Grandrupt, Grand Est (88)", "6+ years" remote and the
+original five projects. Nothing upstream needed porting; entries 23 to 25 below
+are gaps the first pass left unrecorded, found by this diff.
+
 **Scope, since 2026-08-29.** The canvas owns the design; the copy is owned by
 `Pitch_Master_Thomas_Bouzy_{EN,FR}.md` — see
 [ADR 9](adr/0009-the-pitch-master-owns-the-copy.md). This file therefore records
@@ -23,6 +31,9 @@ speaking.
 | 4 | Desktop-only, no breakpoints | Breakpoints at 1023 / 860 / 640 / 400 px | The canvas has none; below ~900px its fixed grids break |
 | 5 | `<image-slot>` placeholder | `<Image>` with responsive `widths`, labelled placeholder until a photo lands | The slot was empty in the canvas |
 | 6 | Hero is the 1160px container | Full-bleed section wrapping the container | Lets the decorative blob bleed as designed without widening the document |
+| 23 | No skills section, and no `#skills` in the nav | `SkillsSection.astro`, plus a fifth nav link | The canvas's data carries `skills`, `kickerSkills` and `skillsTitle`, and `renderVals` returns them — the markup that would render them is simply absent. Built as the data intends |
+| 24 | About's aside renders the mentoring card only | Mentoring, plus languages and education | Same shape: `langs`, `langKicker`, `eduKicker` and `eduText` all exist in the data and reach `renderVals`, and nothing renders them |
+| 25 | Stat figure at 23px | 34px | The canvas's four stats are words — "Event-driven", "Tech lead" — at a size that suits a phrase. They are figures here, and a figure carries the tile; below 640px it steps back to 28px, where "1,000/min" stops fitting a half-width tile |
 
 ## Accessibility
 
