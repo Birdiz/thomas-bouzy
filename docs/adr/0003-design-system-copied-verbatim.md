@@ -1,6 +1,6 @@
 # 3. The design system file is copied verbatim, corrections live elsewhere
 
-- Status: accepted
+- Status: superseded by [ADR 10](0010-the-site-owns-its-own-design.md), 2026-08-29
 - Date: 2026-08-28
 
 ## Context
@@ -36,3 +36,19 @@ no text are untouched.
 - Every deviation is greppable in one file, with its ratio in the comment.
 - If upstream fixes its own contrast, the override block shrinks rather than
   conflicting.
+
+## Postscript, 2026-08-29 — superseded
+
+`tokens.css` is no longer a copy. The palette was forked and re-derived; ADR 10
+has the measurements and the reasoning.
+
+The prediction in this file held, which is why it is worth keeping. It said the
+override block would shrink rather than conflict if upstream ever fixed its own
+contrast. Upstream never did — but the fix landed all the same, here rather than
+there, and the block shrank exactly as described: from a list of corrections
+fighting the ground to a note about where the accent is allowed to appear.
+
+The lesson generalises past this repo. The contrast patches were never the
+problem; they were the symptom of a ground five times too saturated for the
+accent sitting on it. Six months of dimming individual uses would not have found
+that. Measuring the ground against four reference sites did, in an afternoon.

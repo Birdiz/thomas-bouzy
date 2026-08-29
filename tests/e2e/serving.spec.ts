@@ -78,7 +78,7 @@ test('caches fingerprinted assets hard and HTML not at all', async ({ page, requ
   if (hashed?.startsWith('/_astro/')) {
     expect((await request.get(hashed)).headers()['cache-control']).toContain('immutable');
   }
-  const font = (await request.get('/fonts/caprasimo-latin-400-normal.woff2')).headers();
+  const font = (await request.get('/fonts/figtree-latin-700-normal.woff2')).headers();
   expect(font['cache-control']).toContain('immutable');
 });
 

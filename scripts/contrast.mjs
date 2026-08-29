@@ -2,26 +2,26 @@
 /**
  * WCAG 2.1 contrast calculator for the Organic palette.
  *
- * The design system's accent-on-cream pairings sit around 2.3–3.0:1, well under
- * the 4.5:1 AA threshold for body text. This works out which token to swap in
- * so the fix is a measurement, not a guess. `--audit` prints the pairs the site
- * actually uses.
+ * Organic's accent-on-cream pairings sat around 2.3–3.0:1, well under the 4.5:1
+ * AA threshold for body text, and every text use had to step down a rung to
+ * compensate. Draining the ground (docs/adr/0010) removed the problem at the
+ * source rather than patching each use. This is what proves it: `--audit`
+ * prints the pairs the site actually ships.
  */
 const TOKENS = {
-  bg: '#f5ead8',
-  surface: '#ebddc5',
-  text: '#201e1d',
+  bg: '#f6f5f3',
+  surface: '#eeebe7',
+  sunken: '#e5e1dc',
+  divider: '#dcd7d1',
+  text: '#211c18',
+  muted: '#686055',
   accent: '#c67139',
   'accent-400': '#f6a06b',
   'accent-600': '#b2622d',
   'accent-700': '#8c491a',
   'accent-800': '#643312',
   'accent-900': '#402310',
-  'accent-2-100': '#f0fae1',
-  'accent-2-700': '#56633f',
-  'accent-2-800': '#3d472b',
-  'accent-2-900': '#272e1b',
-  'neutral-100': '#f9f4ed',
+  'neutral-100': '#faf9f8',
   'neutral-800': '#474238',
   'neutral-900': '#2e2b25',
 };
@@ -77,31 +77,14 @@ if (process.argv.includes('--audit')) {
     console.log(`  bg on ${fill.padEnd(11)} ${fmt(r)}  ${verdict(r)}`);
   }
 
-  console.log('\n— accent-2 as text (project facet labels) —');
-  for (const fg of ['accent-2-700', 'accent-2-800', 'accent-2-900']) {
-    for (const [bgName, bg] of [
-      ['bg', T.bg],
-      ['surface', T.surface],
-      ['accent-2-100', T['accent-2-100']],
-    ]) {
-      const r = ratio(T[fg], bg);
-      console.log(`  ${fg.padEnd(13)} on ${bgName.padEnd(13)} ${fmt(r)}  ${verdict(r)}`);
-    }
-  }
-
-  console.log('\n— muted body text: minimum opacity of `text` to clear 4.5:1 —');
-  for (const [bgName, bg] of [
+  console.log('\n— muted text, now a token rather than an opacity —');
+  for (const [name, bg] of [
     ['bg', T.bg],
     ['surface', T.surface],
-    ['accent-2-100', T['accent-2-100']],
+    ['sunken', T.sunken],
   ]) {
-    for (let a = 0.5; a <= 1.001; a += 0.05) {
-      const r = ratio(blend(T.text, bg, a), bg);
-      if (r >= 4.5) {
-        console.log(`  on ${bgName.padEnd(13)} needs opacity >= ${a.toFixed(2)}  (${fmt(r)})`);
-        break;
-      }
-    }
+    const r = ratio(T.muted, bg);
+    console.log(`  muted on ${name.padEnd(8)} ${fmt(r)}  ${verdict(r)}`);
   }
 
   // The sticky header is `--color-bg` at 86% over a blur, so its effective

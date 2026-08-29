@@ -11,21 +11,26 @@ import { expect, test } from './fixtures.ts';
  *
  * Sizes are uncompressed; the wire is roughly a quarter of this after brotli.
  *
- * Re-measured on 2026-08-29, after the content was rebased on the pitch master
- * (two more project cards, four more Socios bullets, two more stat tiles):
- *   document  35.7 kB (EN) / 37.6 kB (FR)      css 25.3 kB
+ * Re-measured on 2026-08-29, after the repositioning (docs/adr/0010): two whole
+ * new sections — the problem the site opens on, and the four positions with
+ * their costs — plus the numbered eyebrows on every section.
+ *   document  42.6 kB (EN) / 45.3 kB (FR)      css 27.4 kB
  *   external js 0 (nothing is external)        inline js 364 B
- *   fonts 43.6 kB (four faces)                 images 13.4 kB      6 requests
- * On the wire that FR document is 8.9 kB brotli — the growth is prose, and
- * prose compresses. The document limit moved 34 kB → 42 kB to match, keeping
- * the same ~4 kB of headroom the original left: about one more project card.
+ *   fonts 43.9 kB (Figtree 400/700 + JetBrains Mono)  images 13.4 kB  7 requests
+ * On the wire that FR document is 10.7 kB brotli — the growth is prose, and
+ * prose compresses. The document limit moved 42 kB → 50 kB to match, keeping
+ * the same ~4 kB of headroom every previous revision left.
  *
- * The limit is raised only for content the résumé actually gained. It is not a
+ * Fonts held steady despite the swap: Caprasimo left, JetBrains Mono arrived,
+ * and the total barely moved because a mono face used only for eyebrows and
+ * numbers is not a display face used for every heading.
+ *
+ * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.
  */
 const BUDGET = {
-  documentBytes: 42_000,
+  documentBytes: 50_000,
   cssBytes: 34_000,
   externalJsBytes: 4_000,
   inlineJsBytes: 2_000,

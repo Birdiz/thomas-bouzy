@@ -3,7 +3,7 @@
  * Renders public/og.png (1200×630) and public/apple-touch-icon.png.
  *
  * The card is drawn in a real browser rather than composited by sharp, because
- * it is typeset in Caprasimo — sharp's SVG text goes through fontconfig and
+ * it is typeset in Figtree — sharp's SVG text goes through fontconfig and
  * would not find the self-hosted face. The output is committed, so `npm run
  * build` never needs a browser; re-run `npm run og` after changing the copy or
  * the palette.
@@ -19,25 +19,26 @@ const asDataUri = (file) =>
   `data:font/woff2;base64,${readFileSync(join(root, 'public/fonts', file)).toString('base64')}`;
 
 const CARD = `<!doctype html><meta charset="utf-8"><style>
-  @font-face { font-family: Caprasimo; src: url('${asDataUri('caprasimo-latin-400-normal.woff2')}') format('woff2'); }
   @font-face { font-family: Figtree; src: url('${asDataUri('figtree-latin-400-normal.woff2')}') format('woff2'); }
+  @font-face { font-family: Figtree; font-weight: 700; src: url('${asDataUri('figtree-latin-700-normal.woff2')}') format('woff2'); }
+  @font-face { font-family: 'JetBrains Mono'; src: url('${asDataUri('jetbrains-mono-latin-400-normal.woff2')}') format('woff2'); }
   * { box-sizing: border-box; margin: 0; }
   body {
-    width: 1200px; height: 630px; background: #f5ead8; color: #201e1d;
+    width: 1200px; height: 630px; background: #f6f5f3; color: #211c18;
     font-family: Figtree, sans-serif; position: relative; overflow: hidden;
     padding: 84px 92px; display: flex; flex-direction: column; justify-content: center;
   }
   .blob { position: absolute; border-radius: 999px; }
-  .blob--olive { width: 420px; height: 420px; background: #e1eecc; right: -110px; top: -90px; }
-  .blob--terracotta { width: 260px; height: 260px; background: #ffe1d0; right: 120px; bottom: -120px; }
+  .blob--olive { width: 420px; height: 420px; background: #eeebe7; right: -110px; top: -90px; }
+  .blob--terracotta { width: 260px; height: 260px; background: #e5e1dc; right: 120px; bottom: -120px; }
   .stack { position: relative; }
   .pill {
     display: inline-flex; align-items: center; gap: 12px; padding: 10px 24px 10px 18px;
-    border-radius: 999px; background: #f0fae1; color: #3d472b; font-size: 22px; margin-bottom: 34px;
+    border-radius: 999px; background: #e5e1dc; color: #211c18; font-family: 'JetBrains Mono', monospace; font-size: 19px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 34px;
   }
-  .dot { width: 12px; height: 12px; border-radius: 999px; background: #728157; }
-  h1 { font-family: Caprasimo, serif; font-size: 104px; line-height: .96; letter-spacing: -.02em; }
-  .role { font-family: Caprasimo, serif; font-size: 34px; color: #8c491a; margin-top: 24px; max-width: 30ch; line-height: 1.25; }
+  .dot { width: 12px; height: 12px; border-radius: 999px; background: #8c491a; }
+  h1 { font-family: Figtree, sans-serif; font-weight: 700; font-size: 104px; line-height: .96; letter-spacing: -.035em; }
+  .role { font-family: Figtree, sans-serif; font-weight: 700; font-size: 34px; color: #211c18; margin-top: 24px; max-width: 30ch; line-height: 1.25; }
   .foot { display: flex; gap: 14px; margin-top: 44px; }
   .tag { font-size: 20px; padding: 8px 20px; border-radius: 999px; background: #f9f4ed; color: #474238; }
 </style>

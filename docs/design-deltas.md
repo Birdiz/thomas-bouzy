@@ -3,8 +3,17 @@
 Source: Claude Design project `192e8aa3-4ac8-43c2-8ff3-305baaf30e70`,
 file `Thomas Bouzy - Interactive Résumé.dc.html`.
 
-Every deviation below is deliberate. Anything not listed here matches the
-canvas.
+> **Closed 2026-08-29.** The site forked its own palette, type and running order
+> — see [ADR 10](adr/0010-the-site-owns-its-own-design.md). The canvas no longer
+> leads on design, so this file stopped being a running comparison and became a
+> record. It is kept rather than deleted because the reasoning behind the
+> accessibility and privacy entries outlived the comparison that produced it,
+> and because two of them were fixed at the source by the fork rather than
+> abandoned: entry 8's accent now measures 6.25:1 instead of 5.72, and entry 22's
+> language switch clears AA at its original opacity.
+
+Every deviation below was deliberate. Anything not listed here matched the
+canvas as of that date.
 
 **Verified against the canvas on 2026-08-29, twice.** `styles.css` is unchanged
 upstream — normalised for comments and whitespace it is character-for-character

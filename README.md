@@ -3,14 +3,18 @@
 Bilingual static résumé site. English at `/`, French at `/fr/`.
 Built with Astro, containerised, deployed to Railway.
 
-Two sources, two scopes. The **design** comes from the Claude Design canvas
-`Thomas Bouzy - Interactive Résumé.dc.html`; the **copy** comes from
-`Pitch_Master_Thomas_Bouzy_{EN,FR}.md`, and wins wherever the two disagree on
-words — [ADR 9](docs/adr/0009-the-pitch-master-owns-the-copy.md).
+The page opens on the problem it solves and closes on the person who solves it —
+which is the opposite of a CV, and deliberate:
+[ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
+behind both the running order and the palette.
 
-Every deliberate departure from the design is listed in
-[docs/design-deltas.md](docs/design-deltas.md); the structural decisions are in
-[docs/adr](docs/adr).
+The site owns its own design. It began as an implementation of a Claude Design
+canvas, and the record of where it departed from it is in
+[docs/design-deltas.md](docs/design-deltas.md); the canvas no longer leads.
+Career facts still come from `Pitch_Master_Thomas_Bouzy_{EN,FR}.md` and the two
+reference CVs — [ADR 9](docs/adr/0009-the-pitch-master-owns-the-copy.md).
+
+Structural decisions are in [docs/adr](docs/adr).
 
 New material therefore reaches the site by revising the pitch master first, then
 rebasing `src/content/{en,fr}.ts` on it. `npm run test` fails if that rebase

@@ -18,8 +18,8 @@ export const en = {
 
   nav: {
     work: 'Work',
+    approach: 'Approach',
     experience: 'Experience',
-    skills: 'Skills',
     about: 'About',
     contact: 'Get in touch',
   },
@@ -48,6 +48,66 @@ export const en = {
     { n: '20 → 5', label: 'reported bugs a month, after instrumenting the backend' },
     { n: '17s → 3s', label: 'Time To Interactive, after the trader API was redesigned' },
     { n: '−67%', label: 'annual data-provider cost (€9,000 → €3,000), same data quality' },
+  ],
+
+  problem: {
+    kicker: 'The problem',
+    title: 'The happy path is never the interesting part.',
+    paragraphs: [
+      'Most systems work on the day they ship. What is worth paying for is what they do the night a consumer replays a message twice, a custodian API times out halfway through a transfer, or twenty thousand people arrive within four minutes.',
+      'On a money flow that is not a performance problem. It is an accounting problem, a regulatory problem and a trust problem — and by the time it surfaces, the architecture that allowed it is two years old and load-bearing.',
+      'The decisions that prevent it get made early and cheaply, before the expensive implementation starts: where the domain boundaries fall, what has to be idempotent, what earns an event log and what does not, and what you instrument before you optimise anything.',
+    ],
+  },
+
+  failureModes: [
+    {
+      label: 'Double execution',
+      text: 'A message arrives twice and the money moves twice. Nobody notices until reconciliation, and by then it is a support ticket with a regulator attached.',
+    },
+    {
+      label: 'A balance nobody can explain',
+      text: 'State-based models answer what the balance is, never how it got there — which is the only question finance, support and auditors actually ask.',
+    },
+    {
+      label: 'The migration that never happens',
+      text: 'A rewrite that needs a stop window on a system that cannot stop is a rewrite that stays on the roadmap for three years.',
+    },
+    {
+      label: 'Defects found by users',
+      text: 'A bug you learn about from a ticket was detectable hours earlier. What is not instrumented is not reliable, it is only untested in production.',
+    },
+  ],
+
+  position: {
+    kicker: 'Approach',
+    title: 'Four things I will argue for, and what each one costs.',
+    intro:
+      'At this level an answer that exposes no cost sounds false. So every recommendation below comes with the thing it sacrifices — including the ones I would still make again.',
+    costLabel: 'The cost',
+  },
+
+  principles: [
+    {
+      title: 'Architecture is written down.',
+      text: 'RFCs and ADRs rather than verbal consensus. A decision should outlive the people who made it and the Slack thread it came from, and a newcomer should understand why before wanting to change it.',
+      cost: 'Slower at the moment of deciding. You buy that back the second time the same debate does not get replayed.',
+    },
+    {
+      title: 'Incremental migration over rewrite.',
+      text: 'Three major Symfony migrations on a continuously running production system, none of them a big bang. The same applies to an API contract: you reshape it underneath its consumers, you do not replace it.',
+      cost: 'A coexistence period where two models live side by side — and the discipline to keep that from becoming the permanent state.',
+    },
+    {
+      title: 'Idempotency before cleverness.',
+      text: 'On a money flow the question is not whether it is elegant, it is what happens when the message arrives twice. I never say exactly-once without qualifying it: outbox is at-least-once on publication, plus idempotent consumers, which is exactly-once from the business point of view.',
+      cost: 'Deduplication keys, stored state and reconciliation to maintain — for a case that, done right, you never see happen.',
+    },
+    {
+      title: 'What is not instrumented is not reliable.',
+      text: 'Observability before optimisation. You do not argue about performance you have not measured, and you do not fix a defect you discovered through a user ticket. That is what took reported bugs from around twenty a month to five.',
+      cost: 'Delivery time spent on instrumentation, and the harder decision of what to observe — one alert too many kills every alert.',
+    },
   ],
 
   work: {

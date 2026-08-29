@@ -43,6 +43,19 @@ export interface EarlierRole {
   text: string;
 }
 
+/** One way the interesting kind of system goes wrong. */
+export interface FailureMode {
+  label: string;
+  text: string;
+}
+
+/** A position, and what holding it costs. The cost is the half that convinces. */
+export interface Principle {
+  title: string;
+  text: string;
+  cost: string;
+}
+
 export interface SkillGroup {
   name: string;
   items: string[];
@@ -83,8 +96,8 @@ export interface ResumeContent {
 
   nav: {
     work: string;
+    approach: string;
     experience: string;
-    skills: string;
     about: string;
     contact: string;
   };
@@ -101,6 +114,23 @@ export interface ResumeContent {
   };
 
   stats: Stat[];
+
+  /** Opens the page on what breaks, before anything about who fixes it. */
+  problem: {
+    kicker: string;
+    title: string;
+    paragraphs: string[];
+  };
+  failureModes: FailureMode[];
+
+  /** The section a résumé never has: an argued opinion, with its price. */
+  position: {
+    kicker: string;
+    title: string;
+    intro: string;
+    costLabel: string;
+  };
+  principles: Principle[];
 
   work: {
     kicker: string;

@@ -18,8 +18,8 @@ export const fr = {
 
   nav: {
     work: 'Projets',
+    approach: 'Ma position',
     experience: 'Parcours',
-    skills: 'Compétences',
     about: 'À propos',
     contact: 'Me contacter',
   },
@@ -48,6 +48,66 @@ export const fr = {
     { n: '20 → 5', label: "bugs remontés par mois, après déploiement de l'observabilité" },
     { n: '17 s → 3 s', label: "Time To Interactive, après refonte de l'API traders" },
     { n: '−67 %', label: 'de coût annuel fournisseur (9 000 € → 3 000 €), à qualité égale' },
+  ],
+
+  problem: {
+    kicker: 'Le problème',
+    title: "Le chemin nominal n'est jamais la partie intéressante.",
+    paragraphs: [
+      "La plupart des systèmes fonctionnent le jour de leur mise en ligne. Ce qui mérite d'être payé, c'est ce qu'ils font la nuit où un consumer rejoue deux fois le même message, où l'API d'un dépositaire part en timeout au milieu d'un transfert, ou bien où vingt mille personnes arrivent en quatre minutes.",
+      "Sur un flux d'argent, ce n'est pas un problème de performance. C'est un problème comptable, réglementaire et de confiance — et quand il se manifeste, l'architecture qui l'a permis a deux ans et tout repose dessus.",
+      "Les décisions qui l'évitent se prennent tôt et pour pas cher, avant que l'implémentation coûteuse ne commence : où tombent les frontières de domaine, ce qui doit être idempotent, ce qui mérite un journal d'événements et ce qui ne le mérite pas, et ce qu'on instrumente avant d'optimiser quoi que ce soit.",
+    ],
+  },
+
+  failureModes: [
+    {
+      label: 'La double exécution',
+      text: "Un message arrive deux fois et l'argent part deux fois. Personne ne le voit avant la réconciliation, et c'est alors un ticket de support avec un régulateur au bout.",
+    },
+    {
+      label: 'Un solde que personne ne sait expliquer',
+      text: "Un modèle basé état dit ce qu'est le solde, jamais comment il est arrivé là — la seule question que posent réellement la finance, le support et l'audit.",
+    },
+    {
+      label: 'La migration qui ne se fait jamais',
+      text: "Une réécriture qui exige une fenêtre d'arrêt sur un système qui ne s'arrête pas, c'est une réécriture qui reste trois ans dans la roadmap.",
+    },
+    {
+      label: 'Les défauts trouvés par les utilisateurs',
+      text: "Un bug qu'on découvre par un ticket était détectable des heures plus tôt. Ce qui n'est pas instrumenté n'est pas fiable, c'est juste non testé en production.",
+    },
+  ],
+
+  position: {
+    kicker: 'Ma position',
+    title: 'Quatre choses que je défends, et ce que chacune coûte.',
+    intro:
+      "À ce niveau, une réponse qui n'expose aucun coût sonne faux. Chaque recommandation ci-dessous vient donc avec ce qu'elle sacrifie — y compris celles que je referais sans hésiter.",
+    costLabel: 'Le coût assumé',
+  },
+
+  principles: [
+    {
+      title: "L'architecture s'écrit.",
+      text: "RFC et ADR plutôt que consensus oral. Une décision doit survivre aux gens qui l'ont prise et au fil Slack d'où elle vient, et un nouvel arrivant doit comprendre pourquoi avant de vouloir changer.",
+      cost: "Plus lent au moment de décider. C'est remboursé la deuxième fois qu'on ne rejoue pas le même débat.",
+    },
+    {
+      title: 'Migration incrémentale plutôt que réécriture.',
+      text: "Trois migrations majeures de Symfony sur un système en production continue, aucune en big bang. Idem pour un contrat d'API : on le refait sous les pieds de ses consommateurs, on ne le remplace pas.",
+      cost: 'Une période de cohabitation où deux modèles coexistent — et la discipline de ne pas la laisser devenir un état permanent.',
+    },
+    {
+      title: "L'idempotence avant l'élégance.",
+      text: "Sur un flux d'argent, la question n'est pas de savoir si c'est beau, mais ce qui se passe quand le message arrive deux fois. Je ne dis jamais « exactly-once » sans nuance : l'outbox, c'est at-least-once à la publication, plus des consumers idempotents — soit exactly-once du point de vue métier.",
+      cost: "Des clés de déduplication, de l'état stocké et de la réconciliation à maintenir, pour un cas que, bien fait, on ne voit jamais se produire.",
+    },
+    {
+      title: "Ce qui n'est pas instrumenté n'est pas fiable.",
+      text: "Observabilité avant optimisation. On ne discute pas d'une performance qu'on n'a pas mesurée, et on ne corrige pas un défaut découvert par un ticket utilisateur. C'est ce qui a fait passer les bugs remontés d'une vingtaine par mois à cinq.",
+      cost: "Du temps de delivery investi dans l'instrumentation, et le choix plus difficile de quoi observer — une alerte de trop tue toutes les alertes.",
+    },
   ],
 
   work: {

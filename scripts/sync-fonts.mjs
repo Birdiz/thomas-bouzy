@@ -4,7 +4,7 @@ import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
 /**
  * Copies the woff2 faces we actually use from @fontsource into public/fonts/.
  *
- * The design system's styles.css pulls Caprasimo + Figtree straight from
+ * The design system's styles.css pulled Caprasimo + Figtree straight from
  * fonts.googleapis.com. Self-hosting removes a render-blocking third-party
  * request on the critical path and stops every visitor's browser from calling
  * Google. @fontsource stays the dependency that versions the files; this script
@@ -22,12 +22,12 @@ const dest = join(root, 'public', 'fonts');
 
 /** Only the faces referenced by src/styles/fonts.css. */
 const FACES = [
-  '@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2',
-  '@fontsource/caprasimo/files/caprasimo-latin-ext-400-normal.woff2',
   '@fontsource/figtree/files/figtree-latin-400-normal.woff2',
   '@fontsource/figtree/files/figtree-latin-ext-400-normal.woff2',
   '@fontsource/figtree/files/figtree-latin-700-normal.woff2',
   '@fontsource/figtree/files/figtree-latin-ext-700-normal.woff2',
+  '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2',
+  '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-ext-400-normal.woff2',
 ];
 
 /**

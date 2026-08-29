@@ -1,0 +1,33 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+
+interface Props {
+  t: ResumeContent;
+  num: string;
+}
+
+const { t, num } = Astro.props;
+---
+
+<section id="approach" class="position">
+  <div class="container">
+    <p class="kicker"><span class="kicker__num">{num}</span>{t.position.kicker}</p>
+    <h2 class="section-title">{t.position.title}</h2>
+    <p class="position__intro">{t.position.intro}</p>
+
+    <ul class="position__grid">
+      {
+        t.principles.map((principle) => (
+          <li class="position__card">
+            <h3 class="position__card-title">{principle.title}</h3>
+            <p class="position__card-text">{principle.text}</p>
+            <p class="position__cost">
+              <span class="position__cost-label">{t.position.costLabel}</span>
+              {principle.cost}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

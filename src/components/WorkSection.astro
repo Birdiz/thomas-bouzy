@@ -3,13 +3,14 @@ import type { ResumeContent } from '../content/index.ts';
 
 interface Props {
   t: ResumeContent;
+  num: string;
 }
 
-const { t } = Astro.props;
+const { t, num } = Astro.props;
 ---
 
 <section id="work" class="work container">
-  <p class="kicker">{t.work.kicker}</p>
+  <p class="kicker"><span class="kicker__num">{num}</span>{t.work.kicker}</p>
   <h2 class="section-title">{t.work.title}</h2>
   <p class="work__intro">{t.work.intro}</p>
 

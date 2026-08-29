@@ -1,6 +1,6 @@
 # 9. The design canvas owns the design; the pitch master owns the copy
 
-- Status: accepted
+- Status: amended by [ADR 10](0010-the-site-owns-its-own-design.md), 2026-08-29
 - Date: 2026-08-29
 
 ## Context
@@ -72,3 +72,20 @@ things the canvas still governs — plus one line naming this decision.
 - The canvas and the site will drift apart in wording. That is intended, and is
   why this file exists: without it, the next person to diff the two would read
   the drift as rot and "fix" it backwards.
+
+## Postscript, 2026-08-29 — half of this is gone
+
+The split this file describes had two halves. The first — "the canvas owns the
+design" — is over: ADR 10 forked the palette and the type, and the canvas leads
+nothing any more.
+
+The second half stands, with one correction. The pitch master owns the career
+facts, and it is still the tie-breaker on what Thomas has actually done. But
+this file also said "the site is downstream, not a second original", and that
+was wrong the day it was written. Thomas means to build freelance offers here.
+A site carrying a commercial offer has sections its author's CV will never have,
+a different audience, and every right to its own contact address — which is
+exactly what happened: the page moved to birdiz@proton.me while the CVs kept
+theirs, and that is not a defect to reconcile.
+
+So: the pitch master owns the past, the site owns what it sells.

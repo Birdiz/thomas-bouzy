@@ -158,11 +158,11 @@ test.describe('navigation', () => {
     await gotoHome(page, '/');
     await page
       .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'Skills' })
+      .getByRole('link', { name: 'Approach' })
       .click();
-    await expect(page).toHaveURL(/#skills$/);
+    await expect(page).toHaveURL(/#approach$/);
 
-    const box = await page.locator('#skills').boundingBox();
+    const box = await page.locator('#approach').boundingBox();
     const headerHeight = (await page.locator('.site-header').boundingBox())?.height ?? 0;
     expect(box).not.toBeNull();
     // The heading must land below the sticky header, never behind it.

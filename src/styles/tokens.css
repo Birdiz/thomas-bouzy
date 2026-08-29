@@ -1,32 +1,45 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Organic — design-system tokens and component classes.
+   The palette, forked from Organic on 2026-08-29 — see docs/adr/0010.
 
-   Copied verbatim from the Claude Design project
-   (_ds/organic-d862b25d-20aa-4f17-9d0b-d2ea1e68b627/styles.css) so that a
-   retune upstream can be diffed against this file. See docs/adr/0003.
+   Until now this file was a byte-for-byte copy of the Claude Design system, so
+   an upstream retune could be diffed straight against it (ADR 3). That is over:
+   the site owns its own look now, and Organic's cream is the reason why.
 
-   ONE deliberate change: the `@import url('https://fonts.googleapis.com/...')`
-   was removed. The faces are self-hosted via @fontsource — see
-   src/styles/fonts.css and docs/design-deltas.md.
-   Page-level additions (responsive, reduced motion) live in app.css, never here.
+   Measured, not judged. Organic's ground (#f5ead8) sits at 59% saturation.
+   thoughtbot's is 12%, hexquarter's hairline 7%. Five times too hot is what the
+   eye reads as "not quite professional" — and it is also why --color-accent had
+   to be dimmed a step for every piece of text it touched.
+
+   The fix inverts the arrangement: the ground loses its saturation and keeps its
+   hue (37°, the same amber), while the accent keeps every bit of its saturation
+   and is spent two or three times a page instead of everywhere. Contrast then
+   stops being something to patch — the whole ramp clears AA on every ground,
+   which `node scripts/contrast.mjs --audit` prints.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --color-bg: #f5ead8;
-  --color-surface: #ebddc5;
-  --color-text: #201e1d;
+  /* Ground — hue 37°, saturation 13–17%. Was 49–59%. */
+  --color-bg: #f6f5f3;
+  --color-surface: #eeebe7;
+  --color-sunken: #e5e1dc;
+  --color-divider: #dcd7d1;
+
+  /* Ink — warm near-black, never #000. */
+  --color-text: #211c18;
+  --color-muted: #686055;
+
+  /* Accent, unchanged and deliberately rare. --color-accent is decorative only;
+     anything carrying text uses --color-accent-700 (6.25:1 on bg, 5.73 on
+     surface — both comfortably past AA, which the old ground could not manage). */
   --color-accent: #c67139;
   --color-accent-2: #7a8a5e;
-  --color-divider: color-mix(in srgb, #201e1d 16%, transparent);
 
-  /* Tonal ramps — generated in OKLCH on one shared lightness scale, so the
-     same step of any role matches the others in visual value. */
-  --color-neutral-100: #f9f4ed;
-  --color-neutral-200: #eee7db;
-  --color-neutral-300: #dcd3c4;
-  --color-neutral-400: #c0b6a5;
-  --color-neutral-500: #a19786;
-  --color-neutral-600: #82796a;
+  --color-neutral-100: #faf9f8;
+  --color-neutral-200: #eeebe7;
+  --color-neutral-300: #dcd7d1;
+  --color-neutral-400: #bdb5ab;
+  --color-neutral-500: #9a9188;
+  --color-neutral-600: #7c736a;
   --color-neutral-700: #645c50;
   --color-neutral-800: #474238;
   --color-neutral-900: #2e2b25;
@@ -51,9 +64,10 @@
   --color-accent-2-800: #3d472b;
   --color-accent-2-900: #272e1b;
 
-  --font-heading: "Caprasimo", system-ui, sans-serif;
-  --font-heading-weight: 400;
+  --font-heading: "Figtree", system-ui, sans-serif;
+  --font-heading-weight: 700;
   --font-body: "Figtree", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   --space-1: 4.4px;
   --space-2: 8.8px;
@@ -68,9 +82,9 @@
 
   /* Elevation — derived from the ground: soft ink-tinted shadows on a
      light theme, a hairline edge + ambient darkness on a dark one. */
-  --shadow-sm: 0 1px 2px color-mix(in srgb, #2e2b25 14%, transparent);
-  --shadow-md: 0 3px 10px color-mix(in srgb, #2e2b25 16%, transparent);
-  --shadow-lg: 0 12px 32px color-mix(in srgb, #2e2b25 22%, transparent);
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #211c18 8%, transparent);
+  --shadow-md: 0 2px 8px color-mix(in srgb, #211c18 10%, transparent);
+  --shadow-lg: 0 10px 28px color-mix(in srgb, #211c18 14%, transparent);
 }
 
 body {

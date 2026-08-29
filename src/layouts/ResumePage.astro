@@ -3,6 +3,8 @@ import AboutSection from '../components/AboutSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import ExperienceSection from '../components/ExperienceSection.astro';
 import Hero from '../components/Hero.astro';
+import PositionSection from '../components/PositionSection.astro';
+import ProblemSection from '../components/ProblemSection.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SkillsSection from '../components/SkillsSection.astro';
 import StatsGrid from '../components/StatsGrid.astro';
@@ -24,10 +26,12 @@ const t = RESUME[locale];
   <main id="main">
     <Hero locale={locale} t={t} />
     <StatsGrid t={t} />
-    <WorkSection t={t} />
-    <ExperienceSection t={t} />
-    <SkillsSection t={t} />
-    <AboutSection t={t} />
+    <ProblemSection t={t} num="01" />
+    <WorkSection t={t} num="02" />
+    <PositionSection t={t} num="03" />
+    <ExperienceSection t={t} num="04" />
+    <SkillsSection t={t} num="05" />
+    <AboutSection t={t} num="06" />
     <ContactSection locale={locale} t={t} />
   </main>
 </BaseLayout>

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Interactive r\u00e9sum\u00e9 \u2014 Thomas Bouzy",
+  "description": "Interactive résumé — Thomas Bouzy",
   "engines": {
     "node": ">=22.18.0"
   },
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "@fontsource/caprasimo": "^5.2.10",
     "@fontsource/figtree": "^5.2.11",
+    "@fontsource/jetbrains-mono": "5.2.6",
     "astro": "^7.2.9",
     "sharp": "^0.35.4"
   },

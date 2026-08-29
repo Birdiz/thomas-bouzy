@@ -1,0 +1,37 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+
+interface Props {
+  t: ResumeContent;
+  num: string;
+}
+
+const { t, num } = Astro.props;
+---
+
+<section id="problem" class="problem container">
+  <p class="kicker"><span class="kicker__num">{num}</span>{t.problem.kicker}</p>
+  <h2 class="section-title problem__title">{t.problem.title}</h2>
+
+  <div class="problem__grid">
+    <div class="problem__prose">
+      {t.problem.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+
+    <ul class="problem__modes">
+      {
+        t.failureModes.map((mode, i) => (
+          <li class="problem__mode">
+            <span class="problem__mode-num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <h3 class="problem__mode-label">{mode.label}</h3>
+              <p class="problem__mode-text">{mode.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
