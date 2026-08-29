@@ -4,7 +4,7 @@ export const fr = {
   meta: {
     title: 'Thomas Bouzy — Ingénieur logiciel senior, architecture backend',
     description:
-      "Douze ans à concevoir des applications web complexes et hautement disponibles. Architecture backend event-driven, Event Sourcing et leadership technique sur une plateforme d'1,5 M d'utilisateurs. Disponible immédiatement.",
+      "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans d'architecture backend — wallets event-sourcés à plus de 1 000 transactions par minute, observabilité qui a ramené les bugs de 20 à 5 par mois, et des opérations DeFi en production sur fonds réels.",
     ogImageAlt: 'Thomas Bouzy — Ingénieur logiciel senior, architecture & leadership technique',
   },
 
@@ -25,13 +25,18 @@ export const fr = {
   },
 
   hero: {
-    availability: 'Disponible immédiatement — postes et freelance',
+    availability: 'Freelance immédiatement · CDI à partir de septembre 2026',
     role: 'Ingénieur logiciel senior — architecture & leadership technique',
     blurb:
-      "Douze ans à concevoir des applications web complexes et hautement disponibles. Architecture backend, systèmes event-driven, et la coordination d'équipe qui rend une plateforme d'1,5 M d'utilisateurs agréablement ennuyeuse.",
+      "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans de backend et d'architecture — flux event-driven, Event Sourcing sur les wallets, et des opérations on-chain où une erreur coûte de l'argent réel.",
     yearsCount: '12',
     yearsLabel: 'ans',
-    badges: ['PHP · Symfony', 'DDD · Event Sourcing', 'AWS · Kubernetes'],
+    badges: [
+      'PHP · Symfony',
+      'Event Sourcing · DDD',
+      'Solana · Fireblocks',
+      'OpenTelemetry · Datadog',
+    ],
     ctaWork: 'Voir les projets',
     ctaPdf: 'Télécharger le CV',
   },
@@ -40,12 +45,14 @@ export const fr = {
     { n: '1,5 M+', label: 'utilisateurs actifs sur la plateforme architecturée' },
     { n: '1 000/min', label: 'transactions financières en event sourcing' },
     { n: '30k/min', label: 'événements de gamification en pic de charge' },
-    { n: '6', label: 'développeurs encadrés sur deux squads produit' },
+    { n: '20 → 5', label: "bugs remontés par mois, après déploiement de l'observabilité" },
+    { n: '17 s → 3 s', label: "Time To Interactive, après refonte de l'API traders" },
+    { n: '−67 %', label: 'de coût annuel fournisseur (9 000 € → 3 000 €), à qualité égale' },
   ],
 
   work: {
     kicker: 'Projets sélectionnés',
-    title: 'Cinq sujets à ouvrir',
+    title: 'Six sujets à ouvrir',
     intro:
       "Chacun est un système réel en production. Ouvrez une carte pour le contexte, l'approche et ce que ça a changé.",
     labelContext: 'Contexte',
@@ -67,16 +74,28 @@ export const fr = {
       stack: ['PHP', 'Symfony 7', 'Event Sourcing', 'SNS/SQS', 'PostgreSQL', 'AWS'],
     },
     {
-      title: 'Gamification et classements temps réel',
+      title: "Refaire une API de production sans que l'utilisateur s'en aperçoive",
       org: 'Socios.com (Chiliz)',
-      period: '2023–2026',
+      period: '2022–2026',
       context:
-        "Les fonctionnalités d'engagement — défis, points, classements — devaient être instantanées pour une audience mondiale, avec une charge qui arrive en pics et non en courbes.",
+        "Le produit FanTokens destiné aux traders était lent, instable et coûteux. Les endpoints livraient des payloads trop lourdes et pas assez orientées métier, les erreurs 500 étaient récurrentes, et la page mettait 17 secondes à devenir utilisable. Sur ce type de produit, une donnée incohérente n'est pas un défaut d'affichage : c'est une décision d'investissement prise sur une information fausse.",
       approach:
-        "Contributeur majeur d'un moteur de gamification event-driven consommant le flux d'activité, avec des classements sur Redis et des handlers idempotents pour que les rejeux ne comptent jamais deux fois.",
+        "Refonte complète des contrats d'API autour du domaine métier, menée en migration incrémentale et non en réécriture : la contrainte forte était que la livraison reste invisible côté utilisateur, sans casser le front pendant la transition. Sur le même périmètre, fiabilisation des données de tokens servies aux traders, refonte de l'agrégation, et intégration TradingView — le backend produit des datasets propres, le front les injecte via le SDK. Le vrai livrable est un contrat de données entre deux équipes, pas une intégration de librairie.",
       result:
-        '30 000 événements par minute soutenus, classements mis à jour en direct, et un modèle de scoring que le produit pouvait étendre sans retravail technique.',
-      stack: ['PHP', 'Symfony', 'Redis', 'Event-driven', 'Kubernetes'],
+        "Erreurs 500 récurrentes ramenées à zéro et Time To Interactive de 17 à 3 secondes, les payloads allégées et recentrées sur le métier en étant la cause principale. Image de conteneur de 1,7 Go à 200 Mo, déploiement d'une quinzaine de minutes à moins de 4, mémoire de 1 Go à quelques centaines de Mo, CPU de 2 cores à 100 millicores. Une directive de réduction de coût sur le même périmètre, traitée par batching des appels, endpoints de masse du fournisseur et surtout internalisation d'une partie de la donnée via un client RPC maison lisant les informations de tokens directement on-chain : 9 000 € → 3 000 € par an à qualité équivalente.",
+      stack: ['PHP', 'Symfony', 'API Platform', 'React / Next.js', 'SDK TradingView', 'Kubernetes'],
+    },
+    {
+      title: 'Des transactions on-chain qui engagent des fonds réels',
+      org: 'Socios.com (Chiliz)',
+      period: '2022–2026',
+      context:
+        "Il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
+      approach:
+        "Un microservice Node.js dédié, intégrant le SDK Meteora, avec lecture on-chain complète via RPC et une couche Fireblocks pour la custody et la signature des transactions — signer n'étant pas un appel de librairie mais un workflow d'approbation externe, avec sa latence et ses modes d'échec propres. Mise en service progressive : devnet d'abord, puis production sur fonds réels. Périmètre dit franchement : intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
+      result:
+        "En production sur fonds réels. La difficulté n'est pas d'émettre l'ordre : on ne contrôle ni la finalité ni le délai de confirmation, et la transaction qu'on croit perdue est peut-être déjà passée. Signature idempotente, suivi d'état de transaction et réconciliation avec la chaîne comme source de vérité sont conçus dès le départ, pas rattrapés après coup.",
+      stack: ['Node.js', 'TypeScript', 'Solana', 'SDK Meteora', 'Fireblocks', 'RPC on-chain'],
     },
     {
       title: 'Legacy → API Platform',
@@ -131,12 +150,16 @@ export const fr = {
       title: 'Senior Backend Engineer / Tech Lead',
       company: 'Socios.com (Chiliz)',
       summary:
-        'Plateforme mondiale de sport digital — fan tokens et engagement sportif, 1,5 M+ utilisateurs actifs.',
+        'Plateforme mondiale de sport digital — fan tokens et engagement sportif, 1,5 M+ utilisateurs actifs. Trois rôles successifs sur la période : senior backend engineer, référent technique backend, puis tech lead par intérim.',
       bullets: [
         "Conception d'une architecture event-driven (outbox pattern, SNS/SQS) et implémentation de l'Event Sourcing sur les flux de transactions wallet — plus de 1 000 transactions financières par minute.",
-        "Découpage des domaines métier en microservices (DDD) et mise en place d'un processus RFC/ADR pour les décisions d'architecture inter-équipes.",
+        "Découpage des domaines métier en microservices (DDD), et mise en place d'un processus RFC/ADR et d'une guideline API-first pour les décisions d'architecture inter-équipes.",
+        "Déploiement de l'observabilité sur l'ensemble des services backend — OpenTelemetry et Datadog, dashboards par service, alerting sur les signaux qui précèdent la panne — couplé à une montée de la couverture de tests côté front : bugs remontés passés d'environ 20 par mois à 5.",
+        "Refonte complète de l'API du produit FanTokens destiné aux traders, sans rupture de service ni régression visible, et pilotage de son coût : fournisseur de données ramené de 9 000 € à 3 000 € par an à qualité équivalente, par batching des appels, endpoints de masse et client RPC interne lisant les informations de tokens on-chain.",
+        "Conception et mise en production d'un microservice Node.js d'opérations DeFi sur Solana — SDK Meteora, lecture on-chain via RPC, custody et signature via Fireblocks — déployé sur devnet, puis en production sur fonds réels.",
+        'Intégration de partenaires financiers tiers (dépositaires d’actifs numériques, protocoles d’échange), ensuite ouverte aux autres équipes en service partagé.',
         'Tenue de la charge pendant les Fan Token Offerings — pics de 10 à 20 000 utilisateurs en quelques minutes — et conception des tests de charge (BlazeMeter).',
-        "Leadership technique transverse sur deux squads produit (jusqu'à 6 développeurs, QA, PO) : onboarding, revues d'architecture, communauté de pratique backend.",
+        "Référent technique transverse sur deux squads produit (jusqu'à 6 développeurs, QA, PO) : onboarding, revues d'architecture, communauté de pratique backend.",
         'Pilotage de trois migrations majeures de Symfony sur un système en production continue.',
       ],
       stack: [
@@ -148,6 +171,11 @@ export const fr = {
         'Kubernetes',
         'Docker',
         'GitLab CI/CD',
+        'OpenTelemetry',
+        'Datadog',
+        'Node.js / TypeScript',
+        'Solana',
+        'Fireblocks',
       ],
     },
     {
@@ -195,32 +223,70 @@ export const fr = {
 
   skillsSection: {
     kicker: 'Boîte à outils',
-    title: "Ce que j'utilise",
+    title: "Ce que j'utilise, et à quel niveau",
   },
 
   skills: [
-    { name: 'Langages', items: ['PHP (expert)', 'SQL', 'JavaScript / TypeScript', 'Shell'] },
-    { name: 'Frameworks', items: ['Symfony (3 → 7)', 'API Platform', 'Node.js'] },
     {
-      name: 'Architecture',
+      name: 'Production — maîtrise profonde',
+      items: [
+        'PHP',
+        'Symfony (3 → 8)',
+        'API Platform',
+        'PostgreSQL',
+        'MySQL',
+        'Redis',
+        'AWS',
+        'Docker',
+        'Kubernetes',
+        'GitLab CI/CD',
+        'ArgoCD',
+        'PHPUnit',
+        'Behat',
+        'PHPStan',
+        'BlazeMeter',
+        'OpenTelemetry',
+        'Datadog',
+      ],
+    },
+    {
+      name: 'Production — secondaire',
+      items: [
+        'Node.js',
+        'TypeScript',
+        'Solana',
+        'SDK Meteora',
+        'Fireblocks',
+        'RPC on-chain',
+        'React / Next.js',
+        'MongoDB',
+        'SDK TradingView',
+      ],
+    },
+    { name: 'En apprentissage', items: ['Python', 'FastAPI'] },
+    {
+      name: 'Architecture & méthodes',
       items: [
         'DDD',
         'CQRS',
         'Event Sourcing',
-        'Event-Driven',
+        'Event-driven',
         'Microservices',
         'Monolithe modulaire',
+        'RFC / ADR',
+        'API-first',
+        'Revue de code',
+        'Mentorat',
       ],
     },
-    { name: 'Bases de données', items: ['PostgreSQL', 'MySQL', 'Redis'] },
-    { name: 'Infrastructure', items: ['AWS', 'Docker', 'Kubernetes', 'GitLab CI/CD', 'ArgoCD'] },
     {
-      name: 'Tests & qualité',
-      items: ['PHPUnit', 'Behat', 'PhpStan', 'PHP CS Fixer', 'BlazeMeter'],
-    },
-    {
-      name: 'Méthodes',
-      items: ['Agile / Scrum', 'Kanban', 'Revue de code', 'Mentorat', 'RFC / ADR'],
+      name: 'Pratique IA',
+      items: [
+        'Agents de code — quotidien, en pro',
+        'Claude API — projets personnels',
+        'Serveurs MCP — projets personnels',
+        'Orchestration de pipelines — projets personnels',
+      ],
     },
   ],
 
@@ -228,8 +294,9 @@ export const fr = {
     kicker: 'À propos',
     title: 'En bref',
     paragraphs: [
-      "Je suis un ingénieur backend qui aime les sujets peu glamour : intégrité transactionnelle, journaux d'événements rejouables, migrations que personne ne remarque. J'ai commencé en BI et conseil grands comptes, je suis passé en freelance comme référent backend d'une agence digitale, et j'ai passé quatre ans en full remote comme tech lead sur une plateforme sportive mondiale.",
-      "Ce qui compte pour moi au-delà du code : rendre les décisions d'architecture lisibles pour le reste de l'entreprise, et laisser les équipes plus autonomes que je ne les ai trouvées. RFC, ADR, culture de la revue, et beaucoup de pair programming patient.",
+      "Je suis un ingénieur backend qui aime les sujets peu glamour : intégrité transactionnelle, journaux d'événements rejouables, migrations que personne ne remarque. Sur douze ans, la ligne directrice n'est pas la stack, c'est la criticité croissante de ce qui casse — un dashboard BI qui tombe est un incident ; un wallet qui double une transaction est un problème comptable, réglementaire et de confiance.",
+      "La transmission fait partie du métier, pas à côté. Une décision d'architecture que l'équipe ne comprend pas n'est pas une décision, c'est une dépendance — c'est pour ça que les RFC, les ADR et la culture de la revue comptent plus, à mes yeux, que n'importe quel framework.",
+      "Hors écran : les Vosges, en pleine campagne, sur une propriété que je rénove. Full remote depuis 2018 — ce n'est pas une préférence de confort récente, c'est huit ans de pratique. L'écrit, l'asynchrone et la trace sont ici le mode par défaut, pas une contrainte subie.",
     ],
     mentoringKicker: 'Mentorat & enseignement — un fil rouge',
     languagesKicker: 'Langues',
@@ -263,9 +330,9 @@ export const fr = {
     kicker: 'Contact',
     title: 'Un système qui doit tenir la charge ?',
     blurb:
-      "Disponible pour des postes backend senior et tech lead, ainsi que pour des missions freelance d'architecture. Remote-first, basé dans le Grand Est — je me déplace volontiers quand il faut une salle.",
+      "Disponible pour des postes backend senior et tech lead, et pour des missions freelance bornées : audits d'architecture event-driven, migrations Symfony sur des systèmes qui ne s'arrêtent pas, mise en place de l'observabilité, refonte de contrats d'API sans rupture de service, audits de coût infra et fournisseurs de données. Remote-first — je me déplace volontiers quand il faut une salle.",
     revealPhone: 'Afficher le numéro',
     pdfLabel: 'PDF',
-    locationLine: 'Grand Est, France · Full remote depuis 8 ans · CET',
+    locationLine: 'Vosges, Grand Est, France · Full remote depuis 8 ans · CET',
   },
 } satisfies ResumeContent;

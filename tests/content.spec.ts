@@ -7,7 +7,7 @@ import { fr } from '../src/content/fr.ts';
  * locales carry the same keys — a missing one is a compile error. These tests
  * cover the invariants types cannot express:
  *
- *   - array lengths matching at every depth (5 projects EN, 5 projects FR)
+ *   - array lengths matching at every depth (6 projects EN, 6 projects FR)
  *   - no empty or whitespace-only strings
  *   - the sections that must actually be translated, are
  *   - the content corrections we made against the design are still in place
@@ -102,12 +102,20 @@ describe('EN/FR parity', () => {
 });
 
 describe('content corrections applied against the design', () => {
-  it('states availability as immediate, not a date that has already passed', () => {
-    expect(en.hero.availability).toMatch(/available now/i);
-    expect(fr.hero.availability).toMatch(/disponible imm/i);
-    // The design shipped "from May 2026" / "à partir de mai 2026".
-    expect(en.hero.availability).not.toMatch(/2026/);
-    expect(fr.hero.availability).not.toMatch(/2026/);
+  it('offers freelance immediately, and never advertises a date already past', () => {
+    // The design shipped "from May 2026" / "à partir de mai 2026", stale on
+    // arrival. The pitch master gives two availabilities rather than one:
+    // freelance now, permanent from September 2026. A date is allowed again —
+    // but only while it is still ahead of us, which is what rots otherwise.
+    expect(en.hero.availability).toMatch(/freelance now/i);
+    expect(fr.hero.availability).toMatch(/freelance imm/i);
+
+    const thisYear = new Date().getFullYear();
+    for (const line of [en.hero.availability, fr.hero.availability]) {
+      for (const year of line.match(/\b(19|20)\d{2}\b/g) ?? []) {
+        expect(Number(year), `${line} names a year already past`).toBeGreaterThanOrEqual(thisYear);
+      }
+    }
   });
 
   it('reports the remote track record as 8 years, counting from 2018', () => {
@@ -117,12 +125,53 @@ describe('content corrections applied against the design', () => {
     expect(fr.contact.locationLine).not.toMatch(/6 ans/);
   });
 
-  it('gives the location as a region, not a commune', () => {
-    // A village name plus a name and a job title is a near-deducible address.
+  it('gives the location as a département, never a commune', () => {
+    // A village of a few hundred people, plus a name and a job title, is a
+    // near-deducible home address. A département of 360,000 is not, which is
+    // why the pitch master's "Vosges" is publishable where "Grandrupt" was not.
     for (const content of [en, fr]) {
-      expect(content.contact.locationLine).toMatch(/Grand Est, France/);
+      expect(content.contact.locationLine).toMatch(/Vosges, Grand Est, France/);
       expect(content.contact.locationLine).not.toMatch(/Grandrupt|\(88\)/);
       expect(content.contact.blurb).not.toMatch(/Grandrupt/);
+      for (const paragraph of content.about.paragraphs) {
+        expect(paragraph).not.toMatch(/Grandrupt/);
+      }
+    }
+  });
+
+  it('keeps the three honesty levels on the stack un-compressed', () => {
+    // §4.5 of the pitch master is a strict personal rule: "production
+    // experience" / "personal projects" / "currently learning", never merged
+    // into one undifferentiated list. A flat skills grid breaks it silently,
+    // which is exactly the compression that detonates in a technical interview.
+    for (const content of [en, fr]) {
+      const names = content.skills.map((group) => group.name).join(' | ');
+      expect(names).toMatch(/Production/);
+      expect(names).toMatch(/secondar|secondaire/i);
+      expect(names).toMatch(/learning|apprentissage/i);
+
+      const ai = content.skills.find((group) => /AI practice|Pratique IA/.test(group.name));
+      expect(ai, 'the AI practice group carries its own honesty level').toBeDefined();
+      for (const item of ai?.items ?? []) {
+        expect(item, `${item} must say which level it belongs to`).toMatch(
+          /personal projects|projets personnels|professionally|en pro/,
+        );
+      }
+    }
+  });
+
+  it('states the blockchain scope boundary on the on-chain project itself', () => {
+    // §3.9: SDK integration and transaction operation, no smart contract
+    // authoring. Volunteering the limit is what makes the rest credible, so it
+    // belongs in the card body — not in a footnote, and not omitted.
+    for (const content of [en, fr]) {
+      const onChain = content.projects.find((project) =>
+        /Solana|Meteora/.test(project.stack.join(' ')),
+      );
+      expect(onChain, 'the on-chain project card is present').toBeDefined();
+      expect(`${onChain?.approach} ${onChain?.result}`).toMatch(
+        /no smart contract authoring|pas d'écriture de smart contracts/,
+      );
     }
   });
 

@@ -3,10 +3,19 @@
 Bilingual static résumé site. English at `/`, French at `/fr/`.
 Built with Astro, containerised, deployed to Railway.
 
-Implemented from the Claude Design canvas
-`Thomas Bouzy - Interactive Résumé.dc.html`. Every deliberate departure from
-that design is listed in [docs/design-deltas.md](docs/design-deltas.md), and the
-structural decisions are in [docs/adr](docs/adr).
+Two sources, two scopes. The **design** comes from the Claude Design canvas
+`Thomas Bouzy - Interactive Résumé.dc.html`; the **copy** comes from
+`Pitch_Master_Thomas_Bouzy_{EN,FR}.md`, and wins wherever the two disagree on
+words — [ADR 9](docs/adr/0009-the-pitch-master-owns-the-copy.md).
+
+Every deliberate departure from the design is listed in
+[docs/design-deltas.md](docs/design-deltas.md); the structural decisions are in
+[docs/adr](docs/adr).
+
+New material therefore reaches the site by revising the pitch master first, then
+rebasing `src/content/{en,fr}.ts` on it. `npm run test` fails if that rebase
+breaks EN/FR parity, compresses the stack's three honesty levels, drops the
+blockchain scope boundary, or advertises a date already past.
 
 ## Still to supply
 
@@ -97,6 +106,11 @@ tests/
   leaves the origin.
 - **Budget** — document, CSS, JS, font bytes and request count, with the
   numbers in [ADR 6](docs/adr/0006-budget-tests-instead-of-lighthouse-ci.md).
+- **Copy invariants** — the pitch master's own rules, asserted rather than
+  trusted: EN/FR parity at every array depth, the three honesty levels on the
+  stack kept apart, the "no smart contract authoring" boundary present on the
+  on-chain card, no availability date already past, and the phone number absent
+  from every content string.
 
 ## Deployment
 

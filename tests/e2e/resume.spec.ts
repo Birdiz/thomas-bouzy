@@ -13,11 +13,11 @@ test.describe('routing and locales', () => {
     await gotoHome(page, '/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
-    await expect(page.getByRole('heading', { name: 'Five things worth opening' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Six things worth opening' })).toBeVisible();
 
     await gotoHome(page, '/fr/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-    await expect(page.getByRole('heading', { name: 'Cinq sujets à ouvrir' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Six sujets à ouvrir' })).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {
@@ -56,7 +56,7 @@ test.describe('projects accordion', () => {
   test('opens the first project and keeps only one open at a time', async ({ page }) => {
     await gotoHome(page, '/');
     const projects = page.locator('details.project');
-    await expect(projects).toHaveCount(5);
+    await expect(projects).toHaveCount(6);
     await expect(projects.nth(0)).toHaveAttribute('open', '');
 
     await projects.nth(2).locator('summary').click();
