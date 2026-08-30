@@ -52,11 +52,6 @@ const { t, num } = Astro.props;
                 <p class="project__facet-text">{project.result}</p>
               </div>
             </div>
-            <ul class="stack">
-              {project.stack.map((tech) => (
-                <li class="tag tag-neutral">{tech}</li>
-              ))}
-            </ul>
           </div>
         </details>
       ))

@@ -31,23 +31,37 @@ export const fr = {
       "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans de backend et d'architecture — flux event-driven, Event Sourcing sur les wallets, et des opérations on-chain où une erreur coûte de l'argent réel.",
     yearsCount: '12',
     yearsLabel: 'ans',
-    badges: [
-      'PHP · Symfony',
-      'Event Sourcing · DDD',
-      'Solana · Fireblocks',
-      'OpenTelemetry · Datadog',
-    ],
     ctaWork: 'Voir les projets',
     ctaPdf: 'Télécharger le CV',
   },
 
-  stats: [
-    { n: '1,5 M+', label: 'utilisateurs actifs sur la plateforme architecturée' },
-    { n: '1 000/min', label: 'transactions financières en event sourcing' },
-    { n: '30k/min', label: 'événements de gamification en pic de charge' },
-    { n: '20 → 5', label: "bugs remontés par mois, après déploiement de l'observabilité" },
-    { n: '17 s → 3 s', label: "Time To Interactive, après refonte de l'API traders" },
-    { n: '−67 %', label: 'de coût annuel fournisseur (9 000 € → 3 000 €), à qualité égale' },
+  concepts: [
+    {
+      label: 'Traçable',
+      gloss:
+        'Chaque mouvement conservé comme un fait daté ; le solde se rejoue au lieu de se deviner.',
+    },
+    {
+      label: 'Refonte invisible',
+      gloss: 'Des payloads reconstruits sous leurs consommateurs, sans en casser un seul.',
+    },
+    {
+      label: 'Empreinte',
+      gloss:
+        "Mémoire, CPU, poids d'image et déploiement traités comme du design, pas comme la météo.",
+    },
+    {
+      label: 'Build-vs-buy',
+      gloss: "Ce qu'on continue d'acheter, ce qu'on internalise, et où passe la ligne.",
+    },
+    {
+      label: 'Service partagé',
+      gloss: "Né du besoin d'une squad, ouvert aux autres équipes qui avaient le même.",
+    },
+    {
+      label: 'Transmission',
+      gloss: "Revues d'architecture, onboarding, une trace écrite qu'un nouveau peut contester.",
+    },
   ],
 
   problem: {
@@ -81,7 +95,7 @@ export const fr = {
 
   position: {
     kicker: 'Ma position',
-    title: 'Quatre choses que je défends, et ce que chacune coûte.',
+    title: 'Cinq choses que je défends, et ce que chacune coûte.',
     intro:
       "À ce niveau, une réponse qui n'expose aucun coût sonne faux. Chaque recommandation ci-dessous vient donc avec ce qu'elle sacrifie — y compris celles que je referais sans hésiter.",
     costLabel: 'Le coût assumé',
@@ -108,6 +122,11 @@ export const fr = {
       text: "Observabilité avant optimisation. On ne discute pas d'une performance qu'on n'a pas mesurée, et on ne corrige pas un défaut découvert par un ticket utilisateur. C'est ce qui a fait passer les bugs remontés d'une vingtaine par mois à cinq.",
       cost: "Du temps de delivery investi dans l'instrumentation, et le choix plus difficile de quoi observer — une alerte de trop tue toutes les alertes.",
     },
+    {
+      title: "Trois niveaux d'honnêteté, jamais compressés.",
+      text: "Expérience en production, projets personnels, en cours d'apprentissage — annoncés séparément, y compris quand les confondre rendrait la candidature plus vendable. Une techno revendiquée un cran au-dessus de sa place explose au premier entretien technique sérieux, et coûte plus cher que le trou qu'elle masquait.",
+      cost: 'Une liste plus courte de ce que je peux revendiquer sans réserve, et devoir dire « pas en production » sur des travaux dont je suis fier.',
+    },
   ],
 
   work: {
@@ -131,7 +150,6 @@ export const fr = {
         "Mise en place de l'Event Sourcing sur les flux de transactions avec un outbox pattern via SNS/SQS : chaque mouvement devient un fait stocké et rejouable plutôt qu'une ligne écrasée. Les projections reconstruisent les modèles de lecture.",
       result:
         "Plus de 1 000 transactions financières par minute avec une piste d'audit complète, une réconciliation qui a cessé d'être de l'archéologie, et des investigations qui se rejouent au lieu de se deviner.",
-      stack: ['PHP', 'Symfony 7', 'Event Sourcing', 'SNS/SQS', 'PostgreSQL', 'AWS'],
     },
     {
       title: "Refaire une API de production sans que l'utilisateur s'en aperçoive",
@@ -143,7 +161,6 @@ export const fr = {
         "Refonte complète des contrats d'API autour du domaine métier, menée en migration incrémentale et non en réécriture : la contrainte forte était que la livraison reste invisible côté utilisateur, sans casser le front pendant la transition. Sur le même périmètre, fiabilisation des données de tokens servies aux traders, refonte de l'agrégation, et intégration TradingView — le backend produit des datasets propres, le front les injecte via le SDK. Le vrai livrable est un contrat de données entre deux équipes, pas une intégration de librairie.",
       result:
         "Erreurs 500 récurrentes ramenées à zéro et Time To Interactive de 17 à 3 secondes, les payloads allégées et recentrées sur le métier en étant la cause principale. Image de conteneur de 1,7 Go à 200 Mo, déploiement d'une quinzaine de minutes à moins de 4, mémoire de 1 Go à quelques centaines de Mo, CPU de 2 cores à 100 millicores. Une directive de réduction de coût sur le même périmètre, traitée par batching des appels, endpoints de masse du fournisseur et surtout internalisation d'une partie de la donnée via un client RPC maison lisant les informations de tokens directement on-chain : 9 000 € → 3 000 € par an à qualité équivalente.",
-      stack: ['PHP', 'Symfony', 'API Platform', 'React / Next.js', 'SDK TradingView', 'Kubernetes'],
     },
     {
       title: 'Des transactions on-chain qui engagent des fonds réels',
@@ -155,7 +172,6 @@ export const fr = {
         "Un microservice Node.js dédié, intégrant le SDK Meteora, avec lecture on-chain complète via RPC et une couche Fireblocks pour la custody et la signature des transactions — signer n'étant pas un appel de librairie mais un workflow d'approbation externe, avec sa latence et ses modes d'échec propres. Mise en service progressive : devnet d'abord, puis production sur fonds réels. Périmètre dit franchement : intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
       result:
         "En production sur fonds réels. La difficulté n'est pas d'émettre l'ordre : on ne contrôle ni la finalité ni le délai de confirmation, et la transaction qu'on croit perdue est peut-être déjà passée. Signature idempotente, suivi d'état de transaction et réconciliation avec la chaîne comme source de vérité sont conçus dès le départ, pas rattrapés après coup.",
-      stack: ['Node.js', 'TypeScript', 'Solana', 'SDK Meteora', 'Fireblocks', 'RPC on-chain'],
     },
     {
       title: 'Démarrer un nouveau grand compte en une journée',
@@ -167,7 +183,6 @@ export const fr = {
         "Les tests d'abord : on ne migre pas un monolithe sans de quoi constater les régressions. Puis deux migrations en parallèle sur un système vivant — Symfony 2.7 vers 4 avec API Platform, AngularJS vers React. Le contrat servait deux consommateurs aux cycles de release distincts, un front web et une application mobile : conventions de payload, taxonomie d'erreurs et guidelines d'usage d'API Platform ont donc été arrêtées avant l'implémentation, pas après. Le déploiement lui-même est passé derrière un assistant d'initialisation écrit en Node.js et une orchestration Jenkins.",
       result:
         "La mise en route d'un nouveau grand compte est tombée à une journée. Les classements et résultats des forces de vente sont diffusés en direct par une intégration Mercure en Server-Sent Events. Sur quatre juniors hérités et encadrés deux ans, l'un est resté et a basculé sur l'application mobile servie par la même API.",
-      stack: ['Symfony 2.7 → 4', 'API Platform', 'Mercure', 'React', 'MariaDB', 'Jenkins'],
     },
     {
       title: "Auditer une base de code qui n'est pas la mienne",
@@ -179,7 +194,6 @@ export const fr = {
         "D'abord en lecture seule, sans rien corriger : quatre rapports priorisés — 17 findings de sécurité, 11 de qualité et de dette, 6 sur le poids de déploiement, et un audit SEO à 56/100 sur 34 findings — chaque item rédigé comme une carte prête à prendre, avec sévérité, effort et critères d'acceptation. Puis j'ai traité les critiques moi-même.",
       result:
         "Le panier gratuit qui faisait confiance au client est revalidé côté serveur, le contenu éditorial injecté dans les données structurées est échappé, les en-têtes de sécurité sont globaux, et les actions CI comme l'image de base sont épinglées. La plateforme est passée de zéro test automatisé à la couverture de ses flux de paiement et de l'authentification admin, avec CodeQL dans le pipeline.",
-      stack: ['Next.js', 'TypeScript', 'Turborepo', 'Docker', 'GitHub Actions', 'CodeQL'],
     },
     {
       title: "Annuaires associatifs depuis l'open data",
@@ -191,7 +205,6 @@ export const fr = {
         "Un entonnoir de coût en huit étages sur les données ouvertes (RNA, Annuaire de l'administration), enrichies en explorant les sources publiques des collectivités, avec la provenance de chaque valeur conservée à côté d'elle. Local-first : un process, un fichier SQLite, une interface sur localhost — les requêtes partent de la machine de l'utilisateur, jamais de la mienne.",
       result:
         "Sur l'Ille-et-Vilaine : 332 communes résolues sur 353 et 31 273 associations en 40 secondes, puis 36 170 classées et 748 domaines de messagerie vérifiés en quatre. Un pré-filtre mesuré ramène le volume appelant une inférence de 40,3 % à 6,5 % — l'objectif était 20 % — sans écarter une seule page ayant produit un contact, et avant qu'une ligne d'inférence n'existe.",
-      stack: ['TypeScript', 'Node 24', 'SQLite', 'Local-first', 'Docker', 'ADR'],
     },
   ],
 
@@ -297,77 +310,6 @@ export const fr = {
       title: 'Vacataire en informatique',
       org: 'Université de Reims',
       text: 'Enseignement en premier cycle — la première expérience de transmission, et celle qui est restée.',
-    },
-  ],
-
-  skillsSection: {
-    kicker: 'Boîte à outils',
-    title: "Ce que j'utilise, et à quel niveau",
-  },
-
-  skills: [
-    {
-      name: 'Production — maîtrise profonde',
-      items: [
-        'PHP',
-        'Symfony (3 → 8)',
-        'API Platform',
-        'PostgreSQL',
-        'MySQL / MariaDB',
-        'Redis',
-        'AWS',
-        'Docker',
-        'Kubernetes',
-        'GitLab CI/CD',
-        'ArgoCD',
-        'Jenkins',
-        'PHPUnit',
-        'Behat',
-        'PHPStan',
-        'BlazeMeter',
-        'OpenTelemetry',
-        'Datadog',
-      ],
-    },
-    {
-      name: 'Production — secondaire',
-      items: [
-        'Node.js',
-        'TypeScript',
-        'Solana',
-        'SDK Meteora',
-        'Fireblocks',
-        'RPC on-chain',
-        'React / Next.js',
-        'Mercure',
-        'SDK TradingView',
-      ],
-    },
-    { name: 'En apprentissage', items: ['Python', 'FastAPI'] },
-    {
-      name: 'Architecture & méthodes',
-      items: [
-        'DDD',
-        'CQRS',
-        'Event Sourcing',
-        'Event-driven',
-        'Microservices',
-        'Monolithe modulaire',
-        'Multi-tenant',
-        'RFC / ADR',
-        'API-first',
-        'Revue de code',
-        'Mentorat',
-      ],
-    },
-    {
-      name: 'Pratique IA',
-      items: [
-        'Agents de code — quotidien, en pro',
-        'Claude API — projets personnels',
-        'Serveurs MCP — projets personnels',
-        'Orchestration de pipelines — projets personnels',
-      ],
     },
   ],
 

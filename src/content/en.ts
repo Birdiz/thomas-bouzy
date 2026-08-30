@@ -31,23 +31,35 @@ export const en = {
       'I design transactional systems that have to stay correct while they stay up. Twelve years of backend and architecture — event-driven flows, Event Sourcing on wallets, and on-chain operations where a mistake costs real money.',
     yearsCount: '12',
     yearsLabel: 'years',
-    badges: [
-      'PHP · Symfony',
-      'Event Sourcing · DDD',
-      'Solana · Fireblocks',
-      'OpenTelemetry · Datadog',
-    ],
     ctaWork: 'See the work',
     ctaPdf: 'Download CV',
   },
 
-  stats: [
-    { n: '1.5M+', label: 'active users on the platform I helped architect' },
-    { n: '1,000/min', label: 'financial transactions through event-sourced wallets' },
-    { n: '30k/min', label: 'gamification events at peak load' },
-    { n: '20 → 5', label: 'reported bugs a month, after instrumenting the backend' },
-    { n: '17s → 3s', label: 'Time To Interactive, after the trader API was redesigned' },
-    { n: '−67%', label: 'annual data-provider cost (€9,000 → €3,000), same data quality' },
+  concepts: [
+    {
+      label: 'Traceable',
+      gloss: 'Every movement kept as a dated fact; the balance replays instead of being guessed.',
+    },
+    {
+      label: 'Invisible redesign',
+      gloss: 'Payloads rebuilt underneath their consumers, without breaking a single one.',
+    },
+    {
+      label: 'Footprint',
+      gloss: 'Memory, CPU, image size and deployment treated as design, not as weather.',
+    },
+    {
+      label: 'Build-vs-buy',
+      gloss: 'What you keep buying, what you bring in-house, and where the line falls.',
+    },
+    {
+      label: 'Shared service',
+      gloss: "Born of one squad's need, opened to the other teams that turned out to have it.",
+    },
+    {
+      label: 'Handover',
+      gloss: 'Architecture reviews, onboarding, a written trail a newcomer can argue with.',
+    },
   ],
 
   problem: {
@@ -81,7 +93,7 @@ export const en = {
 
   position: {
     kicker: 'Approach',
-    title: 'Four things I will argue for, and what each one costs.',
+    title: 'Five things I will argue for, and what each one costs.',
     intro:
       'At this level an answer that exposes no cost sounds false. So every recommendation below comes with the thing it sacrifices — including the ones I would still make again.',
     costLabel: 'The cost',
@@ -108,6 +120,11 @@ export const en = {
       text: 'Observability before optimisation. You do not argue about performance you have not measured, and you do not fix a defect you discovered through a user ticket. That is what took reported bugs from around twenty a month to five.',
       cost: 'Delivery time spent on instrumentation, and the harder decision of what to observe — one alert too many kills every alert.',
     },
+    {
+      title: 'Three honesty levels, never compressed.',
+      text: 'Production experience, personal projects, currently learning — stated apart, including when merging them would make the application easier to sell. A stack claimed one level above where it belongs detonates in the first serious technical interview, and costs more than the gap it hid.',
+      cost: 'A shorter list of things I can claim outright, and having to say "not in production" about work I am proud of.',
+    },
   ],
 
   work: {
@@ -131,7 +148,6 @@ export const en = {
         'Introduced Event Sourcing on the transaction flows with an outbox pattern over SNS/SQS, so every balance change is a stored, replayable fact rather than an overwritten row. Projections rebuild read models from the log.',
       result:
         '1,000+ financial transactions a minute with a complete audit trail, reconciliation that stopped being archaeology, and bug investigations that replay instead of guess.',
-      stack: ['PHP', 'Symfony 7', 'Event Sourcing', 'SNS/SQS', 'PostgreSQL', 'AWS'],
     },
     {
       title: 'Rebuilding a live API without users noticing',
@@ -143,7 +159,6 @@ export const en = {
         'A full redesign of the API contracts around the business domain, run as an incremental migration rather than a rewrite: the hard constraint was that the rollout stay invisible to users, without breaking the frontend during the transition. On the same scope, making the token data served to traders consistent, redesigning the aggregation, and a TradingView integration where the backend produces clean datasets and the frontend injects them through the SDK — a data contract negotiated between two teams more than a library integration.',
       result:
         "Recurring 500s brought to zero and Time To Interactive from 17 to 3 seconds, lighter domain-focused payloads being the primary cause. Container image 1.7 GB → 200 MB, deployment from around 15 minutes to under 4, memory 1 GB → a few hundred MB, CPU 2 cores → 100 millicores. A cost-reduction directive on the same scope answered by batching calls, moving to the provider's bulk endpoints and, above all, internalising part of the data with an in-house RPC client reading token information directly on-chain: €9,000 → €3,000 a year at equivalent quality.",
-      stack: ['PHP', 'Symfony', 'API Platform', 'React / Next.js', 'TradingView SDK', 'Kubernetes'],
     },
     {
       title: 'On-chain transactions that commit real funds',
@@ -155,7 +170,6 @@ export const en = {
         'A dedicated Node.js microservice integrating the Meteora SDK, with full on-chain reads over RPC and a Fireblocks layer for custody and transaction signing — signing being an external approval workflow with its own latency and failure modes, not a library call. Rolled out progressively: devnet first, then production with real funds. Scope stated plainly: SDK integration and transaction operation, no smart contract authoring.',
       result:
         'In production on real funds. The hard part is not submitting the order: you control neither finality nor confirmation delay, and the transaction you believe lost may already have landed. Idempotent signing, transaction state tracking and reconciliation against the chain as the source of truth are designed in, not handled afterwards.',
-      stack: ['Node.js', 'TypeScript', 'Solana', 'Meteora SDK', 'Fireblocks', 'On-chain RPC'],
     },
     {
       title: 'Onboarding a new enterprise account in a day',
@@ -167,7 +181,6 @@ export const en = {
         'Test coverage first: you do not migrate a monolith without a way to see the regressions. Then two migrations in parallel on a live system — Symfony 2.7 to 4 with API Platform, AngularJS to React. The contract had two consumers on separate release cycles, a web frontend and a mobile app, so payload conventions, an error taxonomy and API Platform guidelines were agreed before implementation rather than after. The deployment itself went behind an initialisation wizard written in Node.js and Jenkins orchestration.',
       result:
         'Onboarding a new enterprise account came down to one day. Sales-force rankings and results were delivered live through a Mercure integration over Server-Sent Events. Of four inherited juniors mentored over two years, one stayed and moved onto the mobile app served by the same API.',
-      stack: ['Symfony 2.7 → 4', 'API Platform', 'Mercure', 'React', 'MariaDB', 'Jenkins'],
     },
     {
       title: "Auditing a codebase I didn't write",
@@ -179,7 +192,6 @@ export const en = {
         'Read-only first, fixing nothing: four prioritised reports — 17 security findings, 11 on quality and debt, 6 on deployment weight, and an SEO audit scoring 56/100 across 34 findings — each item written as a card the team could pick up, with severity, effort and acceptance criteria. Then I took the critical ones myself.',
       result:
         'A free-cart path that trusted the client is now revalidated server-side, editorial content injected into structured data is escaped, security headers are global, and both the CI actions and the base image are pinned. The platform went from zero automated tests to covering its payment flows and admin authentication, with CodeQL in the pipeline.',
-      stack: ['Next.js', 'TypeScript', 'Turborepo', 'Docker', 'GitHub Actions', 'CodeQL'],
     },
     {
       title: 'Association directories from open data',
@@ -191,7 +203,6 @@ export const en = {
         "An eight-stage cost funnel over open data (the RNA and the government directory), enriched by crawling the public sources of the collectivités themselves, with the provenance of every value kept beside it. Local-first by design: one process, one SQLite file, an interface on localhost — requests leave the user's machine, never mine.",
       result:
         'On Ille-et-Vilaine: 332 of 353 communes resolved and 31,273 associations in 40 seconds, then 36,170 classified and 748 mail domains verified in four. A measured pre-filter cut the volume that would need inference from 40.3% to 6.5% — the target was 20% — without dropping one page that had produced a contact, and before a line of inference existed.',
-      stack: ['TypeScript', 'Node 24', 'SQLite', 'Local-first', 'Docker', 'ADR'],
     },
   ],
 
@@ -297,77 +308,6 @@ export const en = {
       title: 'Computer Science Lecturer',
       org: 'University of Reims',
       text: 'Undergraduate teaching — the first mentoring experience, and the reason it stuck.',
-    },
-  ],
-
-  skillsSection: {
-    kicker: 'Toolkit',
-    title: 'What I reach for, and at what level',
-  },
-
-  skills: [
-    {
-      name: 'Production — deep',
-      items: [
-        'PHP',
-        'Symfony (3 → 8)',
-        'API Platform',
-        'PostgreSQL',
-        'MySQL / MariaDB',
-        'Redis',
-        'AWS',
-        'Docker',
-        'Kubernetes',
-        'GitLab CI/CD',
-        'ArgoCD',
-        'Jenkins',
-        'PHPUnit',
-        'Behat',
-        'PHPStan',
-        'BlazeMeter',
-        'OpenTelemetry',
-        'Datadog',
-      ],
-    },
-    {
-      name: 'Production — secondary',
-      items: [
-        'Node.js',
-        'TypeScript',
-        'Solana',
-        'Meteora SDK',
-        'Fireblocks',
-        'On-chain RPC',
-        'React / Next.js',
-        'Mercure',
-        'TradingView SDK',
-      ],
-    },
-    { name: 'Currently learning', items: ['Python', 'FastAPI'] },
-    {
-      name: 'Architecture & ways of working',
-      items: [
-        'DDD',
-        'CQRS',
-        'Event Sourcing',
-        'Event-driven',
-        'Microservices',
-        'Modular monolith',
-        'Multi-tenant',
-        'RFC / ADR',
-        'API-first',
-        'Code review',
-        'Mentoring',
-      ],
-    },
-    {
-      name: 'AI practice',
-      items: [
-        'Coding agents — daily, professionally',
-        'Claude API — personal projects',
-        'MCP servers — personal projects',
-        'Pipeline orchestration — personal projects',
-      ],
     },
   ],
 

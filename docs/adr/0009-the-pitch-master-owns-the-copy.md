@@ -89,3 +89,33 @@ exactly what happened: the page moved to birdiz@proton.me while the CVs kept
 theirs, and that is not a defect to reconcile.
 
 So: the pitch master owns the past, the site owns what it sells.
+
+## Postscript 2, 2026-08-30 — the honesty rule left the grid
+
+The Toolkit section is gone. Thomas's reading on mobile was that a grid of
+technology tags is the CV look the repositioning was meant to escape, and that
+it says nothing a dated Track record chip does not say better.
+
+That grid was carrying one of the three load-bearing rules named above: the
+three honesty levels, never compressed. Deleting the section without moving the
+rule would have retired it silently — the worst outcome, because the rule's
+whole value is that it is visible and therefore costly.
+
+So it moved rather than died. It is now **principle 5 of the Approach section**,
+stated the way the other four are: a position, with the price of holding it.
+`tests/content.spec.ts` asserts it there instead of on the skills groups, and a
+second test asserts the stack is still on the page at all — the dated job chips
+are its only carrier now, so dropping one removes a technology from the site
+outright.
+
+Two consequences, recorded so they are not read as rot:
+
+- The stack chips left every surface except Track record: the hero's four
+  badges and the six project cards' chips are gone. `knowsAbout` in the Person
+  schema is derived from the job stacks now, for the same reason.
+- The AI-practice lines went with the grid. They were the one place the page
+  carried Claude API, MCP servers and pipeline orchestration, each tagged with
+  its level. Nothing on the page claims them today. Putting them back belongs in
+  the About section, as trajectory, and is not decided yet — §8 of the pitch
+  master is explicit that the AI angle is credible grafted onto another, never
+  as a headline of its own.

@@ -43,9 +43,11 @@ const hasCv = publicAssetExists(cvHref);
         <p class="hero__role">{t.hero.role}</p>
         <p class="hero__blurb">{t.hero.blurb}</p>
 
+        {/* The four stack badges left with the rest of the chips: the stack is
+            carried by the dated Track record chips alone now. The years tag is
+            not a stack claim, so it stays. */}
         <ul class="hero__badges">
           <li><span class="tag tag-accent">{t.hero.yearsCount} {t.hero.yearsLabel}</span></li>
-          {t.hero.badges.map((badge) => <li><span class="tag tag-neutral">{badge}</span></li>)}
         </ul>
 
         <div class="hero__ctas">

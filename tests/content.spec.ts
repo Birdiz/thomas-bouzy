@@ -87,7 +87,8 @@ describe('EN/FR parity', () => {
       '$.work.title',
       '$.work.intro',
       '$.experience.title',
-      '$.skillsSection.title',
+      '$.concepts[0].gloss',
+      '$.concepts[1].label',
       '$.about.title',
       '$.about.paragraphs[0]',
       '$.contact.title',
@@ -148,23 +149,45 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('keeps the three honesty levels on the stack un-compressed', () => {
+  it('states the three honesty levels as a position, not as a grid', () => {
     // §4.5 of the pitch master is a strict personal rule: "production
     // experience" / "personal projects" / "currently learning", never merged
-    // into one undifferentiated list. A flat skills grid breaks it silently,
-    // which is exactly the compression that detonates in a technical interview.
+    // into one undifferentiated list. It used to be carried by the Toolkit
+    // grid's group names; the Toolkit is gone, so the rule moved into the
+    // Approach section as principle 5 — see docs/adr/0009, postscript 2. It is
+    // asserted here rather than left to care, because a rule nobody can see is
+    // a rule that quietly stops applying.
     for (const content of [en, fr]) {
-      const names = content.skills.map((group) => group.name).join(' | ');
-      expect(names).toMatch(/Production/);
-      expect(names).toMatch(/secondar|secondaire/i);
-      expect(names).toMatch(/learning|apprentissage/i);
+      const principle = content.principles.find((p) =>
+        /honesty levels|niveaux d'honnêteté/i.test(p.title),
+      );
+      expect(principle, 'the honesty-levels principle is on the page').toBeDefined();
 
-      const ai = content.skills.find((group) => /AI practice|Pratique IA/.test(group.name));
-      expect(ai, 'the AI practice group carries its own honesty level').toBeDefined();
-      for (const item of ai?.items ?? []) {
-        expect(item, `${item} must say which level it belongs to`).toMatch(
-          /personal projects|projets personnels|professionally|en pro/,
-        );
+      const stated = `${principle?.title} ${principle?.text}`;
+      expect(stated).toMatch(/[Pp]roduction/);
+      expect(stated).toMatch(/personal projects|projets personnels/i);
+      expect(stated).toMatch(/currently learning|apprentissage/i);
+
+      // A principle without its price is a slogan; this one's price is the
+      // reason it is credible at all.
+      expect(principle?.cost.trim().length ?? 0).toBeGreaterThan(0);
+    }
+  });
+
+  it('keeps the stack visible, and only on the dated Track record chips', () => {
+    // Removing the Toolkit made the job chips the page's only stack claim. That
+    // is deliberate — a stack attached to an employer and a period says more
+    // than a floating grid — but it means the chips are now load-bearing, and
+    // dropping one silently removes a technology from the site altogether.
+    for (const content of [en, fr]) {
+      const chips = content.jobs.flatMap((job) => job.stack);
+      expect(chips.length).toBeGreaterThan(0);
+      for (const tech of ['PHP', 'Symfony', 'Kubernetes', 'React']) {
+        expect(chips.join(' '), `${tech} left the page with the Toolkit`).toMatch(tech);
+      }
+      // The projects carry prose, not chips: the CV look Thomas rejected.
+      for (const project of content.projects) {
+        expect(project).not.toHaveProperty('stack');
       }
     }
   });
@@ -174,8 +197,10 @@ describe('content corrections applied against the design', () => {
     // authoring. Volunteering the limit is what makes the rest credible, so it
     // belongs in the card body — not in a footnote, and not omitted.
     for (const content of [en, fr]) {
+      // Selected on the card's own prose now: the stack chips it used to be
+      // found by went with the rest of the chips.
       const onChain = content.projects.find((project) =>
-        /Solana|Meteora/.test(project.stack.join(' ')),
+        /Solana|Meteora/.test(`${project.context} ${project.approach}`),
       );
       expect(onChain, 'the on-chain project card is present').toBeDefined();
       expect(`${onChain?.approach} ${onChain?.result}`).toMatch(

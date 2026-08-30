@@ -9,10 +9,20 @@
  * strings, malformed URLs) is enforced by tests/content.spec.ts.
  */
 
-export interface Stat {
-  /** The figure itself, pre-formatted for the locale (e.g. "1.5M+" / "1,5 M+"). */
-  n: string;
+/**
+ * One named capability, at the top of the page.
+ *
+ * This replaced a grid of six figures. The figures answered "how much" to a
+ * reader who had not yet been told "of what" — and read as a CV's numbers.
+ * A proof line briefly survived underneath, carrying the measurement; it went
+ * the same way and for the same reason. A ratio from one engagement does not
+ * travel: the concept is the part that does, and the measurements still sit in
+ * the project cards and the Track record bullets, where they have a context.
+ */
+export interface Concept {
+  /** One or two words. A named concept, never a skill label. */
   label: string;
+  gloss: string;
 }
 
 export interface Project {
@@ -22,7 +32,6 @@ export interface Project {
   context: string;
   approach: string;
   result: string;
-  stack: string[];
 }
 
 export interface Job {
@@ -49,16 +58,17 @@ export interface FailureMode {
   text: string;
 }
 
-/** A position, and what holding it costs. The cost is the half that convinces. */
+/**
+ * A position, and what holding it costs. The cost is the half that convinces.
+ *
+ * Principle 5 carries the pitch master's three-honesty-levels rule, which used
+ * to live in the Toolkit grid. Stating it as a position one holds — at a price
+ * — says more than a grid of tags ever did. See docs/adr/0009, postscript 2.
+ */
 export interface Principle {
   title: string;
   text: string;
   cost: string;
-}
-
-export interface SkillGroup {
-  name: string;
-  items: string[];
 }
 
 export interface MentoringEntry {
@@ -108,12 +118,11 @@ export interface ResumeContent {
     blurb: string;
     yearsCount: string;
     yearsLabel: string;
-    badges: string[];
     ctaWork: string;
     ctaPdf: string;
   };
 
-  stats: Stat[];
+  concepts: Concept[];
 
   /** Opens the page on what breaks, before anything about who fixes it. */
   problem: {
@@ -150,12 +159,6 @@ export interface ResumeContent {
   };
   jobs: Job[];
   earlier: EarlierRole[];
-
-  skillsSection: {
-    kicker: string;
-    title: string;
-  };
-  skills: SkillGroup[];
 
   about: {
     kicker: string;

@@ -55,7 +55,9 @@ const personSchema = {
   },
   sameAs: [CONTACT.linkedin],
   knowsLanguage: t.languages.map((l) => l.name),
-  knowsAbout: t.skills.flatMap((group) => group.items),
+  /* The Toolkit grid is gone; the dated Track record chips are the only
+     stack the page states, so they are the only stack the schema claims. */
+  knowsAbout: [...new Set(t.jobs.flatMap((job) => job.stack))],
   alumniOf: {
     '@type': 'CollegeOrUniversity',
     name: 'Université de Reims Champagne-Ardenne',

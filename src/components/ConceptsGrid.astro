@@ -1,0 +1,29 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+---
+
+{/*
+  Six named capabilities where six figures used to sit. The figures answered
+  "how much" before the reader had been told "of what", and read as a CV's
+  numbers — which is what this page is not. A ratio from one engagement does
+  not travel either, so the measurements stay in the project cards and the
+  Track record bullets, where a reader has the context to weigh them.
+*/}
+<section class="concepts container" aria-label={t.position.kicker}>
+  <ul class="concepts__grid">
+    {
+      t.concepts.map((concept) => (
+        <li class="card elev-sm concepts__item">
+          <span class="concepts__label">{concept.label}</span>
+          <p class="concepts__gloss">{concept.gloss}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
