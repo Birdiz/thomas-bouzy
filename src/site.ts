@@ -54,7 +54,48 @@ export const CONTACT = {
   phoneE164: '+33632134547',
   phoneDisplay: '06 32 13 45 47',
   linkedin: 'https://www.linkedin.com/in/thomas-bouzy',
+  /* Same handle as the contact address, which is the point: `birdiz` reads as
+     a pseudonym on its own, and as an identity once the profile it belongs to
+     is one click away. */
+  github: 'https://github.com/Birdiz',
 } as const;
+
+/**
+ * Publisher identity, for the legal notice in the footer.
+ *
+ * French law requires a site published in a professional capacity to name its
+ * publisher and its host. None of it can be guessed from the repository, so the
+ * fields start empty and `isComplete` gates the block: an incomplete legal
+ * notice is worse than none — it reads as an unfinished site, which is the one
+ * signal an independent cannot afford. Fill these in and the block appears.
+ *
+ * `SITE.region` deliberately publishes a region and not a locality; a legal
+ * notice needs the registered address, so publishing one is a decision to take
+ * knowingly rather than a field to fill because it is there.
+ */
+export const LEGAL = {
+  /** Registered name. For a sole trader, usually the person's own name. */
+  businessName: '',
+  /** e.g. 'Entrepreneur individuel', 'EURL', 'SASU'. */
+  legalForm: '',
+  siret: '',
+  /** Either a VAT number, or the exemption wording (art. 293 B du CGI). */
+  vat: '',
+  /** Registered address, on one line. */
+  address: '',
+  /** Named because the law requires the host to be identifiable. */
+  host: {
+    name: 'Railway Corp.',
+    url: 'https://railway.com',
+    /** Left to verify rather than guessed: a wrong address is not a notice. */
+    address: '',
+  },
+  get isComplete(): boolean {
+    return Boolean(
+      this.businessName && this.legalForm && this.siret && this.address && this.host.address,
+    );
+  },
+};
 
 export const LOCALES = ['en', 'fr'] as const;
 export type Locale = (typeof LOCALES)[number];

@@ -177,4 +177,18 @@ export interface ResumeContent {
     pdfLabel: string;
     locationLine: string;
   };
+
+  /**
+   * The site footer. Labels only — the publisher's own details live in
+   * `LEGAL` in site.ts, because they are facts about the business rather
+   * than content to translate.
+   */
+  footer: {
+    legalHeading: string;
+    hostedBy: string;
+    siretLabel: string;
+    vatLabel: string;
+    /** Accessible name of the <footer> landmark. */
+    landmark: string;
+  };
 }

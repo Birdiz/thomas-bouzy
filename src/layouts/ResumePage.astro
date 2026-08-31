@@ -6,6 +6,7 @@ import ExperienceSection from '../components/ExperienceSection.astro';
 import Hero from '../components/Hero.astro';
 import PositionSection from '../components/PositionSection.astro';
 import ProblemSection from '../components/ProblemSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import WorkSection from '../components/WorkSection.astro';
 import { RESUME } from '../content/index.ts';
@@ -32,4 +33,5 @@ const t = RESUME[locale];
     <AboutSection t={t} num="05" />
     <ContactSection locale={locale} t={t} />
   </main>
+  <SiteFooter t={t} />
 </BaseLayout>

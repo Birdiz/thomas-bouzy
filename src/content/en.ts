@@ -202,7 +202,7 @@ export const en = {
       approach:
         "An eight-stage cost funnel over open data (the RNA and the government directory), enriched by crawling the public sources of the collectivités themselves, with the provenance of every value kept beside it. Local-first by design: one process, one SQLite file, an interface on localhost — requests leave the user's machine, never mine.",
       result:
-        'On Ille-et-Vilaine: 332 of 353 communes resolved and 31,273 associations in 40 seconds, then 36,170 classified and 748 mail domains verified in four. A measured pre-filter cut the volume that would need inference from 40.3% to 6.5% — the target was 20% — without dropping one page that had produced a contact, and before a line of inference existed.',
+        'On Ille-et-Vilaine: 332 of 353 communes resolved and 31,273 associations in 40 seconds, then 36,170 classified and 748 mail domains verified in four seconds. A measured pre-filter cut the volume that would need inference from 40.3% to 6.5% — the target was 20% — without dropping one page that had produced a contact, and before a line of inference existed.',
     },
   ],
 
@@ -229,7 +229,7 @@ export const en = {
         'Led a full API redesign of the trader-facing FanTokens product with no service interruption and no user-visible regression, and owned its cost: data-provider spend cut from €9,000 to €3,000 a year at equivalent quality, through call batching, bulk endpoints and an in-house RPC client reading token information on-chain.',
         'Designed and shipped a Node.js microservice for DeFi operations on Solana — Meteora SDK, on-chain reads over RPC, custody and signing through Fireblocks — rolled out on devnet, then in production on real funds.',
         'Integrated third-party financial partners (digital-asset custodians, exchange protocols), later opened to other teams as a shared service.',
-        'Sustained load during Fan Token Offerings — peaks of 10–20,000 users within minutes — and designed the load tests (BlazeMeter).',
+        'Sustained load during Fan Token Offerings — peaks of 10,000–20,000 users within minutes — and designed the load tests (BlazeMeter).',
         'Technical leadership across two product teams — six people, five developers and a QA engineer: onboarding, architecture reviews, and the backend community of practice.',
         'On call for the major production releases, the FanTokens redesign among them. Incidents driven and coordinated through Rootly: work in progress stops until the mitigation lands, with tech leads, QA and product in the same room.',
         'Wrote the skills and behaviour assessments of peers, addressed to the Head of Tech and the Head of Engineering ahead of the annual review cycle.',
@@ -356,5 +356,13 @@ export const en = {
     revealPhone: 'Show phone number',
     pdfLabel: 'PDF',
     locationLine: 'Grand Est, France · Fully remote for 8+ years · CET',
+  },
+
+  footer: {
+    legalHeading: 'Legal notice',
+    hostedBy: 'Hosted by',
+    siretLabel: 'SIRET',
+    vatLabel: 'VAT',
+    landmark: 'Site information',
   },
 } satisfies ResumeContent;

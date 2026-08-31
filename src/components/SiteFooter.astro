@@ -1,0 +1,63 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { CONTACT, LEGAL, SITE } from '../site.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+
+/**
+ * The legal block only renders once LEGAL is filled in — see site.ts. A notice
+ * missing its SIRET is not a lighter notice, it is an unfinished one, and the
+ * footer reads better carrying only what it can state.
+ *
+ * No copyright year: a year baked at build time is a date that goes stale on a
+ * page nobody rebuilds, which is the exact signal this footer exists to avoid.
+ */
+const legal = LEGAL.isComplete ? LEGAL : null;
+---
+
+<footer class="site-footer" aria-label={t.footer.landmark}>
+  <div class="site-footer__inner">
+    <div class="site-footer__identity">
+      <span class="site-footer__name">{SITE.author}</span>
+      <span class="site-footer__region">{SITE.region}</span>
+    </div>
+
+    <nav class="site-footer__links" aria-label={t.contact.kicker}>
+      <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+      <a href={CONTACT.github} target="_blank" rel="noopener">GitHub</a>
+      <a href={CONTACT.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+    </nav>
+
+    {
+      legal && (
+        <div class="site-footer__legal">
+          <h2 class="site-footer__legal-heading">{t.footer.legalHeading}</h2>
+          <p>
+            {legal.businessName} — {legal.legalForm}
+            <br />
+            {legal.address}
+            <br />
+            {t.footer.siretLabel} {legal.siret}
+            {legal.vat && (
+              <>
+                {' · '}
+                {t.footer.vatLabel} {legal.vat}
+              </>
+            )}
+          </p>
+          <p>
+            {t.footer.hostedBy}{' '}
+            <a href={legal.host.url} target="_blank" rel="noopener">
+              {legal.host.name}
+            </a>
+            {legal.host.address && `, ${legal.host.address}`}
+          </p>
+        </div>
+      )
+    }
+  </div>
+</footer>

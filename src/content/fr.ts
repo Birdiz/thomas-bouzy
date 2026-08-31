@@ -158,7 +158,7 @@ export const fr = {
       context:
         "Le produit FanTokens destiné aux traders était lent, instable et coûteux. Les endpoints livraient des payloads trop lourdes et pas assez orientées métier, les erreurs 500 étaient récurrentes, et la page mettait 17 secondes à devenir utilisable. Sur ce type de produit, une donnée incohérente n'est pas un défaut d'affichage : c'est une décision d'investissement prise sur une information fausse.",
       approach:
-        "Refonte complète des contrats d'API autour du domaine métier, menée en migration incrémentale et non en réécriture : la contrainte forte était que la livraison reste invisible côté utilisateur, sans casser le front pendant la transition. Sur le même périmètre, fiabilisation des données de tokens servies aux traders, refonte de l'agrégation, et intégration TradingView — le backend produit des datasets propres, le front les injecte via le SDK. Le vrai livrable est un contrat de données entre deux équipes, pas une intégration de librairie. Le front n'a pas été laissé aux autres pour autant : pendant huit sprints, le tech lead a rejoint cette équipe de trois comme quatrième développeur — configuration de build, optimisation d'images, features, correctifs, couverture de tests et suite e2e, en React et Next.js.",
+        "Refonte complète des contrats d'API autour du domaine métier, menée en migration incrémentale et non en réécriture : la contrainte forte était que la livraison reste invisible côté utilisateur, sans casser le front pendant la transition. Sur le même périmètre, fiabilisation des données de tokens servies aux traders, refonte de l'agrégation, et intégration TradingView — le backend produit des datasets propres, le front les injecte via le SDK. Le vrai livrable est un contrat de données entre deux équipes, pas une intégration de bibliothèque. Le front n'a pas été laissé aux autres pour autant : pendant huit sprints, le tech lead a rejoint cette équipe de trois comme quatrième développeur — configuration de build, optimisation d'images, features, correctifs, couverture de tests et suite e2e, en React et Next.js.",
       result:
         "Erreurs 500 récurrentes ramenées à zéro et Time To Interactive de 17 à 3 secondes, les payloads allégées et recentrées sur le métier en étant la cause principale. Image de conteneur de 1,7 Go à 200 Mo, déploiement d'une quinzaine de minutes à moins de 4, mémoire de 1 Go à quelques centaines de Mo, CPU de 2 cores à 100 millicores. Une directive de réduction de coût sur le même périmètre, traitée par batching des appels, endpoints de masse du fournisseur et surtout internalisation d'une partie de la donnée via un client RPC maison lisant les informations de tokens directement on-chain : 9 000 € → 3 000 € par an à qualité équivalente.",
     },
@@ -169,7 +169,7 @@ export const fr = {
       context:
         "En clair : un service qui place et réajuste tout seul de l'argent sur des marchés, où un ordre parti ne se rattrape pas. Techniquement, il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
       approach:
-        "Un microservice Node.js dédié, intégrant le SDK Meteora, avec lecture on-chain complète via RPC et une couche Fireblocks pour la custody et la signature des transactions — signer n'étant pas un appel de librairie mais un workflow d'approbation externe, avec sa latence et ses modes d'échec propres. Mise en service progressive : devnet d'abord, puis production sur fonds réels. Périmètre dit franchement : intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
+        "Un microservice Node.js dédié, intégrant le SDK Meteora, avec lecture on-chain complète via RPC et une couche Fireblocks pour la custody et la signature des transactions — signer n'étant pas un appel de bibliothèque mais un workflow d'approbation externe, avec sa latence et ses modes d'échec propres. Mise en service progressive : devnet d'abord, puis production sur fonds réels. Périmètre dit franchement : intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
       result:
         "En production sur fonds réels. La difficulté n'est pas d'émettre l'ordre : on ne contrôle ni la finalité ni le délai de confirmation, et la transaction qu'on croit perdue est peut-être déjà passée. Signature idempotente, suivi d'état de transaction et réconciliation avec la chaîne comme source de vérité sont conçus dès le départ, pas rattrapés après coup.",
     },
@@ -204,7 +204,7 @@ export const fr = {
       approach:
         "Un entonnoir de coût en huit étages sur les données ouvertes (RNA, Annuaire de l'administration), enrichies en explorant les sources publiques des collectivités, avec la provenance de chaque valeur conservée à côté d'elle. Local-first : un process, un fichier SQLite, une interface sur localhost — les requêtes partent de la machine de l'utilisateur, jamais de la mienne.",
       result:
-        "Sur l'Ille-et-Vilaine : 332 communes résolues sur 353 et 31 273 associations en 40 secondes, puis 36 170 classées et 748 domaines de messagerie vérifiés en quatre. Un pré-filtre mesuré ramène le volume appelant une inférence de 40,3 % à 6,5 % — l'objectif était 20 % — sans écarter une seule page ayant produit un contact, et avant qu'une ligne d'inférence n'existe.",
+        "Sur l'Ille-et-Vilaine : 332 communes résolues sur 353 et 31 273 associations en 40 secondes, puis 36 170 classées et 748 domaines de messagerie vérifiés en quatre secondes. Un pré-filtre mesuré ramène le volume appelant une inférence de 40,3 % à 6,5 % — l'objectif était 20 % — sans écarter une seule page ayant produit un contact, et avant qu'une ligne d'inférence n'existe.",
     },
   ],
 
@@ -220,21 +220,21 @@ export const fr = {
       period: 'Mai 2022 – Avril 2026',
       duration: '4 ans',
       place: 'Full remote',
-      title: 'Développeur backend senior · Référent technique backend, puis tech lead par intérim',
+      title: 'Ingénieur backend senior · Référent technique backend, puis tech lead par intérim',
       company: 'Socios.com (Chiliz)',
       summary:
-        'Plateforme mondiale de sport digital — fan tokens et engagement sportif, 1,5 M+ utilisateurs actifs. Trois rôles successifs sur la période : senior backend engineer, puis référent technique backend pendant dix-huit mois, puis tech lead par intérim pendant huit.',
+        'Plateforme mondiale de sport digital — fan tokens et engagement sportif, 1,5 M+ utilisateurs actifs. Trois rôles successifs sur la période : ingénieur backend senior, puis référent technique backend pendant dix-huit mois, puis tech lead par intérim pendant huit.',
       bullets: [
         "Conception d'une architecture event-driven (outbox pattern, SNS/SQS) et implémentation de l'Event Sourcing sur les flux de transactions wallet — plus de 1 000 transactions financières par minute.",
         "Découpage des domaines métier en microservices (DDD), et mise en place d'un processus RFC/ADR et d'une guideline API-first pour les décisions d'architecture inter-équipes.",
         "Déploiement de l'observabilité sur l'ensemble des services backend — OpenTelemetry et Datadog, dashboards par service, alerting sur les signaux qui précèdent la panne — couplé à une montée de la couverture de tests côté front : bugs remontés passés d'environ 20 par mois à 5.",
         "Refonte complète de l'API du produit FanTokens destiné aux traders, sans rupture de service ni régression visible, et pilotage de son coût : fournisseur de données ramené de 9 000 € à 3 000 € par an à qualité équivalente, par batching des appels, endpoints de masse et client RPC interne lisant les informations de tokens on-chain.",
         "Conception et mise en production d'un microservice Node.js d'opérations DeFi sur Solana — SDK Meteora, lecture on-chain via RPC, custody et signature via Fireblocks — déployé sur devnet, puis en production sur fonds réels.",
-        'Intégration de partenaires financiers tiers (dépositaires d’actifs numériques, protocoles d’échange), ensuite ouverte aux autres équipes en service partagé.',
-        'Tenue de la charge pendant les Fan Token Offerings — pics de 10 à 20 000 utilisateurs en quelques minutes — et conception des tests de charge (BlazeMeter).',
+        "Intégration de partenaires financiers tiers (dépositaires d'actifs numériques, protocoles d'échange), ensuite ouverte aux autres équipes en service partagé.",
+        'Tenue de la charge pendant les Fan Token Offerings — pics de 10 000 à 20 000 utilisateurs en quelques minutes — et conception des tests de charge (BlazeMeter).',
         "Pilotage technique de deux équipes produit — six personnes, cinq développeurs et un QA : onboarding, revues d'architecture, et la communauté de pratique backend.",
         "Astreinte sur les mises en production majeures, dont la refonte FanTokens. Incidents pilotés et coordonnés via Rootly : les travaux en cours s'arrêtent jusqu'à ce que la mitigation tienne, tech leads, QA et produit dans la même pièce.",
-        'Rédaction des évaluations de compétences et de savoir-être de ses pairs, adressées au Head of Tech et au Head of Engineering en amont du cycle annuel.',
+        'Rédaction des évaluations de compétences et de savoir-être de mes pairs, adressées au Head of Tech et au Head of Engineering en amont du cycle annuel.',
         "Propriété du déploiement et de l'empreinte d'exécution de ces services sur Kubernetes et ArgoCD — image de conteneur de 1,7 Go à 200 Mo, CPU de 2 cœurs à 100 millicores, déploiement d'environ quinze minutes à moins de quatre — sur un cluster opéré avec l'appui de l'équipe devops.",
         "Intégration de l'équipe front à trois comme quatrième développeur, sur huit sprints de deux semaines : un tech lead qui prend la place la moins senior pour apprendre une stack en production plutôt que de l'extérieur. Configuration de build, optimisation d'images, features, correctifs, couverture de tests, suite e2e, middleware et thème, en React et Next.js.",
         'Pilotage de trois migrations majeures de Symfony sur un système en production continue.',
@@ -355,11 +355,19 @@ export const fr = {
 
   contact: {
     kicker: 'Contact',
-    title: 'Un système qui doit tenir la charge ?',
+    title: 'Un système qui doit rester juste ?',
     blurb:
       "Disponible pour des postes backend senior et tech lead, et pour des missions freelance bornées : audits d'architecture event-driven, migrations Symfony sur des systèmes qui ne s'arrêtent pas, mise en place de l'observabilité, refonte de contrats d'API sans rupture de service, audits de coût infra et fournisseurs de données. Remote-first — je me déplace volontiers quand il faut une salle.",
     revealPhone: 'Afficher le numéro',
     pdfLabel: 'PDF',
     locationLine: 'Grand Est, France · Full remote depuis 8 ans · CET',
+  },
+
+  footer: {
+    legalHeading: 'Mentions légales',
+    hostedBy: 'Site hébergé par',
+    siretLabel: 'SIRET',
+    vatLabel: 'TVA',
+    landmark: 'Informations sur le site',
   },
 } satisfies ResumeContent;

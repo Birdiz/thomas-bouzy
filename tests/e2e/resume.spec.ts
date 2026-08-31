@@ -129,9 +129,12 @@ test.describe('phone number is not harvestable', () => {
     const page = await context.newPage();
     await page.goto('/');
     await expect(page.getByRole('button', { name: 'Show phone number' })).toHaveCount(0);
-    // Email and LinkedIn still get the visitor there.
-    await expect(page.getByRole('link', { name: 'birdiz@proton.me' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
+    // Email and LinkedIn still get the visitor there. Scoped to the contact
+    // section: the footer repeats both links site-wide, so an unscoped role
+    // query now matches twice and says nothing about this section.
+    const contact = page.locator('#contact');
+    await expect(contact.getByRole('link', { name: 'birdiz@proton.me' })).toBeVisible();
+    await expect(contact.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
     await context.close();
   });
 

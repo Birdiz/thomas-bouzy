@@ -53,16 +53,40 @@ const personSchema = {
     addressRegion: 'Grand Est',
     addressCountry: 'FR',
   },
-  sameAs: [CONTACT.linkedin],
+  sameAs: [CONTACT.linkedin, CONTACT.github],
   knowsLanguage: t.languages.map((l) => l.name),
   /* The Toolkit grid is gone; the dated Track record chips are the only
-     stack the page states, so they are the only stack the schema claims. */
-  knowsAbout: [...new Set(t.jobs.flatMap((job) => job.stack))],
+     stack the page states, so they are the only stack the schema claims.
+     Normalised first: a chip is written for a reader ("Symfony 2.7 → 4",
+     "React / Next.js") and reads as one skill, which is not what knowsAbout
+     means. Splitting the pairs and dropping the version arrow is what keeps
+     `React` from being claimed twice and `Symfony 2.7 → 4` from being
+     claimed as a technology that does not exist. Versions go the same way:
+     knowsAbout names a technology, and `Symfony 7` next to `Symfony 2.7`
+     is one technology counted twice. */
+  knowsAbout: [
+    ...new Set(
+      t.jobs
+        .flatMap((job) => job.stack)
+        .flatMap((chip) => chip.split(' / '))
+        .map((chip) =>
+          chip
+            .replace(/\s*→.*$/, '')
+            .replace(/\s+\d[\d.]*$/, '')
+            .trim(),
+        )
+        .filter(Boolean),
+    ),
+  ],
   alumniOf: {
     '@type': 'CollegeOrUniversity',
     name: 'Université de Reims Champagne-Ardenne',
   },
-  worksFor: t.jobs[0] ? { '@type': 'Organization', name: t.jobs[0].company } : undefined,
+  /* No worksFor. It used to be derived from jobs[0], which is the *most recent*
+     job, not necessarily a current one — so the schema went on telling crawlers
+     and ATS parsers that he still worked at an employer the visible page says he
+     left. A Person schema with no employer is accurate for someone working for
+     himself; a wrong one is worse than a missing one. */
 };
 
 const profilePageSchema = {
