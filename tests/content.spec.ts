@@ -182,13 +182,27 @@ describe('content corrections applied against the design', () => {
     for (const content of [en, fr]) {
       const chips = content.jobs.flatMap((job) => job.stack);
       expect(chips.length).toBeGreaterThan(0);
-      for (const tech of ['PHP', 'Symfony', 'Kubernetes', 'React']) {
+      for (const tech of ['PHP', 'Symfony', 'Kubernetes', 'ArgoCD', 'React', 'Next.js']) {
         expect(chips.join(' '), `${tech} left the page with the Toolkit`).toMatch(tech);
       }
       // The projects carry prose, not chips: the CV look Thomas rejected.
       for (const project of content.projects) {
         expect(project).not.toHaveProperty('stack');
       }
+    }
+  });
+
+  it('states the leadership scope as it actually was', () => {
+    // Both reference CVs carried "up to 6 developers, QA, PO" for months. It
+    // was two teams and six people — five developers and a QA — and the PO was
+    // never in scope. The inflated version is the one a reader would probe, so
+    // the corrected one is asserted rather than trusted to stay.
+    for (const content of [en, fr]) {
+      const bullets = content.jobs.flatMap((job) => job.bullets).join(' ');
+      expect(bullets).toMatch(/five developers|cinq développeurs/);
+      expect(bullets, 'the old inflated headcount is back').not.toMatch(
+        /6 (developers|développeurs)/,
+      );
     }
   });
 

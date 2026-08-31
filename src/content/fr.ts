@@ -158,7 +158,7 @@ export const fr = {
       context:
         "Le produit FanTokens destiné aux traders était lent, instable et coûteux. Les endpoints livraient des payloads trop lourdes et pas assez orientées métier, les erreurs 500 étaient récurrentes, et la page mettait 17 secondes à devenir utilisable. Sur ce type de produit, une donnée incohérente n'est pas un défaut d'affichage : c'est une décision d'investissement prise sur une information fausse.",
       approach:
-        "Refonte complète des contrats d'API autour du domaine métier, menée en migration incrémentale et non en réécriture : la contrainte forte était que la livraison reste invisible côté utilisateur, sans casser le front pendant la transition. Sur le même périmètre, fiabilisation des données de tokens servies aux traders, refonte de l'agrégation, et intégration TradingView — le backend produit des datasets propres, le front les injecte via le SDK. Le vrai livrable est un contrat de données entre deux équipes, pas une intégration de librairie.",
+        "Refonte complète des contrats d'API autour du domaine métier, menée en migration incrémentale et non en réécriture : la contrainte forte était que la livraison reste invisible côté utilisateur, sans casser le front pendant la transition. Sur le même périmètre, fiabilisation des données de tokens servies aux traders, refonte de l'agrégation, et intégration TradingView — le backend produit des datasets propres, le front les injecte via le SDK. Le vrai livrable est un contrat de données entre deux équipes, pas une intégration de librairie. Le front n'a pas été laissé aux autres pour autant : pendant huit sprints, le tech lead a rejoint cette équipe de trois comme quatrième développeur — configuration de build, optimisation d'images, features, correctifs, couverture de tests et suite e2e, en React et Next.js.",
       result:
         "Erreurs 500 récurrentes ramenées à zéro et Time To Interactive de 17 à 3 secondes, les payloads allégées et recentrées sur le métier en étant la cause principale. Image de conteneur de 1,7 Go à 200 Mo, déploiement d'une quinzaine de minutes à moins de 4, mémoire de 1 Go à quelques centaines de Mo, CPU de 2 cores à 100 millicores. Une directive de réduction de coût sur le même périmètre, traitée par batching des appels, endpoints de masse du fournisseur et surtout internalisation d'une partie de la donnée via un client RPC maison lisant les informations de tokens directement on-chain : 9 000 € → 3 000 € par an à qualité équivalente.",
     },
@@ -167,7 +167,7 @@ export const fr = {
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
       context:
-        "Il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
+        "En clair : un service qui place et réajuste tout seul de l'argent sur des marchés, où un ordre parti ne se rattrape pas. Techniquement, il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
       approach:
         "Un microservice Node.js dédié, intégrant le SDK Meteora, avec lecture on-chain complète via RPC et une couche Fireblocks pour la custody et la signature des transactions — signer n'étant pas un appel de librairie mais un workflow d'approbation externe, avec sa latence et ses modes d'échec propres. Mise en service progressive : devnet d'abord, puis production sur fonds réels. Périmètre dit franchement : intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
       result:
@@ -220,10 +220,10 @@ export const fr = {
       period: 'Mai 2022 – Avril 2026',
       duration: '4 ans',
       place: 'Full remote',
-      title: 'Senior Backend Engineer / Tech Lead',
+      title: 'Développeur backend senior · Référent technique backend, puis tech lead par intérim',
       company: 'Socios.com (Chiliz)',
       summary:
-        'Plateforme mondiale de sport digital — fan tokens et engagement sportif, 1,5 M+ utilisateurs actifs. Trois rôles successifs sur la période : senior backend engineer, référent technique backend, puis tech lead par intérim.',
+        'Plateforme mondiale de sport digital — fan tokens et engagement sportif, 1,5 M+ utilisateurs actifs. Trois rôles successifs sur la période : senior backend engineer, puis référent technique backend pendant dix-huit mois, puis tech lead par intérim pendant huit.',
       bullets: [
         "Conception d'une architecture event-driven (outbox pattern, SNS/SQS) et implémentation de l'Event Sourcing sur les flux de transactions wallet — plus de 1 000 transactions financières par minute.",
         "Découpage des domaines métier en microservices (DDD), et mise en place d'un processus RFC/ADR et d'une guideline API-first pour les décisions d'architecture inter-équipes.",
@@ -232,7 +232,11 @@ export const fr = {
         "Conception et mise en production d'un microservice Node.js d'opérations DeFi sur Solana — SDK Meteora, lecture on-chain via RPC, custody et signature via Fireblocks — déployé sur devnet, puis en production sur fonds réels.",
         'Intégration de partenaires financiers tiers (dépositaires d’actifs numériques, protocoles d’échange), ensuite ouverte aux autres équipes en service partagé.',
         'Tenue de la charge pendant les Fan Token Offerings — pics de 10 à 20 000 utilisateurs en quelques minutes — et conception des tests de charge (BlazeMeter).',
-        "Référent technique transverse sur deux squads produit (jusqu'à 6 développeurs, QA, PO) : onboarding, revues d'architecture, communauté de pratique backend.",
+        "Pilotage technique de deux équipes produit — six personnes, cinq développeurs et un QA : onboarding, revues d'architecture, et la communauté de pratique backend.",
+        "Astreinte sur les mises en production majeures, dont la refonte FanTokens. Incidents pilotés et coordonnés via Rootly : les travaux en cours s'arrêtent jusqu'à ce que la mitigation tienne, tech leads, QA et produit dans la même pièce.",
+        'Rédaction des évaluations de compétences et de savoir-être de ses pairs, adressées au Head of Tech et au Head of Engineering en amont du cycle annuel.',
+        "Propriété du déploiement et de l'empreinte d'exécution de ces services sur Kubernetes et ArgoCD — image de conteneur de 1,7 Go à 200 Mo, CPU de 2 cœurs à 100 millicores, déploiement d'environ quinze minutes à moins de quatre — sur un cluster opéré avec l'appui de l'équipe devops.",
+        "Intégration de l'équipe front à trois comme quatrième développeur, sur huit sprints de deux semaines : un tech lead qui prend la place la moins senior pour apprendre une stack en production plutôt que de l'extérieur. Configuration de build, optimisation d'images, features, correctifs, couverture de tests, suite e2e, middleware et thème, en React et Next.js.",
         'Pilotage de trois migrations majeures de Symfony sur un système en production continue.',
       ],
       stack: [
@@ -242,11 +246,14 @@ export const fr = {
         'Behat',
         'AWS',
         'Kubernetes',
+        'ArgoCD',
         'Docker',
         'GitLab CI/CD',
         'OpenTelemetry',
         'Datadog',
         'Node.js / TypeScript',
+        'React / Next.js',
+        'Rootly',
         'Solana',
         'Fireblocks',
       ],
@@ -258,13 +265,13 @@ export const fr = {
       title: 'Lead Backend Developer',
       company: 'Kiss The Bride — agence digitale',
       summary:
-        "Plateforme SaaS multi-tenant d'engagement des forces de vente par la gamification, déployée pour des grands comptes.",
+        "Plateforme SaaS multi-tenant d'engagement des forces de vente par la gamification, déployée pour des grands comptes. Seul développeur backend de la plateforme, et lead technique de l'équipe.",
       bullets: [
         "Refonte d'un monolithe Symfony 2.7 / AngularJS sans couverture de tests vers une architecture API-first (Symfony 4, API Platform) et un front React — deux migrations menées en parallèle sur un système en production continue, la mise en place de la couverture de tests conditionnant la reprise.",
         "Industrialisation du déploiement multi-tenant : mise en route d'un nouveau grand compte ramenée à une journée — base de données isolée par client, assistant d'initialisation développé en Node.js et orchestration Jenkins.",
         "Définition des contrats d'API servant deux consommateurs aux cycles de release distincts, front web et application mobile : conventions de payload, taxonomie d'erreurs et guidelines d'usage d'API Platform pour l'équipe.",
         "Diffusion temps réel des classements et résultats de forces de vente, par une intégration Mercure (Server-Sent Events) sur l'API.",
-        'Encadrement de 4 développeurs juniors sur deux ans, référent technique backend : revues de code, standards de test, montée en compétence.',
+        "Encadrement des quatre développeurs juniors qui m'étaient rattachés pendant deux ans, comme référent technique backend : revues de code, standards de test, montée en compétence.",
       ],
       stack: [
         'Symfony 2.7 → 4',
