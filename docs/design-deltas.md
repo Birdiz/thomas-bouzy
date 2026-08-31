@@ -141,7 +141,9 @@ re-litigated on the next pass.
    it is a bullet on the page and on the project card, not a maybe.
 
 7. **The downloadable CV publishes what the page withholds.** The PDFs carry
-   `06 32 13 45 47 · … · Grandrupt, Grand Est (88)`. The page carries neither:
+   the mobile number, and the locality the page stops short of — quoted here as
+   a description rather than reproduced, because a note about a leak published
+   in a public repository is one. The page carries neither:
    the number reaches it encoded, after a click and never in the source
    ([ADR 5](adr/0005-phone-number-is-not-in-the-html.md)), and the location
    stops at the region by Thomas's own call. One click on "Download CV" undoes
