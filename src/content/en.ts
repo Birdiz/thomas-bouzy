@@ -69,20 +69,20 @@ export const en = {
 
   failureModes: [
     {
-      label: 'Double execution',
-      text: 'A message arrives twice and the money moves twice. Nobody notices until reconciliation, and by then it is a support ticket with a regulator attached.',
+      quote: '“We credited the same payout twice, and only saw it at reconciliation.”',
+      text: 'Double execution. A consumer replays a message, and nothing in the code tells the second pass from the first. By then it is not a technical incident: it is an accounting discrepancy, with a regulator attached.',
     },
     {
-      label: 'A balance nobody can explain',
-      text: 'State-based models answer what the balance is, never how it got there — which is the only question finance, support and auditors actually ask.',
+      quote: '“We cannot explain how this balance got there.”',
+      text: 'A state-based model. It answers what the balance is today, never the sequence of facts that produced it — the only thing finance, support and auditors actually ask for.',
     },
     {
-      label: 'The migration that never happens',
-      text: 'A rewrite that needs a stop window on a system that cannot stop is a rewrite that stays on the roadmap for three years.',
+      quote: '“The migration has been on the roadmap for two years.”',
+      text: 'The rewrite that needs a stop window. On a system that cannot stop, that window never comes: the work slips from one quarter to the next for good reasons, while the cost of the old model keeps running.',
     },
     {
-      label: 'Defects found by users',
-      text: 'A bug you learn about from a ticket was detectable hours earlier. What is not instrumented is not reliable, it is only untested in production.',
+      quote: '“We find out about our own bugs from customer tickets.”',
+      text: 'Defects found by users. A bug you learn about from a ticket was detectable hours earlier. What is not instrumented is not reliable: it is only untested in production, and the customer is doing your acceptance testing.',
     },
   ],
 
@@ -127,6 +127,7 @@ export const en = {
     title: 'Six things worth opening',
     intro:
       'Each one is a real system in production. Open a card for the context, the approach and what it actually changed.',
+    labelPlain: 'In plain terms:',
     labelContext: 'Context',
     labelApproach: 'Approach',
     labelResult: 'Result',
@@ -137,6 +138,8 @@ export const en = {
       title: 'Event Sourcing on wallet transactions',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
+      plain:
+        "Making every movement in a wallet traceable one by one, instead of only ever knowing today's balance.",
       context:
         'Fan-token wallets moved real money and real assets, on a global digital sports platform with 1.5M+ active users. The existing state-based model made it impossible to answer "how did this balance get here?" — a hard problem when finance, support and regulators all ask that question.',
       approach:
@@ -148,6 +151,8 @@ export const en = {
       title: 'Rebuilding a live API without users noticing',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
+      plain:
+        'Rebuilding the foundations of a product while it runs, with no downtime and no broken screens for the people using it.',
       context:
         'The trader-facing FanTokens product was slow, unstable and expensive. Endpoints shipped payloads that were too heavy and not domain-oriented enough, 500 errors were recurring, and the page took 17 seconds to become usable. On this kind of product an inconsistent number is not a display defect — it is an investment decision taken on false information.',
       approach:
@@ -159,8 +164,10 @@ export const en = {
       title: 'On-chain transactions that commit real funds',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
+      plain:
+        'A service that places and readjusts money on markets by itself, where an order once sent cannot be called back.',
       context:
-        'In plain terms: a service that places and readjusts money on markets by itself, where an order once sent cannot be called back. Technically, DeFi operations on Solana had to be run from the platform: swaps, pool creation, opening and closing liquidity positions, claiming rewards, rebalancing. A mistake here does not cost a retry — it costs money that has already gone.',
+        'DeFi operations on Solana had to be run from the platform: swaps, pool creation, opening and closing liquidity positions, claiming rewards, rebalancing. A mistake here does not cost a retry — it costs money that has already gone.',
       approach:
         'A dedicated Node.js microservice integrating the Meteora SDK, with full on-chain reads over RPC and a Fireblocks layer for custody and transaction signing — signing being an external approval workflow with its own latency and failure modes, not a library call. Rolled out progressively: devnet first, then production with real funds. Scope stated plainly: SDK integration and transaction operation, no smart contract authoring. The third-party financial partner integrations built here — digital-asset custodians, exchange protocols — were later opened to other teams as a shared service.',
       result:
@@ -170,6 +177,8 @@ export const en = {
       title: 'Onboarding a new enterprise account in a day',
       org: 'Kiss The Bride',
       period: 'Jan 2018 – April 2022',
+      plain:
+        'Opening a new client account meant bespoke setup every time; it now fits inside a single day.',
       context:
         'A multi-tenant SaaS for sales-force engagement through gamification, sold to large enterprise accounts, running on a Symfony 2.7 / AngularJS monolith with no test coverage at all. Every client gets an isolated database, so every new account meant a bespoke setup.',
       approach:
@@ -181,6 +190,8 @@ export const en = {
       title: "Auditing a codebase I didn't write",
       org: 'Civic tech, volunteer',
       period: '2026',
+      plain:
+        'Telling a team what in their code could cost them dearly — then fixing the critical parts myself.',
       context:
         'A volunteer team shipping fast across a three-app monorepo — a public site, a shop taking real payments, a back-office. No automated tests anywhere, a CI that only checked the build, and no map of what that was costing.',
       approach:
@@ -192,6 +203,8 @@ export const en = {
       title: 'Association directories from open data',
       org: 'Personal project',
       period: '2026',
+      plain:
+        'Rebuilding by machine, in seconds, a directory that used to be compiled by hand, one town at a time.',
       context:
         "Building a département's association directory is done by hand today — commune by commune, copy-pasted from town-hall sites. Slow, not reproducible, and nobody can say where any given line came from.",
       approach:

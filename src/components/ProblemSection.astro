@@ -26,7 +26,11 @@ const { t, num } = Astro.props;
               {String(i + 1).padStart(2, '0')}
             </span>
             <div>
-              <h3 class="problem__mode-label">{mode.label}</h3>
+              {/* The client's sentence is the heading, and the diagnosis is the
+                  body. A reader who recognises his own words has qualified
+                  himself before reading a line of mine — see
+                  docs/adr/0012. */}
+              <h3 class="problem__mode-quote">{mode.quote}</h3>
               <p class="problem__mode-text">{mode.text}</p>
             </div>
           </li>

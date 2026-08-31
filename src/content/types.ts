@@ -29,14 +29,40 @@ export interface Project {
   title: string;
   org: string;
   period: string;
+  /**
+   * One sentence saying what the work was, before any word that has to be
+   * learned. Rendered above the three facets, under the `work.labelPlain`
+   * lead-in.
+   *
+   * The rule is Thomas's own: the on-chain card opened "In plain terms: a
+   * service that places and readjusts money on markets by itself" and then went
+   * technical, and it was the only card of six that did. Chantier C generalised
+   * it — a field rather than a habit, because a habit applied once in six is
+   * how it got here. `tests/content.spec.ts` holds the line by failing when a
+   * plain line names a technology.
+   */
+  plain: string;
   context: string;
   approach: string;
   result: string;
 }
 
-/** One way the interesting kind of system goes wrong. */
+/**
+ * One way the interesting kind of system goes wrong — stated twice.
+ *
+ * The section's job is recognition, not taxonomy: a reader who finds his own
+ * sentence here qualifies himself, and no summary of a failure mode does that
+ * as well as the sentence he has already said out loud. So the client's words
+ * lead and the diagnosis follows, rather than the reverse — which is how these
+ * four read until Chantier C, well written but addressed to a peer.
+ *
+ * The names the headings used to carry ("Double execution", "A balance nobody
+ * can explain") are not lost: each now opens the diagnosis it titled.
+ */
 export interface FailureMode {
-  label: string;
+  /** The sentence a client says, in their words, quote marks included. */
+  quote: string;
+  /** What it actually is, in mine. Opens by naming the failure mode. */
   text: string;
 }
 
@@ -155,6 +181,8 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     intro: string;
+    /** Lead-in for `Project.plain`. Carries its own colon: French spaces it. */
+    labelPlain: string;
     labelContext: string;
     labelApproach: string;
     labelResult: string;

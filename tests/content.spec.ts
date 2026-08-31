@@ -83,6 +83,10 @@ describe('EN/FR parity', () => {
       '$.work.kicker',
       '$.work.title',
       '$.work.intro',
+      '$.work.labelPlain',
+      '$.failureModes[0].quote',
+      '$.failureModes[0].text',
+      '$.projects[0].plain',
       '$.concepts[0].gloss',
       '$.concepts[1].label',
       '$.about.title',
@@ -292,6 +296,106 @@ describe('content corrections applied against the design', () => {
       for (const [path, text] of walkStrings(content)) {
         expect(text.replace(/\s/g, ''), `phone digits found at ${path}`).not.toMatch(
           /(\+33|0)6321345/,
+        );
+      }
+    }
+  });
+});
+
+describe('Chantier C — the mirror', () => {
+  it("leads each failure mode with the client's own sentence", () => {
+    // The four modes were well written and addressed to a peer: "Double
+    // execution", "A balance nobody can explain". The section's job is
+    // recognition, not taxonomy — a reader who finds a sentence he has already
+    // said out loud qualifies himself, and no summary does that as well.
+    //
+    // So the quote is the heading. It is asserted to actually be quoted,
+    // because an unquoted first-person line reads as Thomas speaking, which
+    // inverts the whole device.
+    const marks: Record<'en' | 'fr', [string, string]> = {
+      en: ['\u201c', '\u201d'],
+      fr: ['\u00ab', '\u00bb'],
+    };
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const [open, close] = marks[locale];
+      expect(content.failureModes).toHaveLength(4);
+      for (const mode of content.failureModes) {
+        expect(mode.quote.startsWith(open), `${locale}: ${mode.quote} is not quoted`).toBe(true);
+        expect(mode.quote.endsWith(close), `${locale}: ${mode.quote} is not quoted`).toBe(true);
+      }
+    }
+  });
+
+  it('keeps the failure mode names the headings used to carry', () => {
+    // The mirror replaced four labels that named a thing. The names are worth
+    // keeping — they are the vocabulary the rest of the page argues in — so
+    // each one now opens the diagnosis it used to title. This test is what
+    // stops the rewrite from having quietly cost them.
+    const names: [RegExp, RegExp][] = [
+      [/^Double execution\./, /^La double exécution\./],
+      [/state-based model/i, /modèle basé état/i],
+      [/rewrite that needs a stop window/i, /réécriture qui exige une fenêtre d'arrêt/i],
+      [/^Defects found by users\./, /^Les défauts trouvés par les utilisateurs\./],
+    ];
+    names.forEach(([enPattern, frPattern], i) => {
+      expect(en.failureModes[i]?.text, `EN mode ${i} lost its name`).toMatch(enPattern);
+      expect(fr.failureModes[i]?.text, `FR mode ${i} lost its name`).toMatch(frPattern);
+    });
+  });
+
+  it('opens every project card in plain language, naming no technology', () => {
+    // "In plain terms:" was Thomas's own device, used on the on-chain card and
+    // nowhere else — one card in six. Generalising it as a habit is how it got
+    // to one in six; generalising it as a field with a rule is what holds.
+    //
+    // The rule: the line says what the work was before any word a reader has to
+    // learn. `schema.knowsAbout` is exactly the list of words this page teaches,
+    // so it doubles as the blocklist and maintains itself.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      expect(content.work.labelPlain.trim().endsWith(':')).toBe(true);
+
+      for (const project of content.projects) {
+        expect(
+          project.plain.trim().length,
+          `${locale}: ${project.title} has no plain line`,
+        ).toBeGreaterThan(0);
+
+        // A lede, not a fourth facet. The context paragraph is where the detail
+        // goes; this line has one job and loses it at four clauses.
+        expect(
+          project.plain.length,
+          `${locale}: the plain line on ${project.title} is a paragraph`,
+        ).toBeLessThan(160);
+
+        for (const tech of content.schema.knowsAbout) {
+          expect(
+            project.plain,
+            `${locale}: ${project.title} explains itself with ${tech}`,
+          ).not.toContain(tech);
+        }
+      }
+    }
+  });
+
+  it('carries the plain-terms marker in the label, never inline in the prose', () => {
+    // It used to be the first two words of one context paragraph. Now the
+    // component renders it, so a second copy inside the content would print it
+    // twice — and the card that has it inline is the card that stops being
+    // rewritable without noticing.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const project of content.projects) {
+        const body = `${project.plain} ${project.context} ${project.approach} ${project.result}`;
+        expect(body, `${locale}: ${project.title} still says it inline`).not.toMatch(
+          /In plain terms|En clair/i,
         );
       }
     }

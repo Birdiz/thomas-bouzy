@@ -27,6 +27,11 @@ chronology, no job title, no years badge and no stack chips — those are in the
 downloadable PDF, which the page reaches exactly once, from About. See
 [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md).
 
+It also speaks in the reader's words rather than in its own: the four failure
+modes it opens on are quoted client sentences, and every project card leads with
+one plain line that names no technology. Both are asserted —
+[ADR 12](docs/adr/0012-the-clients-sentence-first.md).
+
 ## Still to supply
 
 The site builds and deploys without these; it degrades on purpose rather than

@@ -71,20 +71,20 @@ export const fr = {
 
   failureModes: [
     {
-      label: 'La double exécution',
-      text: "Un message arrive deux fois et l'argent part deux fois. Personne ne le voit avant la réconciliation, et c'est alors un ticket de support avec un régulateur au bout.",
+      quote: "« On a recrédité deux fois, et on ne l'a vu qu'à la réconciliation. »",
+      text: "La double exécution. Un consumer rejoue un message, et rien dans le code ne distingue le second passage du premier. Ce n'est déjà plus un incident technique à ce stade : c'est un écart comptable, avec un régulateur au bout.",
     },
     {
-      label: 'Un solde que personne ne sait expliquer',
-      text: "Un modèle basé état dit ce qu'est le solde, jamais comment il est arrivé là — la seule question que posent réellement la finance, le support et l'audit.",
+      quote: '« On ne sait pas expliquer comment ce solde est arrivé là. »',
+      text: "Un modèle basé état. Il dit ce qu'est le solde aujourd'hui, jamais la suite de faits qui l'a produit — la seule chose que demandent réellement la finance, le support et l'audit.",
     },
     {
-      label: 'La migration qui ne se fait jamais',
-      text: "Une réécriture qui exige une fenêtre d'arrêt sur un système qui ne s'arrête pas, c'est une réécriture qui reste trois ans dans la roadmap.",
+      quote: '« La migration est dans la roadmap depuis deux ans. »',
+      text: "La réécriture qui exige une fenêtre d'arrêt. Sur un système qui ne s'arrête pas, cette fenêtre n'arrive jamais : le chantier glisse d'un trimestre à l'autre pour de bonnes raisons, pendant que le coût de l'ancien modèle continue de courir.",
     },
     {
-      label: 'Les défauts trouvés par les utilisateurs',
-      text: "Un bug qu'on découvre par un ticket était détectable des heures plus tôt. Ce qui n'est pas instrumenté n'est pas fiable, c'est juste non testé en production.",
+      quote: '« On apprend nos bugs par les tickets clients. »',
+      text: "Les défauts trouvés par les utilisateurs. Un bug découvert par un ticket était détectable des heures plus tôt. Ce qui n'est pas instrumenté n'est pas fiable : c'est juste non testé en production, et le client fait la recette à votre place.",
     },
   ],
 
@@ -129,6 +129,7 @@ export const fr = {
     title: 'Six sujets à ouvrir',
     intro:
       "Chacun est un système réel en production. Ouvrez une carte pour le contexte, l'approche et ce que ça a changé.",
+    labelPlain: 'En clair :',
     labelContext: 'Contexte',
     labelApproach: 'Approche',
     labelResult: 'Résultat',
@@ -139,6 +140,8 @@ export const fr = {
       title: 'Event Sourcing sur les transactions wallet',
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
+      plain:
+        "Rendre chaque mouvement d'un portefeuille traçable un par un, au lieu de ne connaître que le solde du jour.",
       context:
         "Les wallets de fan tokens manipulaient de l'argent et des actifs réels, sur une plateforme mondiale de sport digital à plus de 1,5 million d'utilisateurs actifs. Le modèle basé état rendait impossible de répondre à « comment ce solde est-il arrivé là ? » — une question que posent la finance, le support et le régulateur.",
       approach:
@@ -150,6 +153,8 @@ export const fr = {
       title: "Refaire une API de production sans que l'utilisateur s'en aperçoive",
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
+      plain:
+        "Reconstruire les fondations d'un produit qui tourne, sans une coupure ni un écran cassé pour ceux qui s'en servent.",
       context:
         "Le produit FanTokens destiné aux traders était lent, instable et coûteux. Les endpoints livraient des payloads trop lourdes et pas assez orientées métier, les erreurs 500 étaient récurrentes, et la page mettait 17 secondes à devenir utilisable. Sur ce type de produit, une donnée incohérente n'est pas un défaut d'affichage : c'est une décision d'investissement prise sur une information fausse.",
       approach:
@@ -161,8 +166,10 @@ export const fr = {
       title: 'Des transactions on-chain qui engagent des fonds réels',
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
+      plain:
+        "Un service qui place et réajuste tout seul de l'argent sur des marchés, où un ordre parti ne se rattrape pas.",
       context:
-        "En clair : un service qui place et réajuste tout seul de l'argent sur des marchés, où un ordre parti ne se rattrape pas. Techniquement, il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
+        "Il fallait opérer depuis la plateforme des opérations DeFi sur Solana : swap, création de pool, ouverture et fermeture de positions de liquidité, claim de rewards, rebalance. Ici, une erreur ne coûte pas un nouvel essai — elle coûte de l'argent déjà parti.",
       approach:
         "Un microservice Node.js dédié, intégrant le SDK Meteora, avec lecture on-chain complète via RPC et une couche Fireblocks pour la custody et la signature des transactions — signer n'étant pas un appel de bibliothèque mais un workflow d'approbation externe, avec sa latence et ses modes d'échec propres. Mise en service progressive : devnet d'abord, puis production sur fonds réels. Périmètre dit franchement : intégration de SDK et opération de transactions, pas d'écriture de smart contracts. L'intégration de partenaires financiers tiers construite ici — dépositaires d'actifs numériques, protocoles d'échange — a ensuite été ouverte aux autres équipes en service partagé.",
       result:
@@ -172,6 +179,8 @@ export const fr = {
       title: 'Démarrer un nouveau grand compte en une journée',
       org: 'Kiss The Bride',
       period: 'Janv. 2018 – Avril 2022',
+      plain:
+        "L'ouverture d'un nouveau client demandait un paramétrage sur mesure à chaque fois ; elle tient désormais dans une journée.",
       context:
         "Une plateforme SaaS multi-tenant d'engagement des forces de vente par la gamification, vendue à des grands comptes, sur un monolithe Symfony 2.7 / AngularJS sans la moindre couverture de tests. Chaque client a sa base isolée, donc chaque nouveau compte imposait un paramétrage sur mesure.",
       approach:
@@ -183,6 +192,8 @@ export const fr = {
       title: "Auditer une base de code qui n'est pas la mienne",
       org: 'Civic tech, bénévolat',
       period: '2026',
+      plain:
+        'Dire à une équipe ce qui, dans son code, peut lui coûter cher — puis corriger moi-même ce qui était critique.',
       context:
         'Une équipe bénévole qui livre vite, sur un monorepo de trois applications — un site public, une boutique qui encaisse, un back-office. Aucun test automatisé, une CI qui ne vérifiait que le build, et aucune carte de ce que ça coûtait.',
       approach:
@@ -194,6 +205,8 @@ export const fr = {
       title: "Annuaires associatifs depuis l'open data",
       org: 'Projet personnel',
       period: '2026',
+      plain:
+        "Reconstituer par la machine, en quelques secondes, un annuaire qu'on établissait à la main commune par commune.",
       context:
         "Constituer l'annuaire des associations d'un département se fait à la main, commune par commune, par copier-coller depuis les sites de mairie. C'est long, non reproductible, et personne ne peut dire d'où vient une ligne.",
       approach:

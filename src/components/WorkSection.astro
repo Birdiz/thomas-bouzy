@@ -38,6 +38,13 @@ const { t, num } = Astro.props;
 
           <div class="project__panel">
             <div class="project__rule" aria-hidden="true" />
+            {/* Thomas's own rule, applied to every card rather than to one:
+                say what the work was before using a word anyone has to learn.
+                The label carries its own colon because French spaces it. */}
+            <p class="project__plain">
+              <span class="project__plain-label">{t.work.labelPlain}</span>{' '}
+              {project.plain}
+            </p>
             <div class="project__facets">
               <div class="project__facet">
                 <p class="kicker project__facet-label">{t.work.labelContext}</p>
