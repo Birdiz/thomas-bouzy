@@ -19,20 +19,15 @@ export const en = {
   nav: {
     work: 'Work',
     approach: 'Approach',
-    experience: 'Experience',
     about: 'About',
     contact: 'Get in touch',
   },
 
   hero: {
-    availability: 'Freelance now · permanent roles from September 2026',
-    role: 'Senior Software Engineer — architecture & technical leadership',
+    availability: 'Available now',
     blurb:
       'I design transactional systems that have to stay correct while they stay up. Twelve years of backend and architecture — event-driven flows, Event Sourcing on wallets, and on-chain operations where a mistake costs real money.',
-    yearsCount: '12',
-    yearsLabel: 'years',
     ctaWork: 'See the work',
-    ctaPdf: 'Download CV',
   },
 
   concepts: [
@@ -117,7 +112,7 @@ export const en = {
     },
     {
       title: 'What is not instrumented is not reliable.',
-      text: 'Observability before optimisation. You do not argue about performance you have not measured, and you do not fix a defect you discovered through a user ticket. That is what took reported bugs from around twenty a month to five.',
+      text: 'Observability before optimisation. You do not argue about performance you have not measured, and you do not fix a defect you discovered through a user ticket. OpenTelemetry and Datadog across every backend service, per-service dashboards, alerting on the signals that precede failure: that is what took reported bugs from around twenty a month to five.',
       cost: 'Delivery time spent on instrumentation, and the harder decision of what to observe — one alert too many kills every alert.',
     },
     {
@@ -143,11 +138,11 @@ export const en = {
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
       context:
-        'Fan-token wallets moved real money and real assets. The existing state-based model made it impossible to answer "how did this balance get here?" — a hard problem when finance, support and regulators all ask that question.',
+        'Fan-token wallets moved real money and real assets, on a global digital sports platform with 1.5M+ active users. The existing state-based model made it impossible to answer "how did this balance get here?" — a hard problem when finance, support and regulators all ask that question.',
       approach:
         'Introduced Event Sourcing on the transaction flows with an outbox pattern over SNS/SQS, so every balance change is a stored, replayable fact rather than an overwritten row. Projections rebuild read models from the log.',
       result:
-        '1,000+ financial transactions a minute with a complete audit trail, reconciliation that stopped being archaeology, and bug investigations that replay instead of guess.',
+        '1,000+ financial transactions a minute with a complete audit trail, reconciliation that stopped being archaeology, and bug investigations that replay instead of guess. The same flow absorbs the Fan Token Offerings — peaks of 10,000–20,000 users within minutes — on load tests designed for it (BlazeMeter).',
     },
     {
       title: 'Rebuilding a live API without users noticing',
@@ -158,7 +153,7 @@ export const en = {
       approach:
         'A full redesign of the API contracts around the business domain, run as an incremental migration rather than a rewrite: the hard constraint was that the rollout stay invisible to users, without breaking the frontend during the transition. On the same scope, making the token data served to traders consistent, redesigning the aggregation, and a TradingView integration where the backend produces clean datasets and the frontend injects them through the SDK — a data contract negotiated between two teams more than a library integration. The frontend was not left to others either: for eight sprints the tech lead joined that three-person team as its fourth developer — build configuration, image optimisation, features, fixes, test coverage and the e2e suite, in React and Next.js.',
       result:
-        "Recurring 500s brought to zero and Time To Interactive from 17 to 3 seconds, lighter domain-focused payloads being the primary cause. Container image 1.7 GB → 200 MB, deployment from around 15 minutes to under 4, memory 1 GB → a few hundred MB, CPU 2 cores → 100 millicores. A cost-reduction directive on the same scope answered by batching calls, moving to the provider's bulk endpoints and, above all, internalising part of the data with an in-house RPC client reading token information directly on-chain: €9,000 → €3,000 a year at equivalent quality.",
+        "Recurring 500s brought to zero and Time To Interactive from 17 to 3 seconds, lighter domain-focused payloads being the primary cause. Container image 1.7 GB → 200 MB, deployment from around 15 minutes to under 4, memory 1 GB → a few hundred MB, CPU 2 cores → 100 millicores — the deployment and the runtime footprint of those services are mine to own, on Kubernetes and ArgoCD, on a cluster operated alongside the devops team. A cost-reduction directive on the same scope answered by batching calls, moving to the provider's bulk endpoints and, above all, internalising part of the data with an in-house RPC client reading token information directly on-chain: €9,000 → €3,000 a year at equivalent quality. Shipped on call, incidents driven and coordinated through Rootly: work in progress stops until the mitigation lands, with tech leads, QA and product in the same room.",
     },
     {
       title: 'On-chain transactions that commit real funds',
@@ -167,7 +162,7 @@ export const en = {
       context:
         'In plain terms: a service that places and readjusts money on markets by itself, where an order once sent cannot be called back. Technically, DeFi operations on Solana had to be run from the platform: swaps, pool creation, opening and closing liquidity positions, claiming rewards, rebalancing. A mistake here does not cost a retry — it costs money that has already gone.',
       approach:
-        'A dedicated Node.js microservice integrating the Meteora SDK, with full on-chain reads over RPC and a Fireblocks layer for custody and transaction signing — signing being an external approval workflow with its own latency and failure modes, not a library call. Rolled out progressively: devnet first, then production with real funds. Scope stated plainly: SDK integration and transaction operation, no smart contract authoring.',
+        'A dedicated Node.js microservice integrating the Meteora SDK, with full on-chain reads over RPC and a Fireblocks layer for custody and transaction signing — signing being an external approval workflow with its own latency and failure modes, not a library call. Rolled out progressively: devnet first, then production with real funds. Scope stated plainly: SDK integration and transaction operation, no smart contract authoring. The third-party financial partner integrations built here — digital-asset custodians, exchange protocols — were later opened to other teams as a shared service.',
       result:
         'In production on real funds. The hard part is not submitting the order: you control neither finality nor confirmation delay, and the transaction you believe lost may already have landed. Idempotent signing, transaction state tracking and reconciliation against the chain as the source of truth are designed in, not handled afterwards.',
     },
@@ -206,127 +201,18 @@ export const en = {
     },
   ],
 
-  experience: {
-    kicker: 'Track record',
-    title: 'Where the hours went',
-    earlierShow: 'Show earlier experience (2014–2018)',
-    earlierHide: 'Hide earlier experience',
-  },
-
-  jobs: [
-    {
-      period: 'May 2022 – April 2026',
-      duration: '4 years',
-      place: 'Fully remote',
-      title: 'Senior Backend Engineer · Backend Tech Representative, then acting Tech Lead',
-      company: 'Socios.com (Chiliz)',
-      summary:
-        'Global digital sports entertainment platform — fan tokens and sports engagement, 1.5M+ active users. Three successive roles over the period: senior backend engineer, then backend tech representative for eighteen months, then acting tech lead for eight.',
-      bullets: [
-        'Designed an event-driven architecture (outbox pattern, SNS/SQS) and implemented Event Sourcing on wallet transaction flows — 1,000+ financial transactions per minute.',
-        'Split business domains into microservices (DDD), and introduced an RFC/ADR process and an API-first guideline for cross-team architecture decisions.',
-        'Rolled out observability across all backend services — OpenTelemetry and Datadog, per-service dashboards, alerting on the signals that precede failure — alongside raised frontend test coverage: reported bugs down from around 20 a month to 5.',
-        'Led a full API redesign of the trader-facing FanTokens product with no service interruption and no user-visible regression, and owned its cost: data-provider spend cut from €9,000 to €3,000 a year at equivalent quality, through call batching, bulk endpoints and an in-house RPC client reading token information on-chain.',
-        'Designed and shipped a Node.js microservice for DeFi operations on Solana — Meteora SDK, on-chain reads over RPC, custody and signing through Fireblocks — rolled out on devnet, then in production on real funds.',
-        'Integrated third-party financial partners (digital-asset custodians, exchange protocols), later opened to other teams as a shared service.',
-        'Sustained load during Fan Token Offerings — peaks of 10,000–20,000 users within minutes — and designed the load tests (BlazeMeter).',
-        'Technical leadership across two product teams — six people, five developers and a QA engineer: onboarding, architecture reviews, and the backend community of practice.',
-        'On call for the major production releases, the FanTokens redesign among them. Incidents driven and coordinated through Rootly: work in progress stops until the mitigation lands, with tech leads, QA and product in the same room.',
-        'Wrote the skills and behaviour assessments of peers, addressed to the Head of Tech and the Head of Engineering ahead of the annual review cycle.',
-        'Owned the deployment and the runtime footprint of those services on Kubernetes and ArgoCD — container image 1.7 GB to 200 MB, CPU 2 cores to 100 millicores, deployment from roughly fifteen minutes to under four — on a cluster operated alongside the devops team.',
-        'Joined the three-person frontend team as its fourth developer for eight two-week sprints: a tech lead taking the least senior seat to learn a stack in production rather than from the outside. Build configuration, image optimisation, features, fixes, test coverage, the e2e suite, middleware and theming, in React and Next.js.',
-        'Led three major Symfony version migrations on a continuously running production system.',
-      ],
-      stack: [
-        'PHP',
-        'Symfony 7',
-        'PHPUnit',
-        'Behat',
-        'AWS',
-        'Kubernetes',
-        'ArgoCD',
-        'Docker',
-        'GitLab CI/CD',
-        'OpenTelemetry',
-        'Datadog',
-        'Node.js / TypeScript',
-        'React / Next.js',
-        'Rootly',
-        'Solana',
-        'Fireblocks',
-      ],
-    },
-    {
-      period: 'Jan 2018 – April 2022',
-      duration: '4 years',
-      place: 'Freelance · Remote',
-      title: 'Lead Backend Developer',
-      company: 'Kiss The Bride — digital agency',
-      summary:
-        'Multi-tenant SaaS platform for sales-force engagement through gamification, deployed for large enterprise accounts. Sole backend developer on the platform, and technical lead of the team.',
-      bullets: [
-        'Rebuilt a Symfony 2.7 / AngularJS monolith with no test coverage into an API-first architecture (Symfony 4, API Platform) with a React frontend — two migrations run in parallel on a continuously running production system, with test coverage established as a prerequisite.',
-        'Industrialised the multi-tenant deployment: onboarding a new enterprise account came down to one day — an isolated database per client, an initialisation wizard built in Node.js, and Jenkins orchestration.',
-        'Defined the API contracts serving two consumers on separate release cycles, a web frontend and a mobile application: payload conventions, an error taxonomy, and API Platform usage guidelines for the team.',
-        'Delivered sales-force rankings and results in real time through a Mercure (Server-Sent Events) integration on the API.',
-        "Led the four junior developers who reported to me for two years, as the team's backend referent: code reviews, testing standards, skill development.",
-      ],
-      stack: [
-        'Symfony 2.7 → 4',
-        'API Platform',
-        'Mercure',
-        'React',
-        'MariaDB',
-        'Node.js',
-        'GitLab CI',
-        'Jenkins',
-        'Docker',
-      ],
-    },
-  ],
-
-  earlier: [
-    {
-      period: '2018 · 5 months',
-      title: 'Full Stack Developer',
-      org: 'ZOL',
-      text: 'Android app for delivery drivers plus a logistics dashboard, optimized for low-connectivity infrastructure.',
-    },
-    {
-      period: '2014–2016, 2017',
-      title: 'Developer / Consultant',
-      org: 'Business & Decision',
-      text: 'Multichannel marketing BI platform for MSD France; large-account projects including Sanofi.',
-    },
-    {
-      period: '2016–2017',
-      title: 'Developer / Application Support',
-      org: 'Quadra Informatique',
-      text: 'Maintenance of a mission-critical industrial application in production.',
-    },
-    {
-      period: 'Before 2018',
-      title: 'Freelance engagements',
-      org: 'La Cartonnerie · Highlife Recordings',
-      text: 'La Cartonnerie (Reims) — functional lead on an artistic management application; Highlife Recordings (Dijon) — full-stack development.',
-    },
-    {
-      period: '2016–2017',
-      title: 'Computer Science Lecturer',
-      org: 'University of Reims',
-      text: 'Undergraduate teaching — the first mentoring experience, and the reason it stuck.',
-    },
-  ],
-
   about: {
     kicker: 'About',
     title: 'The short story',
     paragraphs: [
       "I'm a backend engineer who likes the unglamorous parts: transaction integrity, replayable event logs, migrations nobody notices. Across twelve years the through-line isn't the stack, it's the rising criticality of what breaks — a BI dashboard going down is an incident; a wallet double-crediting a transaction is an accounting, regulatory and trust problem.",
-      "Teaching is part of the job rather than adjacent to it. An architecture decision the team doesn't understand isn't a decision, it's a dependency — which is why RFCs, ADRs and review culture matter to me more than any particular framework.",
+      "Teaching is part of the job rather than adjacent to it. An architecture decision the team doesn't understand isn't a decision, it's a dependency — which is why RFCs, ADRs and review culture matter to me more than any particular framework. In practice it is what led to my writing the skills and behaviour assessments of my peers, addressed to the Head of Tech and the Head of Engineering ahead of the annual review cycle.",
       'Off-screen: the Grand Est countryside, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
     ],
     mentoringKicker: 'Mentoring & teaching — a thread through all of it',
+    cvLine:
+      'Hiring rather than contracting? The detailed track record, the chronology and the technologies are in the CV.',
+    cvCta: 'Download CV',
   },
 
   mentoring: [
@@ -335,7 +221,10 @@ export const en = {
       year: '2018',
       text: 'Mentored four junior developers into feature ownership at Kiss The Bride.',
     },
-    { year: '2022', text: 'Ran onboarding and architecture reviews across two squads at Socios.' },
+    {
+      year: '2022',
+      text: 'Ran onboarding and architecture reviews across two product teams at Socios — six people, five developers and a QA engineer.',
+    },
     {
       year: '2024',
       text: 'Founded the backend community of practice — RFCs, ADRs, shared standards.',
@@ -348,13 +237,34 @@ export const en = {
     { name: 'German', level: 'B1 — professional basics' },
   ],
 
+  schema: {
+    jobTitle: 'Senior Software Engineer — backend architecture',
+    knowsAbout: [
+      'Event Sourcing',
+      'Symfony',
+      'API Platform',
+      'Node.js',
+      'React',
+      'Next.js',
+      'Solana',
+      'Fireblocks',
+      'Kubernetes',
+      'ArgoCD',
+      'OpenTelemetry',
+      'Datadog',
+      'Mercure',
+      'Jenkins',
+      'SQLite',
+      'CodeQL',
+    ],
+  },
+
   contact: {
     kicker: 'Contact',
     title: 'Got a system that needs to hold up?',
     blurb:
-      'Available for senior backend and tech-lead roles, and for bounded freelance work: event-driven architecture audits, Symfony migrations on systems that never stop, observability rollouts, API contract redesigns without downtime, infrastructure and data-provider cost audits. Remote-first — happy to travel for the parts that need a room.',
+      'Available for bounded engagements: event-driven architecture audits, Symfony migrations on systems that never stop, observability rollouts, API contract redesigns without downtime, infrastructure and data-provider cost audits. Remote-first — happy to travel for the parts that need a room.',
     revealPhone: 'Show phone number',
-    pdfLabel: 'PDF',
     locationLine: 'Grand Est, France · Fully remote for 8+ years · CET',
   },
 

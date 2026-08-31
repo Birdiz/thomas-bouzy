@@ -85,20 +85,37 @@ test.describe('projects accordion', () => {
   });
 });
 
-test.describe('earlier experience disclosure', () => {
-  test('reveals the earlier roles and swaps its label', async ({ page }) => {
+test.describe('the page is not a CV', () => {
+  // Chantier A: the chronology, the job titles, the years badge and the stack
+  // chips are in the PDF, and the page keeps none of them. These assertions are
+  // the part that does not decay — a rebuilt section can quietly bring the CV
+  // grammar back, and the reason it went is invisible in the markup.
+  for (const path of ['/', '/fr/'] as const) {
+    test(`serves no track record and no earlier-roles disclosure on ${path}`, async ({ page }) => {
+      await gotoHome(page, path);
+      await expect(page.locator('#experience')).toHaveCount(0);
+      await expect(page.locator('details.earlier')).toHaveCount(0);
+      await expect(page.locator('.job')).toHaveCount(0);
+    });
+  }
+
+  test('offers one call to action in the hero, and it is the work', async ({ page }) => {
     await gotoHome(page, '/');
-    const earlier = page.locator('details.earlier');
-    const cards = earlier.locator('.earlier__card');
+    const ctas = page.locator('.hero__ctas a');
+    await expect(ctas).toHaveCount(1);
+    await expect(ctas.first()).toHaveAttribute('href', '#work');
+  });
 
-    await expect(cards.first()).not.toBeVisible();
-    await expect(earlier.getByText('Show earlier experience (2014–2018)')).toBeVisible();
+  test('reaches the CV once, from About, as a download', async ({ page }) => {
+    await gotoHome(page, '/');
+    const cv = page.locator('.about__cv a');
+    await expect(cv).toHaveCount(1);
+    await expect(cv).toHaveAttribute('href', '/assets/cv-thomas-bouzy-en.pdf');
+    await expect(cv).toHaveAttribute('download', 'Thomas-Bouzy-CV-EN.pdf');
 
-    await earlier.locator('summary').click();
-    await expect(cards).toHaveCount(5);
-    await expect(cards.first()).toBeVisible();
-    await expect(earlier.getByText('Hide earlier experience')).toBeVisible();
-    await expect(earlier.getByText('Show earlier experience (2014–2018)')).not.toBeVisible();
+    // Nowhere else: the hero download was the salaried route competing with the
+    // work in the first viewport, which is the whole point of moving it here.
+    await expect(page.locator('a[href$=".pdf"]')).toHaveCount(1);
   });
 });
 

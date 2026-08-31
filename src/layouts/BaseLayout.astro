@@ -43,7 +43,7 @@ const personSchema = {
   name: SITE.author,
   givenName: 'Thomas',
   familyName: 'Bouzy',
-  jobTitle: t.hero.role,
+  jobTitle: t.schema.jobTitle,
   description: t.meta.description,
   url: canonical,
   image: ogImage,
@@ -55,29 +55,13 @@ const personSchema = {
   },
   sameAs: [CONTACT.linkedin, CONTACT.github],
   knowsLanguage: t.languages.map((l) => l.name),
-  /* The Toolkit grid is gone; the dated Track record chips are the only
-     stack the page states, so they are the only stack the schema claims.
-     Normalised first: a chip is written for a reader ("Symfony 2.7 → 4",
-     "React / Next.js") and reads as one skill, which is not what knowsAbout
-     means. Splitting the pairs and dropping the version arrow is what keeps
-     `React` from being claimed twice and `Symfony 2.7 → 4` from being
-     claimed as a technology that does not exist. Versions go the same way:
-     knowsAbout names a technology, and `Symfony 7` next to `Symfony 2.7`
-     is one technology counted twice. */
-  knowsAbout: [
-    ...new Set(
-      t.jobs
-        .flatMap((job) => job.stack)
-        .flatMap((chip) => chip.split(' / '))
-        .map((chip) =>
-          chip
-            .replace(/\s*→.*$/, '')
-            .replace(/\s+\d[\d.]*$/, '')
-            .trim(),
-        )
-        .filter(Boolean),
-    ),
-  ],
+  /* The Toolkit grid went first, then the Track record's stack chips went with
+     chantier A, so this stopped being derivable from anything on the page and
+     is stated in the content instead. The rule it was derived under survives
+     and is now a test: `tests/content.spec.ts` asserts every term below
+     appears verbatim in a string the page renders, so the schema can only ever
+     claim a technology a reader can find. Same reason `worksFor` is absent. */
+  knowsAbout: t.schema.knowsAbout,
   alumniOf: {
     '@type': 'CollegeOrUniversity',
     name: 'Université de Reims Champagne-Ardenne',

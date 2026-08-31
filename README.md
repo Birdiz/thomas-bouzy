@@ -19,7 +19,13 @@ Structural decisions are in [docs/adr](docs/adr).
 New material therefore reaches the site by revising the pitch master first, then
 rebasing `src/content/{en,fr}.ts` on it. `npm run test` fails if that rebase
 breaks EN/FR parity, compresses the stack's three honesty levels, drops the
-blockchain scope boundary, or advertises a date already past.
+blockchain scope boundary, puts a date back in the availability line, or lets
+the structured data claim a technology the page never states.
+
+The page is not a CV, and the tests keep it from becoming one again: there is no
+chronology, no job title, no years badge and no stack chips — those are in the
+downloadable PDF, which the page reaches exactly once, from About. See
+[ADR 11](docs/adr/0011-the-page-is-not-a-cv.md).
 
 ## Still to supply
 
@@ -100,7 +106,7 @@ tests/
 
 - **Content** — both locales have the same shape and the same array lengths at
   every depth; nothing is blank; the prose is genuinely translated.
-- **Behaviour** — one project open at a time, the earlier-experience disclosure,
+- **Behaviour** — one project open at a time, no track record and one CV link,
   the language switch changing the URL, anchors clearing the sticky header.
 - **Privacy** — the phone number is in neither page's HTML source nor the
   JSON-LD, and appears only after a click.
@@ -113,8 +119,10 @@ tests/
 - **Copy invariants** — the pitch master's own rules, asserted rather than
   trusted: EN/FR parity at every array depth, the three honesty levels on the
   stack kept apart, the "no smart contract authoring" boundary present on the
-  on-chain card, no availability date already past, and the phone number absent
-  from every content string.
+  on-chain card, no date at all in the availability line, the four measurements
+  the Track record used to carry alone still on the page, every `knowsAbout`
+  term findable in rendered prose, and the phone number absent from every
+  content string.
 
 ## Deployment
 

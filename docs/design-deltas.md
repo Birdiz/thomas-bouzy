@@ -52,7 +52,7 @@ speaking.
 | --- | --- | --- | --- |
 | 1 | Language held in component state, one URL | Routes `/` (EN) and `/fr/` | Indexable and shareable per language — [ADR 2](adr/0002-locale-routes-over-a-client-toggle.md) |
 | 2 | Project accordion driven by `state.open` | `<details name="projects">` | The browser enforces one-open-at-a-time and provides `aria-expanded` for free; removes the state |
-| 3 | "Earlier experience" driven by `state.earlierOpen` | `<details>`, label swapped in CSS | Same; the show/hide label is `details[open]`, no script |
+| 3 | ~~"Earlier experience" driven by `state.earlierOpen`~~ | **Retired 2026-08-31.** No earlier-experience disclosure, and no Track record to hold it | Chantier A took the chronology off the page and left it to the PDF — [ADR 11](adr/0011-the-page-is-not-a-cv.md). The `<details>` implementation was right; the section it lived in is what a page selling engagements does not have |
 | 4 | Desktop-only, no breakpoints | Breakpoints at 1023 / 860 / 640 / 400 px | The canvas has none; below ~900px its fixed grids break |
 | 5 | `<image-slot>` placeholder | `<Image>` with responsive `widths`, labelled placeholder until a photo lands | The slot was empty in the canvas |
 | 6 | Hero is the 1160px container | Full-bleed section wrapping the container | Lets the decorative blob bleed as designed without widening the document |
@@ -119,9 +119,12 @@ re-litigated on the next pass.
 1. **April → August 2026.** Socios is dated "– April 2026" and nothing on the
    page covers the months since. Reviewed with Thomas and deliberately left
    alone: the reason is a conversation for the call, not a line on a public
-   page. The hero now carries the two availabilities the pitch master states —
-   freelance immediately, permanent from September 2026 — which is the part a
-   reader can act on.
+   page. The hero carried the two availabilities the pitch master states —
+   freelance immediately, permanent from September 2026 — which was the part a
+   reader could act on. **Superseded 2026-08-31:** the dated half went with
+   chantier A, one day before it would have expired, and the permanent route is
+   now stated once beside the CV in About. The hero says only "available now",
+   which is the version that cannot rot.
 2. **The exit is not on the page.** The pitch master says to state the
    collective economic redundancy plainly (§5). Raised with Thomas, who does not
    want it mentioned. That instruction is written for an interview anyway, and
@@ -178,7 +181,8 @@ re-litigated on the next pass.
    regenerated upstream, not here.
 11. **Overlapping 2016–2017 entries.** Business & Decision, Quadra Informatique
    and Université de Reims overlap in "earlier experience". Accurate — the
-   teaching ran in parallel — and accepted as-is.
+   teaching ran in parallel — and accepted as-is. **Moot since 2026-08-31:** the
+   earlier roles are not on the page at all; the overlap is the PDF's to carry.
 12. **LinkedIn URL.** Verified by Thomas. Implemented as
    `https://www.linkedin.com/in/thomas-bouzy`; `links.spec.ts` does not check
    it, because it is the one reference that leaves the origin.

@@ -16,8 +16,8 @@
  * reader who had not yet been told "of what" — and read as a CV's numbers.
  * A proof line briefly survived underneath, carrying the measurement; it went
  * the same way and for the same reason. A ratio from one engagement does not
- * travel: the concept is the part that does, and the measurements still sit in
- * the project cards and the Track record bullets, where they have a context.
+ * travel: the concept is the part that does, and the measurements sit in the
+ * project cards and the principles, where they have a context.
  */
 export interface Concept {
   /** One or two words. A named concept, never a skill label. */
@@ -32,24 +32,6 @@ export interface Project {
   context: string;
   approach: string;
   result: string;
-}
-
-export interface Job {
-  period: string;
-  duration: string;
-  place: string;
-  title: string;
-  company: string;
-  summary: string;
-  bullets: string[];
-  stack: string[];
-}
-
-export interface EarlierRole {
-  period: string;
-  title: string;
-  org: string;
-  text: string;
 }
 
 /** One way the interesting kind of system goes wrong. */
@@ -87,6 +69,25 @@ export interface LanguageSkill {
   level: string;
 }
 
+/**
+ * Structured data only, never rendered — the other half of the same idea as
+ * `LanguageSkill` above.
+ *
+ * Both fields used to be derived from the page: `jobTitle` from the hero's
+ * role line, `knowsAbout` from the stack chips on the Track record. Chantier A
+ * took the job title and the Track record off the page, and a derivation with
+ * no source is not a derivation. Stating them here keeps the schema honest in
+ * the one way that matters: `tests/content.spec.ts` asserts that every
+ * `knowsAbout` term appears verbatim in a string the page actually renders, so
+ * the schema cannot drift into claiming more than the page says. That is the
+ * same rule the missing `worksFor` was fixed under — a wrong claim is worse
+ * than a missing one.
+ */
+export interface SchemaOnly {
+  jobTitle: string;
+  knowsAbout: string[];
+}
+
 export interface ResumeContent {
   /** <head> copy. Not shown on the page. */
   meta: {
@@ -107,19 +108,28 @@ export interface ResumeContent {
   nav: {
     work: string;
     approach: string;
-    experience: string;
     about: string;
     contact: string;
   };
 
+  /**
+   * No job title, no years badge, no CV button.
+   *
+   * All three were recruitment furniture on a page that sells engagements: a
+   * title answers "what post does he hold", a years count answers "is he senior
+   * enough to hire", and the CV button offered the salaried route as an equal
+   * alternative to the work itself, in the first viewport. The chronology, the
+   * titles and the stack now live in the PDF alone, reached once from the About
+   * section — see `about.cvLine`.
+   *
+   * `availability` carries no date. It said "permanent roles from September
+   * 2026" on a page whose own thesis is that what is not instrumented is not
+   * reliable, and it was one day from expiring.
+   */
   hero: {
     availability: string;
-    role: string;
     blurb: string;
-    yearsCount: string;
-    yearsLabel: string;
     ctaWork: string;
-    ctaPdf: string;
   };
 
   concepts: Concept[];
@@ -151,30 +161,32 @@ export interface ResumeContent {
   };
   projects: Project[];
 
-  experience: {
-    kicker: string;
-    title: string;
-    earlierShow: string;
-    earlierHide: string;
-  };
-  jobs: Job[];
-  earlier: EarlierRole[];
-
   about: {
     kicker: string;
     title: string;
     paragraphs: string[];
     mentoringKicker: string;
+    /**
+     * The salaried route, stated once and at the end.
+     *
+     * It is the only thing the Track record carried that the page could not
+     * absorb: a chronology, job titles and a stack are what someone hiring for
+     * a post reads, and they are all in the PDF. Saying so here keeps that door
+     * open without letting it compete with the work — which is what it did from
+     * the hero.
+     */
+    cvLine: string;
+    cvCta: string;
   };
   mentoring: MentoringEntry[];
   languages: LanguageSkill[];
+  schema: SchemaOnly;
 
   contact: {
     kicker: string;
     title: string;
     blurb: string;
     revealPhone: string;
-    pdfLabel: string;
     locationLine: string;
   };
 

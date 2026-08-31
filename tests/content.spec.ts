@@ -61,21 +61,18 @@ describe('EN/FR parity', () => {
   });
 
   it('actually translates the prose, rather than copying English through', () => {
-    // Language-neutral strings (tech stacks, periods, company names, the "12" of
-    // "12 years") are legitimately identical, so we assert on the prose only.
+    // Language-neutral strings (technology names, periods, company names) are
+    // legitimately identical, so we assert on the prose only.
     const mustDiffer = [
       '$.meta.title',
       '$.meta.description',
       '$.nav.work',
-      '$.nav.experience',
       '$.nav.approach',
       '$.nav.about',
       '$.nav.contact',
       '$.hero.availability',
-      '$.hero.role',
       '$.hero.blurb',
       '$.hero.ctaWork',
-      '$.hero.ctaPdf',
       '$.problem.kicker',
       '$.problem.title',
       '$.problem.paragraphs[0]',
@@ -86,11 +83,12 @@ describe('EN/FR parity', () => {
       '$.work.kicker',
       '$.work.title',
       '$.work.intro',
-      '$.experience.title',
       '$.concepts[0].gloss',
       '$.concepts[1].label',
       '$.about.title',
       '$.about.paragraphs[0]',
+      '$.about.cvLine',
+      '$.about.cvCta',
       '$.contact.title',
       '$.contact.blurb',
       '$.contact.revealPhone',
@@ -110,19 +108,36 @@ describe('EN/FR parity', () => {
 });
 
 describe('content corrections applied against the design', () => {
-  it('offers freelance immediately, and never advertises a date already past', () => {
-    // The design shipped "from May 2026" / "à partir de mai 2026", stale on
-    // arrival. The pitch master gives two availabilities rather than one:
-    // freelance now, permanent from September 2026. A date is allowed again —
-    // but only while it is still ahead of us, which is what rots otherwise.
-    expect(en.hero.availability).toMatch(/freelance now/i);
-    expect(fr.hero.availability).toMatch(/freelance imm/i);
+  it('states availability without a date that can rot', () => {
+    // Three versions of this line have gone stale in place: the design's "from
+    // May 2026", then "permanent roles from September 2026" — asserted to be
+    // in the future, and one day from not being, on a page whose own thesis is
+    // that what is not instrumented is not reliable.
+    //
+    // The banner now carries no date at all, which is why this test no longer
+    // compares one against the clock: a line with nothing to expire cannot be
+    // caught late. The permanent-role half went with it — it is stated once, in
+    // About, beside the CV that carries the salaried track record.
+    expect(en.hero.availability).toMatch(/available now/i);
+    expect(fr.hero.availability).toMatch(/disponible imm/i);
 
-    const thisYear = new Date().getFullYear();
     for (const line of [en.hero.availability, fr.hero.availability]) {
-      for (const year of line.match(/\b(19|20)\d{2}\b/g) ?? []) {
-        expect(Number(year), `${line} names a year already past`).toBeGreaterThanOrEqual(thisYear);
-      }
+      expect(line.match(/\b(19|20)\d{2}\b/), `${line} names a year that will go stale`).toBeNull();
+    }
+  });
+
+  it('names the salaried route once, and points it at the PDF', () => {
+    // Chantier A took the chronology, the job title, the years badge and the
+    // stack off the page and left them to the CV. That only holds if the CV is
+    // still reachable and still framed as the thing someone hiring reads —
+    // otherwise the removal is a deletion rather than a move.
+    expect(en.about.cvLine).toMatch(/CV/);
+    expect(fr.about.cvLine).toMatch(/CV/);
+
+    for (const content of [en, fr]) {
+      // Never from the hero again: the download used to sit in the first
+      // viewport as an equal alternative to the work itself.
+      expect(Object.values(content.hero).join(' ')).not.toMatch(/CV|PDF/);
     }
   });
 
@@ -174,20 +189,31 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('keeps the stack visible, and only on the dated Track record chips', () => {
-    // Removing the Toolkit made the job chips the page's only stack claim. That
-    // is deliberate — a stack attached to an employer and a period says more
-    // than a floating grid — but it means the chips are now load-bearing, and
-    // dropping one silently removes a technology from the site altogether.
-    for (const content of [en, fr]) {
-      const chips = content.jobs.flatMap((job) => job.stack);
-      expect(chips.length).toBeGreaterThan(0);
-      for (const tech of ['PHP', 'Symfony', 'Kubernetes', 'ArgoCD', 'React', 'Next.js']) {
-        expect(chips.join(' '), `${tech} left the page with the Toolkit`).toMatch(tech);
-      }
-      // The projects carry prose, not chips: the CV look Thomas rejected.
-      for (const project of content.projects) {
-        expect(project).not.toHaveProperty('stack');
+  it('claims no technology the page does not state', () => {
+    // The Person schema's `knowsAbout` used to be derived from the Track
+    // record's stack chips, so it could only ever name a technology a reader
+    // could see. Chantier A took the chips with the rest of the CV grammar, and
+    // the list is now written by hand in `schema.knowsAbout` — which is exactly
+    // where a structured-data claim starts drifting away from the page.
+    //
+    // So the derivation becomes an assertion: every term must appear verbatim
+    // in a string the page renders. Same rule the missing `worksFor` was fixed
+    // under — a schema that claims more than the page says is a wrong claim,
+    // and a wrong one is worse than a missing one.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const rendered = [...walkStrings(content)]
+        .filter(([path]) => !path.startsWith('$.schema.'))
+        .map(([, text]) => text)
+        .join(' ');
+
+      expect(content.schema.knowsAbout.length).toBeGreaterThan(0);
+      for (const tech of content.schema.knowsAbout) {
+        expect(rendered, `${locale}: the schema claims ${tech}, the page never says it`).toContain(
+          tech,
+        );
       }
     }
   });
@@ -197,12 +223,36 @@ describe('content corrections applied against the design', () => {
     // was two teams and six people — five developers and a QA — and the PO was
     // never in scope. The inflated version is the one a reader would probe, so
     // the corrected one is asserted rather than trusted to stay.
+    //
+    // It used to live in a Track record bullet. Chantier A removed that section,
+    // and this is one of the four facts that existed nowhere else on the page —
+    // it moved to the mentoring entry whose actual subject it is.
     for (const content of [en, fr]) {
-      const bullets = content.jobs.flatMap((job) => job.bullets).join(' ');
-      expect(bullets).toMatch(/five developers|cinq développeurs/);
-      expect(bullets, 'the old inflated headcount is back').not.toMatch(
+      const everywhere = [...walkStrings(content)].map(([, text]) => text).join(' ');
+      expect(everywhere).toMatch(/five developers|cinq développeurs/);
+      expect(everywhere, 'the old inflated headcount is back').not.toMatch(
         /6 (developers|développeurs)/,
       );
+    }
+  });
+
+  it('keeps the measurements that only the Track record used to carry', () => {
+    // Chantier A deleted the Track record. Four of its facts appeared nowhere
+    // else, and a measurement does not survive being replaced by a download —
+    // so each was moved into the project card or the principle whose subject it
+    // already was. This is the test that says so: it fails if a rewrite of any
+    // of those hosts quietly drops what it inherited.
+    const survivors: [string, RegExp, RegExp][] = [
+      ['platform scale', /1\.5M\+ active users/, /1,5 million d'utilisateurs actifs/],
+      ['load peaks', /10,000–20,000 users/, /10 000 à 20 000 utilisateurs/],
+      ['observability tooling', /OpenTelemetry and Datadog/, /OpenTelemetry et Datadog/],
+      ['incident command', /through Rootly/, /via Rootly/],
+    ];
+    for (const [what, enPattern, frPattern] of survivors) {
+      const enText = [...walkStrings(en)].map(([, text]) => text).join(' ');
+      const frText = [...walkStrings(fr)].map(([, text]) => text).join(' ');
+      expect(enText, `EN lost ${what} with the Track record`).toMatch(enPattern);
+      expect(frText, `FR lost ${what} with the Track record`).toMatch(frPattern);
     }
   });
 

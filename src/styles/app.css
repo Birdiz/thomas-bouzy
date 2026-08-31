@@ -378,16 +378,6 @@ a {
   margin: 0 0 20px;
 }
 
-.hero__role {
-  font-size: clamp(19px, 2vw, 24px);
-  line-height: 1.4;
-  max-width: 30ch;
-  margin: 0 0 14px;
-  color: var(--color-text);
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-}
-
 .hero__blurb {
   font-size: 16px;
   line-height: 1.65;
@@ -395,19 +385,6 @@ a {
   margin: 0 0 26px;
   opacity: 0.85;
   text-wrap: pretty;
-}
-
-.hero__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 28px;
-  padding: 0;
-  list-style: none;
-}
-.hero__badges .tag {
-  font-size: 12px;
-  padding: 5px 13px;
 }
 
 .hero__ctas {
@@ -777,141 +754,6 @@ a {
   opacity: 0.9;
   text-wrap: pretty;
 }
-.stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 22px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* — experience ——————————————————————————————————————————————————————————— */
-
-.experience {
-  background: var(--color-surface);
-  padding-block: 64px;
-  margin-top: 20px;
-}
-.experience .section-title {
-  margin: 0 0 34px;
-}
-.experience__list {
-  display: flex;
-  flex-direction: column;
-  gap: 34px;
-}
-.job {
-  display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
-  gap: 32px;
-  align-items: start;
-}
-.job__when {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.job__period {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 15px;
-  color: var(--color-accent-700);
-}
-.job__duration,
-.job__place {
-  font-size: 13px;
-  opacity: 0.7;
-}
-.job__card {
-  background: var(--color-bg);
-  border-radius: calc(var(--radius-lg) * 1.15);
-  padding: 26px 30px;
-}
-.job__title {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 22px;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  margin: 0;
-}
-.job__company {
-  font-size: 15px;
-  color: var(--color-accent-700);
-  margin: 4px 0 14px;
-}
-.job__summary {
-  font-size: 14px;
-  opacity: 0.75;
-  margin: 0 0 16px;
-  text-wrap: pretty;
-}
-.job__bullets {
-  margin: 0;
-  padding-left: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.job__bullets li {
-  font-size: 14.5px;
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-.job__card .stack {
-  margin-top: 18px;
-}
-
-.earlier {
-  margin-top: 34px;
-}
-.earlier__toggle {
-  padding: 11px 22px;
-  font-size: 14.5px;
-  display: inline-flex;
-  list-style: none;
-  cursor: pointer;
-}
-.earlier__toggle::-webkit-details-marker {
-  display: none;
-}
-.earlier__toggle::marker {
-  content: "";
-}
-.earlier__toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-/* The label swaps with the disclosure state — CSS only, no script. */
-.earlier[open] .earlier__label--closed {
-  display: none;
-}
-.earlier:not([open]) .earlier__label--open {
-  display: none;
-}
-
-.earlier__grid {
-  margin-top: 22px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 14px;
-  animation: tb-in 0.3s ease both;
-  padding: 0;
-  list-style: none;
-}
-.earlier__card {
-  background: var(--color-bg);
-  padding: 22px 24px;
-}
-.earlier__org {
-  font-size: 13px;
-  color: var(--color-accent-700);
-}
-.earlier__card .card-body {
-  font-size: 13.5px;
-  opacity: 0.85;
-}
 
 /* — about ———————————————————————————————————————————————————————————————— */
 
@@ -936,6 +778,26 @@ a {
   max-width: 56ch;
   text-wrap: pretty;
 }
+/* The salaried route, once and at the end of the prose. Separated by a rule
+   rather than by size: it has to read as an aside to the section, not as its
+   conclusion, and it must not compete with the contact CTA further down. */
+.about__cv {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-divider);
+  max-width: 56ch;
+}
+.about__prose .about__cv-line {
+  font-size: 15px;
+  margin: 0;
+  opacity: 0.8;
+  flex: 1 1 22ch;
+}
+
 .about__aside {
   display: flex;
   flex-direction: column;
@@ -1080,16 +942,6 @@ a {
     width: 240px;
     height: 240px;
   }
-  .job {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-  .job__when {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px 14px;
-  }
 }
 
 @media (max-width: 860px) {
@@ -1140,9 +992,6 @@ a {
   .concepts__label {
     font-size: 19px;
   }
-  .experience {
-    padding-block: 48px;
-  }
   .about {
     padding-block: 48px 20px;
   }
@@ -1165,9 +1014,6 @@ a {
   .project__facets {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
-  }
-  .job__card {
-    padding: 22px 20px;
   }
   .about__grid {
     gap: 32px;

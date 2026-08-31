@@ -2,7 +2,6 @@
 import AboutSection from '../components/AboutSection.astro';
 import ConceptsGrid from '../components/ConceptsGrid.astro';
 import ContactSection from '../components/ContactSection.astro';
-import ExperienceSection from '../components/ExperienceSection.astro';
 import Hero from '../components/Hero.astro';
 import PositionSection from '../components/PositionSection.astro';
 import ProblemSection from '../components/ProblemSection.astro';
@@ -24,14 +23,13 @@ const t = RESUME[locale];
 <BaseLayout locale={locale}>
   <SiteHeader locale={locale} t={t} />
   <main id="main">
-    <Hero locale={locale} t={t} />
+    <Hero t={t} />
     <ConceptsGrid t={t} />
     <ProblemSection t={t} num="01" />
     <WorkSection t={t} num="02" />
     <PositionSection t={t} num="03" />
-    <ExperienceSection t={t} num="04" />
-    <AboutSection t={t} num="05" />
-    <ContactSection locale={locale} t={t} />
+    <AboutSection locale={locale} t={t} num="04" />
+    <ContactSection t={t} />
   </main>
   <SiteFooter t={t} />
 </BaseLayout>

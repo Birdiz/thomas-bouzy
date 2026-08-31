@@ -88,8 +88,11 @@ test("links each locale's CV exactly when its PDF is present", async ({ page, re
 
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toBe('application/pdf');
-    // Present on disk means the hero and the contact panel both link it.
-    await expect(links).toHaveCount(2);
+    // Exactly one link, in About. It used to be linked twice — from the hero
+    // and from the contact panel — which made the salaried route look like a
+    // third way to get in touch. Chantier A gave it one home; asserting the
+    // count is what stops it acquiring a second one again.
+    await expect(links).toHaveCount(1);
     await expect(links.first()).toHaveAttribute('download', /\.pdf$/);
   }
 });

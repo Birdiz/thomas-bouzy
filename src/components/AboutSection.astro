@@ -1,12 +1,24 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
+import { publicAssetExists } from '../lib/public-assets.ts';
+import { CV, type Locale } from '../site.ts';
 
 interface Props {
+  locale: Locale;
   t: ResumeContent;
   num: string;
 }
 
-const { t, num } = Astro.props;
+const { locale, t, num } = Astro.props;
+
+/**
+ * The CV's single appearance on the page, and the only place the salaried
+ * route is named — it used to sit in the hero, competing with the work.
+ * `hasCv` keeps the existing rule: a missing PDF degrades to no line at all
+ * rather than to a dead link.
+ */
+const cvHref = CV.path(locale);
+const hasCv = publicAssetExists(cvHref);
 ---
 
 <section id="about" class="about container">
@@ -15,6 +27,17 @@ const { t, num } = Astro.props;
       <p class="kicker"><span class="kicker__num">{num}</span>{t.about.kicker}</p>
       <h2 class="section-title">{t.about.title}</h2>
       {t.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+      {
+        hasCv && (
+          <div class="about__cv">
+            <p class="about__cv-line">{t.about.cvLine}</p>
+            <a class="btn btn-secondary" href={cvHref} download={CV.downloadName(locale)}>
+              <span aria-hidden="true">↓</span> {t.about.cvCta}
+            </a>
+          </div>
+        )
+      }
     </div>
 
     <div class="about__aside">

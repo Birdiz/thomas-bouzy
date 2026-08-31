@@ -2,15 +2,13 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { ResumeContent } from '../content/index.ts';
-import { publicAssetExists } from '../lib/public-assets.ts';
-import { CV, type Locale, SITE } from '../site.ts';
+import { SITE } from '../site.ts';
 
 interface Props {
-  locale: Locale;
   t: ResumeContent;
 }
 
-const { locale, t } = Astro.props;
+const { t } = Astro.props;
 
 /**
  * The design's <image-slot> was an empty placeholder. Drop a file at
@@ -23,9 +21,6 @@ const portraits = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 const portrait = Object.values(portraits)[0]?.default;
-
-const cvHref = CV.path(locale);
-const hasCv = publicAssetExists(cvHref);
 ---
 
 <section id="top" class="hero">
@@ -40,25 +35,17 @@ const hasCv = publicAssetExists(cvHref);
         </p>
 
         <h1 class="hero__name">{SITE.author}</h1>
-        <p class="hero__role">{t.hero.role}</p>
         <p class="hero__blurb">{t.hero.blurb}</p>
 
-        {/* The four stack badges left with the rest of the chips: the stack is
-            carried by the dated Track record chips alone now. The years tag is
-            not a stack claim, so it stays. */}
-        <ul class="hero__badges">
-          <li><span class="tag tag-accent">{t.hero.yearsCount} {t.hero.yearsLabel}</span></li>
-        </ul>
-
+        {/* One button, and it points at the work.
+            The job-title line, the "12 years" badge and the CV download all
+            left with chantier A: a title and a years count answer a hiring
+            question this page does not ask, and a CV button in the first
+            viewport offered the salaried route as an equal alternative to the
+            work itself. The PDF is an end-of-journey object — it is reached
+            once, from the About section. */}
         <div class="hero__ctas">
           <a class="btn btn-primary" href="#work">{t.hero.ctaWork}</a>
-          {
-            hasCv && (
-              <a class="btn btn-secondary" href={cvHref} download={CV.downloadName(locale)}>
-                <span aria-hidden="true">↓</span> {t.hero.ctaPdf}
-              </a>
-            )
-          }
         </div>
       </div>
 

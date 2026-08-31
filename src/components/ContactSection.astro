@@ -1,17 +1,13 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { publicAssetExists } from '../lib/public-assets.ts';
-import { CONTACT, CV, type Locale } from '../site.ts';
+import { CONTACT } from '../site.ts';
 import RevealPhone from './RevealPhone.astro';
 
 interface Props {
-  locale: Locale;
   t: ResumeContent;
 }
 
-const { locale, t } = Astro.props;
-const cvHref = CV.path(locale);
-const hasCv = publicAssetExists(cvHref);
+const { t } = Astro.props;
 ---
 
 <section id="contact" class="contact container">
@@ -33,17 +29,10 @@ const hasCv = publicAssetExists(cvHref);
         >
           LinkedIn
         </a>
-        {
-          hasCv && (
-            <a
-              class="btn btn-outline-invert"
-              href={cvHref}
-              download={CV.downloadName(locale)}
-            >
-              <span aria-hidden="true">↓</span> {t.contact.pdfLabel}
-            </a>
-          )
-        }
+        {/* No CV button. The PDF had two homes — the hero and this panel — and
+            §6 of the scaffold gives it one: the About section, where the line
+            beside it says what it is for. A download among the ways to reach
+            someone reads as a third option, and it is not one. */}
       </div>
 
       <p class="contact__location">{t.contact.locationLine}</p>
