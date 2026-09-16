@@ -5,7 +5,8 @@ export const en = {
     title: 'Thomas Bouzy — Senior Software Engineer, backend architecture',
     description:
       'I design transactional systems that have to stay correct while they stay up. Twelve years of backend architecture — event-sourced wallets at 1,000+ transactions a minute, observability that took reported bugs from 20 a month to 5, and DeFi operations in production on real funds.',
-    ogImageAlt: 'Thomas Bouzy — Senior Software Engineer, architecture & technical leadership',
+    ogImageAlt:
+      'Thomas Bouzy — I design transactional systems that have to stay correct while they stay up. Backend & architecture.',
   },
 
   a11y: {

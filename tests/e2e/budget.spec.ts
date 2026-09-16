@@ -25,6 +25,12 @@ import { expect, test } from './fixtures.ts';
  * and the total barely moved because a mono face used only for eyebrows and
  * numbers is not a display face used for every heading.
  *
+ * Re-measured on 2026-09-16, after the palette moved to the LinkedIn cover
+ * (docs/adr/0013). Spectral 500 arrived for the headings and Figtree 700 left,
+ * since nothing bold is set in the sans any more: fonts 43.9 → 55.4 kB
+ * (Figtree 400 + JetBrains Mono + Spectral 500), still under the limit, which
+ * did not move. The ridge is inline SVG, ~2 kB of document, no request.
+ *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.

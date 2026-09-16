@@ -26,12 +26,13 @@ Two things about the source file:
   transparent background works too.
 - **At least 580px on the short side.** Astro emits widths of 300, 440 and 580;
   a smaller source is upscaled and will look soft on a Retina screen.
-  `npm run assets:check` measures the file and warns when it falls short — the
-  one currently in the repo is 500×500, so that warning is live.
+  `npm run assets:check` measures the file and warns when it falls short. The
+  current one is the 1000×1000 LinkedIn avatar (2026-09-16), so it clears it.
 
 Name the file for what it is: the first version shipped as `portrait.jpg` while
 actually being a PNG. `Hero.astro`'s glob matches on the name, so nothing
 noticed. `assets:check` now compares the real format against the extension.
 
-The design system's `.washed` filter (desaturate, soften contrast) is applied on
-top.
+The `.washed` filter (a light desaturation) is applied on top. The photo ships
+on its own dark, glowing background, which is why it sits on the slate ground
+without a visible edge — see docs/adr/0013.

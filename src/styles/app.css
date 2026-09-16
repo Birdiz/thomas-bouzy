@@ -62,7 +62,7 @@ html {
 /* The accent's whole budget on a page is roughly here and on the primary
    button. Everything else that used to be orange is now ink or muted. */
 .kicker__num {
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 .kicker__num::after {
   content: "";
@@ -90,11 +90,10 @@ html {
   top: -100px;
   z-index: 100;
   padding: 10px 18px;
-  background: var(--color-accent-700);
-  color: var(--color-bg);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border-radius: 0 0 var(--radius-md) 0;
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
+  font-family: var(--font-body);
   text-decoration: none;
   transition: top 0.15s ease;
 }
@@ -117,40 +116,30 @@ html {
 /* — Accent, spent sparingly —————————————————————————————————————————————————
    Measured with `node scripts/contrast.mjs --audit`.
 
-   This used to be a block of contrast corrections fighting the design system:
-   --color-accent scored 3.03:1 on the old cream, so every text use had to step
-   down a rung. Draining the ground (ADR 10) settled it at the source —
-   --color-accent-700 now measures 6.25:1 on bg and 5.73:1 on surface, and the
-   whole ramp clears AA without anything being patched.
+   On the dark ground (ADR 13) the accent no longer has to be dimmed for text —
+   it has to be lifted a little. --color-accent-text measures 6.61:1 on bg and
+   5.41:1 on sunken; the button keeps the full-strength --color-accent as its
+   fill, with the ground colour as its label (5.57:1).
 
-   What remains is a budget rather than a fix. The accent appears on the section
-   numbers, the primary button and the links, and nowhere else. Decorative uses
-   that carry no text keep the full-strength --color-accent. */
+   The budget is ADR 10's and has not moved: the section numbers, the primary
+   button and the links, and nowhere else. Decorative uses that carry no text
+   keep --color-accent. */
 
 a {
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 .card-kicker {
-  color: var(--color-accent-700);
-}
-.btn-primary {
-  background: var(--color-accent-700);
-}
-.btn-primary:hover {
-  background: var(--color-accent-800);
-}
-.btn-primary:active {
-  background: var(--color-accent-900);
+  color: var(--color-accent-text);
 }
 .btn-ghost {
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 .tag-outline {
-  border-color: var(--color-accent-700);
-  color: var(--color-accent-700);
+  border-color: var(--color-accent-text);
+  color: var(--color-accent-text);
 }
 :focus-visible {
-  outline-color: var(--color-accent-700);
+  outline-color: var(--color-accent-text);
 }
 
 /* `.btn` sets display:inline-flex, which outranks the user-agent's
@@ -171,15 +160,6 @@ a {
   }
   50% {
     transform: translateY(-10px);
-  }
-}
-@keyframes tb-drift {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(6px, -14px) rotate(6deg);
   }
 }
 @keyframes tb-in {
@@ -243,7 +223,7 @@ a {
   white-space: nowrap;
 }
 .site-header__brand:hover {
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 
 .site-header__dot {
@@ -267,7 +247,7 @@ a {
   white-space: nowrap;
 }
 .site-nav a:hover {
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 
 .site-header__actions {
@@ -285,61 +265,59 @@ a {
 .lang-switch a {
   padding: 6px 14px;
   font-size: 12.5px;
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
+  font-family: var(--font-body);
   line-height: 1.2;
   text-decoration: none;
   color: var(--color-text);
-  /* 0.75, not the design's 0.65. The header is --color-bg at 86% over a blur,
-     so its effective background is whatever scrolls under it. Over the page
-     ground 0.65 measures 4.84:1; over the dark contact panel the header
-     composites to #d9cfbf and it drops to 4.29:1 — the inactive language is
-     AA or not depending on scroll position. 0.75 holds 6.61:1 over the ground
-     and 5.70:1 over the panel, and keeps the dimming the design wanted.
-     Measured with `node scripts/contrast.mjs --audit`. */
+  /* The header is --color-bg at 86% over a blur, so its effective background
+     is whatever scrolls under it. On the dark palette the lightest thing that
+     can pass beneath is the raised contact panel; 0.75 holds AA over it and
+     over the ground. Measured with `node scripts/contrast.mjs --audit`. */
   opacity: 0.75;
 }
 .lang-switch a:hover {
   opacity: 1;
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 .lang-switch a[aria-current="true"] {
-  background: var(--color-accent-700);
-  color: var(--color-bg);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   opacity: 1;
 }
 .lang-switch a[aria-current="true"]:hover {
-  color: var(--color-bg);
+  color: var(--color-on-accent);
 }
 
 /* — hero ————————————————————————————————————————————————————————————————— */
 
-/* Full-bleed so the decorative blob can bleed past the 1160px measure the way
-   the design does, while `clip` stops it widening the document at viewports
-   just larger than that measure. Clipping on `.hero` itself would cut the blob
-   at the container edge instead. */
+/* Full-bleed so the ridge can run past the 1160px measure, the way it runs off
+   the edge of the LinkedIn cover, while `clip` stops it widening the document
+   at viewports just larger than that measure. */
 .hero {
   position: relative;
   overflow: clip;
 }
 .hero__inner {
-  padding-block: 76px 40px;
+  padding-block: 76px 150px;
   position: relative;
 }
 
-/* Was a saturated green disc. Kept as geometry, drained to a wash — the page
-   now spends its colour on the one button and the section numbers. */
-.hero__blob {
+/* The cover's mountain, laid along the bottom of the hero and mirrored so its
+   crest and glow rise behind the portrait. It fades out towards the text side
+   and into the ground below, so the next section starts on plain slate and no
+   text is ever set over it. */
+.ridge {
   position: absolute;
-  right: -90px;
-  top: 20px;
-  width: 320px;
+  inset: auto 0 0 auto;
+  /* Stretched rather than cropped: a fixed box keeps the crest's slope the
+     same at every viewport, where a cropping fit flattened it on wide screens. */
+  width: min(1180px, 72%);
   height: 320px;
-  border-radius: 999px;
-  background: var(--color-sunken);
-  opacity: 0.5;
-  animation: tb-drift 14s ease-in-out infinite;
   pointer-events: none;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 45%),
+    linear-gradient(to top, transparent 0, #000 35%);
+  mask-composite: intersect;
 }
 
 .hero__grid {
@@ -365,7 +343,7 @@ a {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--color-accent-700);
+  background: var(--color-accent);
   display: inline-block;
   flex: none;
   animation: tb-float 2.6s ease-in-out infinite;
@@ -426,8 +404,7 @@ a {
   overflow: hidden;
   background: var(--color-sunken);
   color: var(--color-text);
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
+  font-family: var(--font-body);
   font-size: 11px;
   line-height: 1.3;
   text-align: center;
@@ -534,7 +511,7 @@ a {
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.6;
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 /* The client's own sentence, quote marks and all. Sized as a heading rather
    than styled as a pull quote: it is the label of the row, and a second display
@@ -615,7 +592,7 @@ a {
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
   margin-bottom: 6px;
 }
 
@@ -666,7 +643,7 @@ a {
   content: "";
 }
 .project__summary:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent-text);
   outline-offset: -4px;
   border-radius: calc(var(--radius-lg) * 1.15);
 }
@@ -685,11 +662,11 @@ a {
     background 0.25s ease,
     color 0.25s ease;
   background: var(--color-sunken);
-  color: var(--color-accent-800);
+  color: var(--color-accent-text);
 }
 .project[open] .project__num {
-  background: var(--color-accent-700);
-  color: var(--color-bg);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 .project__heading {
@@ -722,7 +699,7 @@ a {
 
 .project__chevron {
   font-size: 18px;
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
   transition: transform 0.3s ease;
   display: inline-block;
 }
@@ -753,7 +730,7 @@ a {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
   margin-right: 10px;
   white-space: nowrap;
 }
@@ -871,9 +848,12 @@ a {
 .contact {
   padding-block: 40px 90px;
 }
+/* Was a dark block on a light page. On a dark page it is the one raised panel:
+   a step up in ground, a hairline edge, and the cover's terracotta glow low in
+   the corner where the drifting blob used to be. */
 .contact__panel {
-  background: var(--color-neutral-900);
-  color: var(--color-neutral-100);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
   border-radius: calc(var(--radius-lg) * 1.6);
   padding: clamp(38px, 5vw, 64px);
   position: relative;
@@ -881,31 +861,28 @@ a {
 }
 .contact__blob {
   position: absolute;
-  right: -60px;
-  bottom: -80px;
-  width: 280px;
-  height: 280px;
-  border-radius: 999px;
-  background: var(--color-accent-800);
-  opacity: 0.5;
-  animation: tb-drift 16s ease-in-out infinite;
+  right: -160px;
+  bottom: -220px;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-accent) 22%, transparent),
+    transparent
+  );
   pointer-events: none;
 }
 .contact__body {
   position: relative;
 }
-.contact .kicker {
-  color: var(--color-accent-400);
-}
 .contact__title {
   font-size: clamp(32px, 4.4vw, 58px);
   margin: 0 0 16px;
-  color: var(--color-neutral-100);
   max-width: 18ch;
 }
 .contact__blurb {
   font-size: 16.5px;
-  opacity: 0.8;
+  color: var(--color-muted);
   max-width: 52ch;
   margin: 0 0 30px;
   text-wrap: pretty;
@@ -919,32 +896,34 @@ a {
   padding: 12px 24px;
   font-size: 15px;
 }
-/* Outline buttons on the dark panel: the global `a:hover` accent would drop
-   them to near-black on near-black. */
-.contact__actions .btn-outline-invert {
-  border-color: color-mix(in srgb, var(--color-neutral-100) 40%, transparent);
-  color: var(--color-neutral-100);
+/* The secondary actions: an outline in the text colour. The global `a:hover`
+   would otherwise turn their label terracotta and let them compete with the
+   primary button. */
+.contact__actions .btn-outline {
+  border-color: var(--color-divider);
+  color: var(--color-text);
   background: transparent;
 }
-.contact__actions .btn-outline-invert:hover {
-  background: color-mix(in srgb, var(--color-neutral-100) 12%, transparent);
-  color: var(--color-neutral-100);
-}
-.contact__actions .btn-outline-invert:focus-visible {
-  outline: 2px solid var(--color-accent-400);
-  outline-offset: 2px;
+.contact__actions .btn-outline:hover {
+  border-color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  background: color-mix(in srgb, var(--color-text) 6%, transparent);
+  color: var(--color-text);
 }
 .contact__location {
   margin-top: 30px;
   font-size: 14px;
-  opacity: 0.75;
+  color: var(--color-muted);
 }
 
 /* — responsive ——————————————————————————————————————————————————————————— */
 
 @media (max-width: 1023px) {
   .hero__inner {
-    padding-block: 48px 32px;
+    padding-block: 48px 110px;
+  }
+  .ridge {
+    width: 100%;
+    height: 200px;
   }
   .hero__grid {
     grid-template-columns: minmax(0, 1fr);
@@ -955,14 +934,6 @@ a {
     --portrait-size: 220px;
     order: -1;
     justify-content: flex-start;
-  }
-  /* Was a saturated green disc. Kept as geometry, drained to a wash — the page
-   now spends its colour on the one button and the section numbers. */
-  .hero__blob {
-    right: -140px;
-    top: -40px;
-    width: 240px;
-    height: 240px;
   }
 }
 
@@ -1160,7 +1131,7 @@ a {
 }
 
 .site-footer a:hover {
-  color: var(--color-accent-700);
+  color: var(--color-accent-text);
 }
 
 .site-footer__legal {

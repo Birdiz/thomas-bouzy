@@ -11,6 +11,11 @@ file `Thomas Bouzy - Interactive Résumé.dc.html`.
 > and because two of them were fixed at the source by the fork rather than
 > abandoned: entry 8's accent now measures 6.25:1 instead of 5.72, and entry 22's
 > language switch clears AA at its original opacity.
+>
+> **2026-09-16.** The palette moved again, to the LinkedIn cover's dark slate —
+> see [ADR 13](adr/0013-the-site-wears-the-linkedin-cover.md). Entries 8 and 22
+> measure a light ground that no longer exists; they are kept as the record of
+> why the tokens are semantic now, not as a description of the page.
 
 Every deviation below was deliberate. Anything not listed here matched the
 canvas as of that date.

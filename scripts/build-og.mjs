@@ -2,58 +2,75 @@
 /**
  * Renders public/og.png (1200×630) and public/apple-touch-icon.png.
  *
- * The card is drawn in a real browser rather than composited by sharp, because
- * it is typeset in Figtree — sharp's SVG text goes through fontconfig and
- * would not find the self-hosted face. The output is committed, so `npm run
- * build` never needs a browser; re-run `npm run og` after changing the copy or
- * the palette.
+ * The card wears the LinkedIn cover (docs/adr/0013): the slate ground, the
+ * ridge with its terracotta rim and glow, a short accent rule, the name in
+ * Spectral. The ridge is read from src/art/ridge.ts, the same data the hero
+ * draws, so the card and the page show one mountain.
+ *
+ * What it does not take from the cover is the words. The cover is a LinkedIn
+ * headline — a job title and a stack list — and ADR 11 took exactly that off
+ * this site. The card says what the hero says: the client's problem first.
+ *
+ * Drawn in a real browser rather than composited by sharp, because sharp's SVG
+ * text goes through fontconfig and would not find the self-hosted faces. The
+ * output is committed, so `npm run build` never needs a browser; re-run
+ * `npm run og` after changing the copy, the ridge or the palette.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
 import sharp from 'sharp';
+import { RIDGE_GLOW, RIDGE_LAYERS, RIDGE_RIM, RIDGE_VIEWBOX } from '../src/art/ridge.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const asDataUri = (file) =>
   `data:font/woff2;base64,${readFileSync(join(root, 'public/fonts', file)).toString('base64')}`;
 
+const { width: RW, height: RH } = RIDGE_VIEWBOX;
+const RIDGE = `<svg class="ridge" viewBox="0 0 ${RW} ${RH}" preserveAspectRatio="none">
+  <defs>
+    <radialGradient id="glow" cx="0.28" cy="0.3" r="0.35">
+      <stop offset="0" stop-color="${RIDGE_GLOW}" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="${RIDGE_GLOW}" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="${RW}" height="${RH}" fill="url(#glow)"/>
+  ${RIDGE_LAYERS.map(({ d, fill }, i) =>
+    i === 0
+      ? `<path d="${d}" fill="${fill}" stroke="${RIDGE_RIM}" stroke-opacity="0.6" stroke-width="2"/>`
+      : `<path d="${d}" fill="${fill}"/>`,
+  ).join('')}
+</svg>`;
+
 const CARD = `<!doctype html><meta charset="utf-8"><style>
   @font-face { font-family: Figtree; src: url('${asDataUri('figtree-latin-400-normal.woff2')}') format('woff2'); }
-  @font-face { font-family: Figtree; font-weight: 700; src: url('${asDataUri('figtree-latin-700-normal.woff2')}') format('woff2'); }
+  @font-face { font-family: Spectral; font-weight: 500; src: url('${asDataUri('spectral-latin-500-normal.woff2')}') format('woff2'); }
   @font-face { font-family: 'JetBrains Mono'; src: url('${asDataUri('jetbrains-mono-latin-400-normal.woff2')}') format('woff2'); }
   * { box-sizing: border-box; margin: 0; }
   body {
-    width: 1200px; height: 630px; background: #f6f5f3; color: #211c18;
+    width: 1200px; height: 630px; background: #0e1418; color: #eef2f3;
     font-family: Figtree, sans-serif; position: relative; overflow: hidden;
-    padding: 84px 92px; display: flex; flex-direction: column; justify-content: center;
   }
-  .blob { position: absolute; border-radius: 999px; }
-  .blob--olive { width: 420px; height: 420px; background: #eeebe7; right: -110px; top: -90px; }
-  .blob--terracotta { width: 260px; height: 260px; background: #e5e1dc; right: 120px; bottom: -120px; }
-  .stack { position: relative; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 12px; padding: 10px 24px 10px 18px;
-    border-radius: 999px; background: #e5e1dc; color: #211c18; font-family: 'JetBrains Mono', monospace; font-size: 19px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 34px;
+  .ridge {
+    position: absolute; left: 0; bottom: 0; width: 640px; height: 400px;
+    -webkit-mask-image: linear-gradient(to right, #000 70%, transparent 98%);
+            mask-image: linear-gradient(to right, #000 70%, transparent 98%);
   }
-  .dot { width: 12px; height: 12px; border-radius: 999px; background: #8c491a; }
-  h1 { font-family: Figtree, sans-serif; font-weight: 700; font-size: 104px; line-height: .96; letter-spacing: -.035em; }
-  .role { font-family: Figtree, sans-serif; font-weight: 700; font-size: 34px; color: #211c18; margin-top: 24px; max-width: 30ch; line-height: 1.25; }
-  .foot { display: flex; gap: 14px; margin-top: 44px; }
-  .tag { font-size: 20px; padding: 8px 20px; border-radius: 999px; background: #f9f4ed; color: #474238; }
+  .stack { position: absolute; left: 560px; right: 72px; top: 0; bottom: 0;
+    display: flex; flex-direction: column; justify-content: center; }
+  .rule { width: 64px; height: 3px; background: #c8785e; margin-bottom: 34px; }
+  h1 { font-family: Spectral, serif; font-weight: 500; font-size: 84px; line-height: 1; letter-spacing: -0.01em; }
+  .line { font-size: 30px; line-height: 1.35; color: #c9d3d8; margin-top: 28px; max-width: 24ch; }
+  .foot { margin-top: 40px; font-family: 'JetBrains Mono', monospace; font-size: 17px;
+    letter-spacing: .16em; text-transform: uppercase; color: #d4876c; }
 </style>
-<div class="blob blob--olive"></div>
-<div class="blob blob--terracotta"></div>
+${RIDGE}
 <div class="stack">
-  <div class="pill"><span class="dot"></span>Available now — full-time &amp; freelance</div>
+  <div class="rule"></div>
   <h1>Thomas Bouzy</h1>
-  <p class="role">Senior Software Engineer — architecture &amp; technical leadership</p>
-  <div class="foot">
-    <span class="tag">12 years</span>
-    <span class="tag">PHP · Symfony</span>
-    <span class="tag">DDD · Event Sourcing</span>
-    <span class="tag">AWS · Kubernetes</span>
-  </div>
+  <p class="line">I design transactional systems that have to stay correct while they stay up.</p>
+  <p class="foot">Backend &amp; architecture</p>
 </div>`;
 
 const browser = await chromium.launch();
@@ -66,8 +83,8 @@ await page.evaluate(() => document.fonts.ready);
 const png = await page.screenshot({ type: 'png' });
 await browser.close();
 
-// The card is four flat colours and two typefaces — a palette PNG is visually
-// identical and a third of the size. Chromium's screenshot is truecolour, so
+// The card is a handful of flat colours and one soft glow — a palette PNG is
+// close to identical and a fraction of the size. Chromium's screenshot is truecolour, so
 // this step is what keeps og.png off the performance budget.
 const optimised = await sharp(png).png({ palette: true, quality: 90, effort: 10 }).toBuffer();
 writeFileSync(join(root, 'public/og.png'), optimised);

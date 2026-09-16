@@ -1,71 +1,64 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   The palette, forked from Organic on 2026-08-29 — see docs/adr/0010.
+   The palette, taken from the LinkedIn cover on 2026-09-16 — see docs/adr/0013.
 
-   Until now this file was a byte-for-byte copy of the Claude Design system, so
-   an upstream retune could be diffed straight against it (ADR 3). That is over:
-   the site owns its own look now, and Organic's cream is the reason why.
+   ADR 10 drained Organic's cream to a warm near-white and kept one terracotta
+   accent. This keeps the second half and turns the first upside down: the
+   ground is now the cover's slate night (#0e1418, hue ~205°, low saturation —
+   the same "drain it, don't half-colour it" finding, on the dark side), the
+   text is the cover's off-white, and the terracotta is the one it already had.
 
-   Measured, not judged. Organic's ground (#f5ead8) sits at 59% saturation.
-   thoughtbot's is 12%, hexquarter's hairline 7%. Five times too hot is what the
-   eye reads as "not quite professional" — and it is also why --color-accent had
-   to be dimmed a step for every piece of text it touched.
+   On a dark ground "raised" means lighter. Surface and sunken keep their names
+   and their order of use; both are now a step *up* from the ground.
 
-   The fix inverts the arrangement: the ground loses its saturation and keeps its
-   hue (37°, the same amber), while the accent keeps every bit of its saturation
-   and is spent two or three times a page instead of everywhere. Contrast then
-   stops being something to patch — the whole ramp clears AA on every ground,
-   which `node scripts/contrast.mjs --audit` prints.
+   Components read the semantic tokens (--color-accent-text, --color-on-accent)
+   rather than a rung of the ramp, so the ramp's numbering keeps its usual
+   meaning — 100 light, 900 dark — whichever way the page is lit. Every text
+   pairing is printed by `node scripts/contrast.mjs --audit`.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Ground — hue 37°, saturation 13–17%. Was 49–59%. */
-  --color-bg: #f6f5f3;
-  --color-surface: #eeebe7;
-  --color-sunken: #e5e1dc;
-  --color-divider: #dcd7d1;
+  color-scheme: dark;
 
-  /* Ink — warm near-black, never #000. */
-  --color-text: #211c18;
-  --color-muted: #686055;
+  /* Ground — the cover's night sky, then two steps up. */
+  --color-bg: #0e1418;
+  --color-surface: #151d23;
+  --color-sunken: #1d272f;
+  --color-divider: #2a3540;
 
-  /* Accent, unchanged and deliberately rare. --color-accent is decorative only;
-     anything carrying text uses --color-accent-700 (6.25:1 on bg, 5.73 on
-     surface — both comfortably past AA, which the old ground could not manage). */
-  --color-accent: #c67139;
-  --color-accent-2: #7a8a5e;
+  /* Ink — the cover's title white and its grey tag line. Never #fff. */
+  --color-text: #eef2f3;
+  --color-muted: #93a5ae;
 
-  --color-neutral-100: #faf9f8;
-  --color-neutral-200: #eeebe7;
-  --color-neutral-300: #dcd7d1;
-  --color-neutral-400: #bdb5ab;
-  --color-neutral-500: #9a9188;
-  --color-neutral-600: #7c736a;
-  --color-neutral-700: #645c50;
-  --color-neutral-800: #474238;
-  --color-neutral-900: #2e2b25;
+  /* Accent — decorative at full strength (rules, dots, the button fill). Text
+     in the accent uses --color-accent-text: 6.61:1 on bg, 5.41 on sunken. */
+  --color-accent: #c8785e;
+  --color-accent-text: #d4876c;
+  --color-on-accent: #0e1418;
 
-  --color-accent-100: #fff2eb;
-  --color-accent-200: #ffe1d0;
-  --color-accent-300: #ffc6a5;
-  --color-accent-400: #f6a06b;
-  --color-accent-500: #d67f48;
-  --color-accent-600: #b2622d;
-  --color-accent-700: #8c491a;
-  --color-accent-800: #643312;
-  --color-accent-900: #402310;
+  --color-neutral-100: #eef2f3;
+  --color-neutral-200: #c9d3d8;
+  --color-neutral-300: #a9b8bf;
+  --color-neutral-400: #93a5ae;
+  --color-neutral-500: #6f828d;
+  --color-neutral-600: #4a5e6d;
+  --color-neutral-700: #2a3540;
+  --color-neutral-800: #1d272f;
+  --color-neutral-900: #151d23;
 
-  --color-accent-2-100: #f0fae1;
-  --color-accent-2-200: #e1eecc;
-  --color-accent-2-300: #ccdbb2;
-  --color-accent-2-400: #aebf92;
-  --color-accent-2-500: #8fa073;
-  --color-accent-2-600: #728157;
-  --color-accent-2-700: #56633f;
-  --color-accent-2-800: #3d472b;
-  --color-accent-2-900: #272e1b;
+  --color-accent-100: #f6ddd3;
+  --color-accent-200: #edc0af;
+  --color-accent-300: #e3a28a;
+  --color-accent-400: #dc9479;
+  --color-accent-500: #d4876c;
+  --color-accent-600: #c8785e;
+  --color-accent-700: #a8603f;
+  --color-accent-800: #7a4530;
+  --color-accent-900: #4a2c21;
 
-  --font-heading: "Figtree", system-ui, sans-serif;
-  --font-heading-weight: 700;
+  /* Spectral carries the headings, as it carries the cover's title. Figtree
+     stays for prose, JetBrains Mono for the numbered eyebrows. */
+  --font-heading: "Spectral", Georgia, serif;
+  --font-heading-weight: 500;
   --font-body: "Figtree", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
@@ -80,11 +73,17 @@
   --radius-md: 16px;
   --radius-lg: 28px;
 
-  /* Elevation — derived from the ground: soft ink-tinted shadows on a
-     light theme, a hairline edge + ambient darkness on a dark one. */
-  --shadow-sm: 0 1px 2px color-mix(in srgb, #211c18 8%, transparent);
-  --shadow-md: 0 2px 8px color-mix(in srgb, #211c18 10%, transparent);
-  --shadow-lg: 0 10px 28px color-mix(in srgb, #211c18 14%, transparent);
+  /* Elevation on a dark ground: a hairline edge that catches the light, plus
+     ambient darkness underneath. An ink-tinted shadow would not show at all. */
+  --shadow-sm:
+    0 0 0 1px color-mix(in srgb, var(--color-text) 6%, transparent),
+    0 1px 2px color-mix(in srgb, #000 30%, transparent);
+  --shadow-md:
+    0 0 0 1px color-mix(in srgb, var(--color-text) 8%, transparent),
+    0 4px 14px color-mix(in srgb, #000 35%, transparent);
+  --shadow-lg:
+    0 0 0 1px color-mix(in srgb, var(--color-text) 10%, transparent),
+    0 12px 32px color-mix(in srgb, #000 45%, transparent);
 }
 
 body {
@@ -101,7 +100,9 @@ h4 {
 }
 
 .washed {
-  filter: saturate(0.6) contrast(0.85) brightness(1.1) opacity(0.94);
+  /* Light desaturation only. The old brightness/opacity lift washed the photo
+     toward a light ground; on this one it would read as haze. */
+  filter: saturate(0.85);
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -204,8 +205,9 @@ figcaption {
   gap: 6px;
   cursor: pointer;
   text-decoration: none;
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
+  /* Figtree, not the serif: a button is a control, not a title. */
+  font-family: var(--font-body);
+  font-weight: 400;
   font-size: 14px;
   line-height: 1.2;
   color: var(--color-text); /* matches the .input's 14px —
@@ -224,13 +226,13 @@ figcaption {
 }
 .btn-primary {
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-on-accent);
 }
 .btn-primary:hover {
-  background: var(--color-accent-600);
+  background: var(--color-accent-500);
 }
 .btn-primary:active {
-  background: var(--color-accent-700);
+  background: var(--color-accent-400);
 }
 .btn-secondary {
   border-color: var(--color-divider);
@@ -344,7 +346,7 @@ textarea.input {
 }
 .seg-opt:has(input:checked) {
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-on-accent);
 }
 .seg-opt:not(:has(input:checked)):hover {
   background: color-mix(in srgb, var(--color-text) 7%, transparent);
@@ -408,16 +410,12 @@ textarea.input {
   border-radius: calc(var(--radius-md) * 0.75);
 }
 .tag-accent {
-  background: var(--color-accent-100);
-  color: var(--color-accent-800);
-}
-.tag-accent-2 {
-  background: var(--color-accent-2-100);
-  color: var(--color-accent-2-800);
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  color: var(--color-accent-text);
 }
 .tag-neutral {
-  background: var(--color-neutral-100);
-  color: var(--color-neutral-800);
+  background: var(--color-sunken);
+  color: var(--color-text);
 }
 .tag-outline {
   border: 1px solid var(--color-accent);
@@ -478,7 +476,7 @@ textarea.input {
   display: grid;
   place-items: center;
   padding: var(--space-4);
-  background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent);
+  background: color-mix(in srgb, #000 60%, transparent);
 }
 .dialog {
   width: min(440px, 100%);

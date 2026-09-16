@@ -5,7 +5,8 @@ export const fr = {
     title: 'Thomas Bouzy — Ingénieur logiciel senior, architecture backend',
     description:
       "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans d'architecture backend — wallets event-sourcés à plus de 1 000 transactions par minute, observabilité qui a ramené les bugs de 20 à 5 par mois, et des opérations DeFi en production sur fonds réels.",
-    ogImageAlt: 'Thomas Bouzy — Ingénieur logiciel senior, architecture & leadership technique',
+    ogImageAlt:
+      'Thomas Bouzy — « I design transactional systems that have to stay correct while they stay up. » Backend & architecture.',
   },
 
   a11y: {

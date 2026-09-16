@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { ResumeContent } from '../content/index.ts';
 import { SITE } from '../site.ts';
+import Ridge from './Ridge.astro';
 
 interface Props {
   t: ResumeContent;
@@ -24,8 +25,8 @@ const portrait = Object.values(portraits)[0]?.default;
 ---
 
 <section id="top" class="hero">
+  <Ridge />
   <div class="hero__inner container">
-    <div class="hero__blob" aria-hidden="true"></div>
 
     <div class="hero__grid">
       <div class="hero__intro">

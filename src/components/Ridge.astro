@@ -1,0 +1,44 @@
+---
+import { RIDGE_GLOW, RIDGE_LAYERS, RIDGE_RIM, RIDGE_VIEWBOX } from '../art/ridge.ts';
+
+/**
+ * The cover's mountain, behind the hero. Mirrored so the crest and its glow sit
+ * under the portrait rather than under the text: nothing the reader has to read
+ * is ever drawn over the slate, so contrast is measured against the plain ground
+ * alone. Decorative, static, and inline — one SVG, no request.
+ */
+const { width, height } = RIDGE_VIEWBOX;
+---
+
+<svg
+  class="ridge"
+  viewBox={`0 0 ${width} ${height}`}
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <radialGradient id="ridge-glow" cx="0.28" cy="0.3" r="0.35">
+      <stop offset="0" stop-color={RIDGE_GLOW} stop-opacity="0.35"></stop>
+      <stop offset="1" stop-color={RIDGE_GLOW} stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+  <g transform={`translate(${width} 0) scale(-1 1)`}>
+    <rect width={width} height={height} fill="url(#ridge-glow)"></rect>
+    {
+      RIDGE_LAYERS.map((layer, i) =>
+        i === 0 ? (
+          <path
+            d={layer.d}
+            fill={layer.fill}
+            stroke={RIDGE_RIM}
+            stroke-opacity="0.6"
+            stroke-width="2"
+          />
+        ) : (
+          <path d={layer.d} fill={layer.fill} />
+        ),
+      )
+    }
+  </g>
+</svg>

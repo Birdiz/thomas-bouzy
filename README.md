@@ -6,7 +6,9 @@ Built with Astro, containerised, deployed to Railway.
 The page opens on the problem it solves and closes on the person who solves it —
 which is the opposite of a CV, and deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
-behind both the running order and the palette.
+behind the running order. The palette and type are the LinkedIn cover's — dark
+slate, one terracotta, Spectral headings over a ridge —
+[ADR 13](docs/adr/0013-the-site-wears-the-linkedin-cover.md).
 
 The site owns its own design. It began as an implementation of a Claude Design
 canvas, and the record of where it departed from it is in
@@ -83,7 +85,7 @@ npm run verify         # everything CI runs, in the same order
 | `npm run fonts` / `fonts:check` | Copy the woff2 faces out of `@fontsource` / verify they match |
 | `npm run og` | Regenerate `public/og.png` and the touch icon |
 | `docker build --build-arg SITE_DOMAIN=… -t cv .` | Build the deployment image locally |
-| `npm run contrast` | Print WCAG ratios for the Organic palette |
+| `npm run contrast` | Print WCAG ratios for the site palette (ADR 13) |
 
 ## Layout
 
@@ -94,7 +96,7 @@ src/
     types.ts              the content contract; both locales `satisfies` it
     en.ts · fr.ts         all copy
   styles/
-    tokens.css            the Organic design system, copied verbatim
+    tokens.css            the palette and components (ADR 13)
     fonts.css             self-hosted @font-face
     app.css               layout, responsiveness, reduced motion, AA corrections
   components/             one per section, plus RevealPhone
