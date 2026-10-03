@@ -1,6 +1,6 @@
 # 2. Real routes per locale, not a client-side toggle
 
-- Status: accepted
+- Status: accepted; default locale superseded by [ADR 15](0015-french-at-the-root-english-where-it-sells.md), 2026-10-03
 - Date: 2026-08-28
 
 ## Context

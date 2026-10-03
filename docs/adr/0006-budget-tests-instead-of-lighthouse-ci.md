@@ -1,6 +1,6 @@
 # 6. A performance budget in Playwright, not Lighthouse CI
 
-- Status: accepted
+- Status: accepted; amended by [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md), 2026-10-03
 - Date: 2026-08-28
 
 ## Context
