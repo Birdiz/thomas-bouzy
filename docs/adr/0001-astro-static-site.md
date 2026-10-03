@@ -1,6 +1,6 @@
 # 1. Astro, built to static files
 
-- Status: accepted
+- Status: accepted; readers revised in the postscript, 2026-10-03
 - Date: 2026-08-28
 
 ## Context
@@ -38,3 +38,20 @@ Alternatives weighed:
 - Deployment is a file copy; there is nothing to keep running.
 - Astro's own release cadence is the main maintenance cost. `npm audit` is clean
   at the pinned versions and the CI build would catch a break.
+
+## Postscript, 2026-10-03 — the readers changed, the build did not
+
+The context above names this site's readers as "recruiters and engineers arriving
+from a search engine or a LinkedIn link". Half of that is gone. The site sells
+engagements now, and its readers are Clients in three Segments
+([ADR 14](0014-three-segments-and-the-least-technical-reader.md)), the least
+technical of whom runs a manufacturing SME. Recruiters get one line, pointing to
+LinkedIn.
+
+The arrival path stands: LinkedIn and links first, search later
+([ADR 16](0016-the-legal-notice-and-a-number-meant-to-be-public.md) keeps the site
+out of the index until there is a business to publish it). So does the decision.
+A site that grows from one page to one per Offer
+([ADR 17](0017-offer-pages-public-prices-and-the-estimator.md)) is still static
+content that changes a few times a year, and still has no reason to have an
+uptime story.

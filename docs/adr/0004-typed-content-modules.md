@@ -1,6 +1,6 @@
 # 4. Content as typed modules, not a validated collection
 
-- Status: accepted
+- Status: accepted; amended by [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md), 2026-10-03
 - Date: 2026-08-28
 
 ## Context

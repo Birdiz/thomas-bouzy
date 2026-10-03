@@ -1,6 +1,6 @@
 # 12. The client's sentence first, and a plain line on every card
 
-- Status: accepted
+- Status: accepted; amended by [ADR 14](0014-three-segments-and-the-least-technical-reader.md), 2026-10-03
 - Date: 2026-08-31
 
 ## Context

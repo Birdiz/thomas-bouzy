@@ -1,6 +1,6 @@
 # 11. The page is not a CV; the PDF is
 
-- Status: accepted
+- Status: accepted; amended by [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and by its own postscript, 2026-10-03
 - Date: 2026-08-31
 
 ## Context
@@ -87,3 +87,25 @@ neither appears in the page's prose.
   they are the SERP and share-card identity, and rewriting them is a
   positioning decision that belongs with the page's opening line, which is
   waiting on the market analysis rather than on this note.
+
+## Postscript, 2026-10-03 — the PDF is not either
+
+This note gave the CV one home, at the end of About, as the salaried route. That
+home is gone too. Thomas's question was whether a downloadable CV looks serious on
+a site that sells engagements, given that LinkedIn already carries the career.
+The answer was no, and three costs made it easy:
+
+- it was the last piece of hiring register left on the page;
+- it was the leak [ADR 5](0005-phone-number-is-not-in-the-html.md) could not
+  close: the PDF prints the personal mobile and the home commune in plain text;
+- it is a binary generated upstream that kept falling behind the page, with
+  another email address and the old details.
+
+So the two PDFs leave `public/assets/`. `about.cvLine` points to LinkedIn instead:
+"hiring rather than contracting? my career is on LinkedIn". The test asserting
+exactly one CV link asserts none.
+
+The one reader who genuinely needs a CV is a Partner, because an IT services firm
+has to present Thomas to its own client. Even then it is almost always in the
+firm's own format. The Partners section says "CV on request", and it is sent by
+email, not published.
