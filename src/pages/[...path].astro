@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ResumePage from '../layouts/ResumePage.astro';
+import { ROUTES, type Route } from '../routes.ts';
+
+/**
+ * Every page the site serves comes from the registry in src/routes.ts, one
+ * route per page and locale. A page is added there, not here: this file only
+ * knows how to render each kind of page.
+ */
+export const getStaticPaths = (() =>
+  ROUTES.map((route) => ({
+    // `undefined` is how a rest parameter spells the site root.
+    params: { path: route.path.replace(/^\/|\/$/g, '') || undefined },
+    props: { route },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  route: Route;
+}
+
+const { route } = Astro.props;
+---
+
+<ResumePage route={route} />

@@ -1,9 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import type { Result } from 'axe-core';
-import { expect, test } from './fixtures.ts';
-
-const PATHS = ['/', '/fr/'] as const;
+import { expect, PATHS, test } from './fixtures.ts';
 
 /** A failure message that names the offending elements, not just the rule. */
 function describe(violations: Result[]): string[] {

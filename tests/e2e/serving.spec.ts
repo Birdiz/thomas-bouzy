@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { expect, test } from './fixtures.ts';
+import { expect, PATHS, test } from './fixtures.ts';
 
 /**
  * scripts/serve-dist.mjs is what the container runs, so what it puts on the
@@ -20,7 +20,7 @@ const SECURITY_HEADERS = [
 ];
 
 test('sends the security headers on every response', async ({ request }) => {
-  for (const path of ['/', '/fr/', '/does-not-exist']) {
+  for (const path of [...PATHS, '/does-not-exist']) {
     const headers = (await request.get(path)).headers();
     for (const name of SECURITY_HEADERS) {
       expect(headers[name], `${name} missing on ${path}`).toBeTruthy();
@@ -55,7 +55,7 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
 });
 
 test('compresses text and leaves already-packed formats alone', async ({ request }) => {
-  for (const path of ['/', '/fr/']) {
+  for (const path of PATHS) {
     const headers = (await request.get(path)).headers();
     expect(headers['content-encoding'], `${path} not compressed`).toMatch(/br|gzip/);
     expect(headers.vary).toContain('Accept-Encoding');
@@ -139,7 +139,7 @@ test('serves one URL per page, and 301s the other spellings', async ({ baseURL, 
   }
 
   // The canonical spellings still answer directly.
-  for (const path of ['/', '/fr/']) {
+  for (const path of PATHS) {
     expect((await request.get(path, { maxRedirects: 0 })).status()).toBe(200);
   }
 });
@@ -269,7 +269,7 @@ test('tells crawlers to stay away while the hostname is not the canonical one', 
   const robots = await request.get('/robots.txt');
   expect(await robots.text()).toContain('Disallow: /');
 
-  for (const path of ['/', '/fr/']) {
+  for (const path of PATHS) {
     expect(await (await request.get(path)).text()).toContain('name="robots" content="noindex');
   }
 });

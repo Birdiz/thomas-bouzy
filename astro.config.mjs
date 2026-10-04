@@ -1,12 +1,16 @@
 // @ts-check
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
-import { SITE } from './src/site.ts';
+import { alternatesOf, routeAt } from './src/routes.ts';
+import { LOCALE_TAG, SITE } from './src/site.ts';
 
-// Stamped once per build. Every page in a two-page résumé changes together, so
-// a single build date is honest — and a <lastmod> is the cheapest crawl signal
-// there is.
+// Stamped once per build. The pages change together, because they are one
+// build of one content contract, so a single build date is honest — and a
+// <lastmod> is the cheapest crawl signal there is.
 const buildDate = new Date();
+
+/** The registry route behind a sitemap URL. */
+const routeOf = (url) => routeAt(new URL(url).pathname);
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,12 +26,22 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   integrations: [
+    // The pages and their alternates come from src/routes.ts, not from URL
+    // prefixes: the sitemap's own i18n mode pairs pages by path, and cannot
+    // pair a page with a translation that lives at another slug, or know that
+    // a page exists in one locale only.
     sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en', fr: 'fr' },
+      filter: (url) => routeOf(url) !== undefined,
+      serialize: (item) => {
+        const route = routeOf(item.url);
+        const links = route
+          ? alternatesOf(route.page).map((alternate) => ({
+              url: new URL(alternate.path, SITE.origin).href,
+              lang: LOCALE_TAG[alternate.locale],
+            }))
+          : [];
+        return { ...item, links, lastmod: buildDate };
       },
-      serialize: (item) => ({ ...item, lastmod: buildDate }),
     }),
   ],
   image: {

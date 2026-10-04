@@ -1,4 +1,5 @@
 import { test as base } from '@playwright/test';
+import { ROUTES } from '../../src/routes.ts';
 
 export type MotionPreference = 'reduce' | 'no-preference';
 
@@ -23,3 +24,10 @@ export const test = base.extend<{ motion: MotionPreference }>({
 });
 
 export { expect } from '@playwright/test';
+
+/**
+ * Every path the build serves, from the registry the build itself reads
+ * (src/routes.ts). Suites that walk the site iterate over this, so a new page is
+ * held to the same bar the moment it is registered.
+ */
+export const PATHS: readonly string[] = ROUTES.map((route) => route.path);

@@ -9,19 +9,20 @@ import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import WorkSection from '../components/WorkSection.astro';
 import { RESUME } from '../content/index.ts';
-import type { Locale } from '../site.ts';
+import type { Route } from '../routes.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
-  locale: Locale;
+  route: Route;
 }
 
-const { locale } = Astro.props;
+const { route } = Astro.props;
+const { locale } = route;
 const t = RESUME[locale];
 ---
 
-<BaseLayout locale={locale}>
-  <SiteHeader locale={locale} t={t} />
+<BaseLayout route={route}>
+  <SiteHeader route={route} t={t} />
   <main id="main">
     <Hero t={t} />
     <ConceptsGrid t={t} />

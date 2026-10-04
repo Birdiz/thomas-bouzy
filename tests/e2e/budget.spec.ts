@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures.ts';
+import { expect, PATHS, test } from './fixtures.ts';
 
 /**
  * A performance budget on the inputs, rather than a Lighthouse score.
@@ -44,7 +44,7 @@ const BUDGET = {
   requests: 12,
 } as const;
 
-for (const path of ['/', '/fr/'] as const) {
+for (const path of PATHS) {
   test(`${path} stays within the performance budget`, async ({ page }) => {
     const sizes = { document: 0, css: 0, js: 0, font: 0, image: 0, other: 0 };
     let requests = 0;

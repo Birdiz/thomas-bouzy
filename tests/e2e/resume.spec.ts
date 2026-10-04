@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
-import { expect, test } from './fixtures.ts';
+import { expect, PATHS, test } from './fixtures.ts';
 
 const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/];
 
-async function gotoHome(page: Page, path: '/' | '/fr/') {
+async function gotoHome(page: Page, path: string) {
   await page.goto(path);
   await expect(page.locator('h1')).toBeVisible();
 }
@@ -90,7 +90,7 @@ test.describe('the page is not a CV', () => {
   // chips are in the PDF, and the page keeps none of them. These assertions are
   // the part that does not decay — a rebuilt section can quietly bring the CV
   // grammar back, and the reason it went is invisible in the markup.
-  for (const path of ['/', '/fr/'] as const) {
+  for (const path of PATHS) {
     test(`serves no track record and no earlier-roles disclosure on ${path}`, async ({ page }) => {
       await gotoHome(page, path);
       await expect(page.locator('#experience')).toHaveCount(0);
@@ -120,7 +120,7 @@ test.describe('the page is not a CV', () => {
 });
 
 test.describe('phone number is not harvestable', () => {
-  for (const path of ['/', '/fr/'] as const) {
+  for (const path of PATHS) {
     test(`keeps the number out of the HTML source of ${path}`, async ({ request }) => {
       const html = await (await request.get(path)).text();
       for (const pattern of PHONE_PATTERNS) {
@@ -216,7 +216,7 @@ test.describe('navigation', () => {
 
 test.describe('layout integrity', () => {
   test('never scrolls sideways', async ({ page }) => {
-    for (const path of ['/', '/fr/'] as const) {
+    for (const path of PATHS) {
       await gotoHome(page, path);
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - window.innerWidth,
@@ -233,7 +233,7 @@ test.describe('layout integrity', () => {
   });
 
   test('exposes exactly one h1 and no skipped heading levels', async ({ page }) => {
-    for (const path of ['/', '/fr/'] as const) {
+    for (const path of PATHS) {
       await gotoHome(page, path);
       await expect(page.locator('h1')).toHaveCount(1);
 

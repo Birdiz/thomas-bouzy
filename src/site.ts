@@ -102,12 +102,6 @@ export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
-/** Root-relative path of a locale's home page. */
-export const LOCALE_PATH: Record<Locale, string> = {
-  en: '/',
-  fr: '/fr/',
-};
-
 /** BCP 47 tag used for `<html lang>` and `hreflang`. */
 export const LOCALE_TAG: Record<Locale, string> = {
   en: 'en',
@@ -127,10 +121,6 @@ export const LOCALE_ENDONYM: Record<Locale, string> = {
 
 export function absoluteUrl(path: string): string {
   return new URL(path, SITE.origin).href;
-}
-
-export function otherLocale(locale: Locale): Locale {
-  return locale === 'en' ? 'fr' : 'en';
 }
 
 /** Where each locale's CV PDF lives in public/, and what it downloads as. */

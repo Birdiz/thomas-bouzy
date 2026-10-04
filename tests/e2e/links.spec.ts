@@ -1,6 +1,4 @@
-import { expect, test } from './fixtures.ts';
-
-const PATHS = ['/', '/fr/'] as const;
+import { expect, PATHS, test } from './fixtures.ts';
 
 /** Every same-origin URL the page asks the browser to fetch or offers to open. */
 async function collectUrls(page: import('@playwright/test').Page) {
@@ -110,7 +108,7 @@ test('references no insecure absolute URL', async ({ request }) => {
   // The invariant that `upgrade-insecure-requests` would otherwise stand in for:
   // nothing on the page points at http://, so there is no mixed content to fix.
   // See the CSP comment in scripts/serve-dist.mjs.
-  for (const path of ['/', '/fr/', '/404.html'] as const) {
+  for (const path of [...PATHS, '/404.html']) {
     const html = await (await request.get(path)).text();
     const insecure = [...html.matchAll(/["'(](http:\/\/[^"')\s]+)/g)].map((m) => m[1]);
     expect(insecure, `${path} references an insecure URL`).toEqual([]);

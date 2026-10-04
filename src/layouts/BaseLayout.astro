@@ -1,27 +1,24 @@
 ---
 import { RESUME } from '../content/index.ts';
-import {
-  absoluteUrl,
-  CONTACT,
-  LOCALE_PATH,
-  LOCALE_TAG,
-  LOCALES,
-  type Locale,
-  otherLocale,
-  SITE,
-} from '../site.ts';
+import { alternatesOf, defaultAlternateOf, type Route } from '../routes.ts';
+import { absoluteUrl, CONTACT, LOCALE_TAG, type Locale, SITE } from '../site.ts';
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/app.css';
 
 interface Props {
-  locale: Locale;
+  route: Route;
 }
 
-const { locale } = Astro.props;
+const { route } = Astro.props;
+const { locale } = route;
 const t = RESUME[locale];
 
-const canonical = absoluteUrl(LOCALE_PATH[locale]);
+const canonical = absoluteUrl(route.path);
+
+/* Only between versions of this page that exist: see src/routes.ts. */
+const alternates = alternatesOf(route.page);
+const xDefault = defaultAlternateOf(route.page);
 const ogImage = absoluteUrl('/og.png');
 
 /** Open Graph wants the underscored form, not the BCP 47 tag. */
@@ -104,15 +101,15 @@ const profilePageSchema = {
     }
 
     {
-      LOCALES.map((other) => (
+      alternates.map((alternate) => (
         <link
           rel="alternate"
-          hreflang={LOCALE_TAG[other]}
-          href={absoluteUrl(LOCALE_PATH[other])}
+          hreflang={LOCALE_TAG[alternate.locale]}
+          href={absoluteUrl(alternate.path)}
         />
       ))
     }
-    <link rel="alternate" hreflang="x-default" href={absoluteUrl(LOCALE_PATH.en)} />
+    {xDefault && <link rel="alternate" hreflang="x-default" href={absoluteUrl(xDefault.path)} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -126,7 +123,13 @@ const profilePageSchema = {
     <meta property="profile:last_name" content="Bouzy" />
     <meta property="og:site_name" content={SITE.author} />
     <meta property="og:locale" content={OG_LOCALE[locale]} />
-    <meta property="og:locale:alternate" content={OG_LOCALE[otherLocale(locale)]} />
+    {
+      alternates
+        .filter((alternate) => alternate.locale !== locale)
+        .map((alternate) => (
+          <meta property="og:locale:alternate" content={OG_LOCALE[alternate.locale]} />
+        ))
+    }
     <meta property="og:title" content={t.meta.title} />
     <meta property="og:description" content={t.meta.description} />
     <meta property="og:url" content={canonical} />
