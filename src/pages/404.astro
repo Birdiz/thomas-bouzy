@@ -1,16 +1,18 @@
 ---
-import { LOCALE_PATH, SITE } from '../site.ts';
+import { homePath } from '../routes.ts';
+import { SITE } from '../site.ts';
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/app.css';
 
 // A 404 has no locale — the URL that produced it told us nothing. So it says
-// its piece twice, briefly, and offers the way back in both languages.
-const title = 'Page not found · Page introuvable';
+// its piece twice, briefly, and offers the way back in both languages; French
+// first, as at the root of the site (ADR 15).
+const title = 'Page introuvable · Page not found';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -35,16 +37,16 @@ const title = 'Page not found · Page introuvable';
   <body>
     <main id="main" class="notfound container">
       <p class="kicker">404</p>
-      <h1 class="notfound__title">Nothing here</h1>
+      <h1 class="notfound__title">Rien ici</h1>
       <p class="notfound__lead">
-        This address does not point at a page. It may have moved, or never existed.
-      </p>
-      <p class="notfound__lead" lang="fr">
         Cette adresse ne pointe vers aucune page. Elle a peut-être changé, ou n'a jamais existé.
       </p>
+      <p class="notfound__lead" lang="en">
+        This address does not point at a page. It may have moved, or never existed.
+      </p>
       <div class="notfound__actions">
-        <a class="btn btn-primary" href={LOCALE_PATH.en}>Back to the résumé</a>
-        <a class="btn btn-secondary" href={LOCALE_PATH.fr} lang="fr">Revenir au CV</a>
+        <a class="btn btn-primary" href={homePath('fr')}>Revenir à l'accueil</a>
+        <a class="btn btn-secondary" href={homePath('en')} lang="en">Back to the home page</a>
       </div>
     </main>
   </body>

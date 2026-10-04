@@ -59,10 +59,9 @@ const TYPES = {
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
-  '.pdf': 'application/pdf',
 };
 
-/** Worth compressing: text formats. Images, fonts and PDFs are already packed. */
+/** Worth compressing: text formats. Images and fonts are already packed. */
 const COMPRESSIBLE = /^(text\/|application\/(json|xml|javascript))|\+xml/;
 
 /**
@@ -125,31 +124,6 @@ const SECURITY_HEADERS = {
   'strict-transport-security': 'max-age=31536000; includeSubDomains',
   ...(INDEXABLE ? {} : { 'x-robots-tag': 'noindex, nofollow' }),
 };
-
-/**
- * The CV PDFs stay out of the index even on the canonical deployment.
- *
- * Two reasons, and neither is a trade-off:
- *
- * A PDF that ranks is a PDF competing with the page it belongs to. It takes
- * authority that should land on the résumé itself, offers no navigation, and
- * drops the visitor into a document instead of the site.
- *
- * And a crawler does not "download" a PDF — it is one GET, exactly like the
- * HTML. Search engines extract the text, so an indexed CV makes its phone
- * number and its street-level location answerable by a search query. The page
- * withholds both on purpose: the number reaches it encoded, after a click and
- * never in the source (docs/adr/0005), and the location stops at the region.
- * Without this the whole posture would end at the download button the day
- * SITE_INDEXABLE goes true.
- *
- * Applied after SECURITY_HEADERS so it holds whatever that object does.
- */
-const NEVER_INDEXED = /^application\/pdf$/;
-
-function robotsFor(mime) {
-  return NEVER_INDEXED.test(mime) ? { 'x-robots-tag': 'noindex, noarchive' } : {};
-}
 
 /**
  * Astro fingerprints what it emits into /_astro/, and the font filenames carry
@@ -218,8 +192,18 @@ function isFresh(req, etag, mtime) {
 function canonicalise(pathname) {
   const collapsed = pathname.replace(/\/{2,}/g, '/');
   const withoutIndex = collapsed.replace(/(^|\/)index\.html$/, '$1');
-  return withoutIndex === '' ? '/' : withoutIndex;
+  const current = withoutIndex.replace(LEGACY_FRENCH_PREFIX, '/');
+  return current === '' ? '/' : current;
 }
+
+/**
+ * French used to live under `/fr/`; it is served at the root now (ADR 15).
+ * `/fr`, `/fr/` and anything below answer with the same one-hop 301 as every
+ * other spelling of a page, to the address the page has today. The site was
+ * never communicated or indexed, so this is courtesy to the odd shared link,
+ * not an SEO migration.
+ */
+const LEGACY_FRENCH_PREFIX = /^\/fr(\/|$)/;
 
 async function resolveFile(pathname) {
   // Contain the request inside root: no `..`, no absolute escapes.
@@ -317,7 +301,7 @@ async function handle(req, res) {
 
   const hit = await resolveFile(canonical);
 
-  // `/fr` is a directory: it is spelled `/fr/`, the way LOCALE_PATH and the
+  // `/en` is a directory: it is spelled `/en/`, the way src/routes.ts and the
   // canonical link spell it.
   if (hit?.isDirectoryIndex && !canonical.endsWith('/')) {
     send(
@@ -366,7 +350,7 @@ async function handle(req, res) {
   if (encoding) headers['content-encoding'] = encoding;
   else headers['content-length'] = file.size;
 
-  res.writeHead(hit ? 200 : 404, { ...headers, ...SECURITY_HEADERS, ...robotsFor(mime) });
+  res.writeHead(hit ? 200 : 404, { ...headers, ...SECURITY_HEADERS });
   if (req.method === 'HEAD') {
     res.end();
     return;

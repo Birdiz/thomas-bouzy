@@ -2,9 +2,9 @@ import type { ResumeContent } from './types.ts';
 
 export const en = {
   meta: {
-    title: 'Thomas Bouzy — Senior Software Engineer, backend architecture',
+    title: 'Thomas Bouzy — Taking over, fixing and evolving the applications you run on',
     description:
-      'I design transactional systems that have to stay correct while they stay up. Twelve years of backend architecture — event-sourced wallets at 1,000+ transactions a minute, observability that took reported bugs from 20 a month to 5, and DeFi operations in production on real funds.',
+      'I take over, make reliable and evolve the applications your business depends on: audit, takeover and maintenance, migration without downtime, reliability, senior reinforcement. Public prices, first call free.',
     ogImageAlt:
       'Thomas Bouzy — I design transactional systems that have to stay correct while they stay up. Backend & architecture.',
   },
@@ -18,47 +18,25 @@ export const en = {
   },
 
   nav: {
-    work: 'Work',
+    offers: 'Offers',
+    work: 'Achievements',
     approach: 'Approach',
     about: 'About',
     contact: 'Get in touch',
   },
 
   hero: {
-    availability: 'Available now',
+    availability: "First engagements in preparation — let's talk now",
     blurb:
-      'I design transactional systems that have to stay correct while they stay up. Twelve years of backend and architecture — event-driven flows, Event Sourcing on wallets, and on-chain operations where a mistake costs real money.',
-    ctaWork: 'See the work',
+      'I take over the applications your business depends on, make them reliable and keep them evolving, without ever stopping them.',
+    ctaOffers: 'See the offers',
   },
 
-  concepts: [
-    {
-      label: 'Traceable',
-      gloss: 'Every movement kept as a dated fact; the balance replays instead of being guessed.',
-    },
-    {
-      label: 'Invisible redesign',
-      gloss: 'Payloads rebuilt underneath their consumers, without breaking a single one.',
-    },
-    {
-      label: 'Footprint',
-      gloss: 'Memory, CPU, image size and deployment treated as design, not as weather.',
-    },
-    {
-      label: 'Build-vs-buy',
-      gloss: 'What you keep buying, what you bring in-house, and where the line falls.',
-    },
-    {
-      label: 'Shared service',
-      gloss: "Born of one squad's need, opened to the other teams that turned out to have it.",
-    },
-    {
-      label: 'Handover',
-      gloss: 'Architecture reviews, onboarding, a written trail a newcomer can argue with.',
-    },
-  ],
-
   problem: {
+    audit: {
+      text: "Can't tell yet which one is yours?",
+      cta: 'Start with an audit',
+    },
     kicker: 'The problem',
     title: 'The happy path is never the interesting part.',
     paragraphs: [
@@ -70,20 +48,24 @@ export const en = {
 
   failureModes: [
     {
-      quote: '“We credited the same payout twice, and only saw it at reconciliation.”',
-      text: 'Double execution. A consumer replays a message, and nothing in the code tells the second pass from the first. By then it is not a technical incident: it is an accounting discrepancy, with a regulator attached.',
+      quote: '“The person who built our app has left, and nobody dares touch it any more.”',
+      text: 'The orphan application. The one person who knew it has left, the documentation never existed, and every change becomes a bet: in the end nobody touches anything, while the application ages underneath the business that depends on it.',
+      offer: 'takeover',
     },
     {
-      quote: '“We cannot explain how this balance got there.”',
-      text: 'A state-based model. It answers what the balance is today, never the sequence of facts that produced it — the only thing finance, support and auditors actually ask for.',
+      quote: '“The version upgrade is always for next quarter.”',
+      text: 'The migration that never happens. On a system that cannot stop, the stop window a rewrite would need never comes: the work slips from one quarter to the next for good reasons, while the cost of the old version keeps running.',
+      offer: 'migration',
     },
     {
-      quote: '“The migration has been on the roadmap for two years.”',
-      text: 'The rewrite that needs a stop window. On a system that cannot stop, that window never comes: the work slips from one quarter to the next for good reasons, while the cost of the old model keeps running.',
+      quote: "“The stock (or the balance) doesn't add up, and nobody knows why.”",
+      text: 'The discrepancy nobody can explain. A model that keeps only the state says how much is left today, in stock, in a batch or in an account, never the sequence of movements that led there: the only thing accounting, support and auditors actually ask for.',
+      offer: 'reliability',
     },
     {
-      quote: '“We find out about our own bugs from customer tickets.”',
-      text: 'Defects found by users. A bug you learn about from a ticket was detectable hours earlier. What is not instrumented is not reliable: it is only untested in production, and the customer is doing your acceptance testing.',
+      quote: '“Our customers are the ones who find the bugs.”',
+      text: 'Defects found by users. A bug a customer finds was detectable hours earlier. What is not instrumented is not reliable: it is only untested in production, and the customer is doing your acceptance testing.',
+      offer: 'reliability',
     },
   ],
 
@@ -124,8 +106,8 @@ export const en = {
   ],
 
   work: {
-    kicker: 'Selected projects',
-    title: 'Six things worth opening',
+    kicker: 'Achievements',
+    title: 'Work worth opening',
     intro:
       'Each one is a real system in production. Open a card for the context, the approach and what it actually changed.',
     labelPlain: 'In plain terms:',
@@ -134,8 +116,9 @@ export const en = {
     labelResult: 'Result',
   },
 
-  projects: [
+  achievements: [
     {
+      id: 'wallet-event-sourcing',
       title: 'Event Sourcing on wallet transactions',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
@@ -149,6 +132,7 @@ export const en = {
         '1,000+ financial transactions a minute with a complete audit trail, reconciliation that stopped being archaeology, and bug investigations that replay instead of guess. The same flow absorbs the Fan Token Offerings — peaks of 10,000–20,000 users within minutes — on load tests designed for it (BlazeMeter).',
     },
     {
+      id: 'live-api-redesign',
       title: 'Rebuilding a live API without users noticing',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
@@ -162,6 +146,7 @@ export const en = {
         "Recurring 500s brought to zero and Time To Interactive from 17 to 3 seconds, lighter domain-focused payloads being the primary cause. Container image 1.7 GB → 200 MB, deployment from around 15 minutes to under 4, memory 1 GB → a few hundred MB, CPU 2 cores → 100 millicores — the deployment and the runtime footprint of those services are mine to own, on Kubernetes and ArgoCD, on a cluster operated alongside the devops team. A cost-reduction directive on the same scope answered by batching calls, moving to the provider's bulk endpoints and, above all, internalising part of the data with an in-house RPC client reading token information directly on-chain: €9,000 → €3,000 a year at equivalent quality. Shipped on call, incidents driven and coordinated through Rootly: work in progress stops until the mitigation lands, with tech leads, QA and product in the same room.",
     },
     {
+      id: 'on-chain-operations',
       title: 'On-chain transactions that commit real funds',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
@@ -175,6 +160,7 @@ export const en = {
         'In production on real funds. The hard part is not submitting the order: you control neither finality nor confirmation delay, and the transaction you believe lost may already have landed. Idempotent signing, transaction state tracking and reconciliation against the chain as the source of truth are designed in, not handled afterwards.',
     },
     {
+      id: 'enterprise-onboarding',
       title: 'Onboarding a new enterprise account in a day',
       org: 'Kiss The Bride',
       period: 'Jan 2018 – April 2022',
@@ -188,6 +174,21 @@ export const en = {
         'Onboarding a new enterprise account came down to one day. Sales-force rankings and results were delivered live through a Mercure integration over Server-Sent Events. Of four inherited juniors mentored over two years, one stayed and moved onto the mobile app served by the same API.',
     },
     {
+      id: 'industrial-erp',
+      title: 'Keeping an industrial ERP running in production',
+      org: 'Quadra Informatique',
+      period: '2016 – 2017',
+      plain:
+        'Looking after the software a manufacturer runs its whole business on, from suppliers to invoices, while it stayed in daily use.',
+      context:
+        'A complete ERP for industrial clients: suppliers, the production line, stock, invoicing and incident tracking, in one application the business could not do without for a single day.',
+      approach:
+        'Maintenance and change on a system in daily production use. Every correction and every evolution went into the application that held the stock and the invoices, where a regression reached the shop floor or the accounts the same day — so nothing was changed that could not first be checked.',
+      result:
+        'The ERP stayed in production throughout. It is the kind of application the Takeover is for: one a business depends on every day, and that has to keep running while it is looked after.',
+    },
+    {
+      id: 'codebase-audit',
       title: "Auditing a codebase I didn't write",
       org: 'Civic tech, volunteer',
       period: '2026',
@@ -201,6 +202,7 @@ export const en = {
         'A free-cart path that trusted the client is now revalidated server-side, editorial content injected into structured data is escaped, security headers are global, and both the CI actions and the base image are pinned. The platform went from zero automated tests to covering its payment flows and admin authentication, with CodeQL in the pipeline.',
     },
     {
+      id: 'open-data-directories',
       title: 'Association directories from open data',
       org: 'Personal project',
       period: '2026',
@@ -224,9 +226,8 @@ export const en = {
       'Off-screen: the Grand Est countryside, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
     ],
     mentoringKicker: 'Mentoring & teaching — a thread through all of it',
-    cvLine:
-      'Hiring rather than contracting? The detailed track record, the chronology and the technologies are in the CV.',
-    cvCta: 'Download CV',
+    careerLine: 'Hiring rather than contracting?',
+    careerLink: 'My career is on LinkedIn.',
   },
 
   mentoring: [
@@ -271,6 +272,460 @@ export const en = {
       'SQLite',
       'CodeQL',
     ],
+  },
+
+  offersSection: {
+    kicker: 'Offers',
+    title: 'Five ways to start, every one with a price.',
+    intro:
+      'Each Offer has its own page: what you get, how it works, and an estimator that gives an order of magnitude before any call.',
+    from: 'from',
+    see: 'See the offer',
+    inFrench: '(in French)',
+    partners: 'An agency or an IT services firm?',
+    partnersLink: 'The partners page (in French)',
+  },
+
+  offers: {
+    audit: {
+      name: 'Audit',
+      plain:
+        'An outside look at your application, written down: what could cost you dearly, and in what order to deal with it.',
+    },
+    takeover: {
+      name: 'Takeover and maintenance',
+      plain:
+        'Taking back control of the application nobody dares touch any more, without breaking it, then keeping it alive every month.',
+    },
+    migration: {
+      name: 'Migration without downtime',
+      plain:
+        'Moving a running system to a new version without stopping it, starting with a fixed-price plan.',
+    },
+    reliability: {
+      name: 'Reliability',
+      plain:
+        'Making what your system does visible, so that a stock gap, a balance or a bug can be explained instead of guessed.',
+    },
+    reinforcement: {
+      name: 'Senior reinforcement',
+      plain: 'A part-time lead or architect inside your team, billed by the day.',
+    },
+  },
+
+  offerPage: {
+    kicker: 'Offer',
+    sentences: 'What you say about it',
+    delivered: 'What you get',
+    steps: 'How it works',
+    price: 'What it costs',
+    disclaimer: 'An order of magnitude, not a quote.',
+    tableCaption: 'Every range, excluding VAT',
+    excludingVat: 'excl. VAT',
+    perMonth: '/ month',
+    weekOne: 'week',
+    weekMany: 'weeks',
+    fit: 'Is it the right choice?',
+    goodChoice: 'A good choice when',
+    notTheRightChoice: 'Not the right choice when',
+    achievements: 'What proves it',
+    faq: 'Questions',
+    concepts: 'In two words',
+    book: {
+      kicker: 'First step',
+      title: 'A 30-minute call, to see whether I can help.',
+      text: 'Free and with no commitment: you describe the situation, and I tell you plainly whether this Offer is the right one, and if not, which is.',
+      cta: 'Book a call',
+      orWrite: 'Would rather write?',
+      serviceArea: 'On site in {towns}; remotely everywhere else.',
+    },
+  },
+
+  offerPages: {
+    audit: {
+      meta: {
+        title: 'Application audit — Thomas Bouzy',
+        description:
+          'A written audit of your application: a report, a risk register and a prioritised action plan. Public prices, deducted from the engagement that follows.',
+      },
+      sentences: [
+        "“Something is wrong, but we don't know where to start.”",
+        "“Before we sign for a rewrite, we would like an opinion that isn't selling the rewrite.”",
+        '“We are about to buy this company: what is its software actually worth?”',
+      ],
+      concepts: [
+        {
+          label: 'Footprint',
+          gloss: 'Memory, CPU, image size and deployment treated as design, not as weather.',
+        },
+        {
+          label: 'Build-vs-buy',
+          gloss: 'What you keep buying, what you bring in-house, and where the line falls.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'A written report',
+          text: 'What holds, what is fragile and what it costs, from the architecture to operations, read by someone with nothing in it to defend.',
+        },
+        {
+          title: 'A risk register',
+          text: 'Each risk with its severity, its likelihood and what it costs to leave in place, so that decisions are taken knowingly.',
+        },
+        {
+          title: 'An action plan',
+          text: 'The fixes in the order they pay back, each ready to pick up, with its estimated effort. The structural decisions are written as ADRs, so your team can argue with them.',
+        },
+      ],
+      variant: {
+        title: 'Variant: technical due diligence',
+        text: 'Before an acquisition or a fundraise, the same work written for someone who is not the team: what the system is worth, what it will cost to evolve, and what could surprise you after signing.',
+      },
+      steps: [
+        {
+          title: 'A 30-minute call',
+          text: 'You describe the system and what worries you. I tell you whether an audit is the right answer, and how deep it should go.',
+        },
+        {
+          title: 'Read-only access',
+          text: 'To the code, the documentation and, where possible, production metrics. Nothing is changed during the audit.',
+        },
+        {
+          title: 'Reading and interviews',
+          text: 'I read the system and talk to the people who run it: the risks the code does not show are often found there.',
+        },
+        {
+          title: 'The read-out',
+          text: 'The report, the register and the plan, presented and discussed with you and your team until every point is understood.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: 'Size of the system',
+            options: {
+              small: 'One application',
+              medium: 'A few applications',
+              large: 'A platform',
+            },
+          },
+          depth: {
+            label: 'Depth',
+            options: { express: 'Express', full: 'Full' },
+          },
+        },
+        amounts: { fee: 'Audit fee' },
+        duration: 'Duration',
+      },
+      rules: [
+        'If you then entrust me with the engagement that follows from it, the audit fee is deducted from it: an audit is never a sunk cost.',
+      ],
+      goodChoice: [
+        'You sense a risk without being able to name it.',
+        'You have to decide on a rewrite, a migration or an acquisition, and want an independent opinion first.',
+        'Your team needs a prioritised list rather than a general impression.',
+      ],
+      notTheRightChoice: [
+        'You already know what is wrong: Reliability, or a takeover, gets there more directly.',
+        'The system is down right now: service has to come back first, the audit comes after.',
+        'You are looking for a decision already taken to be validated: the audit will say what it finds.',
+      ],
+      faq: [
+        {
+          question: 'Do I have to give you access to production?',
+          answer:
+            'No. Read access to the code is enough for the express audit. For the full audit, production metrics or logs make the diagnosis much sharper, and stay read-only.',
+        },
+        {
+          question: 'What if the audit concludes everything has to be rewritten?',
+          answer:
+            'It will say so, with what it costs not to. It is rarely the conclusion: most systems can be taken back piece by piece, without stopping everything.',
+        },
+        {
+          question: 'Why a range rather than a price?',
+          answer:
+            'Because the price depends on the real size of the system, which we measure during the first call. The quote itself is firm before anything starts.',
+        },
+      ],
+    },
+    migration: {
+      meta: {
+        title: 'Migration without downtime — Thomas Bouzy',
+        description:
+          'Moving a production system to a new version without stopping it: a fixed-price plan, then execution alongside your team. Public prices.',
+      },
+      sentences: ["“We're stuck on a version that no longer gets security fixes.”"],
+      concepts: [
+        {
+          label: 'Invisible redesign',
+          gloss: 'Payloads rebuilt underneath their consumers, without breaking a single one.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'A migration plan',
+          text: 'The order of the steps, what each one risks and how to roll it back, costed: enough to decide before spending more.',
+        },
+        {
+          title: 'A migration in steps',
+          text: 'The system changes underneath the people using it, with no stop window: two versions coexist for as long as needed, and no longer.',
+        },
+        {
+          title: 'A team that can do it again',
+          text: "Execution happens with your team, not instead of it: the next upgrade won't depend on me.",
+        },
+      ],
+      steps: [
+        {
+          title: 'Phase 1: the plan, at a fixed price',
+          text: 'I read the system, measure the version gap and the test coverage, and write the plan. You can stop there: the plan is yours.',
+        },
+        {
+          title: 'The safety net, where it is missing',
+          text: 'Where tests are missing, they are written first: that is what lets you see a regression before your users do.',
+        },
+        {
+          title: 'Phase 2: execution',
+          text: 'Step by step with your team, each step shipped to production before the next, billed by the day.',
+        },
+        {
+          title: 'The end of coexistence',
+          text: 'The old path is removed as soon as the new one has proved itself, so the transition does not become the permanent state.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          gap: {
+            label: 'Version gap',
+            options: {
+              one: 'One major version',
+              two: 'Two major versions',
+              'three-plus': 'Three or more',
+            },
+          },
+          coverage: {
+            label: 'Existing test coverage',
+            options: { good: 'Good', partial: 'Partial', none: 'None' },
+          },
+        },
+        amounts: { plan: 'Plan, phase 1 at a fixed price' },
+        duration: 'Execution, with your team',
+      },
+      rules: [
+        'A Migration is sold in two phases: a fixed-price plan first, then execution alongside your team, billed by the day. You decide on the second with the plan in hand.',
+      ],
+      goodChoice: [
+        'Your system runs continuously and cannot stop to migrate.',
+        'The upgrade slips from quarter to quarter, for good reasons.',
+        'You want a serious estimate before committing to the bulk of the work.',
+      ],
+      notTheRightChoice: [
+        'The system can stop for a weekend without harm: a conventional migration will cost less.',
+        'You want to replace the system rather than evolve it: that is another decision, which an Audit can inform.',
+        'Nobody on your side will be able to take the system on afterwards: look at a takeover instead.',
+      ],
+      faq: [
+        {
+          question: 'Why does test coverage move the price so much?',
+          answer:
+            'Because without tests, every step has to be checked by hand, or the tests written first. It is the first cost driver of a migration, well ahead of the version gap.',
+        },
+        {
+          question: 'Does the plan commit me to doing the rest with you?',
+          answer: 'No. It is yours: you can follow it with your own team, or with someone else.',
+        },
+        {
+          question: 'What does execution cost?',
+          answer:
+            'It is billed by the day, at the published rate; the estimator gives its duration. The plan costs it precisely for your system.',
+        },
+      ],
+    },
+    reliability: {
+      meta: {
+        title: 'Reliability — Thomas Bouzy',
+        description:
+          'Making a system observable and its flows traceable, so a stock gap, a balance or a bug can be explained instead of guessed. Public prices.',
+      },
+      sentences: ['“We credited the same payout twice, and only saw it at reconciliation.”'],
+      concepts: [
+        {
+          label: 'Traceable',
+          gloss:
+            'Every movement kept as a dated fact; the balance replays instead of being guessed.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'Traceable flows',
+          text: 'Every movement of stock, of a batch or of money kept as a dated fact: you replay the history instead of reconstructing what must have happened.',
+        },
+        {
+          title: 'An observable system',
+          text: 'Dashboards per service and alerts on the signals that precede a failure, so you learn about a problem before your customers do.',
+        },
+        {
+          title: 'Double execution, dealt with',
+          text: 'A replayed job must not have two effects. The flows that matter become idempotent: a message received twice is applied once.',
+        },
+      ],
+      steps: [
+        {
+          title: 'The flows that matter',
+          text: 'We pick together the ones where a discrepancy really costs: stock, batches, invoicing, payments.',
+        },
+        {
+          title: 'Instrumentation',
+          text: 'Those flows are traced end to end, and discrepancies become visible the moment they happen.',
+        },
+        {
+          title: 'Fixes',
+          text: 'The causes found are fixed, starting with the ones that cost most, double execution included.',
+        },
+        {
+          title: 'Handover',
+          text: 'Your teams can read the dashboards and act on the alerts: the tooling stays when I leave.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          flows: {
+            label: 'Flows or services to make reliable',
+            options: { few: '1 to 2', some: '3 to 5', many: '6 to 10' },
+          },
+        },
+        amounts: { fee: 'Price' },
+        duration: 'Duration',
+      },
+      rules: [],
+      goodChoice: [
+        'A figure does not add up, and explaining it takes days.',
+        'You learn about your incidents from your customers.',
+        'A job has already run twice, and you want it never to happen again.',
+      ],
+      notTheRightChoice: [
+        "You don't know yet where the problem is: an Audit will locate it first.",
+        'Nobody is left to maintain the application: a takeover starts there.',
+        'You only want a monitoring tool installed: that is one means, not reliability.',
+      ],
+      faq: [
+        {
+          question: 'Do we have to change monitoring tools?',
+          answer:
+            'Rarely. We start from what you have: what matters is knowing what to observe, not the tool.',
+        },
+        {
+          question: 'What is a double execution, concretely?',
+          answer:
+            'The same job applied twice: a payout credited twice, a batch taken out of stock twice. It nearly always comes from a replayed message, and is prevented in the design rather than after the fact.',
+        },
+        {
+          question: 'What about stock rather than money?',
+          answer:
+            'It is the same problem: a discrepancy nobody can explain. The same methods apply to stock, to batches or to invoicing.',
+        },
+      ],
+    },
+    reinforcement: {
+      meta: {
+        title: 'Senior reinforcement — Thomas Bouzy',
+        description:
+          'A part-time lead or architect inside your team, billed by the day. A published day rate, and two clients at a time, never more.',
+      },
+      sentences: [
+        '“We need someone senior, but not full time.”',
+        "“The team is good; it's missing someone to settle the architecture.”",
+      ],
+      concepts: [
+        {
+          label: 'Shared service',
+          gloss: "Born of one squad's need, opened to the other teams that turned out to have it.",
+        },
+        {
+          label: 'Handover',
+          gloss: 'Architecture reviews, onboarding, a written trail a newcomer can argue with.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'A lead inside the team',
+          text: 'Code and architecture reviews, decisions written as ADRs, technical priorities settled: the role, without the hire.',
+        },
+        {
+          title: 'Code shipped',
+          text: 'Not only opinions: I take on work, ship it, and have it reviewed like everyone else.',
+        },
+        {
+          title: 'A team that grows',
+          text: 'Onboarding, reviews, a written trail a newcomer can argue with: what I know stays when I leave.',
+        },
+      ],
+      steps: [
+        {
+          title: 'A 30-minute call',
+          text: 'Your team, your system, what is missing. We agree on the number of days a week.',
+        },
+        {
+          title: 'The first two weeks',
+          text: 'I read the system and meet the team before proposing anything.',
+        },
+        {
+          title: 'Cruising speed',
+          text: 'The same days every week, in your tools and your rituals, like a member of the team.',
+        },
+        {
+          title: 'The exit',
+          text: 'When the need is covered, I leave behind the written trail that lets you carry on without me.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          days: {
+            label: 'Days per week',
+            options: {
+              '1': '1 day',
+              '2': '2 days',
+              '3': '3 days',
+              '4': '4 days',
+              '5': '5 days, full time',
+            },
+          },
+        },
+        amounts: { monthly: 'Per month' },
+      },
+      rules: [
+        'I work with two clients at a time, never more: each gets my attention, not a place in a queue.',
+      ],
+      dayRate: {
+        label: 'Day rate:',
+        note: 'lower for long full-time engagements.',
+      },
+      goodChoice: [
+        'Your team needs someone senior, but not a full-time hire.',
+        'An architecture decision is waiting for someone to settle it and write it down.',
+        'You want your developers to grow, not only to ship.',
+      ],
+      notTheRightChoice: [
+        'You are looking for someone full time for years: a hire will serve you better.',
+        'The work is a well-bounded project: a fixed-price Migration or Reliability engagement will be clearer.',
+        'You have no technical team: a takeover is made for that case.',
+      ],
+      faq: [
+        {
+          question: 'What is the minimum?',
+          answer: 'One day a week. Below that, you cannot keep up with the team.',
+        },
+        {
+          question: 'Why two clients at most?',
+          answer:
+            'Because beyond that, each one gets a distracted consultant. The rule does not move, whatever the demand.',
+        },
+        {
+          question: 'Do you work remotely?',
+          answer: 'Yes, it is the default, with travel when the work needs a room.',
+        },
+      ],
+    },
   },
 
   contact: {

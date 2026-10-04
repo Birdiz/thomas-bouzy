@@ -1,43 +1,48 @@
 import type { Page } from '@playwright/test';
-import { expect, test } from './fixtures.ts';
+import { RESUME } from '../../src/content/index.ts';
+import { OFFER_IDS } from '../../src/content/offers.ts';
+import { fromPrice } from '../../src/content/prices.ts';
+import { formatEuros } from '../../src/lib/money.ts';
+import { homePath, pathOf } from '../../src/routes.ts';
+import { expect, PATHS, test } from './fixtures.ts';
 
 const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/];
 
-async function gotoHome(page: Page, path: '/' | '/fr/') {
+async function gotoHome(page: Page, path: string) {
   await page.goto(path);
   await expect(page.locator('h1')).toBeVisible();
 }
 
 test.describe('routing and locales', () => {
-  test('serves English at / and French at /fr/', async ({ page }) => {
+  test('serves French at / and English at /en/', async ({ page }) => {
     await gotoHome(page, '/');
-    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
-    await expect(page.getByRole('heading', { name: 'Six things worth opening' })).toBeVisible();
-
-    await gotoHome(page, '/fr/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-    await expect(page.getByRole('heading', { name: 'Six sujets à ouvrir' })).toBeVisible();
+    await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
+    await expect(page.getByRole('heading', { name: 'Des réalisations à ouvrir' })).toBeVisible();
+
+    await gotoHome(page, '/en/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.getByRole('heading', { name: 'Work worth opening' })).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {
     await gotoHome(page, '/');
-    await page.getByRole('link', { name: 'Français' }).click();
-    await expect(page).toHaveURL(/\/fr\/?$/);
-    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-
     await page.getByRole('link', { name: 'English' }).click();
-    await expect(page).toHaveURL(/localhost:\d+\/$/);
+    await expect(page).toHaveURL(/\/en\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+    await page.getByRole('link', { name: 'Français' }).click();
+    await expect(page).toHaveURL(/localhost:\d+\/$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
   });
 
   test('marks the active locale and cross-links both with hreflang', async ({ page }) => {
-    await gotoHome(page, '/fr/');
-    await expect(page.getByRole('link', { name: 'Français' })).toHaveAttribute(
+    await gotoHome(page, '/en/');
+    await expect(page.getByRole('link', { name: 'English' })).toHaveAttribute(
       'aria-current',
       'true',
     );
-    await expect(page.getByRole('link', { name: 'English' })).not.toHaveAttribute(
+    await expect(page.getByRole('link', { name: 'Français' })).not.toHaveAttribute(
       'aria-current',
       'true',
     );
@@ -47,26 +52,55 @@ test.describe('routing and locales', () => {
     }
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      /https:\/\/[^/]+\/fr\//,
+      /https:\/\/[^/]+\/en\/$/,
     );
+  });
+
+  test('points x-default at the French page', async ({ page }) => {
+    for (const path of ['/', '/en/']) {
+      await gotoHome(page, path);
+      await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+        'href',
+        /https:\/\/[^/]+\/$/,
+      );
+    }
+  });
+
+  test('never redirects on Accept-Language', async ({ request }) => {
+    // ADR 2 stands on this point: a link sent in one language opens in it.
+    for (const [path, language] of [
+      ['/', 'en-GB,en;q=0.9'],
+      ['/en/', 'fr-FR,fr;q=0.9'],
+    ] as const) {
+      const response = await request.get(path, {
+        headers: { 'Accept-Language': language },
+        maxRedirects: 0,
+      });
+      expect(response.status(), `${path} redirected a ${language} reader`).toBe(200);
+    }
   });
 });
 
-test.describe('projects accordion', () => {
-  test('opens the first project and keeps only one open at a time', async ({ page }) => {
-    await gotoHome(page, '/');
-    const projects = page.locator('details.project');
-    await expect(projects).toHaveCount(6);
-    await expect(projects.nth(0)).toHaveAttribute('open', '');
+test.describe('achievements accordion', () => {
+  test('opens the first achievement and keeps only one open at a time', async ({ page }) => {
+    await gotoHome(page, '/en/');
+    const achievements = page.locator('details.achievement');
+    await expect(achievements).toHaveCount(7);
+    await expect(achievements.nth(0)).toHaveAttribute('open', '');
 
-    await projects.nth(2).locator('summary').click();
-    await expect(projects.nth(2)).toHaveAttribute('open', '');
-    await expect(projects.nth(0)).not.toHaveAttribute('open', '');
+    await achievements.nth(2).locator('summary').click();
+    await expect(achievements.nth(2)).toHaveAttribute('open', '');
+    await expect(achievements.nth(0)).not.toHaveAttribute('open', '');
+
+    // The seventh one too: `name` groups the whole list, not the first six.
+    await achievements.nth(6).locator('summary').click();
+    await expect(achievements.nth(6)).toHaveAttribute('open', '');
+    await expect(achievements.nth(2)).not.toHaveAttribute('open', '');
   });
 
-  test('exposes each project as a heading with its panel content', async ({ page }) => {
-    await gotoHome(page, '/');
-    const first = page.locator('details.project').first();
+  test('exposes each achievement as a heading with its panel content', async ({ page }) => {
+    await gotoHome(page, '/en/');
+    const first = page.locator('details.achievement').first();
     await expect(
       first.getByRole('heading', { name: /Event Sourcing on wallet transactions/ }),
     ).toBeVisible();
@@ -77,8 +111,8 @@ test.describe('projects accordion', () => {
 
   test('is operable from the keyboard', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'WebKit needs full keyboard access enabled at OS level');
-    await gotoHome(page, '/');
-    const second = page.locator('details.project').nth(1);
+    await gotoHome(page, '/en/');
+    const second = page.locator('details.achievement').nth(1);
     await second.locator('summary').focus();
     await page.keyboard.press('Enter');
     await expect(second).toHaveAttribute('open', '');
@@ -90,7 +124,7 @@ test.describe('the page is not a CV', () => {
   // chips are in the PDF, and the page keeps none of them. These assertions are
   // the part that does not decay — a rebuilt section can quietly bring the CV
   // grammar back, and the reason it went is invisible in the markup.
-  for (const path of ['/', '/fr/'] as const) {
+  for (const path of PATHS) {
     test(`serves no track record and no earlier-roles disclosure on ${path}`, async ({ page }) => {
       await gotoHome(page, path);
       await expect(page.locator('#experience')).toHaveCount(0);
@@ -99,28 +133,31 @@ test.describe('the page is not a CV', () => {
     });
   }
 
-  test('offers one call to action in the hero, and it is the work', async ({ page }) => {
-    await gotoHome(page, '/');
-    const ctas = page.locator('.hero__ctas a');
-    await expect(ctas).toHaveCount(1);
-    await expect(ctas.first()).toHaveAttribute('href', '#work');
+  test('offers one call to action in the hero, and it reaches the Offers', async ({ page }) => {
+    for (const [path, label] of [
+      ['/', 'Voir les offres'],
+      ['/en/', 'See the offers'],
+    ] as const) {
+      await gotoHome(page, path);
+      const ctas = page.locator('.hero a');
+      await expect(ctas).toHaveCount(1);
+      await expect(ctas.first()).toHaveText(label);
+      await ctas.first().click();
+      await expect(page).toHaveURL(new RegExp(`${path}#offers$`));
+      await expect(page.locator('#offers')).toBeInViewport();
+    }
   });
 
-  test('reaches the CV once, from About, as a download', async ({ page }) => {
+  test('points the salaried route at LinkedIn, from About', async ({ page }) => {
     await gotoHome(page, '/');
-    const cv = page.locator('.about__cv a');
-    await expect(cv).toHaveCount(1);
-    await expect(cv).toHaveAttribute('href', '/assets/cv-thomas-bouzy-en.pdf');
-    await expect(cv).toHaveAttribute('download', 'Thomas-Bouzy-CV-EN.pdf');
-
-    // Nowhere else: the hero download was the salaried route competing with the
-    // work in the first viewport, which is the whole point of moving it here.
-    await expect(page.locator('a[href$=".pdf"]')).toHaveCount(1);
+    const career = page.locator('#about .about__career a');
+    await expect(career).toHaveCount(1);
+    await expect(career).toHaveAttribute('href', /linkedin\.com\/in\//);
   });
 });
 
 test.describe('phone number is not harvestable', () => {
-  for (const path of ['/', '/fr/'] as const) {
+  for (const path of PATHS) {
     test(`keeps the number out of the HTML source of ${path}`, async ({ request }) => {
       const html = await (await request.get(path)).text();
       for (const pattern of PHONE_PATTERNS) {
@@ -130,7 +167,7 @@ test.describe('phone number is not harvestable', () => {
   }
 
   test('reveals a tel: link on click and moves focus to it', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const button = page.getByRole('button', { name: 'Show phone number' });
     await expect(button).toBeVisible();
     await button.click();
@@ -144,7 +181,7 @@ test.describe('phone number is not harvestable', () => {
   test('leaves no dead control when JavaScript is off', async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
-    await page.goto('/');
+    await page.goto('/en/');
     await expect(page.getByRole('button', { name: 'Show phone number' })).toHaveCount(0);
     // Email and LinkedIn still get the visitor there. Scoped to the contact
     // section: the footer repeats both links site-wide, so an unscoped role
@@ -175,7 +212,7 @@ test.describe('phone number is not harvestable', () => {
 
 test.describe('navigation', () => {
   test('anchors scroll to their section, clear of the sticky header', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     await page
       .getByRole('navigation', { name: 'Main' })
       .getByRole('link', { name: 'Approach' })
@@ -190,7 +227,7 @@ test.describe('navigation', () => {
   });
 
   test('has a skip link that reaches main', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const skip = page.getByRole('link', { name: 'Skip to content' });
     await expect(skip).toHaveAttribute('href', '#main');
     await expect(page.locator('main#main')).toHaveCount(1);
@@ -205,7 +242,7 @@ test.describe('navigation', () => {
     // static half of the contract is asserted above for every engine.
     test.skip(browserName === 'webkit', 'WebKit keyboard focus is not driveable here');
 
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     await page.keyboard.press('Tab');
 
     const skip = page.getByRole('link', { name: 'Skip to content' });
@@ -216,7 +253,7 @@ test.describe('navigation', () => {
 
 test.describe('layout integrity', () => {
   test('never scrolls sideways', async ({ page }) => {
-    for (const path of ['/', '/fr/'] as const) {
+    for (const path of PATHS) {
       await gotoHome(page, path);
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - window.innerWidth,
@@ -233,7 +270,7 @@ test.describe('layout integrity', () => {
   });
 
   test('exposes exactly one h1 and no skipped heading levels', async ({ page }) => {
-    for (const path of ['/', '/fr/'] as const) {
+    for (const path of PATHS) {
       await gotoHome(page, path);
       await expect(page.locator('h1')).toHaveCount(1);
 
@@ -285,4 +322,62 @@ test.describe('motion preferences', () => {
       }
     });
   });
+});
+
+test.describe('the home page sells the Offers (ADR 14)', () => {
+  for (const locale of ['fr', 'en'] as const) {
+    const home = homePath(locale);
+
+    test(`reads problem, offers, proof, position, person on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const order = await page.$$eval('main > section[id]', (sections) =>
+        sections.map((section) => section.id),
+      );
+      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'approach', 'about', 'contact']);
+    });
+
+    test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({
+      page,
+    }) => {
+      await gotoHome(page, home);
+      const modes = page.locator('#problem .problem__mode');
+      const failureModes = RESUME[locale].failureModes;
+      await expect(modes).toHaveCount(failureModes.length);
+      for (const [i, mode] of failureModes.entries()) {
+        const link = modes.nth(i).getByRole('heading').getByRole('link');
+        await expect(link).toContainText(mode.quote);
+        await expect(link).toHaveAttribute(
+          'href',
+          pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
+        );
+      }
+      // Under the four, for the Client who cannot yet name theirs.
+      const audit = page.locator('#problem .problem__audit a');
+      await expect(audit).toHaveAttribute('href', pathOf('audit', locale) ?? '∅');
+      await expect(page.locator('.concepts')).toHaveCount(0);
+    });
+
+    test(`shows five Offers with a price from the table on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const cards = page.locator('#offers .offers__card');
+      await expect(cards).toHaveCount(OFFER_IDS.length);
+
+      for (const id of OFFER_IDS) {
+        const card = page.locator(`#offers .offers__card[data-offer="${id}"]`);
+        await expect(card.getByRole('heading')).toHaveText(RESUME[locale].offers[id].name);
+        await expect(card).toContainText(formatEuros(fromPrice(id).min, locale));
+        // A page in this locale if there is one, the French page otherwise.
+        await expect(card.getByRole('link')).toHaveAttribute(
+          'href',
+          pathOf(id, locale) ?? pathOf(id, 'fr') ?? '∅',
+        );
+      }
+      await expect(page.locator('#offers .offers__card[data-offer="takeover"] a')).toHaveAttribute(
+        'href',
+        '/offres/reprise-et-maintenance/',
+      );
+
+      await expect(page.locator(`#offers a[href="${pathOf('partners', 'fr')}"]`)).toHaveCount(1);
+    });
+  }
 });

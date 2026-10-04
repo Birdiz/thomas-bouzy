@@ -1,0 +1,42 @@
+---
+import type { OfferPageLabels } from '../../content/types.ts';
+import { CONTACT, LOCALE_TAG, type Locale, SITE } from '../../site.ts';
+
+interface Props {
+  labels: OfferPageLabels['book'];
+  locale: Locale;
+}
+
+const { labels, locale } = Astro.props;
+
+/* "Nancy, Strasbourg, Colmar, Obernai et Épinal" — listed in the reader's language. */
+const towns = new Intl.ListFormat(LOCALE_TAG[locale], { type: 'conjunction' }).format(
+  SITE.serviceArea,
+);
+---
+
+{/* The last section of every Offer page: the first step, which costs the
+    Client nothing. A plain outbound link to the booking page, never an embed —
+    no third-party frame, no request leaving the origin on load (ADR 17). */}
+<section id="book" class="contact container">
+  <div class="contact__panel">
+    <div class="contact__blob" aria-hidden="true"></div>
+    <div class="contact__body">
+      <p class="kicker">{labels.kicker}</p>
+      <h2 class="contact__title">{labels.title}</h2>
+      <p class="contact__blurb">{labels.text}</p>
+
+      <div class="contact__actions">
+        <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+          {labels.cta}
+        </a>
+      </div>
+
+      <p class="contact__location">
+        {labels.orWrite} <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        <br />
+        {labels.serviceArea.replace('{towns}', towns)}
+      </p>
+    </div>
+  </div>
+</section>

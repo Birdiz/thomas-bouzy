@@ -1,0 +1,69 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { OFFER_IDS } from '../content/offers.ts';
+import { fromPrice, isMonthly } from '../content/prices.ts';
+import { formatEuros } from '../lib/money.ts';
+import { linkTo } from '../routes.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+  num: string;
+}
+
+const { locale, t, num } = Astro.props;
+
+/**
+ * Five cards: each Offer's plain line, its lowest price from the price table,
+ * and its page. An Offer with no page in this locale links to the French one
+ * and says so — the Takeover is French only (ADR 15), and its card is here in
+ * English too because the home page sells all five.
+ */
+const cards = OFFER_IDS.map((id) => {
+  const { amount, min } = fromPrice(id);
+  const unit = isMonthly(amount) ? ` ${t.offerPage.perMonth}` : '';
+  return {
+    id,
+    ...t.offers[id],
+    ...linkTo(id, locale),
+    from: `${t.offersSection.from} ${formatEuros(min, locale)}${unit} ${t.offerPage.excludingVat}`,
+  };
+});
+
+const partners = linkTo('partners', locale);
+---
+
+<section id="offers" class="offers container">
+  <p class="kicker"><span class="kicker__num">{num}</span>{t.offersSection.kicker}</p>
+  <h2 class="section-title">{t.offersSection.title}</h2>
+  <p class="offers__intro">{t.offersSection.intro}</p>
+
+  <ul class="offers__grid">
+    {
+      cards.map((card) => (
+        <li class="offers__card" data-offer={card.id}>
+          <h3 class="offers__name">{card.name}</h3>
+          <p class="offers__plain">{card.plain}</p>
+          <p class="offers__from">{card.from}</p>
+          <a
+            class="offers__link"
+            href={card.href}
+            hreflang={card.hreflang && LOCALE_TAG[card.hreflang]}
+          >
+            {t.offersSection.see}
+            {card.hreflang && ` ${t.offersSection.inFrench}`}
+            <span aria-hidden="true"> →</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="offers__partners">
+    {t.offersSection.partners}{' '}
+    <a href={partners.href} hreflang={partners.hreflang && LOCALE_TAG[partners.hreflang]}>
+      {t.offersSection.partnersLink}
+    </a>
+  </p>
+</section>

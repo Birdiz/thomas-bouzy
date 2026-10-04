@@ -1,22 +1,23 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import {
-  LOCALE_ENDONYM,
-  LOCALE_LABEL,
-  LOCALE_PATH,
-  LOCALE_TAG,
-  LOCALES,
-  type Locale,
-  SITE,
-} from '../site.ts';
+import { alternatesOf, homePath, type Route } from '../routes.ts';
+import { LOCALE_ENDONYM, LOCALE_LABEL, LOCALE_TAG, SITE } from '../site.ts';
 
 interface Props {
-  locale: Locale;
+  route: Route;
   t: ResumeContent;
+  /** Where the header's call to action goes. The home page's contact section by default. */
+  contactHref?: string;
 }
 
-const { locale, t } = Astro.props;
-const home = LOCALE_PATH[locale];
+const { route, t, contactHref } = Astro.props;
+const { locale } = route;
+const home = homePath(locale);
+
+/* The same page in each locale it exists in. A page in one locale has no
+   switch at all: a link to the other language's home page would drop the
+   reader somewhere they did not ask to go. */
+const versions = alternatesOf(route.page);
 ---
 
 <header class="site-header">
@@ -27,28 +28,32 @@ const home = LOCALE_PATH[locale];
     </a>
 
     <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
-      <a href="#work">{t.nav.work}</a>
-      <a href="#approach">{t.nav.approach}</a>
-      <a href="#about">{t.nav.about}</a>
+      {/* Spelled from the home page, so they work from every page. */}
+      <a href={`${home}#offers`}>{t.nav.offers}</a>
+      <a href={`${home}#work`}>{t.nav.work}</a>
+      <a href={`${home}#approach`}>{t.nav.approach}</a>
+      <a href={`${home}#about`}>{t.nav.about}</a>
     </nav>
 
     <div class="site-header__actions">
-      <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
-        {
-          LOCALES.map((code) => (
-            <a
-              href={LOCALE_PATH[code]}
-              hreflang={LOCALE_TAG[code]}
-              lang={LOCALE_TAG[code]}
-              aria-label={LOCALE_ENDONYM[code]}
-              aria-current={code === locale ? 'true' : undefined}
-            >
-              {LOCALE_LABEL[code]}
-            </a>
-          ))
-        }
-      </nav>
-      <a class="btn btn-primary" href="#contact">{t.nav.contact}</a>
+      {
+        versions.length > 0 && (
+          <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
+            {versions.map((version) => (
+              <a
+                href={version.path}
+                hreflang={LOCALE_TAG[version.locale]}
+                lang={LOCALE_TAG[version.locale]}
+                aria-label={LOCALE_ENDONYM[version.locale]}
+                aria-current={version.locale === locale ? 'true' : undefined}
+              >
+                {LOCALE_LABEL[version.locale]}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+      <a class="btn btn-primary" href={contactHref ?? `${home}#contact`}>{t.nav.contact}</a>
     </div>
   </div>
 </header>

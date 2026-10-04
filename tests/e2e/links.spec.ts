@@ -1,6 +1,8 @@
-import { expect, test } from './fixtures.ts';
+import { ROUTES } from '../../src/routes.ts';
+import { expect, PATHS, test } from './fixtures.ts';
 
-const PATHS = ['/', '/fr/'] as const;
+/** Where the two CV PDFs used to be served, before they left the site. */
+const FORMER_CV_PATHS = ['/assets/cv-thomas-bouzy-en.pdf', '/assets/cv-thomas-bouzy-fr.pdf'];
 
 /** Every same-origin URL the page asks the browser to fetch or offers to open. */
 async function collectUrls(page: import('@playwright/test').Page) {
@@ -47,18 +49,20 @@ for (const path of PATHS) {
   });
 }
 
-test('fonts are served from this origin, never from Google', async ({ page }) => {
+test('no request leaves the origin, and fonts are served from it', async ({ page }) => {
   const external: string[] = [];
   page.on('request', (req) => {
     const host = new URL(req.url()).host;
     if (host && !host.startsWith('localhost')) external.push(req.url());
   });
 
-  await page.goto('/');
-  await page.evaluate(() => document.fonts.ready);
-
-  // The design system's styles.css @imports fonts.googleapis.com. Self-hosting
-  // is both a performance and a privacy decision — assert it stays that way.
+  // The design system's styles.css @imports fonts.googleapis.com, and the
+  // booking page would happily be embedded. Self-hosting the one and linking
+  // the other is a performance and a privacy decision — on every page.
+  for (const path of PATHS) {
+    await page.goto(path);
+    await page.evaluate(() => document.fonts.ready);
+  }
   expect(external).toEqual([]);
   const woff2 = await page.evaluate(
     () => performance.getEntriesByType('resource').filter((e) => e.name.endsWith('.woff2')).length,
@@ -66,51 +70,49 @@ test('fonts are served from this origin, never from Google', async ({ page }) =>
   expect(woff2).toBeGreaterThan(0);
 });
 
-test("links each locale's CV exactly when its PDF is present", async ({ page, request }) => {
-  // The earlier version of this test skipped when the link was absent, which
-  // could not tell "not supplied yet" from "supplied but not linked" — and the
-  // second is what actually happened: a path-resolution bug hid both buttons
-  // while the PDFs were sitting in public/assets/.
-  for (const [locale, path] of [
-    ['en', '/'],
-    ['fr', '/fr/'],
-  ] as const) {
-    const href = `/assets/cv-thomas-bouzy-${locale}.pdf`;
-    const response = await request.get(href);
+test('links no CV file, and the old CV paths are gone', async ({ page, request }) => {
+  // The PDFs left the site (ADR 11, postscript): they printed the contact
+  // details the page deliberately withholds. A link left behind would be a
+  // dead one, and a file left behind would still be the leak.
+  for (const path of PATHS) {
     await page.goto(path);
-    const links = page.locator(`a[href="${href}"]`);
-
-    if (response.status() === 404) {
-      // Not supplied: the page must not offer a dead link either.
-      await expect(links).toHaveCount(0);
-      continue;
-    }
-
-    expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toBe('application/pdf');
-    // Exactly one link, in About. It used to be linked twice — from the hero
-    // and from the contact panel — which made the salaried route look like a
-    // third way to get in touch. Chantier A gave it one home; asserting the
-    // count is what stops it acquiring a second one again.
-    await expect(links).toHaveCount(1);
-    await expect(links.first()).toHaveAttribute('download', /\.pdf$/);
+    await expect(
+      page.locator('a[href$=".pdf" i], a[download]'),
+      `${path} links a file`,
+    ).toHaveCount(0);
+  }
+  for (const path of FORMER_CV_PATHS) {
+    expect((await request.get(path)).status(), `${path} is still served`).toBe(404);
   }
 });
 
-test('the sitemap lists both locales', async ({ request }) => {
+test('the sitemap lists every page in each locale it exists in, and nothing else', async ({
+  request,
+}) => {
   const index = await request.get('/sitemap-index.xml');
   expect(index.status()).toBe(200);
 
   const body = await (await request.get('/sitemap-0.xml')).text();
-  expect(body).toMatch(/<loc>https:\/\/[^<]*\/<\/loc>/);
-  expect(body).toMatch(/<loc>https:\/\/[^<]*\/fr\/<\/loc>/);
+  const listed = [...body.matchAll(/<loc>https:\/\/[^/<]+(\/[^<]*)<\/loc>/g)].map((m) => m[1]);
+  expect([...listed].sort()).toEqual([...PATHS].sort());
+
+  // Alternates pair a page only with versions of itself that exist.
+  for (const route of ROUTES) {
+    const entry = body.match(
+      new RegExp(`<url><loc>https://[^/<]+${route.path}</loc>.*?</url>`),
+    )?.[0];
+    expect(entry, `${route.path} is missing from the sitemap`).toBeDefined();
+    const alternates = [...(entry ?? '').matchAll(/hreflang="([^"]+)"/g)].map((m) => m[1]);
+    const expected = Object.keys(route.page.paths).length > 1 ? Object.keys(route.page.paths) : [];
+    expect([...alternates].sort(), `${route.path} alternates`).toEqual([...expected].sort());
+  }
 });
 
 test('references no insecure absolute URL', async ({ request }) => {
   // The invariant that `upgrade-insecure-requests` would otherwise stand in for:
   // nothing on the page points at http://, so there is no mixed content to fix.
   // See the CSP comment in scripts/serve-dist.mjs.
-  for (const path of ['/', '/fr/', '/404.html'] as const) {
+  for (const path of [...PATHS, '/404.html']) {
     const html = await (await request.get(path)).text();
     const insecure = [...html.matchAll(/["'(](http:\/\/[^"')\s]+)/g)].map((m) => m[1]);
     expect(insecure, `${path} references an insecure URL`).toEqual([]);

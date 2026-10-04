@@ -6,15 +6,15 @@
  * Two tiers:
  *   ERROR   — inconsistency or a missing file the page always references.
  *             Fails the build.
- *   PENDING — content Thomas still has to supply (CV PDFs, portrait). The site
- *             degrades on purpose rather than shipping a dead link, so this
- *             reports loudly and exits 0.
+ *   PENDING — content Thomas still has to supply (the portrait). The site
+ *             degrades on purpose rather than shipping an empty circle, so
+ *             this reports loudly and exits 0.
  */
 import { existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
-import { SITE } from '../src/site.ts';
+import { LEGAL, SITE } from '../src/site.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const path = (...p) => join(root, ...p);
@@ -46,6 +46,28 @@ if (process.env.SITE_STRICT === '1' && !process.env.SITE_DOMAIN?.trim()) {
   );
 }
 
+// An indexed commercial site with no identified publisher is a defect, not a
+// pending item (ADR 16): the law asks a professional site to name its
+// publisher, and LEGAL in src/site.ts stays empty until the business is
+// registered. So making the site indexable is refused until the notice is
+// complete — it circulates by link until then.
+if (SITE.indexable && !LEGAL.isComplete) {
+  const missing = [
+    ['businessName', LEGAL.businessName],
+    ['legalForm', LEGAL.legalForm],
+    ['siret', LEGAL.siret],
+    ['address', LEGAL.address],
+    ['host.address', LEGAL.host.address],
+  ]
+    .filter(([, value]) => !value)
+    .map(([field]) => field);
+  errors.push(
+    'SITE_INDEXABLE is true but the legal notice is incomplete (LEGAL in src/site.ts is ' +
+      `missing ${missing.join(', ')}). An indexed site has to name its publisher; ` +
+      'unset SITE_INDEXABLE or complete LEGAL — see docs/adr/0016.',
+  );
+}
+
 // robots.txt is generated from SITE (src/pages/robots.txt.ts), so it cannot
 // drift. Indexing follows SITE_INDEXABLE; say out loud which way it is set,
 // because shipping a noindex by accident is a silent and expensive mistake.
@@ -56,12 +78,6 @@ console.log(
 );
 
 // Content still to come.
-for (const locale of ['en', 'fr']) {
-  const cv = `public/assets/cv-thomas-bouzy-${locale}.pdf`;
-  if (!existsSync(path(cv))) {
-    pending.push(`${cv} — the ${locale.toUpperCase()} download button is hidden until this lands`);
-  }
-}
 const assetsDir = path('src/assets');
 const portrait = existsSync(assetsDir)
   ? readdirSync(assetsDir).find((f) => /^portrait\.(jpe?g|png|webp|avif)$/i.test(f))

@@ -1,5 +1,4 @@
-import { spawn } from 'node:child_process';
-import { expect, test } from './fixtures.ts';
+import { expect, PATHS, test } from './fixtures.ts';
 
 /**
  * scripts/serve-dist.mjs is what the container runs, so what it puts on the
@@ -20,7 +19,7 @@ const SECURITY_HEADERS = [
 ];
 
 test('sends the security headers on every response', async ({ request }) => {
-  for (const path of ['/', '/fr/', '/does-not-exist']) {
+  for (const path of [...PATHS, '/does-not-exist']) {
     const headers = (await request.get(path)).headers();
     for (const name of SECURITY_HEADERS) {
       expect(headers[name], `${name} missing on ${path}`).toBeTruthy();
@@ -41,28 +40,35 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("base-uri 'none'");
 
-  // And the policy must not break the page it protects.
+  // And the policy must not break the pages it protects: every one of them,
+  // with its scripts run.
   const violations: string[] = [];
   page.on('console', (m) => {
     if (/content security policy|refused to/i.test(m.text())) violations.push(m.text());
   });
   page.on('pageerror', (e) => violations.push(`pageerror: ${e.message}`));
 
-  await page.goto('/');
+  for (const path of PATHS) {
+    expect((await request.get(path)).headers()['content-security-policy']).toBe(csp);
+    await page.goto(path);
+    await expect(page.locator('h1')).toBeVisible();
+  }
+
+  await page.goto('/en/');
   await page.getByRole('button', { name: 'Show phone number' }).click();
   await expect(page.getByRole('link', { name: '06 32 13 45 47' })).toBeVisible();
   expect(violations).toEqual([]);
 });
 
 test('compresses text and leaves already-packed formats alone', async ({ request }) => {
-  for (const path of ['/', '/fr/']) {
+  for (const path of PATHS) {
     const headers = (await request.get(path)).headers();
     expect(headers['content-encoding'], `${path} not compressed`).toMatch(/br|gzip/);
     expect(headers.vary).toContain('Accept-Encoding');
   }
-  // A PDF is already compressed; re-encoding it only burns CPU.
-  const pdf = (await request.get('/assets/cv-thomas-bouzy-en.pdf')).headers();
-  expect(pdf['content-encoding']).toBeUndefined();
+  // A font is already compressed; re-encoding it only burns CPU.
+  const font = (await request.get('/fonts/spectral-latin-500-normal.woff2')).headers();
+  expect(font['content-encoding']).toBeUndefined();
 });
 
 test('caches fingerprinted assets hard and HTML not at all', async ({ page, request }) => {
@@ -89,8 +95,8 @@ test('serves a real 404 page, with a 404 status', async ({ page, request }) => {
   expect(response.headers()['cache-control']).toContain('no-store');
 
   await page.goto('/definitely-not-a-page');
-  await expect(page.getByRole('heading', { name: 'Nothing here' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Back to the résumé' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Rien ici' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
 });
 
 test('refuses to serve anything outside the site root', async ({ request }) => {
@@ -116,17 +122,22 @@ test('answers a malformed URL with 400 and keeps serving', async ({ request }) =
 test('serves one URL per page, and 301s the other spellings', async ({ baseURL, request }) => {
   const redirects: Record<string, string> = {
     '/index.html': '/',
-    '/fr': '/fr/',
-    '/fr/index.html': '/fr/',
-    '/fr//': '/fr/',
-    '//fr/': '/fr/',
+    '/en': '/en/',
+    '/en/index.html': '/en/',
+    '/en//': '/en/',
+    '//en/': '/en/',
     '///': '/',
+    // French moved from /fr/ to the root (ADR 15): the old spellings follow it.
+    '/fr': '/',
+    '/fr/': '/',
+    '/fr/index.html': '/',
+    '//fr/': '/',
   };
 
   for (const [from, to] of Object.entries(redirects)) {
     // Absolute, not relative: a path starting with `//` is a protocol-relative
-    // URL to any URL parser, so `request.get('//fr/')` would resolve to the host
-    // `fr`. That is the same trap the server itself had to stop falling into.
+    // URL to any URL parser, so `request.get('//en/')` would resolve to the host
+    // `en`. That is the same trap the server itself had to stop falling into.
     const response = await request.get(`${baseURL}${from}`, { maxRedirects: 0 });
     expect(response.status(), `${from} was not redirected`).toBe(301);
 
@@ -139,15 +150,20 @@ test('serves one URL per page, and 301s the other spellings', async ({ baseURL, 
   }
 
   // The canonical spellings still answer directly.
-  for (const path of ['/', '/fr/']) {
+  for (const path of PATHS) {
     expect((await request.get(path, { maxRedirects: 0 })).status()).toBe(200);
   }
 });
 
 test('keeps the query string across a normalising redirect', async ({ request }) => {
-  const response = await request.get('/fr?utm_source=x', { maxRedirects: 0 });
-  expect(response.status()).toBe(301);
-  expect(response.headers().location).toContain('/fr/?utm_source=x');
+  for (const [from, to] of [
+    ['/en?utm_source=x', '/en/?utm_source=x'],
+    ['/fr/?utm_source=x', '/?utm_source=x'],
+  ] as const) {
+    const response = await request.get(from, { maxRedirects: 0 });
+    expect(response.status()).toBe(301);
+    expect(response.headers().location).toBe(to);
+  }
 });
 
 test('revalidates with a 304 instead of resending the document', async ({ request }) => {
@@ -199,65 +215,6 @@ test('gives each encoding its own strong validator', async ({ request }) => {
   expect(revalidated.status()).toBe(304);
 });
 
-/**
- * Runs a second copy of the server with SITE_INDEXABLE=true and hands its
- * origin to `body`.
- *
- * The suite's own server is built without the flag, which is the state the site
- * deploys in today — so every response there carries `noindex, nofollow` and an
- * assertion about PDFs would pass whether or not the rule exists. That is the
- * failure docs/adr/0006 already recorded once: an assertion satisfied by a
- * missing measurement is not a test. The guarantee only becomes observable in
- * the state the site is heading for, so the test creates it.
- */
-async function withIndexableServer(workerIndex: number, body: (origin: string) => Promise<void>) {
-  const port = 4400 + workerIndex;
-  const server = spawn('node', ['scripts/serve-dist.mjs', '--port', String(port)], {
-    env: { ...process.env, SITE_INDEXABLE: 'true', PORT: String(port) },
-    stdio: 'ignore',
-  });
-  try {
-    const origin = `http://localhost:${port}`;
-    const deadline = Date.now() + 20_000;
-    for (;;) {
-      try {
-        await fetch(origin, { signal: AbortSignal.timeout(1_000) });
-        break;
-      } catch {
-        if (Date.now() > deadline) throw new Error(`indexable server never came up on ${port}`);
-        await new Promise((r) => setTimeout(r, 100));
-      }
-    }
-    await body(origin);
-  } finally {
-    server.kill('SIGTERM');
-  }
-}
-
-test('keeps the CV PDFs out of the index even once the site is indexable', async () => {
-  // The PDFs carry a phone number and a street-level location that the page
-  // deliberately withholds — the number never reaches the HTML source at all
-  // (docs/adr/0005). A crawler does not "download" a PDF, it GETs it like any
-  // document, and search engines extract the text: indexed, the CV would make
-  // both answerable by a search query. See docs/design-deltas.md.
-  await withIndexableServer(test.info().workerIndex, async (origin) => {
-    // The flag really is on: the page itself is now indexable.
-    const page = await fetch(`${origin}/`);
-    expect(page.status).toBe(200);
-    expect(page.headers.get('x-robots-tag')).toBeNull();
-
-    for (const locale of ['en', 'fr']) {
-      const pdf = await fetch(`${origin}/assets/cv-thomas-bouzy-${locale}.pdf`);
-      expect(pdf.status).toBe(200);
-      expect(pdf.headers.get('content-type')).toBe('application/pdf');
-      expect(
-        pdf.headers.get('x-robots-tag'),
-        `cv-thomas-bouzy-${locale}.pdf is indexable`,
-      ).toContain('noindex');
-    }
-  });
-});
-
 test('tells crawlers to stay away while the hostname is not the canonical one', async ({
   request,
 }) => {
@@ -269,7 +226,7 @@ test('tells crawlers to stay away while the hostname is not the canonical one', 
   const robots = await request.get('/robots.txt');
   expect(await robots.text()).toContain('Disallow: /');
 
-  for (const path of ['/', '/fr/']) {
+  for (const path of PATHS) {
     expect(await (await request.get(path)).text()).toContain('name="robots" content="noindex');
   }
 });

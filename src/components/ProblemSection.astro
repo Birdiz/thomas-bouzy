@@ -1,12 +1,17 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
+import { linkTo } from '../routes.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
 
 interface Props {
+  locale: Locale;
   t: ResumeContent;
   num: string;
 }
 
-const { t, num } = Astro.props;
+const { locale, t, num } = Astro.props;
+
+const audit = linkTo('audit', locale);
 ---
 
 <section id="problem" class="problem container">
@@ -18,24 +23,45 @@ const { t, num } = Astro.props;
       {t.problem.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
     </div>
 
-    <ul class="problem__modes">
-      {
-        t.failureModes.map((mode, i) => (
-          <li class="problem__mode">
-            <span class="problem__mode-num" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <div>
-              {/* The client's sentence is the heading, and the diagnosis is the
-                  body. A reader who recognises his own words has qualified
-                  himself before reading a line of mine — see
-                  docs/adr/0012. */}
-              <h3 class="problem__mode-quote">{mode.quote}</h3>
-              <p class="problem__mode-text">{mode.text}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ul>
+    <div>
+      <ul class="problem__modes">
+        {
+          t.failureModes.map((mode, i) => {
+            const target = linkTo(mode.offer, locale);
+            return (
+              <li class="problem__mode">
+                <span class="problem__mode-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  {/* The client's sentence is the heading, and it is the way
+                      in: it links to the Offer that treats it. A reader who
+                      recognises his own words has qualified himself, and now
+                      has somewhere to go — see docs/adr/0012 and 0014. */}
+                  <h3 class="problem__mode-quote">
+                    <a
+                      href={target.href}
+                      hreflang={target.hreflang && LOCALE_TAG[target.hreflang]}
+                    >
+                      {mode.quote}
+                      <span class="problem__mode-offer">
+                        {t.offers[mode.offer].name}
+                        {target.hreflang && ` ${t.offersSection.inFrench}`}
+                        <span aria-hidden="true"> →</span>
+                      </span>
+                    </a>
+                  </h3>
+                  <p class="problem__mode-text">{mode.text}</p>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <p class="problem__audit">
+        {t.problem.audit.text}{' '}
+        <a class="btn btn-secondary" href={audit.href}>{t.problem.audit.cta}</a>
+      </p>
+    </div>
   </div>
 </section>

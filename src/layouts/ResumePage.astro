@@ -1,34 +1,43 @@
 ---
 import AboutSection from '../components/AboutSection.astro';
-import ConceptsGrid from '../components/ConceptsGrid.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Hero from '../components/Hero.astro';
+import OffersSection from '../components/OffersSection.astro';
 import PositionSection from '../components/PositionSection.astro';
 import ProblemSection from '../components/ProblemSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import WorkSection from '../components/WorkSection.astro';
 import { RESUME } from '../content/index.ts';
-import type { Locale } from '../site.ts';
+import { profilePage } from '../lib/structured-data.ts';
+import type { Route } from '../routes.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
-  locale: Locale;
+  route: Route;
 }
 
-const { locale } = Astro.props;
+const { route } = Astro.props;
+const { locale } = route;
 const t = RESUME[locale];
 ---
 
-<BaseLayout locale={locale}>
-  <SiteHeader locale={locale} t={t} />
+<BaseLayout
+  route={route}
+  title={t.meta.title}
+  description={t.meta.description}
+  ogType="profile"
+  structuredData={profilePage(route, t.meta.title, t.meta.description)}
+>
+  <SiteHeader route={route} t={t} />
   <main id="main">
-    <Hero t={t} />
-    <ConceptsGrid t={t} />
-    <ProblemSection t={t} num="01" />
-    <WorkSection t={t} num="02" />
-    <PositionSection t={t} num="03" />
-    <AboutSection locale={locale} t={t} num="04" />
+    <Hero t={t} home={route.path} />
+    {/* ADR 14: problem → offer → proof → position → person. */}
+    <ProblemSection locale={locale} t={t} num="01" />
+    <OffersSection locale={locale} t={t} num="02" />
+    <WorkSection t={t} num="03" />
+    <PositionSection t={t} num="04" />
+    <AboutSection t={t} num="05" />
     <ContactSection t={t} />
   </main>
   <SiteFooter t={t} />

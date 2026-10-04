@@ -1,88 +1,34 @@
 ---
 import { RESUME } from '../content/index.ts';
-import {
-  absoluteUrl,
-  CONTACT,
-  LOCALE_PATH,
-  LOCALE_TAG,
-  LOCALES,
-  type Locale,
-  otherLocale,
-  SITE,
-} from '../site.ts';
+import { alternatesOf, defaultAlternateOf, type Route } from '../routes.ts';
+import { absoluteUrl, CONTACT, LOCALE_TAG, type Locale, SITE } from '../site.ts';
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/app.css';
 
 interface Props {
-  locale: Locale;
+  route: Route;
+  title: string;
+  description: string;
+  /** `profile` for the page about the person, `website` for everything else. */
+  ogType: 'profile' | 'website';
+  /** JSON-LD for this page. Never carries the phone number — see docs/adr/0005. */
+  structuredData: Record<string, unknown>;
 }
 
-const { locale } = Astro.props;
+const { route, title, description, ogType, structuredData } = Astro.props;
+const { locale } = route;
 const t = RESUME[locale];
 
-const canonical = absoluteUrl(LOCALE_PATH[locale]);
+const canonical = absoluteUrl(route.path);
 const ogImage = absoluteUrl('/og.png');
+
+/* Only between versions of this page that exist: see src/routes.ts. */
+const alternates = alternatesOf(route.page);
+const xDefault = defaultAlternateOf(route.page);
 
 /** Open Graph wants the underscored form, not the BCP 47 tag. */
 const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', fr: 'fr_FR' };
-
-/**
- * Person schema for rich results, wrapped in the ProfilePage that Google
- * documents for pages *about* a person — the page and its subject are two
- * things, and conflating them is why so many profile pages get no entity out of
- * their markup.
- *
- * Deliberately carries no telephone: the number is behind a click on the page,
- * and repeating it here would hand it straight back to any crawler. See
- * docs/design-deltas.md.
- */
-const personSchema = {
-  '@type': 'Person',
-  '@id': `${SITE.origin}/#person`,
-  name: SITE.author,
-  givenName: 'Thomas',
-  familyName: 'Bouzy',
-  jobTitle: t.schema.jobTitle,
-  description: t.meta.description,
-  url: canonical,
-  image: ogImage,
-  email: `mailto:${CONTACT.email}`,
-  address: {
-    '@type': 'PostalAddress',
-    addressRegion: 'Grand Est',
-    addressCountry: 'FR',
-  },
-  sameAs: [CONTACT.linkedin, CONTACT.github],
-  knowsLanguage: t.languages.map((l) => l.name),
-  /* The Toolkit grid went first, then the Track record's stack chips went with
-     chantier A, so this stopped being derivable from anything on the page and
-     is stated in the content instead. The rule it was derived under survives
-     and is now a test: `tests/content.spec.ts` asserts every term below
-     appears verbatim in a string the page renders, so the schema can only ever
-     claim a technology a reader can find. Same reason `worksFor` is absent. */
-  knowsAbout: t.schema.knowsAbout,
-  alumniOf: {
-    '@type': 'CollegeOrUniversity',
-    name: 'Université de Reims Champagne-Ardenne',
-  },
-  /* No worksFor. It used to be derived from jobs[0], which is the *most recent*
-     job, not necessarily a current one — so the schema went on telling crawlers
-     and ATS parsers that he still worked at an employer the visible page says he
-     left. A Person schema with no employer is accurate for someone working for
-     himself; a wrong one is worse than a missing one. */
-};
-
-const profilePageSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfilePage',
-  '@id': canonical,
-  url: canonical,
-  name: t.meta.title,
-  description: t.meta.description,
-  inLanguage: LOCALE_TAG[locale],
-  mainEntity: personSchema,
-};
 ---
 
 <!doctype html>
@@ -91,8 +37,8 @@ const profilePageSchema = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>{t.meta.title}</title>
-    <meta name="description" content={t.meta.description} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <meta name="author" content={SITE.author} />
     <link rel="canonical" href={canonical} />
 
@@ -104,31 +50,43 @@ const profilePageSchema = {
     }
 
     {
-      LOCALES.map((other) => (
+      alternates.map((alternate) => (
         <link
           rel="alternate"
-          hreflang={LOCALE_TAG[other]}
-          href={absoluteUrl(LOCALE_PATH[other])}
+          hreflang={LOCALE_TAG[alternate.locale]}
+          href={absoluteUrl(alternate.path)}
         />
       ))
     }
-    <link rel="alternate" hreflang="x-default" href={absoluteUrl(LOCALE_PATH.en)} />
+    {xDefault && <link rel="alternate" hreflang="x-default" href={absoluteUrl(xDefault.path)} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#0e1418" />
 
-    {/* Consolidates the profile with the sameAs above, for anything reading rel=me. */}
+    {/* Consolidates the profile with the sameAs in the JSON-LD, for anything reading rel=me. */}
     <link rel="me" href={CONTACT.linkedin} />
 
-    <meta property="og:type" content="profile" />
-    <meta property="profile:first_name" content="Thomas" />
-    <meta property="profile:last_name" content="Bouzy" />
+    <meta property="og:type" content={ogType} />
+    {
+      ogType === 'profile' && (
+        <>
+          <meta property="profile:first_name" content="Thomas" />
+          <meta property="profile:last_name" content="Bouzy" />
+        </>
+      )
+    }
     <meta property="og:site_name" content={SITE.author} />
     <meta property="og:locale" content={OG_LOCALE[locale]} />
-    <meta property="og:locale:alternate" content={OG_LOCALE[otherLocale(locale)]} />
-    <meta property="og:title" content={t.meta.title} />
-    <meta property="og:description" content={t.meta.description} />
+    {
+      alternates
+        .filter((alternate) => alternate.locale !== locale)
+        .map((alternate) => (
+          <meta property="og:locale:alternate" content={OG_LOCALE[alternate.locale]} />
+        ))
+    }
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
@@ -152,11 +110,7 @@ const profilePageSchema = {
       crossorigin
     />
 
-    <script
-      type="application/ld+json"
-      is:inline
-      set:html={JSON.stringify(profilePageSchema)}
-    />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
   </head>
   <body>
     <a class="skip-link" href="#main">{t.a11y.skipToContent}</a>

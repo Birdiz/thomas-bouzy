@@ -70,3 +70,21 @@ Worth saying plainly, since this is the move that quietly kills a budget: the
 number was raised for content the résumé genuinely gained, measured before and
 after. A library, a stray polyfill or an unoptimised asset pushing it over is
 the failure the file exists to produce, and is not a reason to touch it again.
+
+## Postscript, 2026-10-04 — one budget per page, and the estimator inside it
+
+The site grew from two pages to twelve (ADR 17), and the budget now runs on every
+page the registry lists rather than on two hard-coded paths. No limit moved.
+
+Measured on the first build with every Offer page:
+
+| Page | Document | Inline JS |
+| --- | --- | --- |
+| Home (FR) | 43.4 kB | 364 B (the phone reveal) |
+| An Offer page | ~17.8 kB | 742 B (the estimator) |
+| Partners | 9.3 kB | 0 |
+
+CSS is 30.0 kB for the whole site, against 34 kB. The estimator was the one
+thing ADR 17 warned might not fit the 2 KB inline line; it takes about a third
+of it, because it formats nothing — it copies cells the static table already
+carries.

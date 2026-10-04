@@ -1,8 +1,8 @@
 # Thomas Bouzy — freelance site
 
 A bilingual showcase that sells Thomas's interventions to the people who could
-commission them, and leaves the salaried route to a downloadable CV. Each term is
-given in English and French: the site speaks both.
+commission them, and leaves the salaried route to one line pointing at LinkedIn.
+Each term is given in English and French: the site speaks both.
 
 ## Readers
 
@@ -11,7 +11,8 @@ A person or organisation who could buy an Offer, whether or not they ever have.
 _Avoid_: buyer, prospect, customer
 
 **Recruiter** (FR *Recruteur*):
-A person reading for a salaried post. The page addresses them once, through the CV.
+A person reading for a salaried post. The page addresses them once, with a line
+pointing to LinkedIn.
 _Avoid_: hiring manager, employer
 
 **Reader** (FR *Lecteur*):
@@ -109,7 +110,7 @@ Past work Thomas actually did, shown as proof of a capability. It is never itsel
 _Avoid_: project, subject, case study, reference
 
 **Concept** (FR *Concept*):
-A named capability, one or two words, at the top of the page.
+A named capability, one or two words, on the page of the Offer it describes.
 _Avoid_: skill, competency, figure
 
 **Principle** (FR *Principe*):
@@ -135,5 +136,6 @@ _Avoid_: value, belief, approach
   instance; the catalogue entry is an **Offer**.
 - "Triggers" in ADR 12 were the Failure modes seen as funnel entry points. That is
   a relationship (*treated by*), not a term of its own.
-- The `Project` type and the "Six sujets à ouvrir" heading both name what is now an
-  **Achievement**.
+- The `Project` type and the "Six sujets à ouvrir" heading both named what is now an
+  **Achievement**. Resolved: the contract says `Achievement`, and the heading
+  carries no count.

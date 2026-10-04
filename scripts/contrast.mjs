@@ -80,7 +80,7 @@ if (process.argv.includes('--audit')) {
   }
 
   // Text dimmed with `opacity` rather than a token: hero blurb 0.85, concept
-  // gloss 0.75, project meta 0.7, card body 0.8, facet text 0.9. Measured on the
+  // gloss 0.75, achievement meta 0.7, card body 0.8, facet text 0.9. Measured on the
   // lightest ground each can sit on.
   console.log('\n— ink dimmed by opacity —');
   for (const a of [0.7, 0.75, 0.8, 0.85, 0.9]) {

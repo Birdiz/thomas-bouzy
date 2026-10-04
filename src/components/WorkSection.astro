@@ -16,47 +16,47 @@ const { t, num } = Astro.props;
 
   <div class="work__list">
     {
-      t.projects.map((project, index) => (
+      t.achievements.map((achievement, index) => (
         /* `name` makes the browser enforce one-open-at-a-time. That was three
            lines of component state in the design; here it costs no JavaScript
            and comes with correct aria-expanded for free. */
-        <details class="project" name="projects" open={index === 0}>
-          <summary class="project__summary">
-            <span class="project__num" aria-hidden="true">
+        <details class="achievement" name="achievements" open={index === 0}>
+          <summary class="achievement__summary">
+            <span class="achievement__num" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </span>
-            <h3 class="project__heading">
-              <span class="project__title">{project.title}</span>
-              <span class="project__meta">
-                <span>{project.org}</span>
+            <h3 class="achievement__heading">
+              <span class="achievement__title">{achievement.title}</span>
+              <span class="achievement__meta">
+                <span>{achievement.org}</span>
                 <span aria-hidden="true">·</span>
-                <span>{project.period}</span>
+                <span>{achievement.period}</span>
               </span>
             </h3>
-            <span class="project__chevron" aria-hidden="true">↓</span>
+            <span class="achievement__chevron" aria-hidden="true">↓</span>
           </summary>
 
-          <div class="project__panel">
-            <div class="project__rule" aria-hidden="true" />
+          <div class="achievement__panel">
+            <div class="achievement__rule" aria-hidden="true" />
             {/* Thomas's own rule, applied to every card rather than to one:
                 say what the work was before using a word anyone has to learn.
                 The label carries its own colon because French spaces it. */}
-            <p class="project__plain">
-              <span class="project__plain-label">{t.work.labelPlain}</span>{' '}
-              {project.plain}
+            <p class="achievement__plain">
+              <span class="achievement__plain-label">{t.work.labelPlain}</span>{' '}
+              {achievement.plain}
             </p>
-            <div class="project__facets">
-              <div class="project__facet">
-                <p class="kicker project__facet-label">{t.work.labelContext}</p>
-                <p class="project__facet-text">{project.context}</p>
+            <div class="achievement__facets">
+              <div class="achievement__facet">
+                <p class="kicker achievement__facet-label">{t.work.labelContext}</p>
+                <p class="achievement__facet-text">{achievement.context}</p>
               </div>
-              <div class="project__facet">
-                <p class="kicker project__facet-label">{t.work.labelApproach}</p>
-                <p class="project__facet-text">{project.approach}</p>
+              <div class="achievement__facet">
+                <p class="kicker achievement__facet-label">{t.work.labelApproach}</p>
+                <p class="achievement__facet-text">{achievement.approach}</p>
               </div>
-              <div class="project__facet">
-                <p class="kicker project__facet-label">{t.work.labelResult}</p>
-                <p class="project__facet-text">{project.result}</p>
+              <div class="achievement__facet">
+                <p class="kicker achievement__facet-label">{t.work.labelResult}</p>
+                <p class="achievement__facet-text">{achievement.result}</p>
               </div>
             </div>
           </div>

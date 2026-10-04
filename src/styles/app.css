@@ -413,52 +413,6 @@ a {
   margin: 0;
 }
 
-/* — concepts —————————————————————————————————————————————————————————————— */
-
-/* Six named capabilities, where six figures used to sit. The label is the
-   concept and carries no accent — six accent figures were already the loudest
-   thing on the page, and the measurements that briefly replaced them were too
-   tied to one engagement to travel. Label and gloss, nothing else. */
-.concepts {
-  padding-block: 26px 60px;
-}
-.concepts__grid {
-  display: grid;
-  /* An explicit three-up rather than auto-fit: at the 1160px container auto-fit
-     lands five per row and orphans the sixth. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.concepts__item {
-  padding: 22px 24px;
-  background: var(--color-surface);
-  gap: 8px;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-.concepts__item:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
-.concepts__label {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 21px;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
-.concepts__gloss {
-  font-size: 13px;
-  opacity: 0.75;
-  line-height: 1.4;
-  margin: 0;
-  text-wrap: pretty;
-}
-
 /* — problem ——————————————————————————————————————————————————————————————— */
 
 /* The page opens on what breaks, not on who fixes it. Every reference that
@@ -522,12 +476,99 @@ a {
   margin: 0 0 6px;
   text-wrap: balance;
 }
+/* The whole quote is the link: it is the largest target in the row, and the
+   sentence a reader recognises is the thing they would click. It keeps the
+   ink colour so the four still read as quotes, and the Offer it leads to is
+   named underneath, in the link colour. */
+.problem__mode-quote a {
+  color: inherit;
+  text-decoration: none;
+}
+.problem__mode-quote a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.problem__mode-offer {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--color-accent-text);
+}
+.problem__audit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 24px 0 0;
+  font-size: 15.5px;
+  color: var(--color-muted);
+}
 .problem__mode-text {
   font-size: 14.5px;
   line-height: 1.6;
   color: var(--color-muted);
   margin: 0;
   text-wrap: pretty;
+}
+
+/* — offers ————————————————————————————————————————————————————————————————— */
+
+/* Five cards, the second section of the page: what is for sale, right after
+   what breaks. Each one ends on a price and a way in — the plain line says what
+   it is, the "from" says whether it is in reach. */
+.offers {
+  padding-block: 40px 64px;
+}
+.offers__intro {
+  max-width: 58ch;
+  font-size: 16px;
+  color: var(--color-muted);
+  margin: 0 0 32px;
+  text-wrap: pretty;
+}
+.offers__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.offers__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offers__name {
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.offers__plain {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+  flex: 1;
+  text-wrap: pretty;
+}
+.offers__from {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+.offers__link {
+  font-size: 15px;
+}
+.offers__partners {
+  margin: 26px 0 0;
+  font-size: 15.5px;
+  color: var(--color-muted);
 }
 
 /* — position ——————————————————————————————————————————————————————————————— */
@@ -596,7 +637,7 @@ a {
   margin-bottom: 6px;
 }
 
-/* — work / projects —————————————————————————————————————————————————————— */
+/* — work / achievements —————————————————————————————————————————————————————— */
 
 .work {
   padding-block: 34px 60px;
@@ -614,7 +655,7 @@ a {
   gap: 14px;
 }
 
-.project {
+.achievement {
   border-radius: calc(var(--radius-lg) * 1.15);
   background: color-mix(in srgb, var(--color-surface) 55%, transparent);
   transition:
@@ -622,12 +663,12 @@ a {
     box-shadow 0.25s ease;
   overflow: hidden;
 }
-.project[open] {
+.achievement[open] {
   background: var(--color-surface);
   box-shadow: var(--shadow-md);
 }
 
-.project__summary {
+.achievement__summary {
   cursor: pointer;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -636,19 +677,19 @@ a {
   padding: 24px 28px;
   list-style: none;
 }
-.project__summary::-webkit-details-marker {
+.achievement__summary::-webkit-details-marker {
   display: none;
 }
-.project__summary::marker {
+.achievement__summary::marker {
   content: "";
 }
-.project__summary:focus-visible {
+.achievement__summary:focus-visible {
   outline: 2px solid var(--color-accent-text);
   outline-offset: -4px;
   border-radius: calc(var(--radius-lg) * 1.15);
 }
 
-.project__num {
+.achievement__num {
   font-family: var(--font-heading);
   font-weight: var(--font-heading-weight);
   font-size: 15px;
@@ -664,12 +705,12 @@ a {
   background: var(--color-sunken);
   color: var(--color-accent-text);
 }
-.project[open] .project__num {
+.achievement[open] .achievement__num {
   background: var(--color-accent);
   color: var(--color-on-accent);
 }
 
-.project__heading {
+.achievement__heading {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -681,14 +722,14 @@ a {
   letter-spacing: normal;
   line-height: inherit;
 }
-.project__title {
+.achievement__title {
   font-family: var(--font-heading);
   font-weight: var(--font-heading-weight);
   font-size: clamp(19px, 2vw, 25px);
   line-height: 1.15;
   letter-spacing: -0.015em;
 }
-.project__meta {
+.achievement__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -697,35 +738,35 @@ a {
   opacity: 0.7;
 }
 
-.project__chevron {
+.achievement__chevron {
   font-size: 18px;
   color: var(--color-accent-text);
   transition: transform 0.3s ease;
   display: inline-block;
 }
-.project[open] .project__chevron {
+.achievement[open] .achievement__chevron {
   transform: rotate(180deg);
 }
 
-.project__panel {
+.achievement__panel {
   padding: 0 28px 28px;
   animation: tb-in 0.3s ease both;
 }
-.project__rule {
+.achievement__rule {
   height: 1px;
   background: var(--color-divider);
   margin-bottom: 24px;
 }
 /* The plain-language line, above the three facets and set larger than them:
    whoever needs it is the reader least likely to stay for the rest. */
-.project__plain {
+.achievement__plain {
   font-size: 16.5px;
   line-height: 1.6;
   max-width: 66ch;
   margin: 0 0 26px;
   text-wrap: pretty;
 }
-.project__plain-label {
+.achievement__plain-label {
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.14em;
@@ -734,19 +775,19 @@ a {
   margin-right: 10px;
   white-space: nowrap;
 }
-.project__facets {
+.achievement__facets {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 26px;
 }
-.project__facet-label {
+.achievement__facet-label {
   color: var(--color-muted);
   margin-bottom: 8px;
 }
-/* Scoped to the body copy: `.project__facet p` also caught the facet label,
+/* Scoped to the body copy: `.achievement__facet p` also caught the facet label,
    which is a <p class="kicker">, dropping it to 14.5px at 90% opacity and under
    the AA contrast floor. */
-.project__facet-text {
+.achievement__facet-text {
   font-size: 14.5px;
   line-height: 1.6;
   margin: 0;
@@ -780,21 +821,12 @@ a {
 /* The salaried route, once and at the end of the prose. Separated by a rule
    rather than by size: it has to read as an aside to the section, not as its
    conclusion, and it must not compete with the contact CTA further down. */
-.about__cv {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 18px;
-  margin-top: 26px;
+.about__prose .about__career {
+  font-size: 15px;
+  margin: 26px 0 0;
   padding-top: 22px;
   border-top: 1px solid var(--color-divider);
-  max-width: 56ch;
-}
-.about__prose .about__cv-line {
-  font-size: 15px;
-  margin: 0;
   opacity: 0.8;
-  flex: 1 1 22ch;
 }
 
 .about__aside {
@@ -915,6 +947,292 @@ a {
   color: var(--color-muted);
 }
 
+/* — offer pages ————————————————————————————————————————————————————————————
+
+   One page per Offer, in ADR 17's order. Same grammar as the home page —
+   numbered mono eyebrows, Spectral headings, surface cards — so a reader who
+   arrives from a link lands on the same site, not on a landing page. The
+   section headings are the eyebrows themselves: one level of h2 per section,
+   no second display title competing with the Offer's name. */
+
+.offer__head {
+  padding-block: 64px 36px;
+}
+.offer__name {
+  font-size: clamp(38px, 5vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0 0 18px;
+}
+.offer__plain {
+  font-size: clamp(18px, 2vw, 21px);
+  line-height: 1.55;
+  max-width: 52ch;
+  margin: 0;
+  text-wrap: pretty;
+}
+.offer__concepts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.offer__concept {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 22px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offer__concept-label {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 19px;
+  line-height: 1.15;
+}
+.offer__concept-gloss {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.offer__section {
+  padding-block: 34px;
+}
+.offer__heading {
+  margin-bottom: 22px;
+}
+
+.offer__sentences {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-divider);
+  max-width: 64ch;
+}
+.offer__sentence {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 19px;
+  line-height: 1.4;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-divider);
+  text-wrap: balance;
+}
+
+.offer__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.offer__card,
+.offer__variant,
+.offer__step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offer__variant {
+  margin-top: 14px;
+  background: var(--color-sunken);
+}
+.offer__card-title {
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.offer__card-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-muted);
+  margin: 0;
+}
+.offer__card-link {
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 15px;
+}
+.offer__card-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.offer__steps {
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.offer__step {
+  counter-increment: step;
+}
+.offer__step::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent-text);
+}
+
+.estimator__disclaimer {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin: 0 0 12px;
+}
+/* Scrolls inside itself on a phone rather than widening the page: the table
+   is the fallback, and a fallback that breaks the layout is not one. */
+.estimator__table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: 6px 12px;
+}
+.estimator__table {
+  font-size: 14.5px;
+}
+.estimator__table th,
+.estimator__table td {
+  padding: 10px 12px;
+  vertical-align: top;
+}
+.estimator__amount {
+  white-space: nowrap;
+}
+
+/* The live estimator: one slider per dimension, then the figures it selects.
+   The figures are the largest type in the section — they are the answer. */
+.estimator__live {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px 32px;
+  align-items: start;
+  padding: 24px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.estimator__sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.estimator__slider label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+}
+.estimator__choice {
+  color: var(--color-text);
+  text-align: right;
+}
+.estimator__slider input {
+  width: 100%;
+  /* Ink, not the accent: ADR 13 spends the terracotta on section numbers, the
+     primary button and links, and a slider is none of the three. */
+  accent-color: var(--color-neutral-200);
+  /* A thumb a finger can find: the native one is ~16px. */
+  min-height: 32px;
+  margin: 0;
+}
+.estimator__figures {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+}
+.estimator__figure dt {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.estimator__figure dd {
+  margin: 4px 0 0;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.2;
+}
+
+.offer__day-rate {
+  margin: 18px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.offer__day-rate strong {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.offer__rules {
+  margin: 18px 0 0;
+  padding: 16px 0 0 20px;
+  border-top: 1px solid var(--color-divider);
+  font-size: 15.5px;
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+.offer__fit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.offer__fit-col {
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offer__fit-list {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+.offer__fit-list li + li {
+  margin-top: 6px;
+}
+
+.offer__faq {
+  border-top: 1px solid var(--color-divider);
+  max-width: 72ch;
+}
+.offer__question {
+  border-bottom: 1px solid var(--color-divider);
+}
+.offer__question summary {
+  cursor: pointer;
+  padding: 16px 0;
+  font-size: 16.5px;
+}
+.offer__question p {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-muted);
+}
+
 /* — responsive ——————————————————————————————————————————————————————————— */
 
 @media (max-width: 1023px) {
@@ -938,17 +1256,16 @@ a {
 }
 
 @media (max-width: 860px) {
+  .offer__fit,
+  .estimator__live {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .problem__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 36px;
   }
   .position__grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-  /* Two stat tiles per row: three no longer leaves the longest figure
-     ("17s → 3s") room beside its label. */
-  .concepts__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   /* Below this width the nav always wraps to its own row. Measured: ~97px here,
      ~127px once the brand row wraps too (see the 480px block). A few pixels of
@@ -980,31 +1297,26 @@ a {
 }
 
 @media (max-width: 640px) {
-  /* Two tiles still fit here, but not at the display size: "Invisible redesign"
-     is the widest label and overruns a half-width tile at 21px. */
-  .concepts__label {
-    font-size: 19px;
-  }
   .about {
     padding-block: 48px 20px;
   }
   .contact {
     padding-block: 32px 64px;
   }
-  .project__summary {
+  .achievement__summary {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 14px;
     padding: 20px;
   }
-  .project__num {
+  .achievement__num {
     width: 34px;
     height: 34px;
     font-size: 13px;
   }
-  .project__panel {
+  .achievement__panel {
     padding: 0 20px 22px;
   }
-  .project__facets {
+  .achievement__facets {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
   }
@@ -1022,11 +1334,6 @@ a {
 }
 
 @media (max-width: 480px) {
-  /* One tile per row: two columns cannot hold a figure and a two-line label. */
-  .concepts__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   :root {
     --header-h: 132px;
   }

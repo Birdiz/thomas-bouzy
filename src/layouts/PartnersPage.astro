@@ -1,0 +1,84 @@
+---
+import BookingSection from '../components/offer/BookingSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { RESUME } from '../content/index.ts';
+import { OFFER_IDS, OFFERS } from '../content/offers.ts';
+import { DAY_RATE } from '../content/prices.ts';
+import { formatEuroRange } from '../lib/money.ts';
+import { service } from '../lib/structured-data.ts';
+import { linkTo, type Route } from '../routes.ts';
+import { SITE } from '../site.ts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  route: Route;
+}
+
+const { route } = Astro.props;
+const { locale } = route;
+const t = RESUME[locale];
+const page = t.partnersPage;
+if (!page) throw new Error(`${route.path}: no ${locale} content for the Partners page`);
+
+/* The Offers a Partner can bring Thomas into, from the Segments in offers.ts. */
+const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')).map((id) => ({
+  ...t.offers[id],
+  href: linkTo(id, locale).href,
+}));
+---
+
+<BaseLayout
+  route={route}
+  title={page.meta.title}
+  description={page.meta.description}
+  ogType="website"
+  structuredData={service(route, page.title, page.plain, SITE.serviceArea)}
+>
+  <SiteHeader route={route} t={t} contactHref="#book" />
+  <main id="main" class="offer">
+    <header class="offer__head container">
+      <p class="kicker">{page.kicker}</p>
+      <h1 class="offer__name">{page.title}</h1>
+      <p class="offer__plain">{page.plain}</p>
+    </header>
+
+    <section class="offer__section container" aria-label={page.kicker}>
+      <ul class="offer__cards">
+        {
+          page.points.map((point) => (
+            <li class="offer__card">
+              <h2 class="offer__card-title">{point.title}</h2>
+              <p class="offer__card-text">{point.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      {/* Read from the price table, like Reinforcement's: one number, one place. */}
+      <p class="offer__day-rate">
+        <strong>{page.dayRate.label}</strong>{' '}
+        {formatEuroRange(DAY_RATE, locale)} {t.offerPage.excludingVat}, {page.dayRate.note}
+      </p>
+    </section>
+
+    <section class="offer__section container" aria-labelledby="partners-offers">
+      <h2 class="kicker offer__heading" id="partners-offers">{page.offers}</h2>
+      <ul class="offer__cards">
+        {
+          offers.map((offer) => (
+            <li class="offer__card">
+              <h3 class="offer__card-title">{offer.name}</h3>
+              <p class="offer__card-text">{offer.plain}</p>
+              <a class="offer__card-link" href={offer.href}>
+                {page.offerLink} <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <BookingSection labels={page.book} locale={locale} />
+  </main>
+  <SiteFooter t={t} />
+</BaseLayout>
