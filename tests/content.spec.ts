@@ -698,6 +698,15 @@ describe('the Partners page (ADR 14)', () => {
     expect(titles).toMatch(/CV sur demande/i);
   });
 
+  it('opens in plain language, naming no technology', () => {
+    // Its plain line is a lede like an Offer's, so ADR 12's rule holds here too.
+    const { plain } = fr.partnersPage;
+    expect(plain.length).toBeLessThan(160);
+    for (const tech of fr.schema.knowsAbout) {
+      expect(plain, `the Partners page explains itself with ${tech}`).not.toContain(tech);
+    }
+  });
+
   it('carries no copy of the day rate: it is read from the price table', () => {
     for (const [path, text] of walkStrings(fr.partnersPage)) {
       expect(text, `a price is copied at ${path}`).not.toMatch(

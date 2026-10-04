@@ -1,7 +1,7 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { pathOf } from '../routes.ts';
-import { DEFAULT_LOCALE, LOCALE_TAG, type Locale } from '../site.ts';
+import { linkTo } from '../routes.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
 
 interface Props {
   locale: Locale;
@@ -11,16 +11,7 @@ interface Props {
 
 const { locale, t, num } = Astro.props;
 
-/** The page of an Offer in this locale, or its French page if it has no other. */
-function offerPage(id: Parameters<typeof pathOf>[0]) {
-  const here = pathOf(id, locale);
-  return {
-    href: here ?? pathOf(id, DEFAULT_LOCALE),
-    hreflang: here ? undefined : LOCALE_TAG[DEFAULT_LOCALE],
-  };
-}
-
-const audit = offerPage('audit');
+const audit = linkTo('audit', locale);
 ---
 
 <section id="problem" class="problem container">
@@ -36,7 +27,7 @@ const audit = offerPage('audit');
       <ul class="problem__modes">
         {
           t.failureModes.map((mode, i) => {
-            const target = offerPage(mode.offer);
+            const target = linkTo(mode.offer, locale);
             return (
               <li class="problem__mode">
                 <span class="problem__mode-num" aria-hidden="true">
@@ -50,7 +41,7 @@ const audit = offerPage('audit');
                   <h3 class="problem__mode-quote">
                     <a
                       href={target.href}
-                      hreflang={target.hreflang}
+                      hreflang={target.hreflang && LOCALE_TAG[target.hreflang]}
                     >
                       {mode.quote}
                       <span class="problem__mode-offer">

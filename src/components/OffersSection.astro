@@ -3,8 +3,8 @@ import type { ResumeContent } from '../content/index.ts';
 import { OFFER_IDS } from '../content/offers.ts';
 import { fromPrice, isMonthly } from '../content/prices.ts';
 import { formatEuros } from '../lib/money.ts';
-import { pathOf } from '../routes.ts';
-import { DEFAULT_LOCALE, LOCALE_TAG, type Locale } from '../site.ts';
+import { linkTo } from '../routes.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
 
 interface Props {
   locale: Locale;
@@ -21,19 +21,17 @@ const { locale, t, num } = Astro.props;
  * English too because the home page sells all five.
  */
 const cards = OFFER_IDS.map((id) => {
-  const here = pathOf(id, locale);
   const { amount, min } = fromPrice(id);
   const unit = isMonthly(amount) ? ` ${t.offerPage.perMonth}` : '';
   return {
     id,
     ...t.offers[id],
-    href: here ?? pathOf(id, DEFAULT_LOCALE),
-    foreign: here ? undefined : DEFAULT_LOCALE,
+    ...linkTo(id, locale),
     from: `${t.offersSection.from} ${formatEuros(min, locale)}${unit} ${t.offerPage.excludingVat}`,
   };
 });
 
-const partners = pathOf('partners', locale) ?? pathOf('partners', DEFAULT_LOCALE);
+const partners = linkTo('partners', locale);
 ---
 
 <section id="offers" class="offers container">
@@ -51,10 +49,10 @@ const partners = pathOf('partners', locale) ?? pathOf('partners', DEFAULT_LOCALE
           <a
             class="offers__link"
             href={card.href}
-            hreflang={card.foreign ? LOCALE_TAG[card.foreign] : undefined}
+            hreflang={card.hreflang && LOCALE_TAG[card.hreflang]}
           >
             {t.offersSection.see}
-            {card.foreign && ` ${t.offersSection.inFrench}`}
+            {card.hreflang && ` ${t.offersSection.inFrench}`}
             <span aria-hidden="true"> →</span>
           </a>
         </li>
@@ -64,7 +62,7 @@ const partners = pathOf('partners', locale) ?? pathOf('partners', DEFAULT_LOCALE
 
   <p class="offers__partners">
     {t.offersSection.partners}{' '}
-    <a href={partners} hreflang={pathOf('partners', locale) ? undefined : LOCALE_TAG.fr}>
+    <a href={partners.href} hreflang={partners.hreflang && LOCALE_TAG[partners.hreflang]}>
       {t.offersSection.partnersLink}
     </a>
   </p>

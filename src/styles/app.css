@@ -1146,7 +1146,9 @@ a {
 }
 .estimator__slider input {
   width: 100%;
-  accent-color: var(--color-accent);
+  /* Ink, not the accent: ADR 13 spends the terracotta on section numbers, the
+     primary button and links, and a slider is none of the three. */
+  accent-color: var(--color-neutral-200);
   /* A thumb a finger can find: the native one is ~16px. */
   min-height: 32px;
   margin: 0;

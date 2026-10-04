@@ -7,8 +7,8 @@ import { OFFER_IDS, OFFERS } from '../content/offers.ts';
 import { DAY_RATE } from '../content/prices.ts';
 import { formatEuroRange } from '../lib/money.ts';
 import { service } from '../lib/structured-data.ts';
-import { pathOf, type Route } from '../routes.ts';
-import { DEFAULT_LOCALE, SITE } from '../site.ts';
+import { linkTo, type Route } from '../routes.ts';
+import { SITE } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -24,7 +24,7 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the Partners
 /* The Offers a Partner can bring Thomas into, from the Segments in offers.ts. */
 const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')).map((id) => ({
   ...t.offers[id],
-  href: pathOf(id, locale) ?? pathOf(id, DEFAULT_LOCALE),
+  href: linkTo(id, locale).href,
 }));
 ---
 

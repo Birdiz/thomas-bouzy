@@ -75,6 +75,27 @@ export function homePath(locale: Locale): string {
   return path;
 }
 
+/** Where a link to a page goes from a page in `locale`, and in which language it lands. */
+export interface PageLink {
+  href: string;
+  /** Set when the link lands in another language than the page it is on. */
+  hreflang?: Locale;
+}
+
+/**
+ * A link to a page from a page in `locale`: its version in that locale, or its
+ * version in the default locale when it has none — the Takeover and the
+ * Partners page exist in French only (ADR 15), and are still linked from the
+ * English home page.
+ */
+export function linkTo(id: PageId, locale: Locale): PageLink {
+  const here = pathOf(id, locale);
+  if (here) return { href: here };
+  const fallback = pathOf(id, DEFAULT_LOCALE);
+  if (!fallback) throw new Error(`${id} exists in neither ${locale} nor ${DEFAULT_LOCALE}`);
+  return { href: fallback, hreflang: DEFAULT_LOCALE };
+}
+
 /**
  * The versions of a page a reader can switch between, in `LOCALES` order.
  *

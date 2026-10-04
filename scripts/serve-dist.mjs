@@ -301,7 +301,7 @@ async function handle(req, res) {
 
   const hit = await resolveFile(canonical);
 
-  // `/fr` is a directory: it is spelled `/fr/`, the way src/routes.ts and the
+  // `/en` is a directory: it is spelled `/en/`, the way src/routes.ts and the
   // canonical link spell it.
   if (hit?.isDirectoryIndex && !canonical.endsWith('/')) {
     send(
