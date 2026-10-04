@@ -530,6 +530,65 @@ a {
   text-wrap: pretty;
 }
 
+/* — offers ————————————————————————————————————————————————————————————————— */
+
+/* Five cards, the second section of the page: what is for sale, right after
+   what breaks. Each one ends on a price and a way in — the plain line says what
+   it is, the "from" says whether it is in reach. */
+.offers {
+  padding-block: 40px 64px;
+}
+.offers__intro {
+  max-width: 58ch;
+  font-size: 16px;
+  color: var(--color-muted);
+  margin: 0 0 32px;
+  text-wrap: pretty;
+}
+.offers__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.offers__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offers__name {
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.offers__plain {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+  flex: 1;
+  text-wrap: pretty;
+}
+.offers__from {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+.offers__link {
+  font-size: 15px;
+}
+.offers__partners {
+  margin: 26px 0 0;
+  font-size: 15.5px;
+  color: var(--color-muted);
+}
+
 /* — position ——————————————————————————————————————————————————————————————— */
 
 /* The section a résumé never has. Four positions, each with what it costs —

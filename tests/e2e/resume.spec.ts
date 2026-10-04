@@ -1,4 +1,9 @@
 import type { Page } from '@playwright/test';
+import { RESUME } from '../../src/content/index.ts';
+import { OFFER_IDS } from '../../src/content/offers.ts';
+import { fromPrice } from '../../src/content/prices.ts';
+import { formatEuros } from '../../src/lib/money.ts';
+import { homePath, pathOf } from '../../src/routes.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/];
@@ -128,11 +133,19 @@ test.describe('the page is not a CV', () => {
     });
   }
 
-  test('offers one call to action in the hero, and it is the work', async ({ page }) => {
-    await gotoHome(page, '/');
-    const ctas = page.locator('.hero__ctas a');
-    await expect(ctas).toHaveCount(1);
-    await expect(ctas.first()).toHaveAttribute('href', '#work');
+  test('offers one call to action in the hero, and it reaches the Offers', async ({ page }) => {
+    for (const [path, label] of [
+      ['/', 'Voir les offres'],
+      ['/en/', 'See the offers'],
+    ] as const) {
+      await gotoHome(page, path);
+      const ctas = page.locator('.hero a');
+      await expect(ctas).toHaveCount(1);
+      await expect(ctas.first()).toHaveText(label);
+      await ctas.first().click();
+      await expect(page).toHaveURL(new RegExp(`${path}#offers$`));
+      await expect(page.locator('#offers')).toBeInViewport();
+    }
   });
 
   test('points the salaried route at LinkedIn, from About', async ({ page }) => {
@@ -309,4 +322,41 @@ test.describe('motion preferences', () => {
       }
     });
   });
+});
+
+test.describe('the home page sells the Offers (ADR 14)', () => {
+  for (const locale of ['fr', 'en'] as const) {
+    const home = homePath(locale);
+
+    test(`reads problem, offers, proof, position, person on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const order = await page.$$eval('main > section[id]', (sections) =>
+        sections.map((section) => section.id),
+      );
+      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'approach', 'about', 'contact']);
+    });
+
+    test(`shows five Offers with a price from the table on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const cards = page.locator('#offers .offers__card');
+      await expect(cards).toHaveCount(OFFER_IDS.length);
+
+      for (const id of OFFER_IDS) {
+        const card = page.locator(`#offers .offers__card[data-offer="${id}"]`);
+        await expect(card.getByRole('heading')).toHaveText(RESUME[locale].offers[id].name);
+        await expect(card).toContainText(formatEuros(fromPrice(id).min, locale));
+        // A page in this locale if there is one, the French page otherwise.
+        await expect(card.getByRole('link')).toHaveAttribute(
+          'href',
+          pathOf(id, locale) ?? pathOf(id, 'fr') ?? '∅',
+        );
+      }
+      await expect(page.locator('#offers .offers__card[data-offer="takeover"] a')).toHaveAttribute(
+        'href',
+        '/offres/reprise-et-maintenance/',
+      );
+
+      await expect(page.locator(`#offers a[href="${pathOf('partners', 'fr')}"]`)).toHaveCount(1);
+    });
+  }
 });

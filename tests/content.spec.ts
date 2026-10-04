@@ -98,7 +98,9 @@ describe('EN/FR parity', () => {
       '$.nav.contact',
       '$.hero.availability',
       '$.hero.blurb',
-      '$.hero.ctaWork',
+      '$.hero.ctaOffers',
+      '$.offersSection.title',
+      '$.offersSection.intro',
       '$.problem.kicker',
       '$.problem.title',
       '$.problem.paragraphs[0]',
@@ -693,6 +695,31 @@ describe('the Partners page (ADR 14)', () => {
       expect(text, `a price is copied at ${path}`).not.toMatch(
         new RegExp(`\\b(${DAY_RATE.min}|${DAY_RATE.max})\\b`),
       );
+    }
+  });
+});
+
+describe('the home page, written for the least technical reader (ADR 14)', () => {
+  it('holds the hero to the plain-line rule', () => {
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const hero = Object.values(content.hero).join(' ');
+      expect(content.hero.blurb.length, `${locale}: the hero is a paragraph`).toBeLessThan(160);
+      for (const tech of content.schema.knowsAbout) {
+        expect(hero, `${locale}: the hero says ${tech}`).not.toContain(tech);
+      }
+    }
+  });
+
+  it('names no job title in the title or the description', () => {
+    // They were the SERP identity of a résumé (ADR 11 left them on purpose);
+    // a site that sells Offers is found by what it sells.
+    for (const content of [en, fr]) {
+      for (const text of [content.meta.title, content.meta.description]) {
+        expect(text).not.toMatch(/engineer|ingénieur|architect|developer|développeur/i);
+      }
     }
   });
 });

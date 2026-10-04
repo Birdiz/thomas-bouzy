@@ -280,6 +280,7 @@ export interface ResumeContent {
   };
 
   nav: {
+    offers: string;
     work: string;
     approach: string;
     about: string;
@@ -304,8 +305,13 @@ export interface ResumeContent {
    */
   hero: {
     availability: string;
+    /**
+     * Written for the least technical reader (ADR 14), so it is held to the
+     * plain-line rule: no `schema.knowsAbout` term, and short.
+     */
     blurb: string;
-    ctaWork: string;
+    /** The hero's one button, to the Offers section. */
+    ctaOffers: string;
   };
 
   concepts: Concept[];
@@ -360,6 +366,23 @@ export interface ResumeContent {
   mentoring: MentoringEntry[];
   languages: LanguageSkill[];
   schema: SchemaOnly;
+
+  /** The home page's Offers section: five cards, each with a "from" price. */
+  offersSection: {
+    kicker: string;
+    title: string;
+    intro: string;
+    /** Before the lowest headline amount the price table holds. */
+    from: string;
+    see: string;
+    /**
+     * Said after a link to a page that exists only in French, from a page in
+     * another language. Never shown on a French page.
+     */
+    inFrench: string;
+    partners: string;
+    partnersLink: string;
+  };
 
   /** Every Offer's name and plain line, wherever the Offer is mentioned. */
   offers: Record<OfferId, OfferSummary>;

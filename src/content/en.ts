@@ -2,9 +2,9 @@ import type { ResumeContent } from './types.ts';
 
 export const en = {
   meta: {
-    title: 'Thomas Bouzy — Senior Software Engineer, backend architecture',
+    title: 'Thomas Bouzy — Taking over, fixing and evolving the applications you run on',
     description:
-      'I design transactional systems that have to stay correct while they stay up. Twelve years of backend architecture — event-sourced wallets at 1,000+ transactions a minute, observability that took reported bugs from 20 a month to 5, and DeFi operations in production on real funds.',
+      'I take over, make reliable and evolve the applications your business depends on: audit, takeover and maintenance, migration without downtime, reliability, senior reinforcement. Public prices, first call free.',
     ogImageAlt:
       'Thomas Bouzy — I design transactional systems that have to stay correct while they stay up. Backend & architecture.',
   },
@@ -18,6 +18,7 @@ export const en = {
   },
 
   nav: {
+    offers: 'Offers',
     work: 'Achievements',
     approach: 'Approach',
     about: 'About',
@@ -27,8 +28,8 @@ export const en = {
   hero: {
     availability: "First engagements in preparation — let's talk now",
     blurb:
-      'I design transactional systems that have to stay correct while they stay up. Twelve years of backend and architecture — event-driven flows, Event Sourcing on wallets, and on-chain operations where a mistake costs real money.',
-    ctaWork: 'See the work',
+      'I take over the applications your business depends on, make them reliable and keep them evolving, without ever stopping them.',
+    ctaOffers: 'See the offers',
   },
 
   concepts: [
@@ -290,6 +291,18 @@ export const en = {
       'SQLite',
       'CodeQL',
     ],
+  },
+
+  offersSection: {
+    kicker: 'Offers',
+    title: 'Five ways to start, every one with a price.',
+    intro:
+      'Each Offer has its own page: what you get, how it works, and an estimator that gives an order of magnitude before any call.',
+    from: 'from',
+    see: 'See the offer',
+    inFrench: '(in French)',
+    partners: 'An agency or an IT services firm?',
+    partnersLink: 'The partners page (in French)',
   },
 
   offers: {

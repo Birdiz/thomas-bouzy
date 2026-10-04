@@ -2,9 +2,9 @@ import type { ResumeContent } from './types.ts';
 
 export const fr = {
   meta: {
-    title: 'Thomas Bouzy — Ingénieur logiciel senior, architecture backend',
+    title: 'Thomas Bouzy — Reprendre, fiabiliser et faire évoluer vos applications métier',
     description:
-      "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans d'architecture backend — wallets event-sourcés à plus de 1 000 transactions par minute, observabilité qui a ramené les bugs de 20 à 5 par mois, et des opérations DeFi en production sur fonds réels.",
+      'Je reprends, fiabilise et fais évoluer les applications dont votre activité dépend : audit, reprise et maintenance, migration sans interruption, fiabilisation, renfort senior. Prix publics, premier appel gratuit.',
     ogImageAlt:
       'Thomas Bouzy — « I design transactional systems that have to stay correct while they stay up. » Backend & architecture.',
   },
@@ -18,6 +18,7 @@ export const fr = {
   },
 
   nav: {
+    offers: 'Offres',
     work: 'Réalisations',
     approach: 'Ma position',
     about: 'À propos',
@@ -27,8 +28,8 @@ export const fr = {
   hero: {
     availability: 'Premières missions en préparation — parlons-en dès maintenant',
     blurb:
-      "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans de backend et d'architecture — flux event-driven, Event Sourcing sur les wallets, et des opérations on-chain où une erreur coûte de l'argent réel.",
-    ctaWork: 'Voir les projets',
+      'Je reprends les applications dont votre activité dépend, je les rends fiables et je les fais évoluer, sans jamais les arrêter.',
+    ctaOffers: 'Voir les offres',
   },
 
   concepts: [
@@ -295,6 +296,18 @@ export const fr = {
       'SQLite',
       'CodeQL',
     ],
+  },
+
+  offersSection: {
+    kicker: 'Les offres',
+    title: 'Cinq façons de commencer, toutes avec un prix.',
+    intro:
+      'Chaque offre a sa page : ce que vous recevez, comment ça se passe, et un simulateur qui donne un ordre de grandeur avant tout appel.',
+    from: 'à partir de',
+    see: "Voir l'offre",
+    inFrench: '(en français)',
+    partners: 'Vous êtes une agence ou une société de services ?',
+    partnersLink: 'La page partenaires',
   },
 
   offers: {

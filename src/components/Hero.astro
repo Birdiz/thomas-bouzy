@@ -7,9 +7,11 @@ import Ridge from './Ridge.astro';
 
 interface Props {
   t: ResumeContent;
+  /** The home page's own path, so the button's anchor is spelled like the header's. */
+  home: string;
 }
 
-const { t } = Astro.props;
+const { t, home } = Astro.props;
 
 /**
  * The design's <image-slot> was an empty placeholder. Drop a file at
@@ -38,14 +40,15 @@ const portrait = Object.values(portraits)[0]?.default;
         <h1 class="hero__name">{SITE.author}</h1>
         <p class="hero__blurb">{t.hero.blurb}</p>
 
-        {/* One button, and it points at the work.
+        {/* One button, and it points at the Offers (ADR 14).
             The job-title line, the "12 years" badge and the CV download all
             left with chantier A: a title and a years count answer a hiring
             question this page does not ask, and a CV button in the first
             viewport offered the salaried route as an equal alternative to the
-            work itself. The salaried route is one line in About now. */}
+            work itself. The booking link is not here either: it belongs to
+            Contact and to the Offer pages, once the reader knows what for. */}
         <div class="hero__ctas">
-          <a class="btn btn-primary" href="#work">{t.hero.ctaWork}</a>
+          <a class="btn btn-primary" href={`${home}#offers`}>{t.hero.ctaOffers}</a>
         </div>
       </div>
 
