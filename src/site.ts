@@ -97,10 +97,14 @@ export const LEGAL = {
   },
 };
 
-export const LOCALES = ['en', 'fr'] as const;
+/**
+ * French first: it is served at the root and is what `x-default` points at
+ * (ADR 15). English exists where it sells — see src/routes.ts for which pages.
+ */
+export const LOCALES = ['fr', 'en'] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const DEFAULT_LOCALE: Locale = 'en';
+export const DEFAULT_LOCALE: Locale = 'fr';
 
 /** BCP 47 tag used for `<html lang>` and `hreflang`. */
 export const LOCALE_TAG: Record<Locale, string> = {

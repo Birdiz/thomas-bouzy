@@ -47,7 +47,7 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
   });
   page.on('pageerror', (e) => violations.push(`pageerror: ${e.message}`));
 
-  await page.goto('/');
+  await page.goto('/en/');
   await page.getByRole('button', { name: 'Show phone number' }).click();
   await expect(page.getByRole('link', { name: '06 32 13 45 47' })).toBeVisible();
   expect(violations).toEqual([]);
@@ -88,7 +88,7 @@ test('serves a real 404 page, with a 404 status', async ({ page, request }) => {
   expect(response.headers()['cache-control']).toContain('no-store');
 
   await page.goto('/definitely-not-a-page');
-  await expect(page.getByRole('heading', { name: 'Nothing here' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Rien ici' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
 });
 
@@ -115,17 +115,22 @@ test('answers a malformed URL with 400 and keeps serving', async ({ request }) =
 test('serves one URL per page, and 301s the other spellings', async ({ baseURL, request }) => {
   const redirects: Record<string, string> = {
     '/index.html': '/',
-    '/fr': '/fr/',
-    '/fr/index.html': '/fr/',
-    '/fr//': '/fr/',
-    '//fr/': '/fr/',
+    '/en': '/en/',
+    '/en/index.html': '/en/',
+    '/en//': '/en/',
+    '//en/': '/en/',
     '///': '/',
+    // French moved from /fr/ to the root (ADR 15): the old spellings follow it.
+    '/fr': '/',
+    '/fr/': '/',
+    '/fr/index.html': '/',
+    '//fr/': '/',
   };
 
   for (const [from, to] of Object.entries(redirects)) {
     // Absolute, not relative: a path starting with `//` is a protocol-relative
-    // URL to any URL parser, so `request.get('//fr/')` would resolve to the host
-    // `fr`. That is the same trap the server itself had to stop falling into.
+    // URL to any URL parser, so `request.get('//en/')` would resolve to the host
+    // `en`. That is the same trap the server itself had to stop falling into.
     const response = await request.get(`${baseURL}${from}`, { maxRedirects: 0 });
     expect(response.status(), `${from} was not redirected`).toBe(301);
 
@@ -144,9 +149,14 @@ test('serves one URL per page, and 301s the other spellings', async ({ baseURL, 
 });
 
 test('keeps the query string across a normalising redirect', async ({ request }) => {
-  const response = await request.get('/fr?utm_source=x', { maxRedirects: 0 });
-  expect(response.status()).toBe(301);
-  expect(response.headers().location).toContain('/fr/?utm_source=x');
+  for (const [from, to] of [
+    ['/en?utm_source=x', '/en/?utm_source=x'],
+    ['/fr/?utm_source=x', '/?utm_source=x'],
+  ] as const) {
+    const response = await request.get(from, { maxRedirects: 0 });
+    expect(response.status()).toBe(301);
+    expect(response.headers().location).toBe(to);
+  }
 });
 
 test('revalidates with a 304 instead of resending the document', async ({ request }) => {

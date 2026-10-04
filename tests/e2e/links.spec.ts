@@ -1,3 +1,4 @@
+import { ROUTES } from '../../src/routes.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 /** Where the two CV PDFs used to be served, before they left the site. */
@@ -83,13 +84,26 @@ test('links no CV file, and the old CV paths are gone', async ({ page, request }
   }
 });
 
-test('the sitemap lists both locales', async ({ request }) => {
+test('the sitemap lists every page in each locale it exists in, and nothing else', async ({
+  request,
+}) => {
   const index = await request.get('/sitemap-index.xml');
   expect(index.status()).toBe(200);
 
   const body = await (await request.get('/sitemap-0.xml')).text();
-  expect(body).toMatch(/<loc>https:\/\/[^<]*\/<\/loc>/);
-  expect(body).toMatch(/<loc>https:\/\/[^<]*\/fr\/<\/loc>/);
+  const listed = [...body.matchAll(/<loc>https:\/\/[^/<]+(\/[^<]*)<\/loc>/g)].map((m) => m[1]);
+  expect([...listed].sort()).toEqual([...PATHS].sort());
+
+  // Alternates pair a page only with versions of itself that exist.
+  for (const route of ROUTES) {
+    const entry = body.match(
+      new RegExp(`<url><loc>https://[^/<]+${route.path}</loc>.*?</url>`),
+    )?.[0];
+    expect(entry, `${route.path} is missing from the sitemap`).toBeDefined();
+    const alternates = [...(entry ?? '').matchAll(/hreflang="([^"]+)"/g)].map((m) => m[1]);
+    const expected = Object.keys(route.page.paths).length > 1 ? Object.keys(route.page.paths) : [];
+    expect([...alternates].sort(), `${route.path} alternates`).toEqual([...expected].sort());
+  }
 });
 
 test('references no insecure absolute URL', async ({ request }) => {

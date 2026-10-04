@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
+import { contentOfPage } from '../src/content/index.ts';
+import { PAGES } from '../src/routes.ts';
+import { LOCALES } from '../src/site.ts';
 
 /**
  * The TypeScript contract (src/content/types.ts) already guarantees that both
@@ -44,9 +47,30 @@ function walkStrings(value: unknown, path = '$', out = new Map<string, string>()
 }
 
 describe('EN/FR parity', () => {
-  it('has the same structure and array lengths in both locales', () => {
-    expect(shapeOf(fr)).toEqual(shapeOf(en));
-  });
+  // Parity follows the registry (src/routes.ts), not the whole module: French
+  // is the site's language and English exists where it sells (ADR 15).
+  for (const page of PAGES) {
+    const declared = LOCALES.filter((locale) => page.paths[locale] !== undefined);
+
+    it(`has content for ${page.id} in exactly the locales it is declared in`, () => {
+      for (const locale of LOCALES) {
+        const content = contentOfPage(locale, page.id);
+        if (declared.includes(locale)) {
+          expect(content, `${page.id} is declared in ${locale} but has no content`).toBeDefined();
+        } else {
+          expect(content, `${page.id} has ${locale} content but no ${locale} page`).toBeUndefined();
+        }
+      }
+    });
+
+    if (declared.length > 1) {
+      it(`has the same structure and array lengths for ${page.id} in both locales`, () => {
+        expect(shapeOf(contentOfPage('fr', page.id))).toEqual(
+          shapeOf(contentOfPage('en', page.id)),
+        );
+      });
+    }
+  }
 
   it('has no empty or whitespace-only strings', () => {
     for (const [locale, content] of [

@@ -22,7 +22,7 @@ export interface Page {
   paths: Partial<Record<Locale, string>>;
 }
 
-export const PAGES: readonly Page[] = [{ id: 'home', paths: { en: '/', fr: '/fr/' } }];
+export const PAGES: readonly Page[] = [{ id: 'home', paths: { fr: '/', en: '/en/' } }];
 
 /** One served URL: a page, in one of its locales. */
 export interface Route {

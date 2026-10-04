@@ -1,6 +1,8 @@
 # Thomas Bouzy — interactive résumé
 
-Bilingual static résumé site. English at `/`, French at `/fr/`.
+Static showcase site. French at `/`, English under `/en/` where it sells
+([ADR 15](docs/adr/0015-french-at-the-root-english-where-it-sells.md)).
+Every page and the locales it exists in are listed once, in `src/routes.ts`.
 Built with Astro, containerised, deployed to Railway.
 
 The page opens on the problem it solves and closes on the person who solves it —
@@ -83,7 +85,7 @@ npm run verify         # everything CI runs, in the same order
 | `npm run serve:dist` | Foreground static server for `dist/` (what the e2e suite runs against) |
 | `npm run check` | `astro check` — types across `.astro` and `.ts` |
 | `npm run lint` / `format` | Biome |
-| `npm run test` | Vitest — EN/FR content parity, and the asset check's verdict |
+| `npm run test` | Vitest — EN/FR content parity on bilingual pages, and the asset check's verdict |
 | `npm run test:e2e` | Playwright — chromium, webkit, mobile chromium |
 | `npm run assets:check` | Missing files, portrait format and size, `SITE_DOMAIN` on a deployment build, no indexing without a legal notice |
 | `npm run fonts` / `fonts:check` | Copy the woff2 faces out of `@fontsource` / verify they match |
@@ -96,6 +98,7 @@ npm run verify         # everything CI runs, in the same order
 ```
 src/
   site.ts                 domain, contact details, locales — one source of truth
+  routes.ts               the page registry: every page, and the locales it exists in
   content/
     types.ts              the content contract; both locales `satisfies` it
     en.ts · fr.ts         all copy
@@ -105,8 +108,7 @@ src/
     app.css               layout, responsiveness, reduced motion, AA corrections
   components/             one per section, plus RevealPhone
   layouts/                BaseLayout (<head>, JSON-LD) · ResumePage (composition)
-  pages/index.astro       EN
-  pages/fr/index.astro    FR
+  pages/[...path].astro   one route per registry entry and locale
 scripts/                  fonts · og image · asset checks · contrast · static server
 tests/
   content.spec.ts         EN/FR parity (vitest)

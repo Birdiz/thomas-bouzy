@@ -192,8 +192,18 @@ function isFresh(req, etag, mtime) {
 function canonicalise(pathname) {
   const collapsed = pathname.replace(/\/{2,}/g, '/');
   const withoutIndex = collapsed.replace(/(^|\/)index\.html$/, '$1');
-  return withoutIndex === '' ? '/' : withoutIndex;
+  const current = withoutIndex.replace(LEGACY_FRENCH_PREFIX, '/');
+  return current === '' ? '/' : current;
 }
+
+/**
+ * French used to live under `/fr/`; it is served at the root now (ADR 15).
+ * `/fr`, `/fr/` and anything below answer with the same one-hop 301 as every
+ * other spelling of a page, to the address the page has today. The site was
+ * never communicated or indexed, so this is courtesy to the odd shared link,
+ * not an SEO migration.
+ */
+const LEGACY_FRENCH_PREFIX = /^\/fr(\/|$)/;
 
 async function resolveFile(pathname) {
   // Contain the request inside root: no `..`, no absolute escapes.

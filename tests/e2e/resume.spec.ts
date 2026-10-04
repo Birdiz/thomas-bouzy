@@ -9,35 +9,35 @@ async function gotoHome(page: Page, path: string) {
 }
 
 test.describe('routing and locales', () => {
-  test('serves English at / and French at /fr/', async ({ page }) => {
+  test('serves French at / and English at /en/', async ({ page }) => {
     await gotoHome(page, '/');
-    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
-    await expect(page.getByRole('heading', { name: 'Work worth opening' })).toBeVisible();
-
-    await gotoHome(page, '/fr/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
+    await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
     await expect(page.getByRole('heading', { name: 'Des réalisations à ouvrir' })).toBeVisible();
+
+    await gotoHome(page, '/en/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.getByRole('heading', { name: 'Work worth opening' })).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {
     await gotoHome(page, '/');
-    await page.getByRole('link', { name: 'Français' }).click();
-    await expect(page).toHaveURL(/\/fr\/?$/);
-    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-
     await page.getByRole('link', { name: 'English' }).click();
-    await expect(page).toHaveURL(/localhost:\d+\/$/);
+    await expect(page).toHaveURL(/\/en\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+    await page.getByRole('link', { name: 'Français' }).click();
+    await expect(page).toHaveURL(/localhost:\d+\/$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
   });
 
   test('marks the active locale and cross-links both with hreflang', async ({ page }) => {
-    await gotoHome(page, '/fr/');
-    await expect(page.getByRole('link', { name: 'Français' })).toHaveAttribute(
+    await gotoHome(page, '/en/');
+    await expect(page.getByRole('link', { name: 'English' })).toHaveAttribute(
       'aria-current',
       'true',
     );
-    await expect(page.getByRole('link', { name: 'English' })).not.toHaveAttribute(
+    await expect(page.getByRole('link', { name: 'Français' })).not.toHaveAttribute(
       'aria-current',
       'true',
     );
@@ -47,14 +47,38 @@ test.describe('routing and locales', () => {
     }
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      /https:\/\/[^/]+\/fr\//,
+      /https:\/\/[^/]+\/en\/$/,
     );
+  });
+
+  test('points x-default at the French page', async ({ page }) => {
+    for (const path of ['/', '/en/']) {
+      await gotoHome(page, path);
+      await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+        'href',
+        /https:\/\/[^/]+\/$/,
+      );
+    }
+  });
+
+  test('never redirects on Accept-Language', async ({ request }) => {
+    // ADR 2 stands on this point: a link sent in one language opens in it.
+    for (const [path, language] of [
+      ['/', 'en-GB,en;q=0.9'],
+      ['/en/', 'fr-FR,fr;q=0.9'],
+    ] as const) {
+      const response = await request.get(path, {
+        headers: { 'Accept-Language': language },
+        maxRedirects: 0,
+      });
+      expect(response.status(), `${path} redirected a ${language} reader`).toBe(200);
+    }
   });
 });
 
 test.describe('achievements accordion', () => {
   test('opens the first achievement and keeps only one open at a time', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const achievements = page.locator('details.achievement');
     await expect(achievements).toHaveCount(7);
     await expect(achievements.nth(0)).toHaveAttribute('open', '');
@@ -70,7 +94,7 @@ test.describe('achievements accordion', () => {
   });
 
   test('exposes each achievement as a heading with its panel content', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const first = page.locator('details.achievement').first();
     await expect(
       first.getByRole('heading', { name: /Event Sourcing on wallet transactions/ }),
@@ -82,7 +106,7 @@ test.describe('achievements accordion', () => {
 
   test('is operable from the keyboard', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'WebKit needs full keyboard access enabled at OS level');
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const second = page.locator('details.achievement').nth(1);
     await second.locator('summary').focus();
     await page.keyboard.press('Enter');
@@ -130,7 +154,7 @@ test.describe('phone number is not harvestable', () => {
   }
 
   test('reveals a tel: link on click and moves focus to it', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const button = page.getByRole('button', { name: 'Show phone number' });
     await expect(button).toBeVisible();
     await button.click();
@@ -144,7 +168,7 @@ test.describe('phone number is not harvestable', () => {
   test('leaves no dead control when JavaScript is off', async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
-    await page.goto('/');
+    await page.goto('/en/');
     await expect(page.getByRole('button', { name: 'Show phone number' })).toHaveCount(0);
     // Email and LinkedIn still get the visitor there. Scoped to the contact
     // section: the footer repeats both links site-wide, so an unscoped role
@@ -175,7 +199,7 @@ test.describe('phone number is not harvestable', () => {
 
 test.describe('navigation', () => {
   test('anchors scroll to their section, clear of the sticky header', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     await page
       .getByRole('navigation', { name: 'Main' })
       .getByRole('link', { name: 'Approach' })
@@ -190,7 +214,7 @@ test.describe('navigation', () => {
   });
 
   test('has a skip link that reaches main', async ({ page }) => {
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     const skip = page.getByRole('link', { name: 'Skip to content' });
     await expect(skip).toHaveAttribute('href', '#main');
     await expect(page.locator('main#main')).toHaveCount(1);
@@ -205,7 +229,7 @@ test.describe('navigation', () => {
     // static half of the contract is asserted above for every engine.
     test.skip(browserName === 'webkit', 'WebKit keyboard focus is not driveable here');
 
-    await gotoHome(page, '/');
+    await gotoHome(page, '/en/');
     await page.keyboard.press('Tab');
 
     const skip = page.getByRole('link', { name: 'Skip to content' });
