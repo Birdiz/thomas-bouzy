@@ -15,11 +15,10 @@ export const RESUME: Record<Locale, ResumeContent> = { fr, en };
  * and a page declared in one locale only is exempt from the other.
  */
 export function contentOfPage(locale: Locale, id: PageId): unknown {
-  const content = RESUME[locale];
-  switch (id) {
-    case 'home':
-      return content;
-  }
+  // The Offer pages are their own pages; everything else in the module is the
+  // home page and the chrome every page shares.
+  const { offerPages, ...home } = RESUME[locale];
+  return id === 'home' ? home : offerPages[id];
 }
 
 export type { ResumeContent } from './types.ts';

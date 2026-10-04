@@ -9,6 +9,7 @@ import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import WorkSection from '../components/WorkSection.astro';
 import { RESUME } from '../content/index.ts';
+import { profilePage } from '../lib/structured-data.ts';
 import type { Route } from '../routes.ts';
 import BaseLayout from './BaseLayout.astro';
 
@@ -21,7 +22,13 @@ const { locale } = route;
 const t = RESUME[locale];
 ---
 
-<BaseLayout route={route}>
+<BaseLayout
+  route={route}
+  title={t.meta.title}
+  description={t.meta.description}
+  ogType="profile"
+  structuredData={profilePage(route, t.meta.title, t.meta.description)}
+>
   <SiteHeader route={route} t={t} />
   <main id="main">
     <Hero t={t} />

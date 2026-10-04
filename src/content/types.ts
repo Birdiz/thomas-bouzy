@@ -1,5 +1,8 @@
+import type { AchievementId, OfferId } from './offers.ts';
+import type { AmountId } from './prices.ts';
+
 /**
- * The résumé content contract.
+ * The content contract.
  *
  * Both locales are plain TypeScript modules declared `satisfies ResumeContent`,
  * so a missing or misspelled key is a compile error caught by `astro check` —
@@ -30,6 +33,8 @@ export interface Concept {
  * itself for sale: an Achievement proves what an Offer sells (CONTEXT.md).
  */
 export interface Achievement {
+  /** Language-neutral, and the same in every locale: how an Offer cites it. */
+  id: AchievementId;
   title: string;
   org: string;
   period: string;
@@ -116,6 +121,105 @@ export interface LanguageSkill {
 export interface SchemaOnly {
   jobTitle: string;
   knowsAbout: string[];
+}
+
+/**
+ * What every mention of an Offer needs: its name and its plain line.
+ *
+ * Every locale carries all five, even for an Offer whose page exists in one
+ * language only, because the home page shows all five cards in both — the
+ * Takeover's English card links to its French page.
+ */
+export interface OfferSummary {
+  name: string;
+  /**
+   * One sentence saying what the Offer does for the Client, before any word
+   * that has to be learned. Held to the same rule as `Achievement.plain`: no
+   * `schema.knowsAbout` term (ADR 12, extended by ADR 14).
+   */
+  plain: string;
+}
+
+/** A titled item: one deliverable, or one step. */
+export interface Titled {
+  title: string;
+  text: string;
+}
+
+/**
+ * The words around one Offer's prices. The numbers themselves are in
+ * prices.ts, which carries no locale; `tests/content.spec.ts` checks that every
+ * dimension, option and amount the table declares has a label here.
+ */
+export interface EstimatorLabels {
+  /** The slider's label, and a label for each of its options, by id. */
+  dimensions: Record<string, { label: string; options: Record<string, string> }>;
+  /** A label for each amount the Offer's table declares. */
+  amounts: Partial<Record<AmountId, string>>;
+  /** A label for the duration, when the Offer's table has one. */
+  duration?: string;
+}
+
+/**
+ * One Offer's page, in the section order of ADR 17. Its name and plain line are
+ * the Offer's `OfferSummary`; its Achievements are cited in offers.ts.
+ */
+export interface OfferPage {
+  meta: {
+    title: string;
+    description: string;
+  };
+  /**
+   * The Client sentences this Offer answers, in the Client's words and quote
+   * marks, like a Failure mode's.
+   */
+  sentences: string[];
+  /** The Concepts this Offer carries (ADR 14). May be empty. */
+  concepts: Concept[];
+  delivered: Titled[];
+  /** A variant of the Offer worth naming on its page, e.g. the Due diligence. */
+  variant?: Titled;
+  steps: Titled[];
+  estimator: EstimatorLabels;
+  /**
+   * The commercial rules this page governs, stated where they apply (ADR 17):
+   * the Audit's fee deducted from what follows, the two phases of a Migration…
+   */
+  rules: string[];
+  goodChoice: string[];
+  notTheRightChoice: string[];
+  faq: { question: string; answer: string }[];
+}
+
+/** Labels every Offer page shares. */
+export interface OfferPageLabels {
+  kicker: string;
+  sentences: string;
+  delivered: string;
+  steps: string;
+  price: string;
+  /** Says what the numbers are: an order of magnitude, never a quote. */
+  disclaimer: string;
+  /** Caption of the static table of every range. */
+  tableCaption: string;
+  excludingVat: string;
+  perMonth: string;
+  weekOne: string;
+  weekMany: string;
+  fit: string;
+  goodChoice: string;
+  notTheRightChoice: string;
+  achievements: string;
+  faq: string;
+  concepts: string;
+  book: {
+    kicker: string;
+    title: string;
+    text: string;
+    cta: string;
+    /** Lead-in to the email address, for those who would rather write. */
+    orWrite: string;
+  };
 }
 
 export interface ResumeContent {
@@ -216,6 +320,15 @@ export interface ResumeContent {
   mentoring: MentoringEntry[];
   languages: LanguageSkill[];
   schema: SchemaOnly;
+
+  /** Every Offer's name and plain line, wherever the Offer is mentioned. */
+  offers: Record<OfferId, OfferSummary>;
+  offerPage: OfferPageLabels;
+  /**
+   * The Offer pages that exist in this locale. Which ones must exist is the
+   * registry's call (src/routes.ts); the parity test holds the two together.
+   */
+  offerPages: Partial<Record<OfferId, OfferPage>>;
 
   contact: {
     kicker: string;

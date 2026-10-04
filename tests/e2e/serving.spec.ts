@@ -40,12 +40,19 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
   expect(csp).toContain("frame-ancestors 'none'");
   expect(csp).toContain("base-uri 'none'");
 
-  // And the policy must not break the page it protects.
+  // And the policy must not break the pages it protects: every one of them,
+  // with its scripts run.
   const violations: string[] = [];
   page.on('console', (m) => {
     if (/content security policy|refused to/i.test(m.text())) violations.push(m.text());
   });
   page.on('pageerror', (e) => violations.push(`pageerror: ${e.message}`));
+
+  for (const path of PATHS) {
+    expect((await request.get(path)).headers()['content-security-policy']).toBe(csp);
+    await page.goto(path);
+    await expect(page.locator('h1')).toBeVisible();
+  }
 
   await page.goto('/en/');
   await page.getByRole('button', { name: 'Show phone number' }).click();

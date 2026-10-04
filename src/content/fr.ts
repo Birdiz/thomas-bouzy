@@ -138,6 +138,7 @@ export const fr = {
 
   achievements: [
     {
+      id: 'wallet-event-sourcing',
       title: 'Event Sourcing sur les transactions wallet',
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
@@ -151,6 +152,7 @@ export const fr = {
         "Plus de 1 000 transactions financières par minute avec une piste d'audit complète, une réconciliation qui a cessé d'être de l'archéologie, et des investigations qui se rejouent au lieu de se deviner. Le même flux encaisse les Fan Token Offerings — des pics de 10 000 à 20 000 utilisateurs en quelques minutes — sur des tests de charge conçus pour ça (BlazeMeter).",
     },
     {
+      id: 'live-api-redesign',
       title: "Refaire une API de production sans que l'utilisateur s'en aperçoive",
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
@@ -164,6 +166,7 @@ export const fr = {
         "Erreurs 500 récurrentes ramenées à zéro et Time To Interactive de 17 à 3 secondes, les payloads allégées et recentrées sur le métier en étant la cause principale. Image de conteneur de 1,7 Go à 200 Mo, déploiement d'une quinzaine de minutes à moins de 4, mémoire de 1 Go à quelques centaines de Mo, CPU de 2 cores à 100 millicores — le déploiement et l'empreinte d'exécution de ces services sont à ma charge, sur Kubernetes et ArgoCD, sur un cluster opéré avec l'appui de l'équipe devops. Une directive de réduction de coût sur le même périmètre, traitée par batching des appels, endpoints de masse du fournisseur et surtout internalisation d'une partie de la donnée via un client RPC maison lisant les informations de tokens directement on-chain : 9 000 € → 3 000 € par an à qualité équivalente. Mise en production sous astreinte, incidents pilotés et coordonnés via Rootly : les travaux en cours s'arrêtent jusqu'à ce que la mitigation tienne, tech leads, QA et produit dans la même pièce.",
     },
     {
+      id: 'on-chain-operations',
       title: 'Des transactions on-chain qui engagent des fonds réels',
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
@@ -177,6 +180,7 @@ export const fr = {
         "En production sur fonds réels. La difficulté n'est pas d'émettre l'ordre : on ne contrôle ni la finalité ni le délai de confirmation, et la transaction qu'on croit perdue est peut-être déjà passée. Signature idempotente, suivi d'état de transaction et réconciliation avec la chaîne comme source de vérité sont conçus dès le départ, pas rattrapés après coup.",
     },
     {
+      id: 'enterprise-onboarding',
       title: 'Démarrer un nouveau grand compte en une journée',
       org: 'Kiss The Bride',
       period: 'Janv. 2018 – Avril 2022',
@@ -190,6 +194,7 @@ export const fr = {
         "La mise en route d'un nouveau grand compte est tombée à une journée. Les classements et résultats des forces de vente sont diffusés en direct par une intégration Mercure en Server-Sent Events. Sur quatre juniors hérités et encadrés deux ans, l'un est resté et a basculé sur l'application mobile servie par la même API.",
     },
     {
+      id: 'industrial-erp',
       title: 'Maintenir un ERP industriel en production',
       org: 'Quadra Informatique',
       period: '2016 – 2017',
@@ -203,6 +208,7 @@ export const fr = {
         "L'ERP est resté en production tout du long. C'est exactement le genre d'application pour laquelle existe la Reprise : un outil dont l'entreprise dépend chaque jour, et qui doit continuer de tourner pendant qu'on s'en occupe.",
     },
     {
+      id: 'codebase-audit',
       title: "Auditer une base de code qui n'est pas la mienne",
       org: 'Civic tech, bénévolat',
       period: '2026',
@@ -216,6 +222,7 @@ export const fr = {
         "Le panier gratuit qui faisait confiance au client est revalidé côté serveur, le contenu éditorial injecté dans les données structurées est échappé, les en-têtes de sécurité sont globaux, et les actions CI comme l'image de base sont épinglées. La plateforme est passée de zéro test automatisé à la couverture de ses flux de paiement et de l'authentification admin, avec CodeQL dans le pipeline.",
     },
     {
+      id: 'open-data-directories',
       title: "Annuaires associatifs depuis l'open data",
       org: 'Projet personnel',
       period: '2026',
@@ -288,6 +295,170 @@ export const fr = {
       'SQLite',
       'CodeQL',
     ],
+  },
+
+  offers: {
+    audit: {
+      name: 'Audit',
+      plain:
+        "Un regard extérieur sur votre application, rendu par écrit : ce qui peut vous coûter cher, et dans quel ordre s'en occuper.",
+    },
+    takeover: {
+      name: 'Reprise et maintenance',
+      plain:
+        "Reprendre en main l'application que plus personne n'ose toucher, sans rien casser, puis la faire vivre chaque mois.",
+    },
+    migration: {
+      name: 'Migration sans interruption',
+      plain:
+        "Faire passer un système qui tourne à une nouvelle version sans l'arrêter, en commençant par un plan à prix fixe.",
+    },
+    reliability: {
+      name: 'Fiabilisation',
+      plain:
+        'Rendre visible ce que fait votre système, pour expliquer un écart de stock, un solde ou un bug au lieu de le deviner.',
+    },
+    reinforcement: {
+      name: 'Renfort senior',
+      plain: 'Un lead ou un architecte à temps partiel dans votre équipe, facturé à la journée.',
+    },
+  },
+
+  offerPage: {
+    kicker: 'Offre',
+    sentences: 'Ce que vous en dites',
+    delivered: 'Ce que vous recevez',
+    steps: 'Comment ça se passe',
+    price: 'Combien ça coûte',
+    disclaimer: 'Ordre de grandeur, pas un devis.',
+    tableCaption: 'Toutes les fourchettes, hors taxes',
+    excludingVat: 'HT',
+    perMonth: '/ mois',
+    weekOne: 'semaine',
+    weekMany: 'semaines',
+    fit: 'Est-ce le bon choix ?',
+    goodChoice: 'Un bon choix si',
+    notTheRightChoice: 'Pas le bon choix si',
+    achievements: 'Ce qui le prouve',
+    faq: 'Questions fréquentes',
+    concepts: 'En deux mots',
+    book: {
+      kicker: 'Premier pas',
+      title: 'Un appel de 30 minutes, pour voir si je peux aider.',
+      text: "Gratuit et sans engagement : vous décrivez la situation, je vous dis franchement si cette offre est la bonne, et sinon laquelle l'est.",
+      cta: 'Réserver un appel',
+      orWrite: 'Vous préférez écrire ?',
+    },
+  },
+
+  offerPages: {
+    audit: {
+      meta: {
+        title: "Audit d'application — Thomas Bouzy",
+        description:
+          "Un audit écrit de votre application : rapport, registre des risques et plan d'action priorisé. Prix publics, déduits de la mission qui suit.",
+      },
+      sentences: [
+        '« On sent que quelque chose ne va pas, mais on ne sait pas par où commencer. »',
+        '« Avant de signer pour une refonte, on voudrait un avis qui ne vend pas la refonte. »',
+        '« On va racheter cette société : que vaut vraiment son logiciel ? »',
+      ],
+      concepts: [
+        {
+          label: 'Empreinte',
+          gloss:
+            "Mémoire, CPU, poids d'image et déploiement traités comme du design, pas comme la météo.",
+        },
+        {
+          label: 'Build-vs-buy',
+          gloss: "Ce qu'on continue d'acheter, ce qu'on internalise, et où passe la ligne.",
+        },
+      ],
+      delivered: [
+        {
+          title: 'Un rapport écrit',
+          text: "Ce qui tient, ce qui fragilise et ce qui coûte, de l'architecture à l'exploitation, lu par quelqu'un qui n'a rien à défendre dedans.",
+        },
+        {
+          title: 'Un registre des risques',
+          text: 'Chaque risque avec sa gravité, sa probabilité et ce que coûte de le laisser en place, pour décider en connaissance de cause.',
+        },
+        {
+          title: "Un plan d'action",
+          text: "Les corrections dans l'ordre où elles rapportent, chacune prête à prendre, avec son effort estimé. Les décisions structurantes sont écrites en ADR, pour que votre équipe puisse les discuter.",
+        },
+      ],
+      variant: {
+        title: 'Variante : la due diligence technique',
+        text: "Avant un rachat ou une levée de fonds, le même travail écrit pour quelqu'un qui n'est pas l'équipe : ce que vaut le système, ce que coûtera de le faire évoluer, et ce qui pourrait surprendre après la signature.",
+      },
+      steps: [
+        {
+          title: 'Un appel de 30 minutes',
+          text: 'Vous décrivez le système et ce qui vous inquiète. Je vous dis si un audit est la bonne réponse, et à quelle profondeur.',
+        },
+        {
+          title: 'Un accès en lecture seule',
+          text: "Au code, à la documentation et, si possible, aux métriques de production. Rien n'est modifié pendant l'audit.",
+        },
+        {
+          title: 'La lecture et les entretiens',
+          text: 'Je lis le système et je parle à ceux qui le font tourner : les risques que le code ne montre pas se trouvent souvent là.',
+        },
+        {
+          title: 'La restitution',
+          text: "Le rapport, le registre et le plan, présentés et discutés avec vous et votre équipe, jusqu'à ce que chaque point soit compris.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: 'Taille du système',
+            options: {
+              small: 'Une application',
+              medium: 'Quelques applications',
+              large: 'Une plateforme',
+            },
+          },
+          depth: {
+            label: 'Profondeur',
+            options: { express: 'Express', full: 'Complet' },
+          },
+        },
+        amounts: { fee: "Prix de l'audit" },
+        duration: 'Durée',
+      },
+      rules: [
+        "Si vous confiez ensuite la mission qui en découle, le prix de l'audit en est déduit : l'audit n'est jamais une dépense perdue.",
+      ],
+      goodChoice: [
+        'Vous sentez un risque sans pouvoir le nommer.',
+        "Vous devez décider d'une refonte, d'une migration ou d'un rachat, et vous voulez un avis indépendant avant.",
+        "Votre équipe a besoin d'une liste priorisée plutôt que d'une impression générale.",
+      ],
+      notTheRightChoice: [
+        'Vous savez déjà ce qui ne va pas : la Reprise ou la Fiabilisation vont plus droit au but.',
+        "Le système est en panne en ce moment : il faut d'abord rétablir le service, l'audit viendra après.",
+        "Vous cherchez la validation d'une décision déjà prise : l'audit dira ce qu'il trouve.",
+      ],
+      faq: [
+        {
+          question: 'Faut-il me donner accès à la production ?',
+          answer:
+            "Non. Un accès en lecture au code suffit pour l'audit express. Pour l'audit complet, des métriques ou des journaux de production rendent le diagnostic bien plus précis, et restent en lecture.",
+        },
+        {
+          question: "Et si l'audit conclut qu'il faut tout réécrire ?",
+          answer:
+            "Il le dira, avec ce que coûte de ne pas le faire. C'est rarement la conclusion : la plupart des systèmes se reprennent par morceaux, sans tout arrêter.",
+        },
+        {
+          question: "Pourquoi une fourchette plutôt qu'un prix ?",
+          answer:
+            "Parce que le prix dépend de la taille réelle du système, qu'on mesure pendant le premier appel. Le devis, lui, est ferme avant de commencer.",
+        },
+      ],
+    },
   },
 
   contact: {

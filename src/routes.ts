@@ -1,3 +1,4 @@
+import type { OfferId } from './content/offers.ts';
 import { DEFAULT_LOCALE, LOCALES, type Locale } from './site.ts';
 
 /**
@@ -14,7 +15,7 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from './site.ts';
  * gets no alternate and no language switch, rather than a link to a page that
  * does not exist.
  */
-export type PageId = 'home';
+export type PageId = 'home' | OfferId;
 
 export interface Page {
   id: PageId;
@@ -22,7 +23,14 @@ export interface Page {
   paths: Partial<Record<Locale, string>>;
 }
 
-export const PAGES: readonly Page[] = [{ id: 'home', paths: { fr: '/', en: '/en/' } }];
+/**
+ * Offer pages live under /offres/ and /en/offers/ (ADR 15). Each locale has its
+ * own slug, so that a French page is found by the French words for it.
+ */
+export const PAGES: readonly Page[] = [
+  { id: 'home', paths: { fr: '/', en: '/en/' } },
+  { id: 'audit', paths: { fr: '/offres/audit/', en: '/en/offers/audit/' } },
+];
 
 /** One served URL: a page, in one of its locales. */
 export interface Route {

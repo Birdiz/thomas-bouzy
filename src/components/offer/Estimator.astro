@@ -1,0 +1,83 @@
+---
+import type { OfferId } from '../../content/offers.ts';
+import { combinationFor, isMonthly, optionCombinations, PRICES } from '../../content/prices.ts';
+import type { EstimatorLabels, OfferPageLabels } from '../../content/types.ts';
+import { formatEuroRange, formatSpan } from '../../lib/money.ts';
+import type { Locale } from '../../site.ts';
+
+interface Props {
+  offer: OfferId;
+  locale: Locale;
+  labels: EstimatorLabels;
+  shared: OfferPageLabels;
+}
+
+const { offer, locale, labels, shared } = Astro.props;
+
+/**
+ * Every range the price table holds for this Offer, as a static table built
+ * from prices.ts. It is the whole estimator for a reader without JavaScript:
+ * the interaction is what they lose, never the price (ADR 17).
+ */
+const table = PRICES[offer];
+
+function labelOf(dimension: string, option: string): string {
+  const label = labels.dimensions[dimension]?.options[option];
+  if (!label) throw new Error(`${offer}: no ${locale} label for ${dimension}=${option}`);
+  return label;
+}
+
+const rows = optionCombinations(table).map((options) => {
+  const combination = combinationFor(table, options);
+  if (!combination) throw new Error(`${offer}: no price for ${options.join(' × ')}`);
+  return {
+    key: options.join(' '),
+    options: options.map((option, i) => labelOf(table.dimensions[i]?.id ?? '', option)),
+    amounts: table.amounts.map((amount) => {
+      const range = combination.amounts[amount];
+      if (!range) throw new Error(`${offer}: ${options.join(' × ')} has no ${amount}`);
+      const unit = isMonthly(amount) ? ` ${shared.perMonth}` : '';
+      return `${formatEuroRange(range, locale)}${unit} ${shared.excludingVat}`;
+    }),
+    weeks: combination.weeks
+      ? `${formatSpan(combination.weeks)} ${
+          combination.weeks.max > 1 ? shared.weekMany : shared.weekOne
+        }`
+      : undefined,
+  };
+});
+
+const disclaimerId = `estimator-${offer}-disclaimer`;
+---
+
+<div class="estimator" data-estimator>
+  <p class="estimator__disclaimer" id={disclaimerId}>{shared.disclaimer}</p>
+
+  <div class="estimator__table-wrap" role="region" aria-label={shared.tableCaption} tabindex="0">
+    <table class="table estimator__table" aria-describedby={disclaimerId}>
+      <caption class="visually-hidden">{shared.tableCaption}</caption>
+      <thead>
+        <tr>
+          {table.dimensions.map((dimension) => <th scope="col">{labels.dimensions[dimension.id]?.label}</th>)}
+          {table.amounts.map((amount) => <th scope="col">{labels.amounts[amount]}</th>)}
+          {table.duration && <th scope="col">{labels.duration}</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((row) => (
+            <tr data-options={row.key}>
+              {row.options.map((option) => (
+                <td>{option}</td>
+              ))}
+              {row.amounts.map((amount) => (
+                <td class="estimator__amount">{amount}</td>
+              ))}
+              {row.weeks && <td>{row.weeks}</td>}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

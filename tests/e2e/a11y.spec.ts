@@ -54,7 +54,9 @@ for (const path of PATHS) {
     await page.evaluate(() => {
       for (const details of document.querySelectorAll('details')) details.open = true;
     });
-    await page.getByRole('button', { name: /Show phone number|Afficher le numéro/ }).click();
+    // The phone reveal lives in the home page's contact section only.
+    const reveal = page.getByRole('button', { name: /Show phone number|Afficher le numéro/ });
+    if ((await reveal.count()) > 0) await reveal.click();
     await settle(page);
 
     const results = await new AxeBuilder({ page })

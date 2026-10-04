@@ -49,18 +49,20 @@ for (const path of PATHS) {
   });
 }
 
-test('fonts are served from this origin, never from Google', async ({ page }) => {
+test('no request leaves the origin, and fonts are served from it', async ({ page }) => {
   const external: string[] = [];
   page.on('request', (req) => {
     const host = new URL(req.url()).host;
     if (host && !host.startsWith('localhost')) external.push(req.url());
   });
 
-  await page.goto('/');
-  await page.evaluate(() => document.fonts.ready);
-
-  // The design system's styles.css @imports fonts.googleapis.com. Self-hosting
-  // is both a performance and a privacy decision — assert it stays that way.
+  // The design system's styles.css @imports fonts.googleapis.com, and the
+  // booking page would happily be embedded. Self-hosting the one and linking
+  // the other is a performance and a privacy decision — on every page.
+  for (const path of PATHS) {
+    await page.goto(path);
+    await page.evaluate(() => document.fonts.ready);
+  }
   expect(external).toEqual([]);
   const woff2 = await page.evaluate(
     () => performance.getEntriesByType('resource').filter((e) => e.name.endsWith('.woff2')).length,

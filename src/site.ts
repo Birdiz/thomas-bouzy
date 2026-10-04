@@ -45,6 +45,11 @@ export const SITE = {
   author: 'Thomas Bouzy',
   /** Region only — the design's full locality is deliberately not published. */
   region: 'Grand Est, France',
+  /**
+   * The towns Thomas travels to for in-person work: the Service area. It is
+   * published; where he lives is not (CONTEXT.md).
+   */
+  serviceArea: ['Nancy', 'Strasbourg', 'Colmar', 'Obernai', 'Épinal'],
   timezone: 'Europe/Paris',
 } as const;
 
@@ -54,6 +59,12 @@ export const CONTACT = {
   phoneE164: '+33632134547',
   phoneDisplay: '06 32 13 45 47',
   linkedin: 'https://www.linkedin.com/in/thomas-bouzy',
+  /**
+   * The 30-minute booking page. Always a plain outbound link, never an embed:
+   * an embed would need a third-party frame and script in a CSP that is
+   * hash-only, and would make a request leave the origin on load (ADR 17).
+   */
+  booking: 'https://cal.com/thomas-bouzy/30min',
   /* Same handle as the contact address, which is the point: `birdiz` reads as
      a pseudonym on its own, and as an identity once the profile it belongs to
      is one click away. */

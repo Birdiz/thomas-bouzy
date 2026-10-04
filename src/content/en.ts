@@ -136,6 +136,7 @@ export const en = {
 
   achievements: [
     {
+      id: 'wallet-event-sourcing',
       title: 'Event Sourcing on wallet transactions',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
@@ -149,6 +150,7 @@ export const en = {
         '1,000+ financial transactions a minute with a complete audit trail, reconciliation that stopped being archaeology, and bug investigations that replay instead of guess. The same flow absorbs the Fan Token Offerings — peaks of 10,000–20,000 users within minutes — on load tests designed for it (BlazeMeter).',
     },
     {
+      id: 'live-api-redesign',
       title: 'Rebuilding a live API without users noticing',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
@@ -162,6 +164,7 @@ export const en = {
         "Recurring 500s brought to zero and Time To Interactive from 17 to 3 seconds, lighter domain-focused payloads being the primary cause. Container image 1.7 GB → 200 MB, deployment from around 15 minutes to under 4, memory 1 GB → a few hundred MB, CPU 2 cores → 100 millicores — the deployment and the runtime footprint of those services are mine to own, on Kubernetes and ArgoCD, on a cluster operated alongside the devops team. A cost-reduction directive on the same scope answered by batching calls, moving to the provider's bulk endpoints and, above all, internalising part of the data with an in-house RPC client reading token information directly on-chain: €9,000 → €3,000 a year at equivalent quality. Shipped on call, incidents driven and coordinated through Rootly: work in progress stops until the mitigation lands, with tech leads, QA and product in the same room.",
     },
     {
+      id: 'on-chain-operations',
       title: 'On-chain transactions that commit real funds',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
@@ -175,6 +178,7 @@ export const en = {
         'In production on real funds. The hard part is not submitting the order: you control neither finality nor confirmation delay, and the transaction you believe lost may already have landed. Idempotent signing, transaction state tracking and reconciliation against the chain as the source of truth are designed in, not handled afterwards.',
     },
     {
+      id: 'enterprise-onboarding',
       title: 'Onboarding a new enterprise account in a day',
       org: 'Kiss The Bride',
       period: 'Jan 2018 – April 2022',
@@ -188,6 +192,7 @@ export const en = {
         'Onboarding a new enterprise account came down to one day. Sales-force rankings and results were delivered live through a Mercure integration over Server-Sent Events. Of four inherited juniors mentored over two years, one stayed and moved onto the mobile app served by the same API.',
     },
     {
+      id: 'industrial-erp',
       title: 'Keeping an industrial ERP running in production',
       org: 'Quadra Informatique',
       period: '2016 – 2017',
@@ -201,6 +206,7 @@ export const en = {
         'The ERP stayed in production throughout. It is the kind of application the Takeover is for: one a business depends on every day, and that has to keep running while it is looked after.',
     },
     {
+      id: 'codebase-audit',
       title: "Auditing a codebase I didn't write",
       org: 'Civic tech, volunteer',
       period: '2026',
@@ -214,6 +220,7 @@ export const en = {
         'A free-cart path that trusted the client is now revalidated server-side, editorial content injected into structured data is escaped, security headers are global, and both the CI actions and the base image are pinned. The platform went from zero automated tests to covering its payment flows and admin authentication, with CodeQL in the pipeline.',
     },
     {
+      id: 'open-data-directories',
       title: 'Association directories from open data',
       org: 'Personal project',
       period: '2026',
@@ -283,6 +290,169 @@ export const en = {
       'SQLite',
       'CodeQL',
     ],
+  },
+
+  offers: {
+    audit: {
+      name: 'Audit',
+      plain:
+        'An outside look at your application, written down: what could cost you dearly, and in what order to deal with it.',
+    },
+    takeover: {
+      name: 'Takeover and maintenance',
+      plain:
+        'Taking back control of the application nobody dares touch any more, without breaking it, then keeping it alive every month.',
+    },
+    migration: {
+      name: 'Migration without downtime',
+      plain:
+        'Moving a running system to a new version without stopping it, starting with a fixed-price plan.',
+    },
+    reliability: {
+      name: 'Reliability',
+      plain:
+        'Making what your system does visible, so that a stock gap, a balance or a bug can be explained instead of guessed.',
+    },
+    reinforcement: {
+      name: 'Senior reinforcement',
+      plain: 'A part-time lead or architect inside your team, billed by the day.',
+    },
+  },
+
+  offerPage: {
+    kicker: 'Offer',
+    sentences: 'What you say about it',
+    delivered: 'What you get',
+    steps: 'How it works',
+    price: 'What it costs',
+    disclaimer: 'An order of magnitude, not a quote.',
+    tableCaption: 'Every range, excluding VAT',
+    excludingVat: 'excl. VAT',
+    perMonth: '/ month',
+    weekOne: 'week',
+    weekMany: 'weeks',
+    fit: 'Is it the right choice?',
+    goodChoice: 'A good choice when',
+    notTheRightChoice: 'Not the right choice when',
+    achievements: 'What proves it',
+    faq: 'Questions',
+    concepts: 'In two words',
+    book: {
+      kicker: 'First step',
+      title: 'A 30-minute call, to see whether I can help.',
+      text: 'Free and with no commitment: you describe the situation, and I tell you plainly whether this Offer is the right one, and if not, which is.',
+      cta: 'Book a call',
+      orWrite: 'Would rather write?',
+    },
+  },
+
+  offerPages: {
+    audit: {
+      meta: {
+        title: 'Application audit — Thomas Bouzy',
+        description:
+          'A written audit of your application: a report, a risk register and a prioritised action plan. Public prices, deducted from the engagement that follows.',
+      },
+      sentences: [
+        "“Something is wrong, but we don't know where to start.”",
+        "“Before we sign for a rewrite, we would like an opinion that isn't selling the rewrite.”",
+        '“We are about to buy this company: what is its software actually worth?”',
+      ],
+      concepts: [
+        {
+          label: 'Footprint',
+          gloss: 'Memory, CPU, image size and deployment treated as design, not as weather.',
+        },
+        {
+          label: 'Build-vs-buy',
+          gloss: 'What you keep buying, what you bring in-house, and where the line falls.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'A written report',
+          text: 'What holds, what is fragile and what it costs, from the architecture to operations, read by someone with nothing in it to defend.',
+        },
+        {
+          title: 'A risk register',
+          text: 'Each risk with its severity, its likelihood and what it costs to leave in place, so that decisions are taken knowingly.',
+        },
+        {
+          title: 'An action plan',
+          text: 'The fixes in the order they pay back, each ready to pick up, with its estimated effort. The structural decisions are written as ADRs, so your team can argue with them.',
+        },
+      ],
+      variant: {
+        title: 'Variant: technical due diligence',
+        text: 'Before an acquisition or a fundraise, the same work written for someone who is not the team: what the system is worth, what it will cost to evolve, and what could surprise you after signing.',
+      },
+      steps: [
+        {
+          title: 'A 30-minute call',
+          text: 'You describe the system and what worries you. I tell you whether an audit is the right answer, and how deep it should go.',
+        },
+        {
+          title: 'Read-only access',
+          text: 'To the code, the documentation and, where possible, production metrics. Nothing is changed during the audit.',
+        },
+        {
+          title: 'Reading and interviews',
+          text: 'I read the system and talk to the people who run it: the risks the code does not show are often found there.',
+        },
+        {
+          title: 'The read-out',
+          text: 'The report, the register and the plan, presented and discussed with you and your team until every point is understood.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: 'Size of the system',
+            options: {
+              small: 'One application',
+              medium: 'A few applications',
+              large: 'A platform',
+            },
+          },
+          depth: {
+            label: 'Depth',
+            options: { express: 'Express', full: 'Full' },
+          },
+        },
+        amounts: { fee: 'Audit fee' },
+        duration: 'Duration',
+      },
+      rules: [
+        'If you then entrust me with the engagement that follows from it, the audit fee is deducted from it: an audit is never a sunk cost.',
+      ],
+      goodChoice: [
+        'You sense a risk without being able to name it.',
+        'You have to decide on a rewrite, a migration or an acquisition, and want an independent opinion first.',
+        'Your team needs a prioritised list rather than a general impression.',
+      ],
+      notTheRightChoice: [
+        'You already know what is wrong: Reliability, or a takeover, gets there more directly.',
+        'The system is down right now: service has to come back first, the audit comes after.',
+        'You are looking for a decision already taken to be validated: the audit will say what it finds.',
+      ],
+      faq: [
+        {
+          question: 'Do I have to give you access to production?',
+          answer:
+            'No. Read access to the code is enough for the express audit. For the full audit, production metrics or logs make the diagnosis much sharper, and stay read-only.',
+        },
+        {
+          question: 'What if the audit concludes everything has to be rewritten?',
+          answer:
+            'It will say so, with what it costs not to. It is rarely the conclusion: most systems can be taken back piece by piece, without stopping everything.',
+        },
+        {
+          question: 'Why a range rather than a price?',
+          answer:
+            'Because the price depends on the real size of the system, which we measure during the first call. The quote itself is firm before anything starts.',
+        },
+      ],
+    },
   },
 
   contact: {

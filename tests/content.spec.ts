@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
-import { contentOfPage } from '../src/content/index.ts';
+import { contentOfPage, type ResumeContent } from '../src/content/index.ts';
+import { OFFER_IDS, OFFERS } from '../src/content/offers.ts';
+import { optionCombinations, PRICES } from '../src/content/prices.ts';
 import { PAGES } from '../src/routes.ts';
 import { LOCALES } from '../src/site.ts';
 
@@ -453,5 +455,137 @@ describe('Chantier C — the mirror', () => {
         );
       }
     }
+  });
+});
+
+describe('Offers and the price table (ADR 17)', () => {
+  it('has a price table for every Offer, and nothing else', () => {
+    expect(Object.keys(PRICES).sort()).toEqual([...OFFER_IDS].sort());
+  });
+
+  for (const offer of OFFER_IDS) {
+    it(`prices every option combination of the ${offer} once, with ordered ranges`, () => {
+      const table = PRICES[offer];
+      expect(table.dimensions.length).toBeGreaterThan(0);
+      expect(table.amounts.length).toBeGreaterThan(0);
+
+      const expected = optionCombinations(table).map((options) => options.join(' × '));
+      const actual = table.combinations.map((combination) => combination.options.join(' × '));
+      expect([...actual].sort(), `${offer}: combinations`).toEqual([...expected].sort());
+
+      for (const combination of table.combinations) {
+        const name = `${offer} ${combination.options.join(' × ')}`;
+        for (const amount of table.amounts) {
+          const range = combination.amounts[amount];
+          expect(range, `${name} has no ${amount}`).toBeDefined();
+          expect(range?.min ?? 0, `${name} ${amount}`).toBeGreaterThan(0);
+          expect(range?.min ?? 1, `${name} ${amount}: min above max`).toBeLessThanOrEqual(
+            range?.max ?? 0,
+          );
+        }
+        expect(Object.keys(combination.amounts).sort(), `${name}: undeclared amount`).toEqual(
+          [...table.amounts].sort(),
+        );
+        if (table.duration) {
+          expect(combination.weeks, `${name} has no duration`).toBeDefined();
+          expect(combination.weeks?.min ?? 1).toBeLessThanOrEqual(combination.weeks?.max ?? 0);
+        } else {
+          expect(combination.weeks, `${name}: a duration the table does not declare`).toBe(
+            undefined,
+          );
+        }
+      }
+    });
+  }
+
+  it('cites only Achievements that exist, in every locale', () => {
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const ids = content.achievements.map((achievement) => achievement.id);
+      for (const offer of OFFER_IDS) {
+        for (const cited of OFFERS[offer].achievements) {
+          expect(ids, `${locale}: ${offer} cites ${cited}`).toContain(cited);
+        }
+      }
+    }
+  });
+
+  it('names each Achievement the same way in both locales', () => {
+    // The ids are how an Offer cites proof in any language; parity checks the
+    // shape, this checks they line up.
+    expect(fr.achievements.map((a) => a.id)).toEqual(en.achievements.map((a) => a.id));
+    expect(new Set(en.achievements.map((a) => a.id)).size).toBe(en.achievements.length);
+  });
+
+  it('opens every Offer in plain language, naming no technology', () => {
+    // ADR 12's rule, extended by ADR 14 to the Offers: the plain line is what
+    // the least technical reader reads first, so it names nothing to learn.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const offer of OFFER_IDS) {
+        const { name, plain } = content.offers[offer];
+        expect(plain.length, `${locale}: ${name}'s plain line is a paragraph`).toBeLessThan(160);
+        for (const tech of content.schema.knowsAbout) {
+          expect(plain, `${locale}: ${name} explains itself with ${tech}`).not.toContain(tech);
+        }
+      }
+    }
+  });
+
+  it("labels every slider, option, amount and duration an Offer's table declares", () => {
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const offer of OFFER_IDS) {
+        const pages: ResumeContent['offerPages'] = content.offerPages;
+        const page = pages[offer];
+        if (!page) continue;
+        const table = PRICES[offer];
+        for (const dimension of table.dimensions) {
+          const labels = page.estimator.dimensions[dimension.id];
+          expect(labels?.label, `${locale}: ${offer} ${dimension.id} has no label`).toBeTruthy();
+          for (const option of dimension.options) {
+            expect(
+              labels?.options[option],
+              `${locale}: ${offer} ${dimension.id}=${option} has no label`,
+            ).toBeTruthy();
+          }
+        }
+        for (const amount of table.amounts) {
+          expect(page.estimator.amounts[amount], `${locale}: ${offer} ${amount}`).toBeTruthy();
+        }
+        expect(Boolean(page.estimator.duration), `${locale}: ${offer} duration label`).toBe(
+          Boolean(table.duration),
+        );
+      }
+    }
+  });
+
+  it("quotes every Offer page's Client sentences", () => {
+    const marks = { en: ['“', '”'], fr: ['«', '»'] } as const;
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const [open, close] = marks[locale];
+      for (const [offer, page] of Object.entries(content.offerPages)) {
+        expect(page.sentences.length, `${locale}: ${offer} answers no sentence`).toBeGreaterThan(0);
+        for (const sentence of page.sentences) {
+          expect(sentence.startsWith(open) && sentence.endsWith(close), sentence).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("states the Audit's commercial rule and its due diligence variant", () => {
+    expect(en.offerPages.audit?.rules.join(' ')).toMatch(/deducted/);
+    expect(fr.offerPages.audit?.rules.join(' ')).toMatch(/déduit/);
+    expect(en.offerPages.audit?.variant?.title).toMatch(/due diligence/i);
+    expect(fr.offerPages.audit?.variant?.title).toMatch(/due diligence/i);
   });
 });

@@ -906,6 +906,219 @@ a {
   color: var(--color-muted);
 }
 
+/* — offer pages ————————————————————————————————————————————————————————————
+
+   One page per Offer, in ADR 17's order. Same grammar as the home page —
+   numbered mono eyebrows, Spectral headings, surface cards — so a reader who
+   arrives from a link lands on the same site, not on a landing page. The
+   section headings are the eyebrows themselves: one level of h2 per section,
+   no second display title competing with the Offer's name. */
+
+.offer__head {
+  padding-block: 64px 36px;
+}
+.offer__name {
+  font-size: clamp(38px, 5vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0 0 18px;
+}
+.offer__plain {
+  font-size: clamp(18px, 2vw, 21px);
+  line-height: 1.55;
+  max-width: 52ch;
+  margin: 0;
+  text-wrap: pretty;
+}
+.offer__concepts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.offer__concept {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 22px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offer__concept-label {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 19px;
+  line-height: 1.15;
+}
+.offer__concept-gloss {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.offer__section {
+  padding-block: 34px;
+}
+.offer__heading {
+  margin-bottom: 22px;
+}
+
+.offer__sentences {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-divider);
+  max-width: 64ch;
+}
+.offer__sentence {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 19px;
+  line-height: 1.4;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-divider);
+  text-wrap: balance;
+}
+
+.offer__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.offer__card,
+.offer__variant,
+.offer__step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offer__variant {
+  margin-top: 14px;
+  background: var(--color-sunken);
+}
+.offer__card-title {
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.offer__card-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-muted);
+  margin: 0;
+}
+.offer__card-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.offer__steps {
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.offer__step {
+  counter-increment: step;
+}
+.offer__step::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent-text);
+}
+
+.estimator__disclaimer {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin: 0 0 12px;
+}
+/* Scrolls inside itself on a phone rather than widening the page: the table
+   is the fallback, and a fallback that breaks the layout is not one. */
+.estimator__table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: 6px 12px;
+}
+.estimator__table {
+  font-size: 14.5px;
+}
+.estimator__table th,
+.estimator__table td {
+  padding: 10px 12px;
+  vertical-align: top;
+}
+.estimator__amount {
+  white-space: nowrap;
+}
+
+.offer__rules {
+  margin: 18px 0 0;
+  padding: 16px 0 0 20px;
+  border-top: 1px solid var(--color-divider);
+  font-size: 15.5px;
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+.offer__fit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.offer__fit-col {
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.offer__fit-list {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+.offer__fit-list li + li {
+  margin-top: 6px;
+}
+
+.offer__faq {
+  border-top: 1px solid var(--color-divider);
+  max-width: 72ch;
+}
+.offer__question {
+  border-bottom: 1px solid var(--color-divider);
+}
+.offer__question summary {
+  cursor: pointer;
+  padding: 16px 0;
+  font-size: 16.5px;
+}
+.offer__question p {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-muted);
+}
+
 /* — responsive ——————————————————————————————————————————————————————————— */
 
 @media (max-width: 1023px) {
@@ -929,6 +1142,9 @@ a {
 }
 
 @media (max-width: 860px) {
+  .offer__fit {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .problem__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 36px;

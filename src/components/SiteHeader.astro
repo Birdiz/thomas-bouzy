@@ -6,9 +6,11 @@ import { LOCALE_ENDONYM, LOCALE_LABEL, LOCALE_TAG, SITE } from '../site.ts';
 interface Props {
   route: Route;
   t: ResumeContent;
+  /** Where the header's call to action goes. The home page's contact section by default. */
+  contactHref?: string;
 }
 
-const { route, t } = Astro.props;
+const { route, t, contactHref } = Astro.props;
 const { locale } = route;
 const home = homePath(locale);
 
@@ -26,9 +28,10 @@ const versions = alternatesOf(route.page);
     </a>
 
     <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
-      <a href="#work">{t.nav.work}</a>
-      <a href="#approach">{t.nav.approach}</a>
-      <a href="#about">{t.nav.about}</a>
+      {/* Spelled from the home page, so they work from every page. */}
+      <a href={`${home}#work`}>{t.nav.work}</a>
+      <a href={`${home}#approach`}>{t.nav.approach}</a>
+      <a href={`${home}#about`}>{t.nav.about}</a>
     </nav>
 
     <div class="site-header__actions">
@@ -49,7 +52,7 @@ const versions = alternatesOf(route.page);
           </nav>
         )
       }
-      <a class="btn btn-primary" href="#contact">{t.nav.contact}</a>
+      <a class="btn btn-primary" href={contactHref ?? `${home}#contact`}>{t.nav.contact}</a>
     </div>
   </div>
 </header>
