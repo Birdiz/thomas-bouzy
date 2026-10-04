@@ -674,3 +674,25 @@ describe('what each Offer page has to say (ADR 17)', () => {
     }
   });
 });
+
+describe('the Partners page (ADR 14)', () => {
+  it('exists in French only', () => {
+    expect(fr.partnersPage).toBeDefined();
+    expect((en as ResumeContent).partnersPage).toBeUndefined();
+  });
+
+  it("accepts white label, follows the Partner's conventions, and sends the CV on request", () => {
+    const titles = fr.partnersPage.points.map((point) => point.title).join(' ');
+    expect(titles).toMatch(/marque blanche/i);
+    expect(titles).toMatch(/conventions/i);
+    expect(titles).toMatch(/CV sur demande/i);
+  });
+
+  it('carries no copy of the day rate: it is read from the price table', () => {
+    for (const [path, text] of walkStrings(fr.partnersPage)) {
+      expect(text, `a price is copied at ${path}`).not.toMatch(
+        new RegExp(`\\b(${DAY_RATE.min}|${DAY_RATE.max})\\b`),
+      );
+    }
+  });
+});

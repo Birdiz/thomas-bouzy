@@ -236,6 +236,32 @@ export interface OfferPageLabels {
   };
 }
 
+/**
+ * The page for agencies and IT services firms (ADR 14): they buy from Thomas
+ * for their own client. French only, like the Segment.
+ */
+export interface PartnersPage {
+  meta: {
+    title: string;
+    description: string;
+  };
+  kicker: string;
+  title: string;
+  plain: string;
+  /** White label, the Partner's conventions, the CV on request. */
+  points: Titled[];
+  /** Words around DAY_RATE, which the page reads from prices.ts. */
+  dayRate: {
+    label: string;
+    note: string;
+  };
+  /** Heading over the Offers a Partner can bring Thomas into. */
+  offers: string;
+  /** Where each Offer card links: "See the offer". */
+  offerLink: string;
+  book: OfferPageLabels['book'];
+}
+
 export interface ResumeContent {
   /** <head> copy. Not shown on the page. */
   meta: {
@@ -343,6 +369,8 @@ export interface ResumeContent {
    * registry's call (src/routes.ts); the parity test holds the two together.
    */
   offerPages: Partial<Record<OfferId, OfferPage>>;
+  /** Exists only in the locales the registry declares the Partners page in. */
+  partnersPage?: PartnersPage;
 
   contact: {
     kicker: string;

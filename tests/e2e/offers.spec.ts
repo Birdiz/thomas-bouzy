@@ -1,5 +1,5 @@
 import { RESUME } from '../../src/content/index.ts';
-import type { OfferId } from '../../src/content/offers.ts';
+import { OFFER_IDS, type OfferId } from '../../src/content/offers.ts';
 import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../../src/content/prices.ts';
 import { formatEuroRange } from '../../src/lib/money.ts';
 import { ROUTES } from '../../src/routes.ts';
@@ -12,7 +12,9 @@ import { expect, test } from './fixtures.ts';
  * labelled as an order of magnitude, and a way to book a call that keeps the
  * page on its own origin.
  */
-const OFFER_ROUTES = ROUTES.filter((route) => route.page.id !== 'home');
+const OFFER_ROUTES = ROUTES.filter((route) =>
+  (OFFER_IDS as readonly string[]).includes(route.page.id),
+);
 
 for (const route of OFFER_ROUTES) {
   const offer = route.page.id as OfferId;
@@ -121,8 +123,8 @@ test('the Audit states that its fee is deducted, and its due diligence variant',
   await expect(page.getByRole('heading', { name: /due diligence/i })).toBeVisible();
 });
 
-test.describe('languages on Offer pages', () => {
-  for (const route of OFFER_ROUTES) {
+test.describe('languages on every page but the home page', () => {
+  for (const route of ROUTES.filter((candidate) => candidate.page.id !== 'home')) {
     const versions = ROUTES.filter((other) => other.page.id === route.page.id);
 
     if (versions.length === 1) {
@@ -166,5 +168,24 @@ test('Reinforcement shows the day rate the price table holds', async ({ page }) 
   ] as const) {
     await page.goto(path);
     await expect(page.locator('.offer__day-rate')).toContainText(formatEuroRange(DAY_RATE, locale));
+  }
+});
+
+test('the Partners page offers white label, the day rate and a CV on request only', async ({
+  page,
+}) => {
+  const partners = RESUME.fr.partnersPage;
+  await page.goto('/partenaires/');
+  await expect(page.locator('h1')).toHaveText(partners?.title ?? '∅');
+  for (const point of partners?.points ?? []) {
+    await expect(page.getByRole('heading', { name: point.title })).toBeVisible();
+  }
+  await expect(page.locator('.offer__day-rate')).toContainText(formatEuroRange(DAY_RATE, 'fr'));
+  // Each Offer a Partner can bring Thomas into, linked to its page.
+  await expect(page.locator('.offer__card-link')).not.toHaveCount(0);
+  for (const href of await page
+    .locator('.offer__card-link')
+    .evaluateAll((links) => links.map((link) => link.getAttribute('href')))) {
+    expect(ROUTES.map((route) => route.path)).toContain(href);
   }
 });

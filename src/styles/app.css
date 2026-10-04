@@ -1018,6 +1018,11 @@ a {
   color: var(--color-muted);
   margin: 0;
 }
+.offer__card-link {
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 15px;
+}
 .offer__card-text {
   font-size: 15px;
   line-height: 1.6;

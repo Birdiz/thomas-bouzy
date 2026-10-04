@@ -17,8 +17,10 @@ export const RESUME: Record<Locale, ResumeContent> = { fr, en };
 export function contentOfPage(locale: Locale, id: PageId): unknown {
   // The Offer pages are their own pages; everything else in the module is the
   // home page and the chrome every page shares.
-  const { offerPages, ...home } = RESUME[locale];
-  return id === 'home' ? home : offerPages[id];
+  const { offerPages, partnersPage, ...home } = RESUME[locale];
+  if (id === 'home') return home;
+  if (id === 'partners') return partnersPage;
+  return offerPages[id];
 }
 
 export type { ResumeContent } from './types.ts';

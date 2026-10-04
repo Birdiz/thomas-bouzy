@@ -846,6 +846,46 @@ export const fr = {
     },
   },
 
+  partnersPage: {
+    meta: {
+      title: 'Partenaires : agences et sociétés de services — Thomas Bouzy',
+      description:
+        'Pour les agences et sociétés de services : un renfort senior en marque blanche, à vos conventions, au taux journalier publié. CV sur demande.',
+    },
+    kicker: 'Partenaires',
+    title: 'Agences et sociétés de services',
+    plain:
+      'Vous avez un client et un besoin senior : je viens en renfort sur votre mission, sous votre nom si vous le souhaitez.',
+    points: [
+      {
+        title: 'Marque blanche acceptée',
+        text: 'Je peux intervenir sous votre nom, auprès de votre client. Vous gardez la relation ; je fais le travail.',
+      },
+      {
+        title: 'Vos conventions, pas les miennes',
+        text: "Votre façon de coder, vos outils, vos rituels et vos règles de revue : je m'y conforme dès le premier jour.",
+      },
+      {
+        title: 'Un CV sur demande',
+        text: "Il n'est pas publié ici. Écrivez-moi et je vous l'envoie, au besoin dans le format de votre dossier de compétences.",
+      },
+    ],
+    dayRate: {
+      label: 'Taux journalier :',
+      note: 'plus bas pour les missions longues à plein temps.',
+    },
+    offers: 'Ce que vous pouvez me confier',
+    offerLink: "Voir l'offre",
+    book: {
+      kicker: 'Premier pas',
+      title: 'Un appel de 30 minutes, pour parler de votre client.',
+      text: 'Gratuit et sans engagement : vous décrivez la mission, je vous dis franchement si je suis la bonne personne pour elle.',
+      cta: 'Réserver un appel',
+      orWrite: 'Pour le CV, ou si vous préférez écrire :',
+      serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
+    },
+  },
+
   contact: {
     kicker: 'Contact',
     title: 'Un système qui doit rester juste ?',

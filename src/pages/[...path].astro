@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import OfferPage from '../layouts/OfferPage.astro';
+import PartnersPage from '../layouts/PartnersPage.astro';
 import ResumePage from '../layouts/ResumePage.astro';
 import { ROUTES, type Route } from '../routes.ts';
 
@@ -24,4 +25,12 @@ const { route } = Astro.props;
 const { id } = route.page;
 ---
 
-{id === 'home' ? <ResumePage route={route} /> : <OfferPage route={route} offer={id} />}
+{
+  id === 'home' ? (
+    <ResumePage route={route} />
+  ) : id === 'partners' ? (
+    <PartnersPage route={route} />
+  ) : (
+    <OfferPage route={route} offer={id} />
+  )
+}
