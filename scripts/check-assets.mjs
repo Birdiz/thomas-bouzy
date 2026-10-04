@@ -14,7 +14,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
-import { SITE } from '../src/site.ts';
+import { LEGAL, SITE } from '../src/site.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const path = (...p) => join(root, ...p);
@@ -43,6 +43,28 @@ if (process.env.SITE_STRICT === '1' && !process.env.SITE_DOMAIN?.trim()) {
   errors.push(
     'SITE_DOMAIN is empty in a deployment build — canonical URLs, hreflang, the ' +
       `sitemap and the JSON-LD would all point at the placeholder "${SITE.domain}"`,
+  );
+}
+
+// An indexed commercial site with no identified publisher is a defect, not a
+// pending item (ADR 16): the law asks a professional site to name its
+// publisher, and LEGAL in src/site.ts stays empty until the business is
+// registered. So making the site indexable is refused until the notice is
+// complete — it circulates by link until then.
+if (SITE.indexable && !LEGAL.isComplete) {
+  const missing = [
+    ['businessName', LEGAL.businessName],
+    ['legalForm', LEGAL.legalForm],
+    ['siret', LEGAL.siret],
+    ['address', LEGAL.address],
+    ['host.address', LEGAL.host.address],
+  ]
+    .filter(([, value]) => !value)
+    .map(([field]) => field);
+  errors.push(
+    'SITE_INDEXABLE is true but the legal notice is incomplete (LEGAL in src/site.ts is ' +
+      `missing ${missing.join(', ')}). An indexed site has to name its publisher; ` +
+      'unset SITE_INDEXABLE or complete LEGAL — see docs/adr/0016.',
   );
 }
 

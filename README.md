@@ -45,7 +45,7 @@ is still missing.
 | --- | --- | --- |
 | A portrait of at least 580×580 | `src/assets/portrait.png` (`.jpg` / `.webp` / `.avif` also work) — see [src/assets/README.md](src/assets/README.md) | Absent: the hero shows a labelled placeholder. Too small: the largest variant is upscaled, and `assets:check` says so |
 | Domain | `SITE_DOMAIN`, a Railway service variable | A deployment build **fails** rather than canonicalising the site to a domain that does not resolve |
-| Indexing | `SITE_INDEXABLE=true`, once `SITE_DOMAIN` is the real domain | `robots.txt` disallows everything, pages carry `noindex`, and every response carries `X-Robots-Tag` |
+| Indexing | `SITE_INDEXABLE=true`, once `SITE_DOMAIN` is the real domain **and** `LEGAL` in `src/site.ts` is complete | `robots.txt` disallows everything, pages carry `noindex`, and every response carries `X-Robots-Tag`. Setting it while `LEGAL` is incomplete **fails** the build ([ADR 16](docs/adr/0016-the-legal-notice-and-a-number-meant-to-be-public.md)) |
 
 ## Going live on a real domain
 
@@ -53,8 +53,11 @@ The site currently runs on the hostname Railway hands out, and is deliberately
 **not indexable** — see [ADR 8](docs/adr/0008-railway-is-the-only-deploy-target.md)
 for why a temporary hostname in Google's index is a debt rather than a head start.
 
-Buying the domain and pointing it at the service is the whole migration. After
-that, two service variables and a redeploy:
+Buying the domain and pointing it at the service is the whole technical
+migration; the other prerequisite is a registered business, because the build
+refuses `SITE_INDEXABLE=true` until the legal notice in `LEGAL` is complete
+([ADR 16](docs/adr/0016-the-legal-notice-and-a-number-meant-to-be-public.md)).
+After that, two service variables and a redeploy:
 
 ```
 SITE_DOMAIN=thomasbouzy.dev
@@ -80,9 +83,9 @@ npm run verify         # everything CI runs, in the same order
 | `npm run serve:dist` | Foreground static server for `dist/` (what the e2e suite runs against) |
 | `npm run check` | `astro check` — types across `.astro` and `.ts` |
 | `npm run lint` / `format` | Biome |
-| `npm run test` | Vitest — EN/FR content parity |
+| `npm run test` | Vitest — EN/FR content parity, and the asset check's verdict |
 | `npm run test:e2e` | Playwright — chromium, webkit, mobile chromium |
-| `npm run assets:check` | Missing files, portrait format and size, `SITE_DOMAIN` on a deployment build |
+| `npm run assets:check` | Missing files, portrait format and size, `SITE_DOMAIN` on a deployment build, no indexing without a legal notice |
 | `npm run fonts` / `fonts:check` | Copy the woff2 faces out of `@fontsource` / verify they match |
 | `npm run og` | Regenerate `public/og.png` and the touch icon |
 | `docker build --build-arg SITE_DOMAIN=… -t cv .` | Build the deployment image locally |
