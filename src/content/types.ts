@@ -148,9 +148,8 @@ export interface ResumeContent {
    * All three were recruitment furniture on a page that sells engagements: a
    * title answers "what post does he hold", a years count answers "is he senior
    * enough to hire", and the CV button offered the salaried route as an equal
-   * alternative to the work itself, in the first viewport. The chronology, the
-   * titles and the stack now live in the PDF alone, reached once from the About
-   * section — see `about.cvLine`.
+   * alternative to the work itself, in the first viewport. The career is on
+   * LinkedIn, reached once from the About section — see `about.careerLine`.
    *
    * `availability` carries no date. It said "permanent roles from September
    * 2026" on a page whose own thesis is that what is not instrumented is not
@@ -199,16 +198,17 @@ export interface ResumeContent {
     paragraphs: string[];
     mentoringKicker: string;
     /**
-     * The salaried route, stated once and at the end.
+     * The salaried route, stated once and at the end, as one line whose last
+     * words link to LinkedIn.
      *
-     * It is the only thing the Track record carried that the page could not
-     * absorb: a chronology, job titles and a stack are what someone hiring for
-     * a post reads, and they are all in the PDF. Saying so here keeps that door
-     * open without letting it compete with the work — which is what it did from
-     * the hero.
+     * A chronology, job titles and a stack are what someone hiring for a post
+     * reads. They used to be in a CV download here; the PDF left the site
+     * (ADR 11, postscript) and LinkedIn carries them. Saying so keeps that door
+     * open without letting it compete with the work.
      */
-    cvLine: string;
-    cvCta: string;
+    careerLine: string;
+    /** The link text, to the LinkedIn profile. */
+    careerLink: string;
   };
   mentoring: MentoringEntry[];
   languages: LanguageSkill[];

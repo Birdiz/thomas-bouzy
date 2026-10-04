@@ -1,5 +1,8 @@
 import { expect, PATHS, test } from './fixtures.ts';
 
+/** Where the two CV PDFs used to be served, before they left the site. */
+const FORMER_CV_PATHS = ['/assets/cv-thomas-bouzy-en.pdf', '/assets/cv-thomas-bouzy-fr.pdf'];
+
 /** Every same-origin URL the page asks the browser to fetch or offers to open. */
 async function collectUrls(page: import('@playwright/test').Page) {
   return page.evaluate(() => {
@@ -64,34 +67,19 @@ test('fonts are served from this origin, never from Google', async ({ page }) =>
   expect(woff2).toBeGreaterThan(0);
 });
 
-test("links each locale's CV exactly when its PDF is present", async ({ page, request }) => {
-  // The earlier version of this test skipped when the link was absent, which
-  // could not tell "not supplied yet" from "supplied but not linked" — and the
-  // second is what actually happened: a path-resolution bug hid both buttons
-  // while the PDFs were sitting in public/assets/.
-  for (const [locale, path] of [
-    ['en', '/'],
-    ['fr', '/fr/'],
-  ] as const) {
-    const href = `/assets/cv-thomas-bouzy-${locale}.pdf`;
-    const response = await request.get(href);
+test('links no CV file, and the old CV paths are gone', async ({ page, request }) => {
+  // The PDFs left the site (ADR 11, postscript): they printed the contact
+  // details the page deliberately withholds. A link left behind would be a
+  // dead one, and a file left behind would still be the leak.
+  for (const path of PATHS) {
     await page.goto(path);
-    const links = page.locator(`a[href="${href}"]`);
-
-    if (response.status() === 404) {
-      // Not supplied: the page must not offer a dead link either.
-      await expect(links).toHaveCount(0);
-      continue;
-    }
-
-    expect(response.status()).toBe(200);
-    expect(response.headers()['content-type']).toBe('application/pdf');
-    // Exactly one link, in About. It used to be linked twice — from the hero
-    // and from the contact panel — which made the salaried route look like a
-    // third way to get in touch. Chantier A gave it one home; asserting the
-    // count is what stops it acquiring a second one again.
-    await expect(links).toHaveCount(1);
-    await expect(links.first()).toHaveAttribute('download', /\.pdf$/);
+    await expect(
+      page.locator('a[href$=".pdf" i], a[download]'),
+      `${path} links a file`,
+    ).toHaveCount(0);
+  }
+  for (const path of FORMER_CV_PATHS) {
+    expect((await request.get(path)).status(), `${path} is still served`).toBe(404);
   }
 });
 

@@ -237,9 +237,8 @@ export const en = {
       'Off-screen: the Grand Est countryside, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
     ],
     mentoringKicker: 'Mentoring & teaching — a thread through all of it',
-    cvLine:
-      'Hiring rather than contracting? The detailed track record, the chronology and the technologies are in the CV.',
-    cvCta: 'Download CV',
+    careerLine: 'Hiring rather than contracting?',
+    careerLink: 'My career is on LinkedIn.',
   },
 
   mentoring: [

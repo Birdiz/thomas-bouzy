@@ -38,7 +38,7 @@ jobs:
       - name: Type-check
         run: npm run check
 
-      # Missing CV PDFs and portrait are reported as warnings. SITE_DOMAIN is
+      # A missing portrait is reported as a warning. SITE_DOMAIN is
       # only required of a deployment build (SITE_STRICT=1, set by the
       # Dockerfile), so CI verifies against the placeholder.
       - name: Assets

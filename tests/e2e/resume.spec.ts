@@ -111,16 +111,11 @@ test.describe('the page is not a CV', () => {
     await expect(ctas.first()).toHaveAttribute('href', '#work');
   });
 
-  test('reaches the CV once, from About, as a download', async ({ page }) => {
+  test('points the salaried route at LinkedIn, from About', async ({ page }) => {
     await gotoHome(page, '/');
-    const cv = page.locator('.about__cv a');
-    await expect(cv).toHaveCount(1);
-    await expect(cv).toHaveAttribute('href', '/assets/cv-thomas-bouzy-en.pdf');
-    await expect(cv).toHaveAttribute('download', 'Thomas-Bouzy-CV-EN.pdf');
-
-    // Nowhere else: the hero download was the salaried route competing with the
-    // work in the first viewport, which is the whole point of moving it here.
-    await expect(page.locator('a[href$=".pdf"]')).toHaveCount(1);
+    const career = page.locator('#about .about__career a');
+    await expect(career).toHaveCount(1);
+    await expect(career).toHaveAttribute('href', /linkedin\.com\/in\//);
   });
 });
 

@@ -239,9 +239,8 @@ export const fr = {
       "Hors écran : le Grand Est, en pleine campagne, sur une propriété que je rénove. Full remote depuis 2018 — ce n'est pas une préférence de confort récente, c'est huit ans de pratique. L'écrit, l'asynchrone et la trace sont ici le mode par défaut, pas une contrainte subie.",
     ],
     mentoringKicker: 'Mentorat & enseignement — un fil rouge',
-    cvLine:
-      "En poste plutôt qu'en mission ? Le parcours détaillé, la chronologie et les technologies sont dans le CV.",
-    cvCta: 'Télécharger le CV',
+    careerLine: "En poste plutôt qu'en mission ?",
+    careerLink: 'Mon parcours est sur LinkedIn.',
   },
 
   mentoring: [

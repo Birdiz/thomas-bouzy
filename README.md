@@ -25,9 +25,10 @@ blockchain scope boundary, puts a date back in the availability line, or lets
 the structured data claim a technology the page never states.
 
 The page is not a CV, and the tests keep it from becoming one again: there is no
-chronology, no job title, no years badge and no stack chips — those are in the
-downloadable PDF, which the page reaches exactly once, from About. See
-[ADR 11](docs/adr/0011-the-page-is-not-a-cv.md).
+chronology, no job title, no years badge, no stack chips and no CV download. The
+career is on LinkedIn, which the page names exactly once, from About; a Partner
+gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its
+postscript.
 
 It also speaks in the reader's words rather than in its own: the four failure
 modes it opens on are quoted client sentences, and every project card leads with
@@ -113,7 +114,7 @@ tests/
 
 - **Content** — both locales have the same shape and the same array lengths at
   every depth; nothing is blank; the prose is genuinely translated.
-- **Behaviour** — one project open at a time, no track record and one CV link,
+- **Behaviour** — one Achievement open at a time, no track record and no CV link,
   the language switch changing the URL, anchors clearing the sticky header.
 - **Privacy** — the phone number is in neither page's HTML source nor the
   JSON-LD, and appears only after a click.

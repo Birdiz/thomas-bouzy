@@ -91,8 +91,8 @@ describe('EN/FR parity', () => {
       '$.concepts[1].label',
       '$.about.title',
       '$.about.paragraphs[0]',
-      '$.about.cvLine',
-      '$.about.cvCta',
+      '$.about.careerLine',
+      '$.about.careerLink',
       '$.contact.title',
       '$.contact.blurb',
       '$.contact.revealPhone',
@@ -121,7 +121,7 @@ describe('content corrections applied against the design', () => {
     // The banner now carries no date at all, which is why this test no longer
     // compares one against the clock: a line with nothing to expire cannot be
     // caught late. The permanent-role half went with it — it is stated once, in
-    // About, beside the CV that carries the salaried track record.
+    // About, as the line that points a Recruiter at LinkedIn.
     expect(en.hero.availability).toMatch(/available now/i);
     expect(fr.hero.availability).toMatch(/disponible imm/i);
 
@@ -130,18 +130,28 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('names the salaried route once, and points it at the PDF', () => {
+  it('names the salaried route once, and points it at LinkedIn', () => {
     // Chantier A took the chronology, the job title, the years badge and the
-    // stack off the page and left them to the CV. That only holds if the CV is
-    // still reachable and still framed as the thing someone hiring reads —
-    // otherwise the removal is a deletion rather than a move.
-    expect(en.about.cvLine).toMatch(/CV/);
-    expect(fr.about.cvLine).toMatch(/CV/);
-
+    // stack off the page and left them to the CV; the postscript to ADR 11
+    // took the CV off the site too. That only holds if a Recruiter is still
+    // told where the career is — otherwise the removal is a dead end rather
+    // than a move.
     for (const content of [en, fr]) {
+      expect(content.about.careerLink).toMatch(/LinkedIn/);
       // Never from the hero again: the download used to sit in the first
       // viewport as an equal alternative to the work itself.
-      expect(Object.values(content.hero).join(' ')).not.toMatch(/CV|PDF/);
+      expect(Object.values(content.hero).join(' ')).not.toMatch(/CV|PDF|LinkedIn/);
+    }
+  });
+
+  it('references no CV file anywhere', () => {
+    // The PDFs printed the personal mobile and the home commune that the page
+    // withholds (ADR 5), and they are gone from public/. A Partner gets a CV on
+    // request, by email: saying so is fine, linking a file is not.
+    for (const content of [en, fr]) {
+      for (const [path, text] of walkStrings(content)) {
+        expect(text, `a CV file is referenced at ${path}`).not.toMatch(/\.pdf\b|\/assets\/cv/i);
+      }
     }
   });
 
