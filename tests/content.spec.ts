@@ -115,8 +115,8 @@ describe('EN/FR parity', () => {
       '$.failureModes[0].quote',
       '$.failureModes[0].text',
       '$.achievements[0].plain',
-      '$.concepts[0].gloss',
-      '$.concepts[1].label',
+      '$.offerPages.audit.concepts[0].gloss',
+      '$.offerPages.migration.concepts[0].label',
       '$.about.title',
       '$.about.paragraphs[0]',
       '$.about.careerLine',
@@ -379,10 +379,14 @@ describe('Chantier C — the mirror', () => {
     // keeping — they are the vocabulary the rest of the page argues in — so
     // each one now opens the diagnosis it used to title. This test is what
     // stops the rewrite from having quietly cost them.
+    //
+    // ADR 14 rewrote the four for the least technical reader: the orphan app
+    // arrived, and "double execution" moved to the Reliability page, where the
+    // Critical-systems reader looks for it (asserted with that page).
     const names: [RegExp, RegExp][] = [
-      [/^Double execution\./, /^La double exécution\./],
-      [/state-based model/i, /modèle basé état/i],
-      [/rewrite that needs a stop window/i, /réécriture qui exige une fenêtre d'arrêt/i],
+      [/^The orphan application\./, /^L'application orpheline\./],
+      [/^The migration that never happens\./, /^La migration qui n'arrive jamais\./],
+      [/^The discrepancy nobody can explain\./, /^L'écart que personne ne sait expliquer\./],
       [/^Defects found by users\./, /^Les défauts trouvés par les utilisateurs\./],
     ];
     names.forEach(([enPattern, frPattern], i) => {
@@ -576,7 +580,11 @@ describe('Offers and the price table (ADR 17)', () => {
     ] as const) {
       const [open, close] = marks[locale];
       for (const [offer, page] of Object.entries(content.offerPages)) {
-        expect(page.sentences.length, `${locale}: ${offer} answers no sentence`).toBeGreaterThan(0);
+        const treated = content.failureModes.filter((mode) => mode.offer === offer);
+        expect(
+          treated.length + page.sentences.length,
+          `${locale}: ${offer} answers no sentence`,
+        ).toBeGreaterThan(0);
         for (const sentence of page.sentences) {
           expect(sentence.startsWith(open) && sentence.endsWith(close), sentence).toBe(true);
         }
@@ -720,6 +728,48 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
       for (const text of [content.meta.title, content.meta.description]) {
         expect(text).not.toMatch(/engineer|ingénieur|architect|developer|développeur/i);
       }
+    }
+  });
+});
+
+describe('each Failure mode is treated by one Offer (ADR 14)', () => {
+  it('references exactly one existing Offer, the one ADR 14 names', () => {
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const mode of content.failureModes) {
+        expect(OFFER_IDS, `${locale}: ${mode.quote}`).toContain(mode.offer);
+        // An existing Offer has a page, in some locale.
+        expect(
+          PAGES.find((page) => page.id === mode.offer),
+          `${locale}: ${mode.offer} has no page`,
+        ).toBeDefined();
+      }
+      expect(content.failureModes.map((mode) => mode.offer)).toEqual([
+        'takeover',
+        'migration',
+        'reliability',
+        'reliability',
+      ]);
+    }
+  });
+
+  it('leaves the Audit treating none: it is the way in for all four', () => {
+    for (const content of [en, fr] as ResumeContent[]) {
+      expect(content.failureModes.some((mode) => mode.offer === 'audit')).toBe(false);
+      expect(content.problem.audit.cta.trim().length).toBeGreaterThan(0);
+    }
+  });
+
+  it('attaches each Concept to exactly one Offer, and none to the home page', () => {
+    for (const content of [en, fr] as ResumeContent[]) {
+      const labels = Object.values(content.offerPages).flatMap((page) =>
+        page.concepts.map((concept) => concept.label),
+      );
+      expect(labels).toHaveLength(6);
+      expect(new Set(labels).size, 'a Concept is on two Offers').toBe(labels.length);
+      expect('concepts' in content, 'the home page still carries Concepts').toBe(false);
     }
   });
 });

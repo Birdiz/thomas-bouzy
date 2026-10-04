@@ -336,6 +336,27 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       expect(order).toEqual(['top', 'problem', 'offers', 'work', 'approach', 'about', 'contact']);
     });
 
+    test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({
+      page,
+    }) => {
+      await gotoHome(page, home);
+      const modes = page.locator('#problem .problem__mode');
+      const failureModes = RESUME[locale].failureModes;
+      await expect(modes).toHaveCount(failureModes.length);
+      for (const [i, mode] of failureModes.entries()) {
+        const link = modes.nth(i).getByRole('heading').getByRole('link');
+        await expect(link).toContainText(mode.quote);
+        await expect(link).toHaveAttribute(
+          'href',
+          pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
+        );
+      }
+      // Under the four, for the Client who cannot yet name theirs.
+      const audit = page.locator('#problem .problem__audit a');
+      await expect(audit).toHaveAttribute('href', pathOf('audit', locale) ?? '∅');
+      await expect(page.locator('.concepts')).toHaveCount(0);
+    });
+
     test(`shows five Offers with a price from the table on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const cards = page.locator('#offers .offers__card');

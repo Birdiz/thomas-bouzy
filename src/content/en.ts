@@ -32,34 +32,11 @@ export const en = {
     ctaOffers: 'See the offers',
   },
 
-  concepts: [
-    {
-      label: 'Traceable',
-      gloss: 'Every movement kept as a dated fact; the balance replays instead of being guessed.',
-    },
-    {
-      label: 'Invisible redesign',
-      gloss: 'Payloads rebuilt underneath their consumers, without breaking a single one.',
-    },
-    {
-      label: 'Footprint',
-      gloss: 'Memory, CPU, image size and deployment treated as design, not as weather.',
-    },
-    {
-      label: 'Build-vs-buy',
-      gloss: 'What you keep buying, what you bring in-house, and where the line falls.',
-    },
-    {
-      label: 'Shared service',
-      gloss: "Born of one squad's need, opened to the other teams that turned out to have it.",
-    },
-    {
-      label: 'Handover',
-      gloss: 'Architecture reviews, onboarding, a written trail a newcomer can argue with.',
-    },
-  ],
-
   problem: {
+    audit: {
+      text: "Can't tell yet which one is yours?",
+      cta: 'Start with an audit',
+    },
     kicker: 'The problem',
     title: 'The happy path is never the interesting part.',
     paragraphs: [
@@ -71,20 +48,24 @@ export const en = {
 
   failureModes: [
     {
-      quote: '“We credited the same payout twice, and only saw it at reconciliation.”',
-      text: 'Double execution. A consumer replays a message, and nothing in the code tells the second pass from the first. By then it is not a technical incident: it is an accounting discrepancy, with a regulator attached.',
+      quote: '“The person who built our app has left, and nobody dares touch it any more.”',
+      text: 'The orphan application. The one person who knew it has left, the documentation never existed, and every change becomes a bet: in the end nobody touches anything, while the application ages underneath the business that depends on it.',
+      offer: 'takeover',
     },
     {
-      quote: '“We cannot explain how this balance got there.”',
-      text: 'A state-based model. It answers what the balance is today, never the sequence of facts that produced it — the only thing finance, support and auditors actually ask for.',
+      quote: '“The version upgrade is always for next quarter.”',
+      text: 'The migration that never happens. On a system that cannot stop, the stop window a rewrite would need never comes: the work slips from one quarter to the next for good reasons, while the cost of the old version keeps running.',
+      offer: 'migration',
     },
     {
-      quote: '“The migration has been on the roadmap for two years.”',
-      text: 'The rewrite that needs a stop window. On a system that cannot stop, that window never comes: the work slips from one quarter to the next for good reasons, while the cost of the old model keeps running.',
+      quote: "“The stock (or the balance) doesn't add up, and nobody knows why.”",
+      text: 'The discrepancy nobody can explain. A model that keeps only the state says how much is left today, in stock, in a batch or in an account, never the sequence of movements that led there: the only thing accounting, support and auditors actually ask for.',
+      offer: 'reliability',
     },
     {
-      quote: '“We find out about our own bugs from customer tickets.”',
-      text: 'Defects found by users. A bug you learn about from a ticket was detectable hours earlier. What is not instrumented is not reliable: it is only untested in production, and the customer is doing your acceptance testing.',
+      quote: '“Our customers are the ones who find the bugs.”',
+      text: 'Defects found by users. A bug a customer finds was detectable hours earlier. What is not instrumented is not reliable: it is only untested in production, and the customer is doing your acceptance testing.',
+      offer: 'reliability',
     },
   ],
 
@@ -473,10 +454,7 @@ export const en = {
         description:
           'Moving a production system to a new version without stopping it: a fixed-price plan, then execution alongside your team. Public prices.',
       },
-      sentences: [
-        '“The version upgrade is always for next quarter.”',
-        "“We're stuck on a version that no longer gets security fixes.”",
-      ],
+      sentences: ["“We're stuck on a version that no longer gets security fixes.”"],
       concepts: [
         {
           label: 'Invisible redesign',
@@ -569,11 +547,7 @@ export const en = {
         description:
           'Making a system observable and its flows traceable, so a stock gap, a balance or a bug can be explained instead of guessed. Public prices.',
       },
-      sentences: [
-        "“The stock (or the balance) doesn't add up, and nobody knows why.”",
-        '“Our customers are the ones who find the bugs.”',
-        '“We credited the same payout twice, and only saw it at reconciliation.”',
-      ],
+      sentences: ['“We credited the same payout twice, and only saw it at reconciliation.”'],
       concepts: [
         {
           label: 'Traceable',

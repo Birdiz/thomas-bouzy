@@ -13,7 +13,10 @@ import type { AmountId } from './prices.ts';
  */
 
 /**
- * One named capability, at the top of the page.
+ * One named capability, on the page of the Offer it describes (ADR 14). It
+ * used to sit in a grid under the hero; under a hero written for the least
+ * technical reader, that grid of vocabulary undid the sorting the hero had
+ * just done.
  *
  * This replaced a grid of six figures. The figures answered "how much" to a
  * reader who had not yet been told "of what" — and read as a CV's numbers.
@@ -73,6 +76,12 @@ export interface FailureMode {
   quote: string;
   /** What it actually is, in mine. Opens by naming the failure mode. */
   text: string;
+  /**
+   * The one Offer that treats it (CONTEXT.md: *treated by*). The quote links
+   * to that Offer's page, and the page opens on the quote — which is what
+   * turns the section from illustration into a way in (ADR 12, ADR 14).
+   */
+  offer: OfferId;
 }
 
 /**
@@ -170,8 +179,9 @@ export interface OfferPage {
     description: string;
   };
   /**
-   * The Client sentences this Offer answers, in the Client's words and quote
-   * marks, like a Failure mode's.
+   * Client sentences this Offer answers beyond those of the Failure modes it
+   * treats — the page shows those first, from `failureModes`, so a sentence is
+   * written once. In the Client's words and quote marks.
    */
   sentences: string[];
   /** The Concepts this Offer carries (ADR 14). May be empty. */
@@ -314,13 +324,19 @@ export interface ResumeContent {
     ctaOffers: string;
   };
 
-  concepts: Concept[];
-
   /** Opens the page on what breaks, before anything about who fixes it. */
   problem: {
     kicker: string;
     title: string;
     paragraphs: string[];
+    /**
+     * Under the four Failure modes, for the Client who cannot yet name theirs:
+     * the Audit treats none of them, and is the way in for all.
+     */
+    audit: {
+      text: string;
+      cta: string;
+    };
   };
   failureModes: FailureMode[];
 

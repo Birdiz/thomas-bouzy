@@ -413,52 +413,6 @@ a {
   margin: 0;
 }
 
-/* — concepts —————————————————————————————————————————————————————————————— */
-
-/* Six named capabilities, where six figures used to sit. The label is the
-   concept and carries no accent — six accent figures were already the loudest
-   thing on the page, and the measurements that briefly replaced them were too
-   tied to one engagement to travel. Label and gloss, nothing else. */
-.concepts {
-  padding-block: 26px 60px;
-}
-.concepts__grid {
-  display: grid;
-  /* An explicit three-up rather than auto-fit: at the 1160px container auto-fit
-     lands five per row and orphans the sixth. */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.concepts__item {
-  padding: 22px 24px;
-  background: var(--color-surface);
-  gap: 8px;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-.concepts__item:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
-.concepts__label {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 21px;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
-.concepts__gloss {
-  font-size: 13px;
-  opacity: 0.75;
-  line-height: 1.4;
-  margin: 0;
-  text-wrap: pretty;
-}
-
 /* — problem ——————————————————————————————————————————————————————————————— */
 
 /* The page opens on what breaks, not on who fixes it. Every reference that
@@ -521,6 +475,34 @@ a {
   line-height: 1.35;
   margin: 0 0 6px;
   text-wrap: balance;
+}
+/* The whole quote is the link: it is the largest target in the row, and the
+   sentence a reader recognises is the thing they would click. It keeps the
+   ink colour so the four still read as quotes, and the Offer it leads to is
+   named underneath, in the link colour. */
+.problem__mode-quote a {
+  color: inherit;
+  text-decoration: none;
+}
+.problem__mode-quote a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.problem__mode-offer {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--color-accent-text);
+}
+.problem__audit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 24px 0 0;
+  font-size: 15.5px;
+  color: var(--color-muted);
 }
 .problem__mode-text {
   font-size: 14.5px;
@@ -1283,11 +1265,6 @@ a {
   .position__grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  /* Two stat tiles per row: three no longer leaves the longest figure
-     ("17s → 3s") room beside its label. */
-  .concepts__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   /* Below this width the nav always wraps to its own row. Measured: ~97px here,
      ~127px once the brand row wraps too (see the 480px block). A few pixels of
      headroom absorbs the reflow while the heading face is still loading. */
@@ -1318,11 +1295,6 @@ a {
 }
 
 @media (max-width: 640px) {
-  /* Two tiles still fit here, but not at the display size: "Invisible redesign"
-     is the widest label and overruns a half-width tile at 21px. */
-  .concepts__label {
-    font-size: 19px;
-  }
   .about {
     padding-block: 48px 20px;
   }
@@ -1360,11 +1332,6 @@ a {
 }
 
 @media (max-width: 480px) {
-  /* One tile per row: two columns cannot hold a figure and a two-line label. */
-  .concepts__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   :root {
     --header-h: 132px;
   }

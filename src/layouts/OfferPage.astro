@@ -25,6 +25,13 @@ const page = t.offerPages[offer];
 if (!page) throw new Error(`${route.path}: no ${locale} content for the ${offer} Offer`);
 const labels = t.offerPage;
 
+/* The Failure modes this Offer treats speak first, in the words the home page
+   quotes them in; the page's own sentences follow. Each is written once. */
+const sentences = [
+  ...t.failureModes.filter((mode) => mode.offer === offer).map((mode) => mode.quote),
+  ...page.sentences,
+];
+
 const achievements = OFFERS[offer].achievements.map((id) => {
   const achievement = t.achievements.find((candidate) => candidate.id === id);
   if (!achievement) throw new Error(`${offer} cites ${id}, which is not an Achievement`);
@@ -69,7 +76,7 @@ const num = (n: number) => String(n).padStart(2, '0');
         <span class="kicker__num">{num(1)}</span>{labels.sentences}
       </h2>
       <ul class="offer__sentences">
-        {page.sentences.map((sentence) => <li class="offer__sentence">{sentence}</li>)}
+        {sentences.map((sentence) => <li class="offer__sentence">{sentence}</li>)}
       </ul>
     </section>
 

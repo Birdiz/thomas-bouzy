@@ -32,36 +32,11 @@ export const fr = {
     ctaOffers: 'Voir les offres',
   },
 
-  concepts: [
-    {
-      label: 'Traçable',
-      gloss:
-        'Chaque mouvement conservé comme un fait daté ; le solde se rejoue au lieu de se deviner.',
-    },
-    {
-      label: 'Refonte invisible',
-      gloss: 'Des payloads reconstruits sous leurs consommateurs, sans en casser un seul.',
-    },
-    {
-      label: 'Empreinte',
-      gloss:
-        "Mémoire, CPU, poids d'image et déploiement traités comme du design, pas comme la météo.",
-    },
-    {
-      label: 'Build-vs-buy',
-      gloss: "Ce qu'on continue d'acheter, ce qu'on internalise, et où passe la ligne.",
-    },
-    {
-      label: 'Service partagé',
-      gloss: "Né du besoin d'une squad, ouvert aux autres équipes qui avaient le même.",
-    },
-    {
-      label: 'Transmission',
-      gloss: "Revues d'architecture, onboarding, une trace écrite qu'un nouveau peut contester.",
-    },
-  ],
-
   problem: {
+    audit: {
+      text: 'Vous ne savez pas encore lequel est le vôtre ?',
+      cta: 'Commencer par un audit',
+    },
     kicker: 'Le problème',
     title: "Le chemin nominal n'est jamais la partie intéressante.",
     paragraphs: [
@@ -73,20 +48,24 @@ export const fr = {
 
   failureModes: [
     {
-      quote: "« On a recrédité deux fois, et on ne l'a vu qu'à la réconciliation. »",
-      text: "La double exécution. Un consumer rejoue un message, et rien dans le code ne distingue le second passage du premier. Ce n'est déjà plus un incident technique à ce stade : c'est un écart comptable, avec un régulateur au bout.",
+      quote: "« Celui qui a fait notre appli est parti, et plus personne n'ose y toucher. »",
+      text: "L'application orpheline. Celui qui la connaissait est parti, la documentation n'a jamais existé, et chaque modification devient un pari : on finit par ne plus rien toucher, pendant que l'application vieillit sous l'activité qui en dépend.",
+      offer: 'takeover',
     },
     {
-      quote: '« On ne sait pas expliquer comment ce solde est arrivé là. »',
-      text: "Un modèle basé état. Il dit ce qu'est le solde aujourd'hui, jamais la suite de faits qui l'a produit — la seule chose que demandent réellement la finance, le support et l'audit.",
+      quote: "« La montée de version, c'est toujours pour le trimestre prochain. »",
+      text: "La migration qui n'arrive jamais. Sur un système qui ne peut pas s'arrêter, la fenêtre d'arrêt qu'exigerait une réécriture n'arrive jamais : le chantier glisse d'un trimestre à l'autre pour de bonnes raisons, pendant que le coût de l'ancienne version continue de courir.",
+      offer: 'migration',
     },
     {
-      quote: '« La migration est dans la roadmap depuis deux ans. »',
-      text: "La réécriture qui exige une fenêtre d'arrêt. Sur un système qui ne s'arrête pas, cette fenêtre n'arrive jamais : le chantier glisse d'un trimestre à l'autre pour de bonnes raisons, pendant que le coût de l'ancien modèle continue de courir.",
+      quote: '« Le stock (ou le solde) ne tombe pas juste, et personne ne sait pourquoi. »',
+      text: "L'écart que personne ne sait expliquer. Un modèle qui ne garde que l'état dit combien il reste aujourd'hui, en stock, dans un lot ou sur un compte, jamais la suite de mouvements qui y a mené : la seule chose que demandent la comptabilité, le support et l'audit.",
+      offer: 'reliability',
     },
     {
-      quote: '« On apprend nos bugs par les tickets clients. »',
-      text: "Les défauts trouvés par les utilisateurs. Un bug découvert par un ticket était détectable des heures plus tôt. Ce qui n'est pas instrumenté n'est pas fiable : c'est juste non testé en production, et le client fait la recette à votre place.",
+      quote: '« Ce sont nos clients qui trouvent les bugs. »',
+      text: "Les défauts trouvés par les utilisateurs. Un bug découvert par un client était détectable des heures plus tôt. Ce qui n'est pas instrumenté n'est pas fiable : c'est juste non testé en production, et le client fait la recette à votre place.",
+      offer: 'reliability',
     },
   ],
 
@@ -480,7 +459,6 @@ export const fr = {
           "Reprendre une application métier orpheline sans rien casser : un filet de tests d'abord, puis une formule mensuelle Veille ou Évolution. Prix publics.",
       },
       sentences: [
-        "« Celui qui a fait notre appli est parti, et plus personne n'ose y toucher. »",
         '« On ne sait même plus qui a les accès au serveur. »',
         "« Chaque modification, c'est la boule au ventre. »",
       ],
@@ -576,10 +554,7 @@ export const fr = {
         description:
           "Migrer un système en production vers une nouvelle version sans l'arrêter : un plan à prix fixe, puis l'exécution avec votre équipe. Prix publics.",
       },
-      sentences: [
-        "« La montée de version, c'est toujours pour le trimestre prochain. »",
-        "« On est bloqués sur une version qui n'a plus de correctifs de sécurité. »",
-      ],
+      sentences: ["« On est bloqués sur une version qui n'a plus de correctifs de sécurité. »"],
       concepts: [
         {
           label: 'Refonte invisible',
@@ -673,11 +648,7 @@ export const fr = {
         description:
           'Rendre un système observable et ses flux traçables, pour expliquer un écart de stock, un solde ou un bug au lieu de le deviner. Prix publics.',
       },
-      sentences: [
-        '« Le stock (ou le solde) ne tombe pas juste, et personne ne sait pourquoi. »',
-        '« Ce sont nos clients qui trouvent les bugs. »',
-        "« On a recrédité deux fois, et on ne l'a vu qu'à la réconciliation. »",
-      ],
+      sentences: ["« On a recrédité deux fois, et on ne l'a vu qu'à la réconciliation. »"],
       concepts: [
         {
           label: 'Traçable',
