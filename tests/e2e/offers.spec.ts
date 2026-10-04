@@ -1,5 +1,5 @@
-import { en } from '../../src/content/en.ts';
-import { fr } from '../../src/content/fr.ts';
+import { RESUME } from '../../src/content/index.ts';
+import type { OfferId } from '../../src/content/offers.ts';
 import { combinationFor, optionCombinations, PRICES } from '../../src/content/prices.ts';
 import { formatEuroRange } from '../../src/lib/money.ts';
 import { ROUTES } from '../../src/routes.ts';
@@ -12,12 +12,11 @@ import { expect, test } from './fixtures.ts';
  * labelled as an order of magnitude, and a way to book a call that keeps the
  * page on its own origin.
  */
-const CONTENT = { en, fr } as const;
 const OFFER_ROUTES = ROUTES.filter((route) => route.page.id !== 'home');
 
 for (const route of OFFER_ROUTES) {
-  const offer = route.page.id as keyof typeof PRICES;
-  const t = CONTENT[route.locale];
+  const offer = route.page.id as OfferId;
+  const t = RESUME[route.locale];
 
   test.describe(`${route.path}`, () => {
     test('opens on the Offer and its plain line', async ({ page }) => {
@@ -43,6 +42,66 @@ for (const route of OFFER_ROUTES) {
       }
 
       await expect(page.locator('.estimator__disclaimer')).toHaveText(t.offerPage.disclaimer);
+    });
+
+    test('turns the table into labelled sliders that show every range it holds', async ({
+      page,
+    }) => {
+      await page.goto(route.path);
+      const table = PRICES[offer];
+      const labels = t.offerPages[offer]?.estimator;
+      if (!labels) throw new Error(`${route.path} has no estimator labels`);
+
+      // The table it replaces is gone, the result is announced.
+      await expect(page.locator('[data-estimator-table]')).toBeHidden();
+      const result = page.getByRole('status');
+      await expect(result).toHaveCount(1);
+
+      const sliders = table.dimensions.map((dimension) =>
+        page.getByRole('slider', { name: labels.dimensions[dimension.id]?.label ?? dimension.id }),
+      );
+      for (const slider of sliders) await expect(slider).toHaveCount(1);
+
+      // Every combination, reached from the keyboard alone.
+      for (const options of optionCombinations(table)) {
+        for (const [i, dimension] of table.dimensions.entries()) {
+          const slider = sliders[i];
+          if (!slider) throw new Error('missing slider');
+          const option = options[i] ?? '';
+          await slider.focus();
+          await page.keyboard.press('Home');
+          for (let step = 0; step < dimension.options.indexOf(option); step++) {
+            await page.keyboard.press('ArrowRight');
+          }
+          await expect(slider).toHaveAttribute(
+            'aria-valuetext',
+            labels.dimensions[dimension.id]?.options[option] ?? '',
+          );
+        }
+
+        const combination = combinationFor(table, options);
+        for (const amount of table.amounts) {
+          const range = combination?.amounts[amount];
+          if (!range) throw new Error(`${offer} ${options.join(' ')} has no ${amount}`);
+          await expect(result, options.join(' × ')).toContainText(
+            formatEuroRange(range, route.locale),
+          );
+        }
+      }
+    });
+
+    test('keeps every range, and leaves no dead control, without JavaScript', async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({ javaScriptEnabled: false });
+      const page = await context.newPage();
+      await page.goto(route.path);
+      await expect(page.getByRole('slider')).toHaveCount(0);
+      await expect(page.locator('[data-estimator-table]')).toBeVisible();
+      await expect(page.locator('.estimator__table tbody tr')).toHaveCount(
+        optionCombinations(PRICES[offer]).length,
+      );
+      await context.close();
     });
 
     test('books the call through a plain outbound link', async ({ page }) => {

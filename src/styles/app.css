@@ -1070,6 +1070,62 @@ a {
   white-space: nowrap;
 }
 
+/* The live estimator: one slider per dimension, then the figures it selects.
+   The figures are the largest type in the section — they are the answer. */
+.estimator__live {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px 32px;
+  align-items: start;
+  padding: 24px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.estimator__sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.estimator__slider label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+}
+.estimator__choice {
+  color: var(--color-text);
+  text-align: right;
+}
+.estimator__slider input {
+  width: 100%;
+  accent-color: var(--color-accent);
+  /* A thumb a finger can find: the native one is ~16px. */
+  min-height: 32px;
+  margin: 0;
+}
+.estimator__figures {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+}
+.estimator__figure dt {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.estimator__figure dd {
+  margin: 4px 0 0;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.2;
+}
+
 .offer__rules {
   margin: 18px 0 0;
   padding: 16px 0 0 20px;
@@ -1142,7 +1198,8 @@ a {
 }
 
 @media (max-width: 860px) {
-  .offer__fit {
+  .offer__fit,
+  .estimator__live {
     grid-template-columns: minmax(0, 1fr);
   }
   .problem__grid {
