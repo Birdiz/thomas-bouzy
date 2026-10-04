@@ -18,7 +18,7 @@ export const en = {
   },
 
   nav: {
-    work: 'Work',
+    work: 'Achievements',
     approach: 'Approach',
     about: 'About',
     contact: 'Get in touch',
@@ -124,8 +124,8 @@ export const en = {
   ],
 
   work: {
-    kicker: 'Selected projects',
-    title: 'Six things worth opening',
+    kicker: 'Achievements',
+    title: 'Work worth opening',
     intro:
       'Each one is a real system in production. Open a card for the context, the approach and what it actually changed.',
     labelPlain: 'In plain terms:',
@@ -134,7 +134,7 @@ export const en = {
     labelResult: 'Result',
   },
 
-  projects: [
+  achievements: [
     {
       title: 'Event Sourcing on wallet transactions',
       org: 'Socios.com (Chiliz)',
@@ -186,6 +186,19 @@ export const en = {
         'Test coverage first: you do not migrate a monolith without a way to see the regressions. Then two migrations in parallel on a live system — Symfony 2.7 to 4 with API Platform, AngularJS to React. The contract had two consumers on separate release cycles, a web frontend and a mobile app, so payload conventions, an error taxonomy and API Platform guidelines were agreed before implementation rather than after. The deployment itself went behind an initialisation wizard written in Node.js and Jenkins orchestration.',
       result:
         'Onboarding a new enterprise account came down to one day. Sales-force rankings and results were delivered live through a Mercure integration over Server-Sent Events. Of four inherited juniors mentored over two years, one stayed and moved onto the mobile app served by the same API.',
+    },
+    {
+      title: 'Keeping an industrial ERP running in production',
+      org: 'Quadra Informatique',
+      period: '2016 – 2017',
+      plain:
+        'Looking after the software a manufacturer runs its whole business on, from suppliers to invoices, while it stayed in daily use.',
+      context:
+        'A complete ERP for industrial clients: suppliers, the production line, stock, invoicing and incident tracking, in one application the business could not do without for a single day.',
+      approach:
+        'Maintenance and change on a system in daily production use. Every correction and every evolution went into the application that held the stock and the invoices, where a regression reached the shop floor or the accounts the same day — so nothing was changed that could not first be checked.',
+      result:
+        'The ERP stayed in production throughout. It is the kind of application the Takeover is for: one a business depends on every day, and that has to keep running while it is looked after.',
     },
     {
       title: "Auditing a codebase I didn't write",

@@ -7,7 +7,7 @@ import { fr } from '../src/content/fr.ts';
  * locales carry the same keys — a missing one is a compile error. These tests
  * cover the invariants types cannot express:
  *
- *   - array lengths matching at every depth (6 projects EN, 6 projects FR)
+ *   - array lengths matching at every depth (7 achievements EN, 7 FR)
  *   - no empty or whitespace-only strings
  *   - the sections that must actually be translated, are
  *   - the content corrections we made against the design are still in place
@@ -86,7 +86,7 @@ describe('EN/FR parity', () => {
       '$.work.labelPlain',
       '$.failureModes[0].quote',
       '$.failureModes[0].text',
-      '$.projects[0].plain',
+      '$.achievements[0].plain',
       '$.concepts[0].gloss',
       '$.concepts[1].label',
       '$.about.title',
@@ -243,7 +243,7 @@ describe('content corrections applied against the design', () => {
   it('keeps the measurements that only the Track record used to carry', () => {
     // Chantier A deleted the Track record. Four of its facts appeared nowhere
     // else, and a measurement does not survive being replaced by a download —
-    // so each was moved into the project card or the principle whose subject it
+    // so each was moved into the achievement card or the principle whose subject it
     // already was. This is the test that says so: it fails if a rewrite of any
     // of those hosts quietly drops what it inherited.
     const survivors: [string, RegExp, RegExp][] = [
@@ -260,17 +260,17 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('states the blockchain scope boundary on the on-chain project itself', () => {
+  it('states the blockchain scope boundary on the on-chain achievement itself', () => {
     // §3.9: SDK integration and transaction operation, no smart contract
     // authoring. Volunteering the limit is what makes the rest credible, so it
     // belongs in the card body — not in a footnote, and not omitted.
     for (const content of [en, fr]) {
       // Selected on the card's own prose now: the stack chips it used to be
       // found by went with the rest of the chips.
-      const onChain = content.projects.find((project) =>
-        /Solana|Meteora/.test(`${project.context} ${project.approach}`),
+      const onChain = content.achievements.find((achievement) =>
+        /Solana|Meteora/.test(`${achievement.context} ${achievement.approach}`),
       );
-      expect(onChain, 'the on-chain project card is present').toBeDefined();
+      expect(onChain, 'the on-chain achievement card is present').toBeDefined();
       expect(`${onChain?.approach} ${onChain?.result}`).toMatch(
         /no smart contract authoring|pas d'écriture de smart contracts/,
       );
@@ -346,7 +346,7 @@ describe('Chantier C — the mirror', () => {
     });
   });
 
-  it('opens every project card in plain language, naming no technology', () => {
+  it('opens every achievement card in plain language, naming no technology', () => {
     // "In plain terms:" was Thomas's own device, used on the on-chain card and
     // nowhere else — one card in six. Generalising it as a habit is how it got
     // to one in six; generalising it as a field with a rule is what holds.
@@ -360,26 +360,39 @@ describe('Chantier C — the mirror', () => {
     ] as const) {
       expect(content.work.labelPlain.trim().endsWith(':')).toBe(true);
 
-      for (const project of content.projects) {
+      for (const achievement of content.achievements) {
         expect(
-          project.plain.trim().length,
-          `${locale}: ${project.title} has no plain line`,
+          achievement.plain.trim().length,
+          `${locale}: ${achievement.title} has no plain line`,
         ).toBeGreaterThan(0);
 
         // A lede, not a fourth facet. The context paragraph is where the detail
         // goes; this line has one job and loses it at four clauses.
         expect(
-          project.plain.length,
-          `${locale}: the plain line on ${project.title} is a paragraph`,
+          achievement.plain.length,
+          `${locale}: the plain line on ${achievement.title} is a paragraph`,
         ).toBeLessThan(160);
 
         for (const tech of content.schema.knowsAbout) {
           expect(
-            project.plain,
-            `${locale}: ${project.title} explains itself with ${tech}`,
+            achievement.plain,
+            `${locale}: ${achievement.title} explains itself with ${tech}`,
           ).not.toContain(tech);
         }
       }
+    }
+  });
+
+  it('names the work Achievements, and stops counting them in the heading', () => {
+    // The glossary's term is Achievement (CONTEXT.md). The heading used to say
+    // "six", which was true until the industrial ERP arrived; a count in a
+    // heading is a number the next card makes wrong.
+    for (const content of [en, fr]) {
+      expect(content.work.title).not.toMatch(/\b(six|seven|sept|\d+)\b/i);
+      expect(
+        content.achievements.some((achievement) => achievement.org === 'Quadra Informatique'),
+        'the industrial ERP Achievement is on the page',
+      ).toBe(true);
     }
   });
 
@@ -392,9 +405,9 @@ describe('Chantier C — the mirror', () => {
       ['en', en],
       ['fr', fr],
     ] as const) {
-      for (const project of content.projects) {
-        const body = `${project.plain} ${project.context} ${project.approach} ${project.result}`;
-        expect(body, `${locale}: ${project.title} still says it inline`).not.toMatch(
+      for (const achievement of content.achievements) {
+        const body = `${achievement.plain} ${achievement.context} ${achievement.approach} ${achievement.result}`;
+        expect(body, `${locale}: ${achievement.title} still says it inline`).not.toMatch(
           /In plain terms|En clair/i,
         );
       }

@@ -13,11 +13,11 @@ test.describe('routing and locales', () => {
     await gotoHome(page, '/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
-    await expect(page.getByRole('heading', { name: 'Six things worth opening' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Work worth opening' })).toBeVisible();
 
     await gotoHome(page, '/fr/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-    await expect(page.getByRole('heading', { name: 'Six sujets à ouvrir' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Des réalisations à ouvrir' })).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {
@@ -52,21 +52,26 @@ test.describe('routing and locales', () => {
   });
 });
 
-test.describe('projects accordion', () => {
-  test('opens the first project and keeps only one open at a time', async ({ page }) => {
+test.describe('achievements accordion', () => {
+  test('opens the first achievement and keeps only one open at a time', async ({ page }) => {
     await gotoHome(page, '/');
-    const projects = page.locator('details.project');
-    await expect(projects).toHaveCount(6);
-    await expect(projects.nth(0)).toHaveAttribute('open', '');
+    const achievements = page.locator('details.achievement');
+    await expect(achievements).toHaveCount(7);
+    await expect(achievements.nth(0)).toHaveAttribute('open', '');
 
-    await projects.nth(2).locator('summary').click();
-    await expect(projects.nth(2)).toHaveAttribute('open', '');
-    await expect(projects.nth(0)).not.toHaveAttribute('open', '');
+    await achievements.nth(2).locator('summary').click();
+    await expect(achievements.nth(2)).toHaveAttribute('open', '');
+    await expect(achievements.nth(0)).not.toHaveAttribute('open', '');
+
+    // The seventh one too: `name` groups the whole list, not the first six.
+    await achievements.nth(6).locator('summary').click();
+    await expect(achievements.nth(6)).toHaveAttribute('open', '');
+    await expect(achievements.nth(2)).not.toHaveAttribute('open', '');
   });
 
-  test('exposes each project as a heading with its panel content', async ({ page }) => {
+  test('exposes each achievement as a heading with its panel content', async ({ page }) => {
     await gotoHome(page, '/');
-    const first = page.locator('details.project').first();
+    const first = page.locator('details.achievement').first();
     await expect(
       first.getByRole('heading', { name: /Event Sourcing on wallet transactions/ }),
     ).toBeVisible();
@@ -78,7 +83,7 @@ test.describe('projects accordion', () => {
   test('is operable from the keyboard', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'WebKit needs full keyboard access enabled at OS level');
     await gotoHome(page, '/');
-    const second = page.locator('details.project').nth(1);
+    const second = page.locator('details.achievement').nth(1);
     await second.locator('summary').focus();
     await page.keyboard.press('Enter');
     await expect(second).toHaveAttribute('open', '');

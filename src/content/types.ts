@@ -17,7 +17,7 @@
  * A proof line briefly survived underneath, carrying the measurement; it went
  * the same way and for the same reason. A ratio from one engagement does not
  * travel: the concept is the part that does, and the measurements sit in the
- * project cards and the principles, where they have a context.
+ * Achievement cards and the principles, where they have a context.
  */
 export interface Concept {
   /** One or two words. A named concept, never a skill label. */
@@ -25,7 +25,11 @@ export interface Concept {
   gloss: string;
 }
 
-export interface Project {
+/**
+ * Past work Thomas actually did, shown as proof of a capability. It is never
+ * itself for sale: an Achievement proves what an Offer sells (CONTEXT.md).
+ */
+export interface Achievement {
   title: string;
   org: string;
   period: string;
@@ -181,13 +185,13 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     intro: string;
-    /** Lead-in for `Project.plain`. Carries its own colon: French spaces it. */
+    /** Lead-in for `Achievement.plain`. Carries its own colon: French spaces it. */
     labelPlain: string;
     labelContext: string;
     labelApproach: string;
     labelResult: string;
   };
-  projects: Project[];
+  achievements: Achievement[];
 
   about: {
     kicker: string;

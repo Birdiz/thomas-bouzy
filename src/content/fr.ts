@@ -18,7 +18,7 @@ export const fr = {
   },
 
   nav: {
-    work: 'Projets',
+    work: 'Réalisations',
     approach: 'Ma position',
     about: 'À propos',
     contact: 'Me contacter',
@@ -126,8 +126,8 @@ export const fr = {
   ],
 
   work: {
-    kicker: 'Projets sélectionnés',
-    title: 'Six sujets à ouvrir',
+    kicker: 'Réalisations',
+    title: 'Des réalisations à ouvrir',
     intro:
       "Chacun est un système réel en production. Ouvrez une carte pour le contexte, l'approche et ce que ça a changé.",
     labelPlain: 'En clair :',
@@ -136,7 +136,7 @@ export const fr = {
     labelResult: 'Résultat',
   },
 
-  projects: [
+  achievements: [
     {
       title: 'Event Sourcing sur les transactions wallet',
       org: 'Socios.com (Chiliz)',
@@ -188,6 +188,19 @@ export const fr = {
         "Les tests d'abord : on ne migre pas un monolithe sans de quoi constater les régressions. Puis deux migrations en parallèle sur un système vivant — Symfony 2.7 vers 4 avec API Platform, AngularJS vers React. Le contrat servait deux consommateurs aux cycles de release distincts, un front web et une application mobile : conventions de payload, taxonomie d'erreurs et guidelines d'usage d'API Platform ont donc été arrêtées avant l'implémentation, pas après. Le déploiement lui-même est passé derrière un assistant d'initialisation écrit en Node.js et une orchestration Jenkins.",
       result:
         "La mise en route d'un nouveau grand compte est tombée à une journée. Les classements et résultats des forces de vente sont diffusés en direct par une intégration Mercure en Server-Sent Events. Sur quatre juniors hérités et encadrés deux ans, l'un est resté et a basculé sur l'application mobile servie par la même API.",
+    },
+    {
+      title: 'Maintenir un ERP industriel en production',
+      org: 'Quadra Informatique',
+      period: '2016 – 2017',
+      plain:
+        "Veiller sur le logiciel dont un industriel dépend de bout en bout, des fournisseurs aux factures, pendant qu'il sert tous les jours.",
+      context:
+        "Un ERP complet pour des clients industriels : fournisseurs, ligne de production, stock, facturation et suivi des incidents, dans une seule application dont l'entreprise ne pouvait pas se passer une journée.",
+      approach:
+        "Maintenance et évolutions sur un système en production quotidienne. Chaque correction et chaque évolution partait dans l'application qui tenait le stock et les factures, où une régression atteignait l'atelier ou la comptabilité le jour même — rien n'était donc changé qu'on ne puisse d'abord vérifier.",
+      result:
+        "L'ERP est resté en production tout du long. C'est exactement le genre d'application pour laquelle existe la Reprise : un outil dont l'entreprise dépend chaque jour, et qui doit continuer de tourner pendant qu'on s'en occupe.",
     },
     {
       title: "Auditer une base de code qui n'est pas la mienne",
