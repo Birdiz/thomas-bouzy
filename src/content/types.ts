@@ -153,7 +153,10 @@ export interface ResumeContent {
    *
    * `availability` carries no date. It said "permanent roles from September
    * 2026" on a page whose own thesis is that what is not instrumented is not
-   * reliable, and it was one day from expiring.
+   * reliable, and it was one day from expiring. Then it said "available now",
+   * which is not true of a business that is not registered yet: it says that
+   * first engagements are in preparation, which stays true until it is not
+   * needed (ADR 14).
    */
   hero: {
     availability: string;

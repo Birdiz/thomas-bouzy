@@ -122,11 +122,18 @@ describe('content corrections applied against the design', () => {
     // compares one against the clock: a line with nothing to expire cannot be
     // caught late. The permanent-role half went with it — it is stated once, in
     // About, as the line that points a Recruiter at LinkedIn.
-    expect(en.hero.availability).toMatch(/available now/i);
-    expect(fr.hero.availability).toMatch(/disponible imm/i);
+    //
+    // "Available now" went too: it is not true before the business is
+    // registered, and nothing on the page could make it so (ADR 14).
+    expect(en.hero.availability).toMatch(/first engagements in preparation/i);
+    expect(fr.hero.availability).toMatch(/premières missions en préparation/i);
 
     for (const line of [en.hero.availability, fr.hero.availability]) {
+      expect(line.trim().length, 'the availability line is blank').toBeGreaterThan(0);
       expect(line.match(/\b(19|20)\d{2}\b/), `${line} names a year that will go stale`).toBeNull();
+      expect(line, `${line} still claims immediate availability`).not.toMatch(
+        /available now|disponible imm/i,
+      );
     }
   });
 

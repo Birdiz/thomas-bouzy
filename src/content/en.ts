@@ -25,7 +25,7 @@ export const en = {
   },
 
   hero: {
-    availability: 'Available now',
+    availability: "First engagements in preparation — let's talk now",
     blurb:
       'I design transactional systems that have to stay correct while they stay up. Twelve years of backend and architecture — event-driven flows, Event Sourcing on wallets, and on-chain operations where a mistake costs real money.',
     ctaWork: 'See the work',

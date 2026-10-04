@@ -25,7 +25,7 @@ export const fr = {
   },
 
   hero: {
-    availability: 'Disponible immédiatement',
+    availability: 'Premières missions en préparation — parlons-en dès maintenant',
     blurb:
       "Je conçois des systèmes transactionnels qui doivent rester justes pendant qu'ils restent debout. Douze ans de backend et d'architecture — flux event-driven, Event Sourcing sur les wallets, et des opérations on-chain où une erreur coûte de l'argent réel.",
     ctaWork: 'Voir les projets',
