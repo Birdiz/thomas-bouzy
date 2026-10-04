@@ -1,6 +1,6 @@
 import { RESUME } from '../../src/content/index.ts';
 import type { OfferId } from '../../src/content/offers.ts';
-import { combinationFor, optionCombinations, PRICES } from '../../src/content/prices.ts';
+import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../../src/content/prices.ts';
 import { formatEuroRange } from '../../src/lib/money.ts';
 import { ROUTES } from '../../src/routes.ts';
 import { CONTACT } from '../../src/site.ts';
@@ -119,4 +119,52 @@ test('the Audit states that its fee is deducted, and its due diligence variant',
   await page.goto('/en/offers/audit/');
   await expect(page.locator('main')).toContainText(/deducted/);
   await expect(page.getByRole('heading', { name: /due diligence/i })).toBeVisible();
+});
+
+test.describe('languages on Offer pages', () => {
+  for (const route of OFFER_ROUTES) {
+    const versions = ROUTES.filter((other) => other.page.id === route.page.id);
+
+    if (versions.length === 1) {
+      test(`${route.path} exists in one locale: no alternate, no switch`, async ({ page }) => {
+        await page.goto(route.path);
+        await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
+        await expect(page.locator('.lang-switch')).toHaveCount(0);
+      });
+    } else {
+      test(`${route.path} switches to itself in the other language`, async ({ page }) => {
+        for (const other of versions.filter((version) => version.locale !== route.locale)) {
+          await page.goto(route.path);
+          await page.locator(`.lang-switch a[hreflang="${other.locale}"]`).click();
+          await expect(page).toHaveURL(new RegExp(`${other.path}$`));
+        }
+      });
+    }
+  }
+});
+
+test('the Takeover starts with the test safety net and is proven by the industrial ERP', async ({
+  page,
+}) => {
+  const takeover = RESUME.fr.offerPages.takeover;
+  const erp = RESUME.fr.achievements.find((achievement) => achievement.id === 'industrial-erp');
+  await page.goto('/offres/reprise-et-maintenance/');
+  await expect(page.locator('.offer__step').first()).toContainText(
+    takeover?.steps[0]?.title ?? '∅',
+  );
+  await expect(page.getByRole('heading', { name: erp?.title ?? '∅' })).toBeVisible();
+  // Two figures for every combination: the set-up, then the monthly plan.
+  const result = page.getByRole('status');
+  await expect(result).toContainText(takeover?.estimator.amounts.setup ?? '∅');
+  await expect(result).toContainText(takeover?.estimator.amounts.monthly ?? '∅');
+});
+
+test('Reinforcement shows the day rate the price table holds', async ({ page }) => {
+  for (const [path, locale] of [
+    ['/offres/renfort-senior/', 'fr'],
+    ['/en/offers/reinforcement/', 'en'],
+  ] as const) {
+    await page.goto(path);
+    await expect(page.locator('.offer__day-rate')).toContainText(formatEuroRange(DAY_RATE, locale));
+  }
 });

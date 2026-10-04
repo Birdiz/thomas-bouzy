@@ -186,6 +186,15 @@ export interface OfferPage {
    * the Audit's fee deducted from what follows, the two phases of a Migration…
    */
   rules: string[];
+  /**
+   * Words around the published day rate, for the pages that show it. The
+   * amount itself is DAY_RATE in prices.ts, never a copy.
+   */
+  dayRate?: {
+    label: string;
+    /** What follows the range, e.g. that it is lower for long full-time Engagements. */
+    note: string;
+  };
   goodChoice: string[];
   notTheRightChoice: string[];
   faq: { question: string; answer: string }[];
@@ -219,6 +228,11 @@ export interface OfferPageLabels {
     cta: string;
     /** Lead-in to the email address, for those who would rather write. */
     orWrite: string;
+    /**
+     * Names the Service area. `{towns}` is replaced by SITE.serviceArea, so the
+     * towns are listed in one place.
+     */
+    serviceArea: string;
   };
 }
 

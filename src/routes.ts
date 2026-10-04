@@ -30,6 +30,14 @@ export interface Page {
 export const PAGES: readonly Page[] = [
   { id: 'home', paths: { fr: '/', en: '/en/' } },
   { id: 'audit', paths: { fr: '/offres/audit/', en: '/en/offers/audit/' } },
+  // French only: its Segments, the orphan app and Partners, are French and local.
+  { id: 'takeover', paths: { fr: '/offres/reprise-et-maintenance/' } },
+  { id: 'migration', paths: { fr: '/offres/migration/', en: '/en/offers/migration/' } },
+  { id: 'reliability', paths: { fr: '/offres/fiabilisation/', en: '/en/offers/reliability/' } },
+  {
+    id: 'reinforcement',
+    paths: { fr: '/offres/renfort-senior/', en: '/en/offers/reinforcement/' },
+  },
 ];
 
 /** One served URL: a page, in one of its locales. */

@@ -5,6 +5,8 @@ import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
 import { OFFERS, type OfferId } from '../content/offers.ts';
+import { DAY_RATE } from '../content/prices.ts';
+import { formatEuroRange } from '../lib/money.ts';
 import { service } from '../lib/structured-data.ts';
 import type { Route } from '../routes.ts';
 import { SITE } from '../site.ts';
@@ -120,6 +122,14 @@ const num = (n: number) => String(n).padStart(2, '0');
       </h2>
       <Estimator offer={offer} locale={locale} labels={page.estimator} shared={labels} />
       {
+        page.dayRate && (
+          <p class="offer__day-rate">
+            <strong>{page.dayRate.label}</strong>{' '}
+            {formatEuroRange(DAY_RATE, locale)} {labels.excludingVat}, {page.dayRate.note}
+          </p>
+        )
+      }
+      {
         page.rules.length > 0 && (
           <ul class="offer__rules">
             {page.rules.map((rule) => (
@@ -185,7 +195,7 @@ const num = (n: number) => String(n).padStart(2, '0');
     </section>
 
     {/* 9. The booking link. */}
-    <BookingSection labels={labels.book} />
+    <BookingSection labels={labels.book} locale={locale} />
   </main>
   <SiteFooter t={t} />
 </BaseLayout>

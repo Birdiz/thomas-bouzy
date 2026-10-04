@@ -3,7 +3,7 @@ import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
 import { contentOfPage, type ResumeContent } from '../src/content/index.ts';
 import { OFFER_IDS, OFFERS } from '../src/content/offers.ts';
-import { optionCombinations, PRICES } from '../src/content/prices.ts';
+import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../src/content/prices.ts';
 import { PAGES } from '../src/routes.ts';
 import { LOCALES } from '../src/site.ts';
 
@@ -587,5 +587,90 @@ describe('Offers and the price table (ADR 17)', () => {
     expect(fr.offerPages.audit?.rules.join(' ')).toMatch(/déduit/);
     expect(en.offerPages.audit?.variant?.title).toMatch(/due diligence/i);
     expect(fr.offerPages.audit?.variant?.title).toMatch(/due diligence/i);
+  });
+});
+
+describe('what each Offer page has to say (ADR 17)', () => {
+  const pagesOf = (content: ResumeContent) => content.offerPages;
+
+  it('starts a Takeover with the test safety net, and presents both plans', () => {
+    const takeover = pagesOf(fr).takeover;
+    expect(takeover, 'the Takeover page exists in French').toBeDefined();
+    expect(pagesOf(en).takeover, 'the Takeover is French only').toBeUndefined();
+    expect(takeover?.steps[0]?.title).toMatch(/filet de tests/i);
+    expect(takeover?.rules.join(' ')).toMatch(/filet de tests/i);
+    const delivered = takeover?.delivered.map((item) => item.title).join(' ') ?? '';
+    expect(delivered).toMatch(/Veille/);
+    expect(delivered).toMatch(/Évolution/);
+    expect(PRICES.takeover.amounts).toEqual(['setup', 'monthly']);
+    expect(OFFERS.takeover.achievements).toContain('industrial-erp');
+  });
+
+  it('sells a Migration in two phases, priced by version gap and test coverage', () => {
+    expect(PRICES.migration.dimensions.map((d) => d.id)).toEqual(['gap', 'coverage']);
+    expect(pagesOf(en).migration?.rules.join(' ')).toMatch(/two phases/);
+    expect(pagesOf(fr).migration?.rules.join(' ')).toMatch(/deux phases/);
+    // The plan is the fixed-price first phase: one range, inside the published one.
+    for (const combination of PRICES.migration.combinations) {
+      expect(combination.amounts.plan?.min).toBeGreaterThanOrEqual(2000);
+      expect(combination.amounts.plan?.max).toBeLessThanOrEqual(4000);
+    }
+  });
+
+  it('addresses double execution on the Reliability page, with one slider', () => {
+    expect(PRICES.reliability.dimensions).toHaveLength(1);
+    for (const content of [en, fr]) {
+      const page = pagesOf(content).reliability;
+      const everywhere = [...walkStrings(page)].map(([, text]) => text).join(' ');
+      expect(everywhere).toMatch(/double execution|double exécution/i);
+    }
+  });
+
+  it('publishes a 600–750 € day rate, and Reinforcement is priced from it', () => {
+    expect(DAY_RATE).toEqual({ min: 600, max: 750 });
+    expect(PRICES.reinforcement.dimensions.map((d) => d.id)).toEqual(['days']);
+    const oneDay = combinationFor(PRICES.reinforcement, ['1'])?.amounts.monthly;
+    // "from about 2,600 a month at one day a week"
+    expect(oneDay?.min).toBe(2600);
+    for (const content of [en, fr]) {
+      expect(pagesOf(content).reinforcement?.dayRate).toBeDefined();
+    }
+  });
+
+  it('states the capacity rule as a rule, never as a state that could go stale', () => {
+    // "Two Clients at a time, never more" (ADR 17) — a rule cannot expire; a
+    // "currently available" or a date can, like the line ADR 11 removed.
+    expect(pagesOf(en).reinforcement?.rules.join(' ')).toMatch(
+      /two clients at a time, never more/i,
+    );
+    expect(pagesOf(fr).reinforcement?.rules.join(' ')).toMatch(
+      /deux clients à la fois, jamais plus/i,
+    );
+    for (const content of [en, fr]) {
+      const page = pagesOf(content).reinforcement;
+      const everywhere = [...walkStrings(page)].map(([, text]) => text).join(' ');
+      expect(everywhere).not.toMatch(/\b(19|20)\d{2}\b/);
+      expect(everywhere).not.toMatch(/available|disponible|currently|actuellement|complet/i);
+    }
+  });
+
+  it('puts each Concept on the Offer ADR 14 moves it to', () => {
+    const expected: Record<string, [string, string][]> = {
+      audit: [
+        ['Footprint', 'Empreinte'],
+        ['Build-vs-buy', 'Build-vs-buy'],
+      ],
+      migration: [['Invisible redesign', 'Refonte invisible']],
+      reliability: [['Traceable', 'Traçable']],
+      reinforcement: [
+        ['Shared service', 'Service partagé'],
+        ['Handover', 'Transmission'],
+      ],
+    };
+    for (const [offer, labels] of Object.entries(expected)) {
+      const id = offer as keyof ResumeContent['offerPages'];
+      expect(pagesOf(en)[id]?.concepts.map((c) => c.label)).toEqual(labels.map(([e]) => e));
+      expect(pagesOf(fr)[id]?.concepts.map((c) => c.label)).toEqual(labels.map(([, f]) => f));
+    }
   });
 });

@@ -343,6 +343,7 @@ export const en = {
       text: 'Free and with no commitment: you describe the situation, and I tell you plainly whether this Offer is the right one, and if not, which is.',
       cta: 'Book a call',
       orWrite: 'Would rather write?',
+      serviceArea: 'On site in {towns}; remotely everywhere else.',
     },
   },
 
@@ -450,6 +451,291 @@ export const en = {
           question: 'Why a range rather than a price?',
           answer:
             'Because the price depends on the real size of the system, which we measure during the first call. The quote itself is firm before anything starts.',
+        },
+      ],
+    },
+    migration: {
+      meta: {
+        title: 'Migration without downtime — Thomas Bouzy',
+        description:
+          'Moving a production system to a new version without stopping it: a fixed-price plan, then execution alongside your team. Public prices.',
+      },
+      sentences: [
+        '“The version upgrade is always for next quarter.”',
+        "“We're stuck on a version that no longer gets security fixes.”",
+      ],
+      concepts: [
+        {
+          label: 'Invisible redesign',
+          gloss: 'Payloads rebuilt underneath their consumers, without breaking a single one.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'A migration plan',
+          text: 'The order of the steps, what each one risks and how to roll it back, costed: enough to decide before spending more.',
+        },
+        {
+          title: 'A migration in steps',
+          text: 'The system changes underneath the people using it, with no stop window: two versions coexist for as long as needed, and no longer.',
+        },
+        {
+          title: 'A team that can do it again',
+          text: "Execution happens with your team, not instead of it: the next upgrade won't depend on me.",
+        },
+      ],
+      steps: [
+        {
+          title: 'Phase 1: the plan, at a fixed price',
+          text: 'I read the system, measure the version gap and the test coverage, and write the plan. You can stop there: the plan is yours.',
+        },
+        {
+          title: 'The safety net, where it is missing',
+          text: 'Where tests are missing, they are written first: that is what lets you see a regression before your users do.',
+        },
+        {
+          title: 'Phase 2: execution',
+          text: 'Step by step with your team, each step shipped to production before the next, billed by the day.',
+        },
+        {
+          title: 'The end of coexistence',
+          text: 'The old path is removed as soon as the new one has proved itself, so the transition does not become the permanent state.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          gap: {
+            label: 'Version gap',
+            options: {
+              one: 'One major version',
+              two: 'Two major versions',
+              'three-plus': 'Three or more',
+            },
+          },
+          coverage: {
+            label: 'Existing test coverage',
+            options: { good: 'Good', partial: 'Partial', none: 'None' },
+          },
+        },
+        amounts: { plan: 'Plan, phase 1 at a fixed price' },
+        duration: 'Execution, with your team',
+      },
+      rules: [
+        'A Migration is sold in two phases: a fixed-price plan first, then execution alongside your team, billed by the day. You decide on the second with the plan in hand.',
+      ],
+      goodChoice: [
+        'Your system runs continuously and cannot stop to migrate.',
+        'The upgrade slips from quarter to quarter, for good reasons.',
+        'You want a serious estimate before committing to the bulk of the work.',
+      ],
+      notTheRightChoice: [
+        'The system can stop for a weekend without harm: a conventional migration will cost less.',
+        'You want to replace the system rather than evolve it: that is another decision, which an Audit can inform.',
+        'Nobody on your side will be able to take the system on afterwards: look at a takeover instead.',
+      ],
+      faq: [
+        {
+          question: 'Why does test coverage move the price so much?',
+          answer:
+            'Because without tests, every step has to be checked by hand, or the tests written first. It is the first cost driver of a migration, well ahead of the version gap.',
+        },
+        {
+          question: 'Does the plan commit me to doing the rest with you?',
+          answer: 'No. It is yours: you can follow it with your own team, or with someone else.',
+        },
+        {
+          question: 'What does execution cost?',
+          answer:
+            'It is billed by the day, at the published rate; the estimator gives its duration. The plan costs it precisely for your system.',
+        },
+      ],
+    },
+    reliability: {
+      meta: {
+        title: 'Reliability — Thomas Bouzy',
+        description:
+          'Making a system observable and its flows traceable, so a stock gap, a balance or a bug can be explained instead of guessed. Public prices.',
+      },
+      sentences: [
+        "“The stock (or the balance) doesn't add up, and nobody knows why.”",
+        '“Our customers are the ones who find the bugs.”',
+        '“We credited the same payout twice, and only saw it at reconciliation.”',
+      ],
+      concepts: [
+        {
+          label: 'Traceable',
+          gloss:
+            'Every movement kept as a dated fact; the balance replays instead of being guessed.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'Traceable flows',
+          text: 'Every movement of stock, of a batch or of money kept as a dated fact: you replay the history instead of reconstructing what must have happened.',
+        },
+        {
+          title: 'An observable system',
+          text: 'Dashboards per service and alerts on the signals that precede a failure, so you learn about a problem before your customers do.',
+        },
+        {
+          title: 'Double execution, dealt with',
+          text: 'A replayed job must not have two effects. The flows that matter become idempotent: a message received twice is applied once.',
+        },
+      ],
+      steps: [
+        {
+          title: 'The flows that matter',
+          text: 'We pick together the ones where a discrepancy really costs: stock, batches, invoicing, payments.',
+        },
+        {
+          title: 'Instrumentation',
+          text: 'Those flows are traced end to end, and discrepancies become visible the moment they happen.',
+        },
+        {
+          title: 'Fixes',
+          text: 'The causes found are fixed, starting with the ones that cost most, double execution included.',
+        },
+        {
+          title: 'Handover',
+          text: 'Your teams can read the dashboards and act on the alerts: the tooling stays when I leave.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          flows: {
+            label: 'Flows or services to make reliable',
+            options: { few: '1 to 2', some: '3 to 5', many: '6 to 10' },
+          },
+        },
+        amounts: { fee: 'Price' },
+        duration: 'Duration',
+      },
+      rules: [],
+      goodChoice: [
+        'A figure does not add up, and explaining it takes days.',
+        'You learn about your incidents from your customers.',
+        'A job has already run twice, and you want it never to happen again.',
+      ],
+      notTheRightChoice: [
+        "You don't know yet where the problem is: an Audit will locate it first.",
+        'Nobody is left to maintain the application: a takeover starts there.',
+        'You only want a monitoring tool installed: that is one means, not reliability.',
+      ],
+      faq: [
+        {
+          question: 'Do we have to change monitoring tools?',
+          answer:
+            'Rarely. We start from what you have: what matters is knowing what to observe, not the tool.',
+        },
+        {
+          question: 'What is a double execution, concretely?',
+          answer:
+            'The same job applied twice: a payout credited twice, a batch taken out of stock twice. It nearly always comes from a replayed message, and is prevented in the design rather than after the fact.',
+        },
+        {
+          question: 'What about stock rather than money?',
+          answer:
+            'It is the same problem: a discrepancy nobody can explain. The same methods apply to stock, to batches or to invoicing.',
+        },
+      ],
+    },
+    reinforcement: {
+      meta: {
+        title: 'Senior reinforcement — Thomas Bouzy',
+        description:
+          'A part-time lead or architect inside your team, billed by the day. A published day rate, and two clients at a time, never more.',
+      },
+      sentences: [
+        '“We need someone senior, but not full time.”',
+        "“The team is good; it's missing someone to settle the architecture.”",
+      ],
+      concepts: [
+        {
+          label: 'Shared service',
+          gloss: "Born of one squad's need, opened to the other teams that turned out to have it.",
+        },
+        {
+          label: 'Handover',
+          gloss: 'Architecture reviews, onboarding, a written trail a newcomer can argue with.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'A lead inside the team',
+          text: 'Code and architecture reviews, decisions written as ADRs, technical priorities settled: the role, without the hire.',
+        },
+        {
+          title: 'Code shipped',
+          text: 'Not only opinions: I take on work, ship it, and have it reviewed like everyone else.',
+        },
+        {
+          title: 'A team that grows',
+          text: 'Onboarding, reviews, a written trail a newcomer can argue with: what I know stays when I leave.',
+        },
+      ],
+      steps: [
+        {
+          title: 'A 30-minute call',
+          text: 'Your team, your system, what is missing. We agree on the number of days a week.',
+        },
+        {
+          title: 'The first two weeks',
+          text: 'I read the system and meet the team before proposing anything.',
+        },
+        {
+          title: 'Cruising speed',
+          text: 'The same days every week, in your tools and your rituals, like a member of the team.',
+        },
+        {
+          title: 'The exit',
+          text: 'When the need is covered, I leave behind the written trail that lets you carry on without me.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          days: {
+            label: 'Days per week',
+            options: {
+              '1': '1 day',
+              '2': '2 days',
+              '3': '3 days',
+              '4': '4 days',
+              '5': '5 days, full time',
+            },
+          },
+        },
+        amounts: { monthly: 'Per month' },
+      },
+      rules: [
+        'I work with two clients at a time, never more: each gets my attention, not a place in a queue.',
+      ],
+      dayRate: {
+        label: 'Day rate:',
+        note: 'lower for long full-time engagements.',
+      },
+      goodChoice: [
+        'Your team needs someone senior, but not a full-time hire.',
+        'An architecture decision is waiting for someone to settle it and write it down.',
+        'You want your developers to grow, not only to ship.',
+      ],
+      notTheRightChoice: [
+        'You are looking for someone full time for years: a hire will serve you better.',
+        'The work is a well-bounded project: a fixed-price Migration or Reliability engagement will be clearer.',
+        'You have no technical team: a takeover is made for that case.',
+      ],
+      faq: [
+        {
+          question: 'What is the minimum?',
+          answer: 'One day a week. Below that, you cannot keep up with the team.',
+        },
+        {
+          question: 'Why two clients at most?',
+          answer:
+            'Because beyond that, each one gets a distracted consultant. The rule does not move, whatever the demand.',
+        },
+        {
+          question: 'Do you work remotely?',
+          answer: 'Yes, it is the default, with travel when the work needs a room.',
         },
       ],
     },

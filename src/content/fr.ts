@@ -348,6 +348,7 @@ export const fr = {
       text: "Gratuit et sans engagement : vous décrivez la situation, je vous dis franchement si cette offre est la bonne, et sinon laquelle l'est.",
       cta: 'Réserver un appel',
       orWrite: 'Vous préférez écrire ?',
+      serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
     },
   },
 
@@ -456,6 +457,390 @@ export const fr = {
           question: "Pourquoi une fourchette plutôt qu'un prix ?",
           answer:
             "Parce que le prix dépend de la taille réelle du système, qu'on mesure pendant le premier appel. Le devis, lui, est ferme avant de commencer.",
+        },
+      ],
+    },
+    takeover: {
+      meta: {
+        title: "Reprise et maintenance d'application — Thomas Bouzy",
+        description:
+          "Reprendre une application métier orpheline sans rien casser : un filet de tests d'abord, puis une formule mensuelle Veille ou Évolution. Prix publics.",
+      },
+      sentences: [
+        "« Celui qui a fait notre appli est parti, et plus personne n'ose y toucher. »",
+        '« On ne sait même plus qui a les accès au serveur. »',
+        "« Chaque modification, c'est la boule au ventre. »",
+      ],
+      concepts: [],
+      delivered: [
+        {
+          title: "Une carte de l'application",
+          text: "Ce qu'elle fait, où elle tourne, de quoi elle dépend et qui détient quoi : les accès, le code, les données. Écrite, pour ne plus dépendre d'une seule personne.",
+        },
+        {
+          title: 'Un filet de tests',
+          text: "Avant toute modification, des tests qui vérifient ce que l'application fait aujourd'hui. C'est ce qui permet ensuite de la changer sans casser ce qui marche.",
+        },
+        {
+          title: 'La formule Veille',
+          text: "Chaque mois : mises à jour de sécurité, surveillance, sauvegardes vérifiées et correction des incidents. L'application reste saine, sans évoluer.",
+        },
+        {
+          title: 'La formule Évolution',
+          text: "Tout ce que couvre la Veille, plus des jours chaque mois pour faire évoluer l'application : les demandes de vos équipes, enfin traitées.",
+        },
+      ],
+      steps: [
+        {
+          title: "Le filet de tests, d'abord",
+          text: "Rien n'est changé avant que des tests vérifient ce que l'application fait aujourd'hui. Une Reprise commence toujours par là.",
+        },
+        {
+          title: 'La cartographie',
+          text: "Les accès récupérés, le code et les données inventoriés, l'hébergement compris et documenté.",
+        },
+        {
+          title: 'La remise en état',
+          text: 'Les risques urgents traités : mises à jour de sécurité, sauvegardes qui se restaurent vraiment, déploiement reproductible.',
+        },
+        {
+          title: 'La formule mensuelle',
+          text: "Veille ou Évolution, selon que l'application doit seulement rester saine ou continuer d'avancer.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: "Taille de l'application",
+            options: {
+              small: 'Un outil interne',
+              medium: 'Une application métier',
+              large: "Le cœur de l'activité",
+            },
+          },
+          plan: {
+            label: 'Formule',
+            options: { watch: 'Veille', evolution: 'Évolution' },
+          },
+        },
+        amounts: { setup: 'Mise en place', monthly: 'Formule mensuelle' },
+        duration: 'Durée de la mise en place',
+      },
+      rules: [
+        "Une Reprise commence toujours par un filet de tests, avant la moindre modification : on ne touche pas à ce qu'on ne sait pas vérifier.",
+      ],
+      goodChoice: [
+        "L'application fait tourner votre activité, et la personne qui la connaissait est partie.",
+        "Personne en interne n'ose la modifier, ni même la mettre à jour.",
+        'Vous voulez la garder plutôt que la remplacer, ou pas tout de suite.',
+      ],
+      notTheRightChoice: [
+        "Vous envisagez de la remplacer par un logiciel du marché : un Audit vous dira d'abord si c'est le bon calcul.",
+        "L'application n'est presque plus utilisée : la maintenir coûterait plus que la retirer.",
+        'Votre équipe technique est en place et a seulement besoin de renfort : le Renfort senior est fait pour ça.',
+      ],
+      faq: [
+        {
+          question: "Et si l'application est écrite dans une technologie ancienne ?",
+          answer:
+            "C'est le cas le plus courant. Le filet de tests sert justement à pouvoir la moderniser par petites étapes, sans tout réécrire.",
+        },
+        {
+          question: "Faut-il récupérer le code auprès de l'ancien prestataire ?",
+          answer:
+            "Si vous ne l'avez pas, oui, et c'est la première chose à faire. La cartographie dit précisément ce qui vous manque.",
+        },
+        {
+          question: 'Venez-vous sur place ?',
+          answer:
+            "Oui, dans la zone d'intervention indiquée plus bas, pour la cartographie et quand il faut une salle. Le reste du travail se fait à distance.",
+        },
+      ],
+    },
+    migration: {
+      meta: {
+        title: 'Migration sans interruption — Thomas Bouzy',
+        description:
+          "Migrer un système en production vers une nouvelle version sans l'arrêter : un plan à prix fixe, puis l'exécution avec votre équipe. Prix publics.",
+      },
+      sentences: [
+        "« La montée de version, c'est toujours pour le trimestre prochain. »",
+        "« On est bloqués sur une version qui n'a plus de correctifs de sécurité. »",
+      ],
+      concepts: [
+        {
+          label: 'Refonte invisible',
+          gloss: 'Des payloads reconstruits sous leurs consommateurs, sans en casser un seul.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'Un plan de migration',
+          text: "L'ordre des étapes, ce que chacune risque et comment revenir en arrière, chiffré : de quoi décider avant de dépenser davantage.",
+        },
+        {
+          title: 'Une migration par étapes',
+          text: "Le système change sous ceux qui l'utilisent, sans fenêtre d'arrêt : deux versions cohabitent le temps qu'il faut, jamais plus.",
+        },
+        {
+          title: 'Une équipe qui saura refaire',
+          text: "L'exécution se fait avec votre équipe, pas à sa place : la prochaine montée de version ne dépendra pas de moi.",
+        },
+      ],
+      steps: [
+        {
+          title: 'Phase 1 : le plan, à prix fixe',
+          text: "Je lis le système, mesure l'écart de version et la couverture de tests, et j'écris le plan. Vous pouvez vous arrêter là : le plan vous appartient.",
+        },
+        {
+          title: 'Le filet, là où il manque',
+          text: "Là où les tests manquent, on les écrit d'abord : c'est ce qui permet de voir une régression avant vos utilisateurs.",
+        },
+        {
+          title: "Phase 2 : l'exécution",
+          text: 'Étape par étape avec votre équipe, chacune livrée en production avant la suivante, facturée à la journée.',
+        },
+        {
+          title: 'La fin de la cohabitation',
+          text: "L'ancien chemin est retiré dès que le nouveau a fait ses preuves, pour que la transition ne devienne pas l'état permanent.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          gap: {
+            label: 'Écart de version',
+            options: {
+              one: 'Une version majeure',
+              two: 'Deux versions majeures',
+              'three-plus': 'Trois ou plus',
+            },
+          },
+          coverage: {
+            label: 'Couverture de tests existante',
+            options: { good: 'Bonne', partial: 'Partielle', none: 'Aucune' },
+          },
+        },
+        amounts: { plan: 'Plan, phase 1 à prix fixe' },
+        duration: 'Exécution, avec votre équipe',
+      },
+      rules: [
+        "La Migration se vend en deux phases : un plan à prix fixe d'abord, puis l'exécution aux côtés de votre équipe, facturée à la journée. Vous décidez de la seconde une fois le plan en main.",
+      ],
+      goodChoice: [
+        "Votre système tourne en continu et ne peut pas s'arrêter pour migrer.",
+        'La montée de version glisse de trimestre en trimestre, pour de bonnes raisons.',
+        'Vous voulez un chiffrage sérieux avant de vous engager sur le gros du travail.',
+      ],
+      notTheRightChoice: [
+        "Le système peut s'arrêter un week-end sans dommage : une migration classique coûtera moins cher.",
+        "Vous voulez remplacer le système plutôt que le faire évoluer : c'est une autre décision, qu'un Audit peut éclairer.",
+        'Personne chez vous ne pourra reprendre le système ensuite : regardez plutôt la Reprise.',
+      ],
+      faq: [
+        {
+          question: 'Pourquoi la couverture de tests change-t-elle autant le prix ?',
+          answer:
+            "Parce que sans tests, chaque étape doit être vérifiée à la main, ou les tests écrits d'abord. C'est le premier facteur de coût d'une migration, bien avant l'écart de version.",
+        },
+        {
+          question: 'Le plan engage-t-il à faire la suite avec moi ?',
+          answer:
+            "Non. Il vous appartient : vous pouvez le suivre avec votre équipe seule, ou avec quelqu'un d'autre.",
+        },
+        {
+          question: "Combien coûte l'exécution ?",
+          answer:
+            'Elle est facturée à la journée, au taux publié ; le simulateur en donne la durée. Le plan la chiffre précisément pour votre système.',
+        },
+      ],
+    },
+    reliability: {
+      meta: {
+        title: 'Fiabilisation — Thomas Bouzy',
+        description:
+          'Rendre un système observable et ses flux traçables, pour expliquer un écart de stock, un solde ou un bug au lieu de le deviner. Prix publics.',
+      },
+      sentences: [
+        '« Le stock (ou le solde) ne tombe pas juste, et personne ne sait pourquoi. »',
+        '« Ce sont nos clients qui trouvent les bugs. »',
+        "« On a recrédité deux fois, et on ne l'a vu qu'à la réconciliation. »",
+      ],
+      concepts: [
+        {
+          label: 'Traçable',
+          gloss:
+            'Chaque mouvement conservé comme un fait daté ; le solde se rejoue au lieu de se deviner.',
+        },
+      ],
+      delivered: [
+        {
+          title: 'Des flux traçables',
+          text: "Chaque mouvement de stock, de lot ou d'argent conservé comme un fait daté : on rejoue l'historique au lieu de reconstituer ce qui a dû se passer.",
+        },
+        {
+          title: 'Un système observable',
+          text: 'Des tableaux de bord par service et des alertes sur les signaux qui précèdent la panne, pour apprendre un problème avant vos clients.',
+        },
+        {
+          title: 'La double exécution, traitée',
+          text: "Un traitement rejoué ne doit pas produire deux effets. Les flux qui comptent deviennent idempotents : un message reçu deux fois n'est appliqué qu'une fois.",
+        },
+      ],
+      steps: [
+        {
+          title: 'Les flux qui comptent',
+          text: 'On choisit ensemble ceux dont un écart coûte vraiment : stock, lots, facturation, paiements.',
+        },
+        {
+          title: "L'instrumentation",
+          text: 'Ces flux sont tracés de bout en bout, et les écarts deviennent visibles au moment où ils se produisent.',
+        },
+        {
+          title: 'Les corrections',
+          text: 'Les causes trouvées sont corrigées, en commençant par celles qui coûtent le plus, double exécution comprise.',
+        },
+        {
+          title: 'La passation',
+          text: "Vos équipes savent lire les tableaux de bord et répondre aux alertes : l'outillage reste quand je pars.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          flows: {
+            label: 'Flux ou services à fiabiliser',
+            options: { few: '1 à 2', some: '3 à 5', many: '6 à 10' },
+          },
+        },
+        amounts: { fee: 'Prix' },
+        duration: 'Durée',
+      },
+      rules: [],
+      goodChoice: [
+        "Un chiffre ne tombe pas juste, et l'expliquer prend des jours.",
+        'Vous apprenez vos incidents par vos clients.',
+        'Un traitement a déjà été exécuté deux fois, et vous voulez que ça ne se reproduise pas.',
+      ],
+      notTheRightChoice: [
+        "Vous ne savez pas encore où est le problème : un Audit le situera d'abord.",
+        "L'application n'a plus personne pour la maintenir : la Reprise commence par là.",
+        "Vous cherchez seulement un outil de supervision à installer : ce n'est qu'un moyen, pas la fiabilisation.",
+      ],
+      faq: [
+        {
+          question: "Faut-il changer d'outil de supervision ?",
+          answer:
+            "Rarement. On part de ce que vous avez : l'essentiel est de savoir quoi observer, pas l'outil.",
+        },
+        {
+          question: "Qu'est-ce qu'une double exécution, concrètement ?",
+          answer:
+            "Un même traitement appliqué deux fois : un virement recrédité, un lot déstocké deux fois. Elle vient presque toujours d'un message rejoué, et se prévient dans la conception plutôt qu'après coup.",
+        },
+        {
+          question: "Et pour un stock plutôt que de l'argent ?",
+          answer:
+            "C'est le même problème : un écart qu'on ne sait pas expliquer. Les mêmes méthodes s'appliquent à un stock, à des lots ou à une facturation.",
+        },
+      ],
+    },
+    reinforcement: {
+      meta: {
+        title: 'Renfort senior — Thomas Bouzy',
+        description:
+          'Un lead ou un architecte à temps partiel dans votre équipe, facturé à la journée. Taux journalier publié, deux clients à la fois, jamais plus.',
+      },
+      sentences: [
+        "« On a besoin de quelqu'un de senior, mais pas à plein temps. »",
+        "« L'équipe est bonne ; il lui manque quelqu'un qui tranche l'architecture. »",
+      ],
+      concepts: [
+        {
+          label: 'Service partagé',
+          gloss: "Né du besoin d'une squad, ouvert aux autres équipes qui avaient le même.",
+        },
+        {
+          label: 'Transmission',
+          gloss:
+            "Revues d'architecture, onboarding, une trace écrite qu'un nouveau peut contester.",
+        },
+      ],
+      delivered: [
+        {
+          title: "Un lead dans l'équipe",
+          text: "Revues de code et d'architecture, décisions écrites en ADR, priorités techniques arbitrées : le rôle, sans le recrutement.",
+        },
+        {
+          title: 'Du code livré',
+          text: 'Pas seulement des avis : je prends des sujets, je les livre, et je les fais relire comme tout le monde.',
+        },
+        {
+          title: 'Une équipe qui grandit',
+          text: "Onboarding, revues, une trace écrite qu'un nouveau peut contester : ce que je sais reste quand je pars.",
+        },
+      ],
+      steps: [
+        {
+          title: 'Un appel de 30 minutes',
+          text: 'Votre équipe, votre système, ce qui manque. On convient du nombre de jours par semaine.',
+        },
+        {
+          title: 'Les deux premières semaines',
+          text: "Je lis le système et je rencontre l'équipe avant de proposer quoi que ce soit.",
+        },
+        {
+          title: 'Le rythme de croisière',
+          text: "Les mêmes jours chaque semaine, dans vos outils et vos rituels, comme un membre de l'équipe.",
+        },
+        {
+          title: 'La sortie',
+          text: 'Quand le besoin est couvert, je pars en laissant la trace écrite qui permet de continuer sans moi.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          days: {
+            label: 'Jours par semaine',
+            options: {
+              '1': '1 jour',
+              '2': '2 jours',
+              '3': '3 jours',
+              '4': '4 jours',
+              '5': '5 jours, à plein temps',
+            },
+          },
+        },
+        amounts: { monthly: 'Par mois' },
+      },
+      rules: [
+        'Je travaille avec deux clients à la fois, jamais plus : chacun a mon attention, pas une place dans une file.',
+      ],
+      dayRate: {
+        label: 'Taux journalier :',
+        note: 'plus bas pour les missions longues à plein temps.',
+      },
+      goodChoice: [
+        "Votre équipe a besoin d'un senior, mais pas d'un recrutement à plein temps.",
+        "Une décision d'architecture attend quelqu'un pour la trancher et l'écrire.",
+        'Vous voulez faire progresser vos développeurs, pas seulement livrer.',
+      ],
+      notTheRightChoice: [
+        "Vous cherchez quelqu'un à plein temps pour des années : un recrutement vous servira mieux.",
+        'Le travail est un projet bien délimité : une Migration ou une Fiabilisation au forfait sera plus claire.',
+        "Vous n'avez pas d'équipe technique : la Reprise est faite pour ce cas.",
+      ],
+      faq: [
+        {
+          question: 'Combien de jours au minimum ?',
+          answer: "Un jour par semaine. En dessous, on ne suit plus le rythme de l'équipe.",
+        },
+        {
+          question: 'Pourquoi deux clients au plus ?',
+          answer:
+            "Parce qu'au-delà, chacun récupère un consultant distrait. La règle ne bouge pas, quelle que soit la demande.",
+        },
+        {
+          question: 'Travaillez-vous à distance ?',
+          answer: "Oui, c'est le mode par défaut, avec des déplacements quand il faut une salle.",
         },
       ],
     },
