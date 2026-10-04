@@ -1,6 +1,6 @@
 # 15. French at the root, English only where it sells
 
-- Status: accepted, not yet implemented
+- Status: accepted, implemented 2026-10-04
 - Date: 2026-10-03
 - Supersedes the default-locale half of [ADR 2](0002-locale-routes-over-a-client-toggle.md)
 

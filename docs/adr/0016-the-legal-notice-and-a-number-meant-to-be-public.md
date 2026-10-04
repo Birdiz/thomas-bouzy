@@ -1,6 +1,7 @@
 # 16. The legal notice wins, so the number becomes one meant to be public
 
-- Status: accepted, takes effect at registration (planned for 14 April 2027)
+- Status: accepted, takes effect at registration (planned for 14 April 2027);
+  the indexing guard is in place since 2026-10-04
 - Date: 2026-10-03
 - Supersedes [ADR 5](0005-phone-number-is-not-in-the-html.md) from that date
 

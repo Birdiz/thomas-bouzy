@@ -1,12 +1,17 @@
-# Thomas Bouzy — interactive résumé
+# Thomas Bouzy — freelance site
 
-Static showcase site. French at `/`, English under `/en/` where it sells
+Static showcase site that sells five Offers to three Segments
+([ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md)): a
+home page, one page per Offer with public prices and an estimator, and a page
+for Partners ([ADR 17](docs/adr/0017-offer-pages-public-prices-and-the-estimator.md)).
+French at `/`, English under `/en/` where it sells
 ([ADR 15](docs/adr/0015-french-at-the-root-english-where-it-sells.md)).
 Every page and the locales it exists in are listed once, in `src/routes.ts`.
-Built with Astro, containerised, deployed to Railway.
+Built with Astro, containerised, deployed to Railway. The vocabulary is in
+[CONTEXT.md](CONTEXT.md).
 
-The page opens on the problem it solves and closes on the person who solves it —
-which is the opposite of a CV, and deliberate:
+The home page reads problem → offer → proof → position → person — which is the
+opposite of a CV, and deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
 behind the running order. The palette and type are the LinkedIn cover's — dark
 slate, one terracotta, Spectral headings over a ridge —
@@ -33,9 +38,16 @@ gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and it
 postscript.
 
 It also speaks in the reader's words rather than in its own: the four failure
-modes it opens on are quoted client sentences, and every project card leads with
-one plain line that names no technology. Both are asserted —
-[ADR 12](docs/adr/0012-the-clients-sentence-first.md).
+modes it opens on are quoted client sentences, each linking to the Offer that
+treats it, and the hero, every Offer and every Achievement lead with a plain
+line that names no technology. All of it is asserted —
+[ADR 12](docs/adr/0012-the-clients-sentence-first.md),
+[ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md).
+
+Every price comes from one typed table, `src/content/prices.ts`: the static
+table on each Offer page, the estimator that turns it into sliders, the "from"
+on the home page's cards and the published day rate all read it, so changing a
+price is one edit. The amounts are provisional, like the copy.
 
 ## Still to supply
 
@@ -102,31 +114,45 @@ src/
   content/
     types.ts              the content contract; both locales `satisfies` it
     en.ts · fr.ts         all copy
+    offers.ts             the Offers' language-neutral facts: Segments, cited Achievements
+    prices.ts             every published price, euros excl. VAT, no locale
   styles/
     tokens.css            the palette and components (ADR 13)
     fonts.css             self-hosted @font-face
     app.css               layout, responsiveness, reduced motion, AA corrections
-  components/             one per section, plus RevealPhone
-  layouts/                BaseLayout (<head>, JSON-LD) · ResumePage (composition)
+  components/             one per section, plus RevealPhone; offer/ holds the estimator
+  lib/                    price formatting · JSON-LD
+  layouts/                BaseLayout (<head>) · ResumePage (home) · OfferPage · PartnersPage
   pages/[...path].astro   one route per registry entry and locale
 scripts/                  fonts · og image · asset checks · contrast · static server
 tests/
-  content.spec.ts         EN/FR parity (vitest)
-  e2e/                    behaviour · accessibility · links · performance budget
+  content.spec.ts         the content contract: parity, references, prices (vitest)
+  asset-check.spec.ts     the asset check's verdict on indexing (vitest)
+  e2e/                    behaviour · offers · accessibility · links · performance budget
 ```
 
 ## What the tests hold in place
 
-- **Content** — both locales have the same shape and the same array lengths at
-  every depth; nothing is blank; the prose is genuinely translated.
-- **Behaviour** — one Achievement open at a time, no track record and no CV link,
-  the language switch changing the URL, anchors clearing the sticky header.
+- **Content** — each page has content in exactly the locales the registry
+  declares, and a bilingual page has the same shape and array lengths in both;
+  nothing is blank; the prose is genuinely translated. Every Failure mode
+  references one existing Offer, every cited Achievement exists, each Concept is
+  on exactly one Offer, every option combination has a price range with its
+  minimum at most its maximum, and the day rate is 600–750 € excl. VAT.
+- **Behaviour** — the home page's running order and its one hero button, one
+  Achievement open at a time, no track record and no CV link, the language
+  switch changing the URL and never pointing at a page that does not exist,
+  anchors clearing the sticky header.
+- **Offers** — each Offer page's ranges match the price table, with and without
+  JavaScript; every slider is labelled and keyboard-operable, and the result is
+  announced; the booking link is a plain outbound link.
 - **Privacy** — the phone number is in neither page's HTML source nor the
   JSON-LD, and appears only after a click.
-- **Accessibility** — axe at WCAG 2.1 AA, on both locales, with every disclosure
-  open, on desktop and mobile viewports; one `h1` and no skipped heading levels.
-- **Integrity** — every link and asset the page references resolves; no request
-  leaves the origin.
+- **Accessibility** — axe at WCAG 2.1 AA, on every registered page, with every
+  disclosure open, on desktop and mobile viewports; one `h1` and no skipped
+  heading levels.
+- **Integrity** — every link and asset a page references resolves; no request
+  leaves the origin; the sitemap lists exactly the registered pages.
 - **Budget** — document, CSS, JS, font bytes and request count, with the
   numbers in [ADR 6](docs/adr/0006-budget-tests-instead-of-lighthouse-ci.md).
 - **Copy invariants** — the pitch master's own rules, asserted rather than

@@ -1,6 +1,6 @@
 # 14. Three Segments, and a page written for the least technical of them
 
-- Status: accepted, not yet implemented
+- Status: accepted, implemented 2026-10-04
 - Date: 2026-10-03
 - Settles what [ADR 11](0011-the-page-is-not-a-cv.md) and
   [ADR 12](0012-the-clients-sentence-first.md) left waiting on "the segment"

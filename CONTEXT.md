@@ -110,7 +110,7 @@ Past work Thomas actually did, shown as proof of a capability. It is never itsel
 _Avoid_: project, subject, case study, reference
 
 **Concept** (FR *Concept*):
-A named capability, one or two words, at the top of the page.
+A named capability, one or two words, on the page of the Offer it describes.
 _Avoid_: skill, competency, figure
 
 **Principle** (FR *Principe*):
@@ -136,5 +136,6 @@ _Avoid_: value, belief, approach
   instance; the catalogue entry is an **Offer**.
 - "Triggers" in ADR 12 were the Failure modes seen as funnel entry points. That is
   a relationship (*treated by*), not a term of its own.
-- The `Project` type and the "Six sujets à ouvrir" heading both name what is now an
-  **Achievement**.
+- The `Project` type and the "Six sujets à ouvrir" heading both named what is now an
+  **Achievement**. Resolved: the contract says `Achievement`, and the heading
+  carries no count.

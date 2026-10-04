@@ -1,6 +1,6 @@
 # 17. One page per Offer, public prices, and an estimator that degrades to a table
 
-- Status: accepted, not yet implemented
+- Status: accepted, implemented 2026-10-04
 - Date: 2026-10-03
 - Amends [ADR 4](0004-typed-content-modules.md) and
   [ADR 6](0006-budget-tests-instead-of-lighthouse-ci.md)
