@@ -132,13 +132,3 @@ export function absoluteUrl(path: string): string {
 export function otherLocale(locale: Locale): Locale {
   return locale === 'en' ? 'fr' : 'en';
 }
-
-/** Where each locale's CV PDF lives in public/, and what it downloads as. */
-export const CV = {
-  path(locale: Locale): string {
-    return `/assets/cv-thomas-bouzy-${locale}.pdf`;
-  },
-  downloadName(locale: Locale): string {
-    return `Thomas-Bouzy-CV-${locale.toUpperCase()}.pdf`;
-  },
-} as const;

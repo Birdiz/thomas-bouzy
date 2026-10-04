@@ -1,24 +1,13 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { publicAssetExists } from '../lib/public-assets.ts';
-import { CV, type Locale } from '../site.ts';
+import { CONTACT } from '../site.ts';
 
 interface Props {
-  locale: Locale;
   t: ResumeContent;
   num: string;
 }
 
-const { locale, t, num } = Astro.props;
-
-/**
- * The CV's single appearance on the page, and the only place the salaried
- * route is named — it used to sit in the hero, competing with the work.
- * `hasCv` keeps the existing rule: a missing PDF degrades to no line at all
- * rather than to a dead link.
- */
-const cvHref = CV.path(locale);
-const hasCv = publicAssetExists(cvHref);
+const { t, num } = Astro.props;
 ---
 
 <section id="about" class="about container">
@@ -28,16 +17,13 @@ const hasCv = publicAssetExists(cvHref);
       <h2 class="section-title">{t.about.title}</h2>
       {t.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
 
-      {
-        hasCv && (
-          <div class="about__cv">
-            <p class="about__cv-line">{t.about.cvLine}</p>
-            <a class="btn btn-secondary" href={cvHref} download={CV.downloadName(locale)}>
-              <span aria-hidden="true">↓</span> {t.about.cvCta}
-            </a>
-          </div>
-        )
-      }
+      {/* The only place the salaried route is named. It used to sit in the
+          hero as a CV download, competing with the work; then here, as the
+          same download. The career is on LinkedIn, so this says so. */}
+      <p class="about__salaried">
+        {t.about.salariedLine}{' '}
+        <a href={CONTACT.linkedin} target="_blank" rel="noopener">{t.about.salariedLink}</a>.
+      </p>
     </div>
 
     <div class="about__aside">

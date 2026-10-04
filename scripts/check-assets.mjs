@@ -6,7 +6,7 @@
  * Two tiers:
  *   ERROR   — inconsistency or a missing file the page always references.
  *             Fails the build.
- *   PENDING — content Thomas still has to supply (CV PDFs, portrait). The site
+ *   PENDING — content Thomas still has to supply (the portrait). The site
  *             degrades on purpose rather than shipping a dead link, so this
  *             reports loudly and exits 0.
  */
@@ -56,12 +56,6 @@ console.log(
 );
 
 // Content still to come.
-for (const locale of ['en', 'fr']) {
-  const cv = `public/assets/cv-thomas-bouzy-${locale}.pdf`;
-  if (!existsSync(path(cv))) {
-    pending.push(`${cv} — the ${locale.toUpperCase()} download button is hidden until this lands`);
-  }
-}
 const assetsDir = path('src/assets');
 const portrait = existsSync(assetsDir)
   ? readdirSync(assetsDir).find((f) => /^portrait\.(jpe?g|png|webp|avif)$/i.test(f))

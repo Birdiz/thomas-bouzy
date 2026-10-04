@@ -25,7 +25,7 @@ export const en = {
   },
 
   hero: {
-    availability: 'Available now',
+    availability: 'First engagements in preparation',
     blurb:
       'I design transactional systems that have to stay correct while they stay up. Twelve years of backend and architecture — event-driven flows, Event Sourcing on wallets, and on-chain operations where a mistake costs real money.',
     ctaWork: 'See the work',
@@ -224,9 +224,8 @@ export const en = {
       'Off-screen: the Grand Est countryside, on a property I am renovating. Fully remote since 2018 — not a recent comfort preference, eight years of practice. Written, asynchronous and traceable work is the default mode here, not a constraint I put up with.',
     ],
     mentoringKicker: 'Mentoring & teaching — a thread through all of it',
-    cvLine:
-      'Hiring rather than contracting? The detailed track record, the chronology and the technologies are in the CV.',
-    cvCta: 'Download CV',
+    salariedLine: 'Hiring rather than contracting? My career is on',
+    salariedLink: 'LinkedIn',
   },
 
   mentoring: [

@@ -1,7 +1,7 @@
 # Thomas Bouzy — freelance site
 
 A bilingual showcase that sells Thomas's interventions to the people who could
-commission them, and leaves the salaried route to a downloadable CV. Each term is
+commission them, and leaves the salaried route to LinkedIn. Each term is
 given in English and French: the site speaks both.
 
 ## Readers
@@ -11,7 +11,8 @@ A person or organisation who could buy an Offer, whether or not they ever have.
 _Avoid_: buyer, prospect, customer
 
 **Recruiter** (FR *Recruteur*):
-A person reading for a salaried post. The page addresses them once, through the CV.
+A person reading for a salaried post. The page addresses them once, with a line
+pointing at LinkedIn.
 _Avoid_: hiring manager, employer
 
 **Reader** (FR *Lecteur*):

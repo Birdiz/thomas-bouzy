@@ -60,9 +60,10 @@ test('compresses text and leaves already-packed formats alone', async ({ request
     expect(headers['content-encoding'], `${path} not compressed`).toMatch(/br|gzip/);
     expect(headers.vary).toContain('Accept-Encoding');
   }
-  // A PDF is already compressed; re-encoding it only burns CPU.
-  const pdf = (await request.get('/assets/cv-thomas-bouzy-en.pdf')).headers();
-  expect(pdf['content-encoding']).toBeUndefined();
+  // A PNG is already compressed; re-encoding it only burns CPU.
+  const png = await request.get('/og.png', { headers: { 'Accept-Encoding': 'br, gzip' } });
+  expect(png.status()).toBe(200);
+  expect(png.headers()['content-encoding']).toBeUndefined();
 });
 
 test('caches fingerprinted assets hard and HTML not at all', async ({ page, request }) => {
@@ -90,7 +91,7 @@ test('serves a real 404 page, with a 404 status', async ({ page, request }) => {
 
   await page.goto('/definitely-not-a-page');
   await expect(page.getByRole('heading', { name: 'Nothing here' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Back to the résumé' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
 });
 
 test('refuses to serve anything outside the site root', async ({ request }) => {
@@ -204,11 +205,11 @@ test('gives each encoding its own strong validator', async ({ request }) => {
  * origin to `body`.
  *
  * The suite's own server is built without the flag, which is the state the site
- * deploys in today — so every response there carries `noindex, nofollow` and an
- * assertion about PDFs would pass whether or not the rule exists. That is the
- * failure docs/adr/0006 already recorded once: an assertion satisfied by a
- * missing measurement is not a test. The guarantee only becomes observable in
- * the state the site is heading for, so the test creates it.
+ * deploys in today — so every response there carries `noindex, nofollow`, and
+ * an assertion about the indexable state would pass whether or not it holds.
+ * That is the failure docs/adr/0006 already recorded once: an assertion
+ * satisfied by a missing measurement is not a test. The guarantee only becomes
+ * observable in the state the site is heading for, so the test creates it.
  */
 async function withIndexableServer(workerIndex: number, body: (origin: string) => Promise<void>) {
   const port = 4400 + workerIndex;
@@ -234,27 +235,13 @@ async function withIndexableServer(workerIndex: number, body: (origin: string) =
   }
 }
 
-test('keeps the CV PDFs out of the index even once the site is indexable', async () => {
-  // The PDFs carry a phone number and a street-level location that the page
-  // deliberately withholds — the number never reaches the HTML source at all
-  // (docs/adr/0005). A crawler does not "download" a PDF, it GETs it like any
-  // document, and search engines extract the text: indexed, the CV would make
-  // both answerable by a search query. See docs/design-deltas.md.
+test('lifts the noindex header once the site is indexable', async () => {
+  // The other half of the guard below: the header must actually go when the
+  // flag is on, or the day the domain lands the site stays invisible.
   await withIndexableServer(test.info().workerIndex, async (origin) => {
-    // The flag really is on: the page itself is now indexable.
     const page = await fetch(`${origin}/`);
     expect(page.status).toBe(200);
     expect(page.headers.get('x-robots-tag')).toBeNull();
-
-    for (const locale of ['en', 'fr']) {
-      const pdf = await fetch(`${origin}/assets/cv-thomas-bouzy-${locale}.pdf`);
-      expect(pdf.status).toBe(200);
-      expect(pdf.headers.get('content-type')).toBe('application/pdf');
-      expect(
-        pdf.headers.get('x-robots-tag'),
-        `cv-thomas-bouzy-${locale}.pdf is indexable`,
-      ).toContain('noindex');
-    }
   });
 });
 

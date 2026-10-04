@@ -91,8 +91,7 @@ describe('EN/FR parity', () => {
       '$.concepts[1].label',
       '$.about.title',
       '$.about.paragraphs[0]',
-      '$.about.cvLine',
-      '$.about.cvCta',
+      '$.about.salariedLine',
       '$.contact.title',
       '$.contact.blurb',
       '$.contact.revealPhone',
@@ -120,28 +119,49 @@ describe('content corrections applied against the design', () => {
     //
     // The banner now carries no date at all, which is why this test no longer
     // compares one against the clock: a line with nothing to expire cannot be
-    // caught late. The permanent-role half went with it — it is stated once, in
-    // About, beside the CV that carries the salaried track record.
-    expect(en.hero.availability).toMatch(/available now/i);
-    expect(fr.hero.availability).toMatch(/disponible imm/i);
+    // caught late. "Available now" went the same way: it is a state, and a
+    // state goes stale too. "First engagements in preparation" is true until
+    // the line is rewritten, which is the only way it should change.
+    expect(en.hero.availability).toMatch(/first engagements in preparation/i);
+    expect(fr.hero.availability).toMatch(/premières missions en préparation/i);
 
+    const months =
+      /\b(january|february|march|april|may|june|july|august|september|october|november|december|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\b/i;
     for (const line of [en.hero.availability, fr.hero.availability]) {
+      expect(line.trim(), 'the availability line is blank').not.toBe('');
       expect(line.match(/\b(19|20)\d{2}\b/), `${line} names a year that will go stale`).toBeNull();
+      expect(line.match(months), `${line} names a month that will go stale`).toBeNull();
     }
   });
 
-  it('names the salaried route once, and points it at the PDF', () => {
+  it('names the salaried route once, and points it at LinkedIn', () => {
     // Chantier A took the chronology, the job title, the years badge and the
-    // stack off the page and left them to the CV. That only holds if the CV is
-    // still reachable and still framed as the thing someone hiring reads —
-    // otherwise the removal is a deletion rather than a move.
-    expect(en.about.cvLine).toMatch(/CV/);
-    expect(fr.about.cvLine).toMatch(/CV/);
+    // stack off the page; the postscript to ADR 11 took the CV PDF off the
+    // site. LinkedIn carries the career, so the one line that names the
+    // salaried route says so, rather than the route quietly disappearing.
+    expect(en.about.salariedLink).toBe('LinkedIn');
+    expect(fr.about.salariedLink).toBe('LinkedIn');
 
     for (const content of [en, fr]) {
       // Never from the hero again: the download used to sit in the first
       // viewport as an equal alternative to the work itself.
-      expect(Object.values(content.hero).join(' ')).not.toMatch(/CV|PDF/);
+      expect(Object.values(content.hero).join(' ')).not.toMatch(/CV|PDF|LinkedIn/);
+    }
+  });
+
+  it('references no CV file anywhere', () => {
+    // The PDFs left public/. A content string naming one would be a dead link
+    // in waiting, or the download creeping back.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const hits = [...walkStrings(content)]
+        .filter(([, text]) =>
+          /\.pdf\b|cv-thomas-bouzy|download (the )?cv|télécharger (le )?cv/i.test(text),
+        )
+        .map(([path, text]) => `${locale}:${path}: ${text}`);
+      expect(hits).toEqual([]);
     }
   });
 

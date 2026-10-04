@@ -106,17 +106,21 @@ test.describe('the page is not a CV', () => {
     await expect(ctas.first()).toHaveAttribute('href', '#work');
   });
 
-  test('reaches the CV once, from About, as a download', async ({ page }) => {
-    await gotoHome(page, '/');
-    const cv = page.locator('.about__cv a');
-    await expect(cv).toHaveCount(1);
-    await expect(cv).toHaveAttribute('href', '/assets/cv-thomas-bouzy-en.pdf');
-    await expect(cv).toHaveAttribute('download', 'Thomas-Bouzy-CV-EN.pdf');
+  for (const path of ['/', '/fr/'] as const) {
+    test(`names the salaried route once, from About, as a LinkedIn link on ${path}`, async ({
+      page,
+    }) => {
+      await gotoHome(page, path);
+      const about = page.locator('#about');
+      const linkedin = about.locator('a[href="https://www.linkedin.com/in/thomas-bouzy"]');
+      await expect(linkedin).toHaveCount(1);
+      await expect(linkedin).toHaveText('LinkedIn');
 
-    // Nowhere else: the hero download was the salaried route competing with the
-    // work in the first viewport, which is the whole point of moving it here.
-    await expect(page.locator('a[href$=".pdf"]')).toHaveCount(1);
-  });
+      // The hero never carries it again: a CV download there was the salaried
+      // route competing with the work in the first viewport.
+      await expect(page.locator('.hero a[href*="linkedin"], .hero a[href$=".pdf"]')).toHaveCount(0);
+    });
+  }
 });
 
 test.describe('phone number is not harvestable', () => {
