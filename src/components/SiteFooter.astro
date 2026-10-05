@@ -1,12 +1,22 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { CONTACT, LEGAL, SITE } from '../site.ts';
+import { OFFER_IDS } from '../content/offers.ts';
+import { linkTo } from '../routes.ts';
+import { CONTACT, LEGAL, LOCALE_TAG, type Locale, SITE } from '../site.ts';
 
 interface Props {
   t: ResumeContent;
+  locale: Locale;
 }
 
-const { t } = Astro.props;
+const { t, locale } = Astro.props;
+
+/* Every Offer and the Partners page, from every page: the header only reaches
+   anchors on the home page, and an Offer page was otherwise a dead end. */
+const pages = [
+  ...OFFER_IDS.map((id) => ({ ...linkTo(id, locale), name: t.offers[id].name })),
+  { ...linkTo('partners', locale), name: t.nav.partners },
+];
 
 /**
  * The legal block only renders once LEGAL is filled in — see site.ts. A notice
@@ -25,6 +35,17 @@ const legal = LEGAL.isComplete ? LEGAL : null;
       <span class="site-footer__name">{SITE.author}</span>
       <span class="site-footer__region">{SITE.region}</span>
     </div>
+
+    <nav class="site-footer__links" aria-label={t.nav.offers}>
+      {
+        pages.map((page) => (
+          <a href={page.href} hreflang={page.hreflang && LOCALE_TAG[page.hreflang]}>
+            {page.name}
+            {page.hreflang && ` ${t.offersSection.inFrench}`}
+          </a>
+        ))
+      }
+    </nav>
 
     <nav class="site-footer__links" aria-label={t.contact.kicker}>
       <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>

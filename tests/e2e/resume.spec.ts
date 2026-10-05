@@ -1,9 +1,10 @@
 import type { Page } from '@playwright/test';
 import { RESUME } from '../../src/content/index.ts';
-import { OFFER_IDS } from '../../src/content/offers.ts';
+import { ACHIEVEMENT_IDS, OFFER_IDS } from '../../src/content/offers.ts';
 import { fromPrice } from '../../src/content/prices.ts';
 import { formatEuros } from '../../src/lib/money.ts';
 import { homePath, pathOf } from '../../src/routes.ts';
+import { CONTACT } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/];
@@ -17,7 +18,9 @@ test.describe('routing and locales', () => {
   test('serves French at / and English at /en/', async ({ page }) => {
     await gotoHome(page, '/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
-    await expect(page.locator('h1')).toHaveText('Thomas Bouzy');
+    // The name, then the promise, in the one H1 (ADR 18).
+    await expect(page.locator('h1')).toContainText('Thomas Bouzy');
+    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title);
     await expect(page.getByRole('heading', { name: 'Des réalisations à ouvrir' })).toBeVisible();
 
     await gotoHome(page, '/en/');
@@ -85,16 +88,17 @@ test.describe('achievements accordion', () => {
   test('opens the first achievement and keeps only one open at a time', async ({ page }) => {
     await gotoHome(page, '/en/');
     const achievements = page.locator('details.achievement');
-    await expect(achievements).toHaveCount(7);
+    await expect(achievements).toHaveCount(ACHIEVEMENT_IDS.length);
     await expect(achievements.nth(0)).toHaveAttribute('open', '');
 
     await achievements.nth(2).locator('summary').click();
     await expect(achievements.nth(2)).toHaveAttribute('open', '');
     await expect(achievements.nth(0)).not.toHaveAttribute('open', '');
 
-    // The seventh one too: `name` groups the whole list, not the first six.
-    await achievements.nth(6).locator('summary').click();
-    await expect(achievements.nth(6)).toHaveAttribute('open', '');
+    // The last one too: `name` groups the whole list, not the first few.
+    const last = achievements.nth(ACHIEVEMENT_IDS.length - 1);
+    await last.locator('summary').click();
+    await expect(last).toHaveAttribute('open', '');
     await expect(achievements.nth(2)).not.toHaveAttribute('open', '');
   });
 
@@ -102,9 +106,10 @@ test.describe('achievements accordion', () => {
     await gotoHome(page, '/en/');
     const first = page.locator('details.achievement').first();
     await expect(
-      first.getByRole('heading', { name: /Event Sourcing on wallet transactions/ }),
+      first.getByRole('heading', { name: RESUME.en.achievements[0]?.title ?? '∅' }),
     ).toBeVisible();
-    await expect(first.getByText('Context', { exact: true })).toBeVisible();
+    // Two facets: "Context" repeated the plain line above it (ADR 18).
+    await expect(first.getByText('Context', { exact: true })).toHaveCount(0);
     await expect(first.getByText('Approach', { exact: true })).toBeVisible();
     await expect(first.getByText('Result', { exact: true })).toBeVisible();
   });
@@ -188,6 +193,10 @@ test.describe('phone number is not harvestable', () => {
     // query now matches twice and says nothing about this section.
     const contact = page.locator('#contact');
     await expect(contact.getByRole('link', { name: 'birdiz@proton.me' })).toBeVisible();
+    // And the booking link comes first: the home page used to be the one
+    // page without it (ADR 18). A link, never an embed.
+    await expect(contact.getByRole('link').first()).toHaveAttribute('href', CONTACT.booking);
+    await expect(page.locator('iframe')).toHaveCount(0);
     await expect(contact.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
     await context.close();
   });

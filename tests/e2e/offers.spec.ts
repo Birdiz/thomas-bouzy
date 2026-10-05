@@ -1,8 +1,8 @@
 import { RESUME } from '../../src/content/index.ts';
 import { OFFER_IDS, type OfferId } from '../../src/content/offers.ts';
 import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../../src/content/prices.ts';
-import { formatEuroRange } from '../../src/lib/money.ts';
-import { ROUTES } from '../../src/routes.ts';
+import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
+import { linkTo, ROUTES } from '../../src/routes.ts';
 import { CONTACT } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
@@ -21,10 +21,26 @@ for (const route of OFFER_ROUTES) {
   const t = RESUME[route.locale];
 
   test.describe(`${route.path}`, () => {
-    test('opens on the Offer and its plain line', async ({ page }) => {
+    test('opens on the Offer, its search heading and its plain line', async ({ page }) => {
       await page.goto(route.path);
-      await expect(page.locator('h1')).toHaveText(t.offers[offer].name);
+      // The H1 carries the words a buyer searches with; the catalogue name is
+      // the kicker above it (ADR 18).
+      await expect(page.locator('h1')).toHaveText(t.offerPages[offer]?.heading ?? '∅');
+      await expect(page.locator('.offer__head .kicker')).toContainText(t.offers[offer].name);
       await expect(page.getByText(t.offers[offer].plain)).toBeVisible();
+    });
+
+    test('links each "not the right choice" line to the Offer it names', async ({ page }) => {
+      await page.goto(route.path);
+      const lines = t.offerPages[offer]?.notTheRightChoice ?? [];
+      const links = page.locator('.offer__fit-list a');
+      const named = lines.filter((line) => line.offer);
+      await expect(links).toHaveCount(named.length);
+      for (const [i, line] of named.entries()) {
+        if (!line.offer) continue;
+        await expect(links.nth(i)).toHaveAttribute('href', linkTo(line.offer, route.locale).href);
+        await expect(links.nth(i)).toHaveText(t.offers[line.offer].name);
+      }
     });
 
     test('shows every range the price table holds, as an order of magnitude', async ({ page }) => {
@@ -151,8 +167,8 @@ test('the Takeover starts with the test safety net and is proven by the industri
   const takeover = RESUME.fr.offerPages.takeover;
   const erp = RESUME.fr.achievements.find((achievement) => achievement.id === 'industrial-erp');
   await page.goto('/offres/reprise-et-maintenance/');
-  await expect(page.locator('.offer__step').first()).toContainText(
-    takeover?.steps[0]?.title ?? '∅',
+  await expect(page.locator('.offer__delivered > li').first()).toContainText(
+    takeover?.delivered[0]?.title ?? '∅',
   );
   await expect(page.getByRole('heading', { name: erp?.title ?? '∅' })).toBeVisible();
   // Two figures for every combination: the set-up, then the monthly plan.
@@ -167,7 +183,7 @@ test('Reinforcement shows the day rate the price table holds', async ({ page }) 
     ['/en/offers/reinforcement/', 'en'],
   ] as const) {
     await page.goto(path);
-    await expect(page.locator('.offer__day-rate')).toContainText(formatEuroRange(DAY_RATE, locale));
+    await expect(page.locator('.offer__day-rate')).toContainText(formatEuros(DAY_RATE, locale));
   }
 });
 
@@ -180,7 +196,8 @@ test('the Partners page offers white label, the day rate and a CV on request onl
   for (const point of partners?.points ?? []) {
     await expect(page.getByRole('heading', { name: point.title })).toBeVisible();
   }
-  await expect(page.locator('.offer__day-rate')).toContainText(formatEuroRange(DAY_RATE, 'fr'));
+  // The same rate a Client pays (ADR 18).
+  await expect(page.locator('.offer__day-rate')).toContainText(formatEuros(DAY_RATE, 'fr'));
   // Each Offer a Partner can bring Thomas into, linked to its page.
   await expect(page.locator('.offer__card-link')).not.toHaveCount(0);
   for (const href of await page

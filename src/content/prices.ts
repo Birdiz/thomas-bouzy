@@ -12,8 +12,8 @@ import type { OfferId } from './offers.ts';
  * show the same numbers by construction, and each locale module supplies only
  * the words around them.
  *
- * The amounts are provisional. They reach the site through content review, not
- * through this file's comments, and are revisited with the business.
+ * The amounts were rebased on a single 550 € day rate on 5 October 2026 (ADR 18),
+ * and are revisited with the business.
  */
 
 /** A range, in euros excluding VAT — or in weeks, for a duration. */
@@ -64,26 +64,57 @@ export interface PriceTable {
 }
 
 /**
- * The published day rate (ADR 17). The low end is for long, full-time
- * Engagements. Reinforcement is priced from it, and the Partners page shows it.
+ * The day rate (ADR 18): one figure, the same for a Client and for a Partner.
+ *
+ * Above the regional generalists, below Paris: rates in France follow the
+ * nearest big city, and Thomas's is Nancy or Strasbourg, not Paris. One figure
+ * rather than a range, because a range is read from its low end, and a Partner
+ * cannot build a margin on a number that moves.
  */
-export const DAY_RATE: Range = { min: 600, max: 750 };
+export const DAY_RATE = 550;
+
+/** Days a week Thomas sells, to any one Client or in total. */
+export const MAX_DAYS_PER_WEEK = 4;
+
+/**
+ * The Entry offer's price: one figure, whatever the size (ADR 18). The express
+ * Audit is bounded in time, about two and a half days, not in scope.
+ */
+export const AUDIT_EXPRESS_FEE = 1400;
+
+/**
+ * What any Audit credits against the Engagement that follows it. Capped at the
+ * express fee: uncapped, a full Audit would wipe out a Takeover's set-up.
+ */
+export const AUDIT_CREDIT = AUDIT_EXPRESS_FEE;
+
+/** Days of change each month in an Evolution plan, by application size. */
+export const EVOLUTION_DAYS = { small: 2, medium: 2.5, large: 3 } as const;
 
 /** Billable days in a month of `daysPerWeek`: 52 weeks over 12 months. */
 const WEEKS_PER_MONTH = 52 / 12;
 
 /** Rounded to the nearest 50 €: an order of magnitude, not an invoice line. */
 function monthlyAtDayRate(daysPerWeek: number): Range {
-  const round = (amount: number) => Math.round(amount / 50) * 50;
-  return {
-    min: round(DAY_RATE.min * daysPerWeek * WEEKS_PER_MONTH),
-    max: round(DAY_RATE.max * daysPerWeek * WEEKS_PER_MONTH),
-  };
+  const amount = Math.round((DAY_RATE * daysPerWeek * WEEKS_PER_MONTH) / 50) * 50;
+  return { min: amount, max: amount };
 }
 
 const range = (min: number, max: number): Range => ({ min, max });
 
+/** An Evolution plan: its Watch plan, plus its days of change at the day rate. */
+function evolution(watch: Range, days: number): Range {
+  return range(watch.min + days * DAY_RATE, watch.max + days * DAY_RATE);
+}
+
+const express = range(AUDIT_EXPRESS_FEE, AUDIT_EXPRESS_FEE);
+
+/** Watch plans are priced on the market for keeping an application healthy, not on days. */
+const watch = { small: range(350, 450), medium: range(450, 550), large: range(550, 700) };
+
 export const PRICES: Record<OfferId, PriceTable> = {
+  // Each price below is an effort in days at the day rate, rounded, except the
+  // express Audit (a fixed fee) and the Watch plans (a market price).
   audit: {
     dimensions: [
       { id: 'size', options: ['small', 'medium', 'large'] },
@@ -92,15 +123,20 @@ export const PRICES: Record<OfferId, PriceTable> = {
     amounts: ['fee'],
     duration: 'delivery',
     combinations: [
-      { options: ['small', 'express'], amounts: { fee: range(1500, 1800) }, weeks: range(1, 1) },
-      { options: ['small', 'full'], amounts: { fee: range(5000, 5800) }, weeks: range(3, 3) },
-      { options: ['medium', 'express'], amounts: { fee: range(1800, 2200) }, weeks: range(1, 2) },
-      { options: ['medium', 'full'], amounts: { fee: range(5800, 6600) }, weeks: range(3, 4) },
-      { options: ['large', 'express'], amounts: { fee: range(2200, 2500) }, weeks: range(2, 2) },
-      { options: ['large', 'full'], amounts: { fee: range(6600, 7500) }, weeks: range(4, 5) },
+      { options: ['small', 'express'], amounts: { fee: express }, weeks: range(1, 1) },
+      // 8–9 days.
+      { options: ['small', 'full'], amounts: { fee: range(4500, 5000) }, weeks: range(3, 3) },
+      { options: ['medium', 'express'], amounts: { fee: express }, weeks: range(1, 1) },
+      // 10–11 days.
+      { options: ['medium', 'full'], amounts: { fee: range(5500, 6000) }, weeks: range(3, 4) },
+      { options: ['large', 'express'], amounts: { fee: express }, weeks: range(1, 1) },
+      // 14–16 days: in practice the Due diligence.
+      { options: ['large', 'full'], amounts: { fee: range(8000, 9000) }, weeks: range(4, 6) },
     ],
   },
 
+  // A Watch set-up puts a smoke-test net on the critical paths; an Evolution
+  // set-up puts the full net under the application, because it will change.
   takeover: {
     dimensions: [
       { id: 'size', options: ['small', 'medium', 'large'] },
@@ -111,32 +147,41 @@ export const PRICES: Record<OfferId, PriceTable> = {
     combinations: [
       {
         options: ['small', 'watch'],
-        amounts: { setup: range(3500, 5000), monthly: range(350, 450) },
-        weeks: range(2, 3),
+        amounts: { setup: range(2000, 3000), monthly: watch.small },
+        weeks: range(1, 2),
       },
       {
         options: ['small', 'evolution'],
-        amounts: { setup: range(3500, 5000), monthly: range(1400, 1800) },
+        amounts: {
+          setup: range(3000, 4500),
+          monthly: evolution(watch.small, EVOLUTION_DAYS.small),
+        },
         weeks: range(2, 3),
       },
       {
         options: ['medium', 'watch'],
-        amounts: { setup: range(5000, 7500), monthly: range(450, 550) },
-        weeks: range(3, 5),
+        amounts: { setup: range(3000, 4500), monthly: watch.medium },
+        weeks: range(2, 3),
       },
       {
         options: ['medium', 'evolution'],
-        amounts: { setup: range(5000, 7500), monthly: range(1800, 2300) },
+        amounts: {
+          setup: range(4500, 7000),
+          monthly: evolution(watch.medium, EVOLUTION_DAYS.medium),
+        },
         weeks: range(3, 5),
       },
       {
         options: ['large', 'watch'],
-        amounts: { setup: range(7500, 10000), monthly: range(550, 700) },
-        weeks: range(5, 8),
+        amounts: { setup: range(4500, 6500), monthly: watch.large },
+        weeks: range(3, 5),
       },
       {
         options: ['large', 'evolution'],
-        amounts: { setup: range(7500, 10000), monthly: range(2300, 2800) },
+        amounts: {
+          setup: range(7000, 9000),
+          monthly: evolution(watch.large, EVOLUTION_DAYS.large),
+        },
         weeks: range(5, 8),
       },
     ],
@@ -183,18 +228,24 @@ export const PRICES: Record<OfferId, PriceTable> = {
     amounts: ['fee'],
     duration: 'delivery',
     combinations: [
-      { options: ['few'], amounts: { fee: range(4000, 7000) }, weeks: range(2, 4) },
-      { options: ['some'], amounts: { fee: range(7000, 12000) }, weeks: range(4, 6) },
-      { options: ['many'], amounts: { fee: range(12000, 20000) }, weeks: range(6, 10) },
+      // 6–10, 11–17 and 18–28 days.
+      { options: ['few'], amounts: { fee: range(3500, 5500) }, weeks: range(2, 4) },
+      { options: ['some'], amounts: { fee: range(6000, 9500) }, weeks: range(4, 6) },
+      { options: ['many'], amounts: { fee: range(10000, 15000) }, weeks: range(6, 10) },
     ],
   },
 
   reinforcement: {
-    dimensions: [{ id: 'days', options: ['1', '2', '3', '4', '5'] }],
+    dimensions: [
+      {
+        id: 'days',
+        options: Array.from({ length: MAX_DAYS_PER_WEEK }, (_, i) => String(i + 1)),
+      },
+    ],
     amounts: ['monthly'],
-    combinations: ['1', '2', '3', '4', '5'].map((days) => ({
-      options: [days],
-      amounts: { monthly: monthlyAtDayRate(Number(days)) },
+    combinations: Array.from({ length: MAX_DAYS_PER_WEEK }, (_, i) => ({
+      options: [String(i + 1)],
+      amounts: { monthly: monthlyAtDayRate(i + 1) },
     })),
   },
 };

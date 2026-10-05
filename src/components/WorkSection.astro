@@ -47,10 +47,6 @@ const { t, num } = Astro.props;
             </p>
             <div class="achievement__facets">
               <div class="achievement__facet">
-                <p class="kicker achievement__facet-label">{t.work.labelContext}</p>
-                <p class="achievement__facet-text">{achievement.context}</p>
-              </div>
-              <div class="achievement__facet">
                 <p class="kicker achievement__facet-label">{t.work.labelApproach}</p>
                 <p class="achievement__facet-text">{achievement.approach}</p>
               </div>
@@ -59,6 +55,13 @@ const { t, num } = Astro.props;
                 <p class="achievement__facet-text">{achievement.result}</p>
               </div>
             </div>
+            {achievement.link && (
+              <p class="achievement__link">
+                <a href={achievement.link.href} target="_blank" rel="noopener">
+                  {achievement.link.label} <span aria-hidden="true">↗</span>
+                </a>
+              </p>
+            )}
           </div>
         </details>
       ))

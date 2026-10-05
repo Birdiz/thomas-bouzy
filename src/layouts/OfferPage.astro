@@ -6,10 +6,11 @@ import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
 import { OFFERS, type OfferId } from '../content/offers.ts';
 import { DAY_RATE } from '../content/prices.ts';
-import { formatEuroRange } from '../lib/money.ts';
+import { formatEuros } from '../lib/money.ts';
+import { fillPrices } from '../lib/price-tokens.ts';
 import { service } from '../lib/structured-data.ts';
-import type { Route } from '../routes.ts';
-import { SITE } from '../site.ts';
+import { linkTo, type Route } from '../routes.ts';
+import { LOCALE_TAG, SITE } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -38,7 +39,19 @@ const achievements = OFFERS[offer].achievements.map((id) => {
   return achievement;
 });
 
-/** Sections are numbered in the order ADR 17 gives them, as on the home page. */
+/* "Not the right choice when" names another Offer as a link to it: the
+   qualification the reader is doing is also how the pages link to each other. */
+const redirects = page.notTheRightChoice.map(({ text, offer: other }) => {
+  if (!other) return { before: fillPrices(text, locale) };
+  const [before = '', after = ''] = text.split('{offer}');
+  return {
+    before: fillPrices(before, locale),
+    after: fillPrices(after, locale),
+    link: { ...linkTo(other, locale), name: t.offers[other].name },
+  };
+});
+
+/** Sections are numbered in the order ADR 18 gives them, as on the home page. */
 const num = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -51,50 +64,41 @@ const num = (n: number) => String(n).padStart(2, '0');
 >
   <SiteHeader route={route} t={t} contactHref="#book" />
   <main id="main" class="offer">
-    {/* 1. The plain line: what the Offer does, before any word to learn. */}
+    {/* 1. The plain line: what the Offer does, before any word to learn. The
+        H1 carries the words a buyer searches with; the catalogue name stays
+        in the kicker. */}
     <header class="offer__head container">
-      <p class="kicker">{labels.kicker}</p>
-      <h1 class="offer__name">{summary.name}</h1>
+      <p class="kicker">{labels.kicker} · {summary.name}</p>
+      <h1 class="offer__name">{page.heading}</h1>
       <p class="offer__plain">{summary.plain}</p>
-      {
-        page.concepts.length > 0 && (
-          <ul class="offer__concepts" aria-label={labels.concepts}>
-            {page.concepts.map((concept) => (
-              <li class="offer__concept">
-                <span class="offer__concept-label">{concept.label}</span>
-                <span class="offer__concept-gloss">{concept.gloss}</span>
-              </li>
-            ))}
-          </ul>
-        )
-      }
     </header>
 
     {/* 2. The Client sentences it answers, in the Client's words. */}
     <section class="offer__section container" aria-labelledby="offer-sentences">
       <h2 class="kicker offer__heading" id="offer-sentences">
-        <span class="kicker__num">{num(1)}</span>{labels.sentences}
+        <span class="kicker__num" aria-hidden="true">{num(1)}</span>{labels.sentences}
       </h2>
       <ul class="offer__sentences">
         {sentences.map((sentence) => <li class="offer__sentence">{sentence}</li>)}
       </ul>
     </section>
 
-    {/* 3. What is delivered. */}
+    {/* 3. What is delivered, in the order it is delivered: the steps used to
+        be a section of their own, and repeated this one (ADR 18). */}
     <section class="offer__section container" aria-labelledby="offer-delivered">
       <h2 class="kicker offer__heading" id="offer-delivered">
-        <span class="kicker__num">{num(2)}</span>{labels.delivered}
+        <span class="kicker__num" aria-hidden="true">{num(2)}</span>{labels.delivered}
       </h2>
-      <ul class="offer__cards">
+      <ol class="offer__cards offer__delivered">
         {
           page.delivered.map((item) => (
             <li class="offer__card">
               <h3 class="offer__card-title">{item.title}</h3>
-              <p class="offer__card-text">{item.text}</p>
+              <p class="offer__card-text">{fillPrices(item.text, locale)}</p>
             </li>
           ))
         }
-      </ul>
+      </ol>
       {
         page.variant && (
           <div class="offer__variant">
@@ -105,34 +109,17 @@ const num = (n: number) => String(n).padStart(2, '0');
       }
     </section>
 
-    {/* 4. The steps. */}
-    <section class="offer__section container" aria-labelledby="offer-steps">
-      <h2 class="kicker offer__heading" id="offer-steps">
-        <span class="kicker__num">{num(3)}</span>{labels.steps}
-      </h2>
-      <ol class="offer__steps">
-        {
-          page.steps.map((step) => (
-            <li class="offer__step">
-              <h3 class="offer__card-title">{step.title}</h3>
-              <p class="offer__card-text">{step.text}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </section>
-
-    {/* 5. The price, and the commercial rules this page governs. */}
+    {/* 4. The price, and the commercial rules this page governs. */}
     <section class="offer__section container" aria-labelledby="offer-price">
       <h2 class="kicker offer__heading" id="offer-price">
-        <span class="kicker__num">{num(4)}</span>{labels.price}
+        <span class="kicker__num" aria-hidden="true">{num(3)}</span>{page.priceHeading}
       </h2>
       <Estimator offer={offer} locale={locale} labels={page.estimator} shared={labels} />
       {
         page.dayRate && (
           <p class="offer__day-rate">
             <strong>{page.dayRate.label}</strong>{' '}
-            {formatEuroRange(DAY_RATE, locale)} {labels.excludingVat}, {page.dayRate.note}
+            {formatEuros(DAY_RATE, locale)} {labels.excludingVat}, {fillPrices(page.dayRate.note, locale)}
           </p>
         )
       }
@@ -140,34 +127,44 @@ const num = (n: number) => String(n).padStart(2, '0');
         page.rules.length > 0 && (
           <ul class="offer__rules">
             {page.rules.map((rule) => (
-              <li>{rule}</li>
+              <li>{fillPrices(rule, locale)}</li>
             ))}
           </ul>
         )
       }
     </section>
 
-    {/* 6. When it is, and is not, the right choice: the Offer's own price. */}
+    {/* 5. When it is not the right choice, and what is: the Offer's own price. */}
     <section class="offer__section container" aria-labelledby="offer-fit">
       <h2 class="kicker offer__heading" id="offer-fit">
-        <span class="kicker__num">{num(5)}</span>{labels.fit}
+        <span class="kicker__num" aria-hidden="true">{num(4)}</span>{labels.notTheRightChoice}
       </h2>
-      <div class="offer__fit">
-        <div class="offer__fit-col">
-          <h3 class="offer__card-title">{labels.goodChoice}</h3>
-          <ul class="offer__fit-list">{page.goodChoice.map((line) => <li>{line}</li>)}</ul>
-        </div>
-        <div class="offer__fit-col">
-          <h3 class="offer__card-title">{labels.notTheRightChoice}</h3>
-          <ul class="offer__fit-list">{page.notTheRightChoice.map((line) => <li>{line}</li>)}</ul>
-        </div>
-      </div>
+      <ul class="offer__fit-list">
+        {
+          redirects.map((line) => (
+            <li>
+              {line.before}
+              {line.link && (
+                <a
+                  href={line.link.href}
+                  hreflang={line.link.hreflang && LOCALE_TAG[line.link.hreflang]}
+                >
+                  {line.link.name}
+                </a>
+              )}
+              {/* A link to a page that exists only in French says so. */}
+              {line.link?.hreflang && ` ${t.offersSection.inFrench}`}
+              {line.after}
+            </li>
+          ))
+        }
+      </ul>
     </section>
 
-    {/* 7. The Achievements that prove it. */}
+    {/* 6. The Achievements that prove it. */}
     <section class="offer__section container" aria-labelledby="offer-achievements">
       <h2 class="kicker offer__heading" id="offer-achievements">
-        <span class="kicker__num">{num(6)}</span>{labels.achievements}
+        <span class="kicker__num" aria-hidden="true">{num(5)}</span>{labels.achievements}
       </h2>
       <ul class="offer__cards">
         {
@@ -184,25 +181,25 @@ const num = (n: number) => String(n).padStart(2, '0');
       </ul>
     </section>
 
-    {/* 8. A short FAQ. */}
+    {/* 7. A short FAQ. */}
     <section class="offer__section container" aria-labelledby="offer-faq">
       <h2 class="kicker offer__heading" id="offer-faq">
-        <span class="kicker__num">{num(7)}</span>{labels.faq}
+        <span class="kicker__num" aria-hidden="true">{num(6)}</span>{labels.faq}
       </h2>
       <div class="offer__faq">
         {
           page.faq.map((entry) => (
             <details class="offer__question">
               <summary>{entry.question}</summary>
-              <p>{entry.answer}</p>
+              <p>{fillPrices(entry.answer, locale)}</p>
             </details>
           ))
         }
       </div>
     </section>
 
-    {/* 9. The booking link. */}
+    {/* 8. The booking link. */}
     <BookingSection labels={labels.book} locale={locale} />
   </main>
-  <SiteFooter t={t} />
+  <SiteFooter t={t} locale={locale} />
 </BaseLayout>

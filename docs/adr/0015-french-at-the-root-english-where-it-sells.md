@@ -15,7 +15,7 @@ LinkedIn cover the site wears says "Full remote — EU".
 The site is also about to grow from one page to one page per Offer. Under ADR 2's
 full parity, every Offer page costs two pieces of writing, and the parity test
 holds the whole catalogue to both languages. A plain-language page about taking
-over a Vosges manufacturer's in-house application gains nothing from an English
+over a local manufacturer's in-house application gains nothing from an English
 twin.
 
 ## Decision
