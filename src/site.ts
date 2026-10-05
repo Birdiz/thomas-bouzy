@@ -57,7 +57,11 @@ export const CONTACT = {
   email: 'birdiz@proton.me',
   /** Never rendered into the HTML source — see components/RevealPhone.astro. */
   phoneE164: '+33632134547',
-  phoneDisplay: '06 32 13 45 47',
+  /**
+   * The national format means nothing outside France: an English reader needs
+   * the country code to dial it at all.
+   */
+  phoneDisplay: { fr: '06 32 13 45 47', en: '+33 6 32 13 45 47' },
   linkedin: 'https://www.linkedin.com/in/thomas-bouzy',
   /**
    * The 30-minute booking page. Always a plain outbound link, never an embed:

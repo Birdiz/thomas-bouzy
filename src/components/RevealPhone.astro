@@ -1,13 +1,14 @@
 ---
-import { CONTACT } from '../site.ts';
+import { CONTACT, type Locale } from '../site.ts';
 
 interface Props {
+  locale: Locale;
   label: string;
   /** Class applied to both the button and the link it becomes. */
   buttonClass?: string;
 }
 
-const { label, buttonClass = 'btn btn-outline' } = Astro.props;
+const { locale, label, buttonClass = 'btn btn-outline' } = Astro.props;
 
 /**
  * The number never reaches the HTML source.
@@ -20,7 +21,7 @@ const { label, buttonClass = 'btn btn-outline' } = Astro.props;
  * no-JS visitor is shown no dead control at all — email and LinkedIn still work.
  */
 const payload = Buffer.from(
-  JSON.stringify({ tel: CONTACT.phoneE164, label: CONTACT.phoneDisplay }),
+  JSON.stringify({ tel: CONTACT.phoneE164, label: CONTACT.phoneDisplay[locale] }),
   'utf8',
 )
   .toString('base64')

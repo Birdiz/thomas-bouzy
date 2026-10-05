@@ -7,7 +7,7 @@ import { homePath, pathOf } from '../../src/routes.ts';
 import { CONTACT } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
-const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/];
+const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/, /\+33 6 32 13 45 47/];
 
 async function gotoHome(page: Page, path: string) {
   await page.goto(path);
@@ -177,10 +177,17 @@ test.describe('phone number is not harvestable', () => {
     await expect(button).toBeVisible();
     await button.click();
 
-    const link = page.getByRole('link', { name: '06 32 13 45 47' });
+    const link = page.getByRole('link', { name: '+33 6 32 13 45 47' });
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute('href', 'tel:+33632134547');
     await expect(link).toBeFocused();
+  });
+
+  test('shows the national format to a French reader', async ({ page }) => {
+    await gotoHome(page, '/');
+    await page.getByRole('button', { name: 'Afficher le numéro' }).click();
+    const link = page.getByRole('link', { name: '06 32 13 45 47' });
+    await expect(link).toHaveAttribute('href', 'tel:+33632134547');
   });
 
   test('leaves no dead control when JavaScript is off', async ({ browser }) => {
