@@ -288,6 +288,11 @@ export const fr = {
       plain:
         'Que votre système tienne le jour où tout le monde arrive, et se relève seul quand une pièce lâche.',
     },
+    build: {
+      name: 'Création sur mesure',
+      plain:
+        "Construire l'application qui vous manque, pensée dès le départ pour qu'un autre puisse la reprendre.",
+    },
     reinforcement: {
       name: 'Renfort senior',
       plain:
@@ -662,6 +667,77 @@ export const fr = {
           question: 'Le tir de charge risque-t-il de faire tomber la production ?',
           answer:
             "Il se fait sur une copie fidèle, ou en production par paliers, hors des heures d'affluence, avec un arrêt prêt.",
+        },
+      ],
+    },
+    build: {
+      meta: {
+        title: "Développement d'application métier sur mesure en PHP/Symfony",
+        description:
+          'Une application métier sur mesure en PHP/Symfony, construite pour être reprise : cadrage à prix fixe, puis développement à la journée. Prix publics.',
+      },
+      heading: "Développement d'application sur mesure en PHP/Symfony",
+      priceHeading: 'Combien coûte une application sur mesure ?',
+      sentences: [
+        '« Toute notre activité tient sur un fichier Excel que tout le monde modifie en même temps. »',
+        "« On a l'idée du service, pas l'équipe pour le construire. »",
+      ],
+      delivered: [
+        {
+          title: 'Phase 1 : le cadrage, à prix fixe',
+          text: "L'architecture, les décisions écrites, et un premier squelette qui tourne de bout en bout. Il vous appartient.",
+        },
+        {
+          title: 'Phase 2 : la construction, testée dès la première semaine',
+          text: 'Livrée par étapes que vous utilisez, pas en un bloc à la fin.',
+        },
+        {
+          title: 'Une passation, pas une dépendance',
+          text: "Le code, les tests et les décisions écrites : une autre équipe peut prendre le relais sans moi. C'est ce qui manque aux applications que je reprends.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: "Ce qu'il faut construire",
+            options: {
+              small: 'Un outil interne',
+              medium: 'Une application métier',
+              large: 'Un service critique',
+            },
+          },
+          integrations: {
+            label: 'Systèmes à relier',
+            options: { none: 'Aucun', few: '1 ou 2', many: '3 ou plus' },
+          },
+        },
+        amounts: { plan: 'Cadrage, phase 1 à prix fixe' },
+        duration: 'Construction, à la journée',
+      },
+      rules: [
+        "Une Création sur mesure ne remplace jamais un système qui tourne : celui-là relève d'une Migration, ou d'abord d'un Audit.",
+        'Elle se vend en deux phases : le cadrage à prix fixe, puis la construction à {dayRate} HT la journée. Vous décidez de la seconde cadrage en main.',
+      ],
+      notTheRightChoice: [
+        {
+          text: 'Votre application existe déjà et tourne : la {offer} la fera évoluer sans la remplacer.',
+          offer: 'migration',
+        },
+        {
+          text: "Un logiciel du marché fait déjà le travail : un {offer} vous dira si c'est le bon calcul.",
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: 'Pourquoi le nombre de systèmes à relier pèse-t-il sur le prix ?',
+          answer:
+            "Chaque système à relier (ERP, paiement, comptabilité) a ses règles, ses pannes et ses délais. C'est là qu'un projet dérape, plus souvent que dans les écrans.",
+        },
+        {
+          question: "Et une fois l'application livrée ?",
+          answer:
+            'Votre équipe la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
         },
       ],
     },

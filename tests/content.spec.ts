@@ -702,6 +702,33 @@ describe('what each Offer page has to say (ADR 17)', () => {
     }
   });
 
+  it('sells a Build in two phases, priced by size and systems to connect', () => {
+    expect(PRICES.build.dimensions.map((d) => d.id)).toEqual(['size', 'integrations']);
+    expect(PRICES.build.amounts).toEqual(['plan']);
+    expect(pagesOf(en).build?.rules.join(' ')).toMatch(/two phases/);
+    expect(pagesOf(fr).build?.rules.join(' ')).toMatch(/deux phases/);
+    // More systems to connect never costs less.
+    for (const size of ['small', 'medium', 'large']) {
+      const plans = ['none', 'few', 'many'].map(
+        (integrations) =>
+          combinationFor(PRICES.build, [size, integrations])?.amounts.plan?.min ?? 0,
+      );
+      expect(plans, size).toEqual([...plans].sort((a, b) => a - b));
+    }
+  });
+
+  it('never sells a Build as the rewrite of a running system', () => {
+    // ADR 19: without this rule, the Offer contradicts a site whose hero says
+    // "without rewriting everything". The page states the rule, and never uses
+    // the words that would sell the opposite.
+    expect(pagesOf(en).build?.rules.join(' ')).toMatch(/never replaces a running system/);
+    expect(pagesOf(fr).build?.rules.join(' ')).toMatch(/ne remplace jamais un système qui tourne/);
+    for (const content of [en, fr]) {
+      const page = [...walkStrings(pagesOf(content).build)].map(([, text]) => text).join(' ');
+      expect(page).not.toMatch(/rewrit|refonte|réécri|from scratch/i);
+    }
+  });
+
   it('keeps the words of a distributed system off the Scaling plain line', () => {
     // They are for the technical buyer, in the body and the metadata (ADR 19).
     for (const content of [en, fr]) {
@@ -893,6 +920,9 @@ describe('each Failure mode is treated by one Offer (ADR 14)', () => {
   it('leaves the Audit treating none: it is the way in for all of them', () => {
     for (const content of [en, fr] as ResumeContent[]) {
       expect(content.failureModes.some((mode) => mode.offer === 'audit')).toBe(false);
+      // Nor the Build: the reader who wants something built is not suffering a
+      // failure (ADR 19).
+      expect(content.failureModes.some((mode) => mode.offer === 'build')).toBe(false);
       expect(content.problem.audit.cta.trim().length).toBeGreaterThan(0);
     }
   });
