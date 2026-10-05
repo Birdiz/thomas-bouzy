@@ -66,7 +66,7 @@ things the canvas still governs — plus one line naming this decision.
   are now behind the page that offers them. Regenerating them is the pitch
   master's §10 item 1; Thomas is doing it, and they drop in at the same paths.
 - The pitch master wins on wording, not on what is safe to publish. Two of its
-  lines are deliberately not on the page: the collective redundancy, and the
+  lines are deliberately not on the page: how the last position ended, and the
   département. Both are Thomas's calls, recorded in `design-deltas.md` so the
   next rebase does not "restore" them.
 - The canvas and the site will drift apart in wording. That is intended, and is

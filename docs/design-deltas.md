@@ -24,7 +24,7 @@ canvas as of that date.
 upstream — normalised for comments and whitespace it is character-for-character
 `src/styles/tokens.css`, down to an identical length, with one cosmetic quote
 style biome rewrote. The `.dc.html`'s data is unchanged too: it still carries
-the May 2026 availability, "Grandrupt, Grand Est (88)", "6+ years" remote and
+the May 2026 availability, a commune-level location, "6+ years" remote and
 the original five projects, so nothing it says needed porting. Between the two
 checks it gained exactly one thing — the PDF download handler of entry 26 —
 which is deliberately not ported. Entries 23 to 25 are gaps the first pass left
@@ -40,7 +40,7 @@ is unchanged and ADR 9 still holds.
 Corroborated by the project's own export. Unzipped, `styles.css` differs from
 what the API served by a single trailing newline, and the `.dc.html` is the
 post-reload version down to the `downloadPdf` handler — same May 2026, same
-"Grandrupt", same five projects, and still nothing rendering `skills`, `langs`
+commune, same five projects, and still nothing rendering `skills`, `langs`
 or `eduText`. The API was not serving a stale copy; the canvas simply holds
 this.
 
@@ -108,9 +108,9 @@ than by a table:
 | 20, 21 — the project set | Owned by the pitch master; six cards, chosen there |
 
 One entry is a judgement rather than a rule, and it stands. Entry 19 rejected
-"Grandrupt, Grand Est (88)" because a commune of a few hundred people, beside a
+the canvas's commune and département because a commune of a few hundred people, beside a
 name and a job title, is a near-deducible home address. The pitch master
-publishes "the Vosges" in its own LinkedIn section, so the département was put
+publishes the département in its own LinkedIn section, so the département was put
 to Thomas as a possible middle ground; he chose to stay at the region. The page
 says *Grand Est, France*, the structured data agrees, and the test now rejects
 the département as well as the commune — this is the one place where the pitch
@@ -130,8 +130,8 @@ re-litigated on the next pass.
    chantier A, one day before it would have expired, and the permanent route is
    now stated once beside the CV in About. The hero says only "available now",
    which is the version that cannot rot.
-2. **The exit is not on the page.** The pitch master says to state the
-   collective economic redundancy plainly (§5). Raised with Thomas, who does not
+2. **The exit is not on the page.** The pitch master says to state how the
+   last position ended plainly (§5). Raised with Thomas, who does not
    want it mentioned. That instruction is written for an interview anyway, and
    the availability line already answers the question it would raise.
 3. **Project dates.** Confirmed by Thomas: the Socios cards all carry the full
