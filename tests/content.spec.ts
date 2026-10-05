@@ -498,10 +498,13 @@ describe('Chantier C — the mirror', () => {
     // heading is a number the next card makes wrong.
     for (const content of [en, fr]) {
       expect(content.work.title).not.toMatch(/\b(six|seven|sept|\d+)\b/i);
-      expect(
-        content.achievements.some((achievement) => achievement.org === 'Quadra Informatique'),
-        'the industrial ERP Achievement is on the page',
-      ).toBe(true);
+      const erp = content.achievements.find(
+        (achievement) => achievement.org === 'Quadra Informatique',
+      );
+      expect(erp, 'the industrial ERP Achievement is on the page').toBeDefined();
+      // The only proof the orphan-app Segment has. It carried no fact until
+      // ADR 20; the plants it ran in are the fact, and must not be lost.
+      expect(`${erp?.title} ${erp?.result}`).toMatch(/ArcelorMittal/);
     }
   });
 

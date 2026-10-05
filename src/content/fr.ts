@@ -113,15 +113,14 @@ export const fr = {
   achievements: [
     {
       id: 'industrial-erp',
-      title: 'Maintenir un ERP industriel en production',
+      title: "Maintenir l'ERP de plusieurs usines ArcelorMittal",
       org: 'Quadra Informatique',
       period: '2016 – 2017',
       plain:
-        "Veiller sur l'ERP dont un industriel dépend chaque jour, des fournisseurs aux factures.",
+        'Veiller sur le logiciel dont plusieurs usines dépendent chaque jour, des fournisseurs aux factures.',
       approach:
-        "Corrections et évolutions sur un logiciel dont l'entreprise ne pouvait se passer une journée : rien ne partait sans être vérifié.",
-      result:
-        "L'ERP est resté en production tout du long. C'est le cas exact pour lequel existe la Reprise.",
+        "Toute la chaîne : fournisseurs, production, stock, facturation, incidents. Des usines qui ne pouvaient s'en passer une journée : rien ne partait sans être vérifié.",
+      result: 'Resté en production tout du long, dans plusieurs usines ArcelorMittal en France.',
     },
     {
       id: 'live-api-redesign',

@@ -133,10 +133,10 @@ three words.
 
 ## Consequences
 
-- The Industrial ERP card is still the weakest proof on the page, and the
-  only one the orphan-app Segment has: no figure, and a result that talks about
-  the site. It waits for a real fact from Thomas (users, modules, years in
-  production). None will be invented.
+- The industrial ERP card, the only proof the orphan-app Segment has, carried
+  no fact and a result that talked about the site. Thomas supplied the fact:
+  the ERP ran the whole chain in several ArcelorMittal plants in France. The
+  title and the result now say so, and a test keeps the name on the card.
 - The English copy follows the French, as ADR 18 requires. The English title
   keeps "backend consultant" and no town: its reader is remote.
 - The sitemap's `lastmod` is still the build time on every page, which search

@@ -112,15 +112,14 @@ export const en = {
   achievements: [
     {
       id: 'industrial-erp',
-      title: 'Keeping an industrial ERP running in production',
+      title: 'Keeping the ERP of several ArcelorMittal plants running',
       org: 'Quadra Informatique',
       period: '2016 – 2017',
       plain:
-        'Looking after the software a manufacturer relies on every day, from suppliers to invoices.',
+        'Looking after the software several plants rely on every day, from suppliers to invoices.',
       approach:
-        'Fixes and changes on software the business could not do without for a single day: nothing went out without being checked.',
-      result:
-        'The ERP stayed in production throughout. It is exactly the case the Takeover exists for.',
+        'The whole chain: suppliers, production, stock, invoicing, incidents. Plants that could not do without it for a day: nothing went out unchecked.',
+      result: 'In production throughout, at several ArcelorMittal plants in France.',
     },
     {
       id: 'live-api-redesign',
