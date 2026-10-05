@@ -7,12 +7,13 @@
  * and which Achievements prove it.
  */
 
-/** The five packaged interventions the site sells. See CONTEXT.md. */
+/** The packaged interventions the site sells. See CONTEXT.md. */
 export const OFFER_IDS = [
   'audit',
   'takeover',
   'migration',
   'reliability',
+  'scaling',
   'reinforcement',
 ] as const;
 export type OfferId = (typeof OFFER_IDS)[number];
@@ -55,6 +56,13 @@ export const OFFERS: Record<OfferId, OfferFacts> = {
   reliability: {
     segments: ['critical-systems', 'orphan-app'],
     achievements: ['wallet-event-sourcing', 'on-chain-operations'],
+  },
+  // Keeps a system up, where Reliability keeps it correct (ADR 19). The API
+  // redesign leads: its plain line, the one an Offer page shows, is the one
+  // about never going down.
+  scaling: {
+    segments: ['critical-systems', 'partners'],
+    achievements: ['live-api-redesign', 'wallet-event-sourcing'],
   },
   reinforcement: {
     segments: ['critical-systems', 'partners'],
