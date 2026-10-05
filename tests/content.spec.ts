@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
-import { contentOfPage, type ResumeContent } from '../src/content/index.ts';
+import { contentOfPage, RESUME, type ResumeContent } from '../src/content/index.ts';
 import { OFFER_IDS, OFFERS } from '../src/content/offers.ts';
 import {
   AUDIT_CREDIT,
@@ -13,6 +14,7 @@ import {
   optionCombinations,
   PRICES,
 } from '../src/content/prices.ts';
+import { frenchSpacing } from '../src/lib/french-spacing.ts';
 import { fillPrices } from '../src/lib/price-tokens.ts';
 import { PAGES } from '../src/routes.ts';
 import { LOCALES } from '../src/site.ts';
@@ -146,6 +148,33 @@ describe('EN/FR parity', () => {
       return a === b;
     });
     expect(identical).toEqual([]);
+  });
+});
+
+describe('French typography', () => {
+  // A plain space before `?` lets the browser wrap the mark onto a line of its
+  // own: the home page's Problem title ended on a lone "?" at 1280px. fr.ts is
+  // typed with plain spaces; src/lib/french-spacing.ts makes them unbreakable
+  // on the way to the page.
+  it('never leaves a plain space before ? : ; ! » or after « in the French the pages read', () => {
+    const breakable = [...walkStrings(RESUME.fr)]
+      .filter(([, text]) => / [?:;!»]|« /.test(text))
+      .map(([path, text]) => `${path}: ${text}`);
+    expect(breakable).toEqual([]);
+  });
+
+  it('gives the French to the pages through RESUME only', () => {
+    // A page that imported fr.ts itself would get the plain spaces back.
+    const sources = readdirSync('src', { recursive: true, encoding: 'utf8' })
+      .filter((file) => /\.(ts|astro)$/.test(file) && file !== 'content/index.ts')
+      .filter((file) => /from '[^']*\/fr\.ts'/.test(readFileSync(`src/${file}`, 'utf8')));
+    expect(sources).toEqual([]);
+  });
+
+  it('uses a thin space before ; ? ! and a word space before : and inside guillemets', () => {
+    expect(frenchSpacing('« Et ça ; et ça ? Oui ! Enfin : non. »')).toBe(
+      '«\u00a0Et ça\u202f; et ça\u202f? Oui\u202f! Enfin\u00a0: non.\u00a0»',
+    );
   });
 });
 
@@ -895,6 +924,12 @@ describe('a site short enough to be read (ADR 18)', () => {
     [...walkStrings(content)]
       .filter(([path]) => !NOT_PROSE.test(path))
       .reduce((sum, [, text]) => sum + text.split(/\s+/).filter(Boolean).length, 0);
+
+  it('counts the same words whether the French spaces break or not', () => {
+    // The budgets were set on plain spaces; `\s` also matches U+00A0 and
+    // U+202F, so the unbreakable ones neither add nor merge a word.
+    expect(wordsOf(RESUME.fr)).toBe(wordsOf(fr));
+  });
 
   for (const page of PAGES) {
     for (const locale of LOCALES) {
