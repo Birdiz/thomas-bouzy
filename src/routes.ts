@@ -35,6 +35,7 @@ export const PAGES: readonly Page[] = [
   { id: 'migration', paths: { fr: '/offres/migration/', en: '/en/offers/migration/' } },
   { id: 'reliability', paths: { fr: '/offres/fiabilisation/', en: '/en/offers/reliability/' } },
   { id: 'scaling', paths: { fr: '/offres/tenue-en-charge/', en: '/en/offers/scaling/' } },
+  { id: 'build', paths: { fr: '/offres/creation-sur-mesure/', en: '/en/offers/build/' } },
   {
     id: 'reinforcement',
     paths: { fr: '/offres/renfort-senior/', en: '/en/offers/reinforcement/' },

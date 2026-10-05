@@ -284,6 +284,11 @@ export const en = {
       plain:
         'Keeping your system standing on the day everyone shows up, and back on its feet when a part fails.',
     },
+    build: {
+      name: 'Custom build',
+      plain:
+        'Building the application you are missing, designed from day one so that someone else can take it over.',
+    },
     reinforcement: {
       name: 'Senior reinforcement',
       plain: 'A senior lead or architect inside your team, part time, billed by the day.',
@@ -580,6 +585,77 @@ export const en = {
           question: 'Could the load test bring production down?',
           answer:
             'It runs on a faithful copy, or on production in steps, outside peak hours, with a stop ready.',
+        },
+      ],
+    },
+    build: {
+      meta: {
+        title: 'Custom PHP/Symfony business application development',
+        description:
+          'A custom PHP/Symfony business application, built to be taken over: a fixed-price framing, then development by the day. Public prices.',
+      },
+      heading: 'Custom application development in PHP/Symfony',
+      priceHeading: 'How much does a custom application cost?',
+      sentences: [
+        '“Our whole business runs on a spreadsheet everyone edits at the same time.”',
+        '“We have the idea for the service, not the team to build it.”',
+      ],
+      delivered: [
+        {
+          title: 'Phase 1: the framing, at a fixed price',
+          text: 'The architecture, the decisions written down, and a first skeleton that runs end to end. It is yours.',
+        },
+        {
+          title: 'Phase 2: the build, tested from the first week',
+          text: 'Delivered in steps you use, not in one block at the end.',
+        },
+        {
+          title: 'A handover, not a dependency',
+          text: 'The code, the tests and the written decisions: another team can take over without me. It is what the applications I take over are missing.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: 'What needs building',
+            options: {
+              small: 'An internal tool',
+              medium: 'A business application',
+              large: 'A critical service',
+            },
+          },
+          integrations: {
+            label: 'Systems to connect',
+            options: { none: 'None', few: '1 or 2', many: '3 or more' },
+          },
+        },
+        amounts: { plan: 'Framing, phase 1 at a fixed price' },
+        duration: 'Build, by the day',
+      },
+      rules: [
+        'A Custom build never replaces a running system: that is a Migration, or first an Audit.',
+        'It is sold in two phases: the fixed-price framing, then the build at {dayRate} excl. VAT a day. You decide on the second with the framing in hand.',
+      ],
+      notTheRightChoice: [
+        {
+          text: 'Your application already exists and runs: a {offer} will evolve it without replacing it.',
+          offer: 'migration',
+        },
+        {
+          text: 'An off-the-shelf product already does the job: an {offer} will tell you whether it is the right call.',
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: 'Why does the number of systems to connect weigh on the price?',
+          answer:
+            'Each system to connect (ERP, payments, accounting) has its own rules, failures and delays. That is where a project overruns, more often than in the screens.',
+        },
+        {
+          question: 'And once the application is delivered?',
+          answer:
+            'Your team takes it over with the tests and the written decisions, or I maintain it monthly, under a Takeover.',
         },
       ],
     },
