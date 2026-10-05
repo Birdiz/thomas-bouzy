@@ -21,6 +21,24 @@ const { locale, t } = Astro.props;
   </div>
 
   <div class="problem__body">
+  {/* Above the sentence, like the bars of a story: the space a short sentence
+      leaves falls under it, into the section's margin, not between it and
+      its controls. */}
+  <div class="thoughts__controls" hidden>
+    <button type="button" class="thoughts__pause" aria-pressed="false">{t.problem.pause}</button>
+    {
+      t.failureModes.map((_, i) => (
+        <button
+          type="button"
+          class="thoughts__dot"
+          data-i={i}
+          aria-label={t.problem.goTo.replace('{n}', String(i + 1))}
+        >
+          <span />
+        </button>
+      ))
+    }
+  </div>
   <ul class="problem__modes">
     {
       t.failureModes.map((mode, i) => {
@@ -53,21 +71,6 @@ const { locale, t } = Astro.props;
     }
   </ul>
 
-  <div class="thoughts__controls" hidden>
-    <button type="button" class="thoughts__pause" aria-pressed="false">{t.problem.pause}</button>
-    {
-      t.failureModes.map((_, i) => (
-        <button
-          type="button"
-          class="thoughts__dot"
-          data-i={i}
-          aria-label={t.problem.goTo.replace('{n}', String(i + 1))}
-        >
-          <span />
-        </button>
-      ))
-    }
-  </div>
   </div>
 </section>
 

@@ -132,16 +132,7 @@ html {
 a {
   color: var(--color-accent-text);
 }
-.card-kicker {
-  color: var(--color-accent-text);
-}
-.btn-ghost {
-  color: var(--color-accent-text);
-}
-.tag-outline {
-  border-color: var(--color-accent-text);
-  color: var(--color-accent-text);
-}
+
 :focus-visible {
   outline-color: var(--color-accent-text);
 }
@@ -406,8 +397,9 @@ a {
   padding-block: 78px 64px;
 }
 .problem__title {
-  max-width: 16ch;
+  max-width: 20ch;
   margin-bottom: 40px;
+  text-wrap: balance;
 }
 .problem__modes {
   display: grid;
@@ -480,7 +472,7 @@ a {
     display: grid;
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     column-gap: 72px;
-    align-items: center;
+    align-items: start;
   }
   .problem.is-carousel .problem__title {
     margin-bottom: 0;
@@ -533,11 +525,12 @@ a {
 .thoughts__controls {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 34px;
+  gap: 6px;
+  margin-bottom: 22px;
 }
 .thoughts__pause {
-  margin-right: 8px;
+  flex: none;
+  margin-right: 10px;
   padding: 4px 12px;
   border: 1px solid var(--color-divider);
   border-radius: 999px;
@@ -546,15 +539,22 @@ a {
   font: 12px / 1.6 var(--font-mono);
   cursor: pointer;
 }
+.thoughts__pause:hover {
+  color: var(--color-text);
+  border-color: var(--color-muted);
+}
 .thoughts__pause[aria-pressed="true"] {
   border-color: var(--color-accent);
   color: var(--color-accent-text);
 }
-/* A 44px target around a 3px bar. */
+/* The bars share the row, as wide as they can be, each a 44px-tall target
+   around a 4px track. */
 .thoughts__dot {
+  flex: 1 1 0;
+  min-width: 32px;
+  max-width: 96px;
   display: grid;
   align-items: center;
-  width: 44px;
   height: 44px;
   padding: 0;
   border: 0;
@@ -563,9 +563,9 @@ a {
 }
 .thoughts__dot span {
   display: block;
-  height: 3px;
+  height: 4px;
   border-radius: 2px;
-  background: var(--color-divider);
+  background: color-mix(in srgb, var(--color-text) 16%, transparent);
   overflow: hidden;
 }
 .thoughts__dot span::after {
@@ -575,11 +575,16 @@ a {
   width: 0;
   background: var(--color-accent);
 }
+/* The sentences already passed stay full, a shade quieter. */
+.thoughts__dot:has(~ .thoughts__dot[aria-current]) span::after {
+  width: 100%;
+  opacity: 0.55;
+}
 .thoughts__dot[aria-current] span::after {
   animation: thought 5s linear forwards;
 }
 .thoughts__dot:hover span {
-  background: var(--color-muted);
+  background: color-mix(in srgb, var(--color-text) 32%, transparent);
 }
 @keyframes thought {
   to {
