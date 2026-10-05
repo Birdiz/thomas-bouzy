@@ -84,8 +84,26 @@ _Avoid_: upgrade, rewrite, refactoring
 
 **Reliability** (FR *Fiabilisation*):
 Making a system observable and its flows traceable, so that a balance, a batch or
-a defect can be explained instead of guessed.
+a defect can be explained instead of guessed. It keeps a system correct; Scaling
+keeps it up.
 _Avoid_: observability (that is one means), monitoring, quality
+
+**Scaling** (FR *Tenue en charge*):
+Making a system hold its peak and survive a failure. It always begins with a load
+test that reproduces the peak, before any change, and it is sold in two phases: a
+fixed-price load diagnosis, then corrections, each measured again under the same
+test.
+_Avoid_: scale-up (that is a kind of Client), performance (one symptom),
+scalability, high availability (one means); *montée en charge* is the event and
+the reader's search words, not the Offer
+
+**Build** (FR *Création sur mesure*):
+Designing and building an application or a service that does not exist yet, so
+that it can be taken over: tests, written decisions and a handover from the first
+week. It is sold in two phases: a fixed-price framing that ends in a walking
+skeleton, then the build by the day. It is never the rewrite of a running system.
+_Avoid_: rewrite, redesign, MVP, from scratch (as a term), *développement
+spécifique*
 
 **Reinforcement** (FR *Renfort senior*):
 Thomas as a part-time lead or architect inside the Client's team, billed by the day,
@@ -131,6 +149,9 @@ _Avoid_: value, belief, approach
 - An **Audit** credits a fixed amount, the express Audit's fee, against the
   **Engagement** that follows it.
 - A **Takeover** always begins with the test safety net, before any change.
+- A **Scaling** always begins with a load test that reproduces the peak, before any change.
+- A **Build** never replaces a running system: that is a **Migration**, or first an **Audit**.
+- **Build**, like the **Audit**, treats no Failure mode.
 - An **Engagement** may come through a **Partner**, in which case the Partner is
   the one who pays and the Client is the one being served.
 
@@ -145,6 +166,10 @@ _Avoid_: value, belief, approach
   carries no count.
 - The **Concept** was a named capability on an Offer page. ADR 18 took Concepts off
   the site; the term is retired.
+- The local buyer of a **Build**, an owner whose process lives on a shared
+  spreadsheet, is not quite the **Orphan-app segment**: nothing is orphaned yet.
+  They are served under that Segment for now; a fourth Segment waits on real
+  conversations (ADR 19).
 - The glossary governs the site's voice. Metadata and an FAQ question may quote the
   words a reader types instead, as a Client sentence quotes the words a Client says:
   "TMA" in one Takeover question, "sous-traitance" and "ESN" in the Partners page's
