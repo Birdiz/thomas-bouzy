@@ -8,9 +8,9 @@ export const en = {
   meta: {
     title: 'Thomas Bouzy — Freelance Symfony & PHP backend consultant',
     description:
-      'I take over, stabilise and upgrade the PHP/Symfony business applications your company runs on, without downtime. Grand Est or remote. Public prices.',
+      'I take over, stabilise and upgrade the PHP/Symfony business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
     ogImageAlt:
-      'Thomas Bouzy — I design transactional systems that have to stay correct while they stay up. Backend & architecture.',
+      'Thomas Bouzy — in French: “I take over, stabilise and upgrade your business applications.” Freelance PHP/Symfony.',
   },
 
   a11y: {
@@ -31,7 +31,7 @@ export const en = {
   },
 
   hero: {
-    availability: "First engagements in preparation — let's talk now",
+    availability: "Planning my 2027 calendar — let's talk now",
     title: 'I take over your business software, make it reliable and keep it moving forward.',
     blurb:
       'Even the one nobody dares touch any more. Without stopping it, without rewriting everything, at published prices.',
@@ -40,7 +40,7 @@ export const en = {
 
   problem: {
     audit: {
-      text: 'Not sure which one is yours?',
+      text: 'Not sure?',
       cta: 'Start with an audit',
     },
     kicker: 'The problem',
@@ -65,7 +65,7 @@ export const en = {
     },
     {
       quote: '“Our customers are the ones who find the bugs.”',
-      text: 'Defects found by users. The bug was visible hours earlier; nobody was watching.',
+      text: 'Defects found by users. The bug was visible hours earlier; nothing flagged it.',
       offer: 'reliability',
     },
     {
@@ -90,20 +90,20 @@ export const en = {
     },
     {
       title: 'What is not instrumented is not reliable.',
-      text: 'OpenTelemetry and Datadog across every backend service, with alerts before the failure: reported bugs went from around twenty a month to five.',
+      text: 'Alerts before the failure on every backend service (OpenTelemetry and Datadog): reported bugs went from around twenty a month to five.',
       cost: 'Time taken from delivery, and choosing what to watch.',
     },
     {
-      title: 'Three honesty levels, never compressed.',
-      text: 'Production, personal projects, currently learning: I state them apart, so you know what you are buying.',
-      cost: 'A shorter list, and saying “not in production” when that is the case.',
+      title: 'What I leave behind belongs to you.',
+      text: 'Code, access, tests and written decisions stay with you: another developer picks up after me.',
+      cost: 'Time spent writing, billed like the rest.',
     },
   ],
 
   work: {
     kicker: 'Achievements',
-    title: 'Work worth opening',
-    intro: 'Open a card: what I did, and what it changed.',
+    title: 'What I have already kept running in production',
+    intro: 'What I did, and what it changed.',
     labelPlain: 'In plain terms:',
     labelApproach: 'Approach',
     labelResult: 'Result',
@@ -112,15 +112,14 @@ export const en = {
   achievements: [
     {
       id: 'industrial-erp',
-      title: 'Keeping an industrial ERP running in production',
+      title: 'Keeping the ERP of several ArcelorMittal plants running',
       org: 'Quadra Informatique',
       period: '2016 – 2017',
       plain:
-        'Looking after the software a manufacturer relies on every day, from suppliers to invoices.',
+        'Looking after the software several plants rely on every day, from suppliers to invoices.',
       approach:
-        'Fixes and changes on software the business could not do without for a single day: nothing went out without being checked.',
-      result:
-        'The ERP stayed in production throughout. It is exactly the case the Takeover exists for.',
+        'The whole chain: suppliers, production, stock, invoicing, incidents. Plants that could not do without it for a day: nothing went out unchecked.',
+      result: 'In production throughout, at several ArcelorMittal plants in France.',
     },
     {
       id: 'live-api-redesign',
@@ -136,7 +135,7 @@ export const en = {
     },
     {
       id: 'wallet-event-sourcing',
-      title: 'Event Sourcing on wallet transactions',
+      title: 'Tracing the money of 1.5 million users',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
       plain:
@@ -148,7 +147,7 @@ export const en = {
     },
     {
       id: 'on-chain-operations',
-      title: 'On-chain transactions that commit real funds',
+      title: 'Moving real money, with no room for error',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
       plain:
@@ -183,7 +182,7 @@ export const en = {
     },
     {
       id: 'open-data-directories',
-      title: 'Association directories from open data',
+      title: 'Rebuilding in 40 seconds a directory once compiled by hand',
       org: 'For a client',
       period: '2026',
       plain:
@@ -204,7 +203,7 @@ export const en = {
     title: 'In short',
     paragraphs: [
       'I work in PHP and Symfony, and I also take on the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, histories you can replay, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
-      'I live in the Grand Est countryside. Written, asynchronous work is my default; I travel when the work needs a room.',
+      'I live in the Grand Est countryside. I work mostly remotely, and come on site when needed.',
     ],
     mentoringKicker: 'Passing it on — a thread through all of it',
     careerLine: 'Hiring rather than contracting?',
@@ -228,7 +227,7 @@ export const en = {
   ],
 
   schema: {
-    jobTitle: 'Senior Software Engineer — backend architecture',
+    jobTitle: 'Freelance PHP/Symfony developer',
     knowsAbout: [
       'PHP',
       'Symfony',
@@ -254,7 +253,9 @@ export const en = {
   offersSection: {
     kicker: 'Offers',
     title: 'Offers for your business applications, each with its price.',
-    from: 'from',
+    from: { fee: 'from', setup: 'from', plan: 'plan from', monthly: 'from' },
+    followedBy: 'then',
+    start: 'Where to start',
     see: 'See the offer',
     inFrench: '(in French)',
     partners: 'An agency or an IT services firm?',
@@ -298,7 +299,7 @@ export const en = {
   offerPage: {
     kicker: 'Offer',
     sentences: 'Does this sound like you?',
-    delivered: 'What you receive, in order',
+    delivered: 'What you receive',
     disclaimer: 'An order of magnitude, not a quote.',
     tableCaption: 'Every range, excluding VAT',
     excludingVat: 'excl. VAT',
@@ -323,7 +324,7 @@ export const en = {
       meta: {
         title: 'Symfony & PHP code audit and technical due diligence',
         description:
-          'A written audit of your PHP/Symfony system: report, risk register and prioritised action plan. Public prices, credited against the next engagement.',
+          'A written audit of your PHP/Symfony system: report, risk register and prioritised action plan. The express audit, at a fixed price, is credited against the next engagement.',
       },
       heading: 'A technical audit of your application',
       priceHeading: 'How much does a code audit cost?',
@@ -460,7 +461,7 @@ export const en = {
     },
     reliability: {
       meta: {
-        title: 'Observability and traceable flows for critical systems',
+        title: 'Reliable PHP/Symfony systems: traceable flows, observability',
         description:
           "A balance, a stock or an invoice that won't reconcile? Traceable flows, idempotent processing and observability to explain it. Public prices.",
       },
@@ -737,7 +738,7 @@ export const en = {
     blurb: 'A free 30-minute call: I tell you plainly whether I can help.',
     cta: 'Book a call',
     revealPhone: 'Show phone number',
-    locationLine: 'Grand Est, France · Fully remote for 8+ years · CET',
+    locationLine: 'Grand Est, France · On site in {towns} · Remote for 8+ years',
   },
 
   footer: {

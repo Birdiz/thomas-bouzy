@@ -141,3 +141,8 @@ export const LOCALE_ENDONYM: Record<Locale, string> = {
 export function absoluteUrl(path: string): string {
   return new URL(path, SITE.origin).href;
 }
+
+/** "Nancy, Strasbourg, Colmar, Obernai et Épinal": the Service area, listed in the reader's language. */
+export function serviceAreaTowns(locale: Locale): string {
+  return new Intl.ListFormat(LOCALE_TAG[locale], { type: 'conjunction' }).format(SITE.serviceArea);
+}

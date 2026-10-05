@@ -1,8 +1,7 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { OFFER_IDS } from '../content/offers.ts';
-import { fromPrice, isMonthly } from '../content/prices.ts';
-import { formatEuros } from '../lib/money.ts';
+import { ENTRY_OFFER, OFFER_IDS } from '../content/offers.ts';
+import { fromLine } from '../lib/offer-price.ts';
 import { linkTo } from '../routes.ts';
 import { LOCALE_TAG, type Locale } from '../site.ts';
 
@@ -15,21 +14,18 @@ interface Props {
 const { locale, t, num } = Astro.props;
 
 /**
- * One card per Offer: its plain line, its lowest price from the price table,
+ * One card per Offer: its plain line, its lowest prices from the price table,
  * and its page. An Offer with no page in this locale links to the French one
  * and says so — the Takeover is French only (ADR 15), and its card is here in
  * English too because the home page sells them all.
  */
-const cards = OFFER_IDS.map((id) => {
-  const { amount, min } = fromPrice(id);
-  const unit = isMonthly(amount) ? ` ${t.offerPage.perMonth}` : '';
-  return {
-    id,
-    ...t.offers[id],
-    ...linkTo(id, locale),
-    from: `${t.offersSection.from} ${formatEuros(min, locale)}${unit} ${t.offerPage.excludingVat}`,
-  };
-});
+const cards = OFFER_IDS.map((id) => ({
+  id,
+  ...t.offers[id],
+  ...linkTo(id, locale),
+  from: fromLine(id, locale, t),
+  entry: id === ENTRY_OFFER,
+}));
 
 const partners = linkTo('partners', locale);
 ---
@@ -42,6 +38,8 @@ const partners = linkTo('partners', locale);
     {
       cards.map((card) => (
         <li class="offers__card" data-offer={card.id}>
+          {/* Cards of equal weight did not say where to start (ADR 20). */}
+          {card.entry && <p class="offers__badge">{t.offersSection.start}</p>}
           <h3 class="offers__name">
             <a href={card.href} hreflang={card.hreflang && LOCALE_TAG[card.hreflang]}>
               {card.name}

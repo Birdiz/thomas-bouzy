@@ -2,7 +2,8 @@
 
 - Status: accepted, implemented 2026-10-04; amended by
   [ADR 18](0018-one-day-rate-and-half-the-words.md), 2026-10-05, and by
-  [ADR 19](0019-building-new-and-holding-the-load.md), 2026-10-05
+  [ADR 19](0019-building-new-and-holding-the-load.md) and
+  [ADR 20](0020-the-buyers-objections-before-the-buyer-asks.md), 2026-10-05
 - Date: 2026-10-03
 - Settles what [ADR 11](0011-the-page-is-not-a-cv.md) and
   [ADR 12](0012-the-clients-sentence-first.md) left waiting on "the segment"
