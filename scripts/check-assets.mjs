@@ -74,7 +74,7 @@ if (SITE.indexable && !LEGAL.isComplete) {
 console.log(
   SITE.indexable
     ? `Indexable: ${SITE.origin} is served to crawlers.`
-    : `NOT indexable (SITE_INDEXABLE unset): robots.txt disallows all, pages carry noindex.`,
+    : `NOT indexable (SITE_INDEXABLE unset): crawlers may read the pages, and every page carries noindex.`,
 );
 
 // Content still to come.

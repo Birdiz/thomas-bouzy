@@ -215,20 +215,33 @@ test('gives each encoding its own strong validator', async ({ request }) => {
   expect(revalidated.status()).toBe(304);
 });
 
-test('tells crawlers to stay away while the hostname is not the canonical one', async ({
-  request,
-}) => {
+test('keeps the site out of the index, without keeping crawlers out', async ({ request }) => {
   // The e2e suite builds without SITE_INDEXABLE, which is the state the site
-  // deploys in until the custom domain is live — so this asserts the guard is
-  // wired end to end: header, robots.txt and the page itself.
+  // deploys in until registration — so this asserts the guard is wired end to
+  // end: header and the page itself. robots.txt lets crawlers in, because one
+  // that may not fetch a page never reads its `noindex` (robots.txt.ts).
   expect((await request.get('/')).headers()['x-robots-tag']).toBe('noindex, nofollow');
 
   const robots = await request.get('/robots.txt');
-  expect(await robots.text()).toContain('Disallow: /');
+  expect(await robots.text()).toContain('Allow: /');
+  expect(await robots.text()).not.toContain('Disallow');
 
   for (const path of PATHS) {
     expect(await (await request.get(path)).text()).toContain('name="robots" content="noindex');
   }
+});
+
+test("sends Railway's generated hostname to the domain, path and query kept", async ({
+  request,
+}) => {
+  const response = await request.get('/offres/audit/?from=railway', {
+    headers: { host: 'thomas-bouzy-production.up.railway.app' },
+    maxRedirects: 0,
+  });
+  expect(response.status()).toBe(301);
+  expect(response.headers().location).toBe(
+    `https://${process.env.SITE_DOMAIN?.trim() || 'thomasbouzy.dev'}/offres/audit/?from=railway`,
+  );
 });
 
 test('answers methods it does not implement with 405', async ({ request }) => {

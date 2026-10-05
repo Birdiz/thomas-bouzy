@@ -43,6 +43,21 @@ const root = resolve(flag('root', 'dist'));
  */
 const INDEXABLE = /^(1|true|yes)$/i.test((process.env.SITE_INDEXABLE ?? '').trim());
 
+/**
+ * The canonical domain, as src/site.ts spells it. A request that reached the
+ * service through Railway's generated hostname is sent there, so the same
+ * pages are never served under two names (the canonical link only cleans that
+ * up after the fact). Only that hostname: localhost, the e2e suite and
+ * Railway's healthcheck, which comes in under its own name, are served as is.
+ */
+const DOMAIN = process.env.SITE_DOMAIN?.trim() || 'thomasbouzy.dev';
+const RAILWAY_HOSTNAME = /\.up\.railway\.app$/i;
+
+function redirectToDomain(req) {
+  const hostname = (req.headers.host ?? '').replace(/:\d+$/, '').toLowerCase();
+  return RAILWAY_HOSTNAME.test(hostname) && hostname !== DOMAIN.toLowerCase();
+}
+
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -243,11 +258,16 @@ async function handle(req, res) {
     return;
   }
 
+  const target = req.url ?? '/';
+  if (redirectToDomain(req) && target.startsWith('/')) {
+    send(res, 301, { location: `https://${DOMAIN}${target}`, 'cache-control': 'no-store' }, '');
+    return;
+  }
+
   // The request target is split by hand rather than handed to `new URL()`: a
   // target beginning with `//` is a protocol-relative URL to that constructor,
   // so `GET //fr/` silently became a request for `/` — served 200, wrong page,
   // and invisible to the redirect below.
-  const target = req.url ?? '/';
   const badRequest = () =>
     send(
       res,
