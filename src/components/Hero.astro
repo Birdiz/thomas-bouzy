@@ -32,11 +32,11 @@ const portrait = Object.values(portraits)[0]?.default;
 
     <div class="hero__grid">
       <div class="hero__intro">
-        {/* The name, then the promise, in one H1. The name is set small: the
-            reader arrives warm from LinkedIn or a referral and already knows
-            it; the promise is what they came to read. */}
+        {/* The name, then the promise, in one H1. The name is for search
+            engines and screen readers only: the header already shows it, and
+            twice in the first screen is once too many. */}
         <h1 class="hero__name">
-          {SITE.author}
+          <span class="visually-hidden">{SITE.author} — </span>
           <span class="hero__promise">
             {t.hero.title.map((line) => <span class="hero__promise-line">{line} </span>)}
           </span>

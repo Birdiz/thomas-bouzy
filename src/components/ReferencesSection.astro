@@ -4,10 +4,9 @@ import { REFERENCES } from '../content/offers.ts';
 
 interface Props {
   t: ResumeContent;
-  num: string;
 }
 
-const { t, num } = Astro.props;
+const { t } = Astro.props;
 
 /**
  * One row per client or context, closed by default: a reader skims who, in
@@ -26,7 +25,7 @@ const references = REFERENCES.map((reference) => ({
 ---
 
 <section id="work" class="work container">
-  <p class="kicker"><span class="kicker__num">{num}</span>{t.work.kicker}</p>
+  <p class="kicker">{t.work.kicker}</p>
   <h2 class="section-title">{t.work.title}</h2>
   <p class="work__intro">{t.work.intro}</p>
 

@@ -8,10 +8,9 @@ import { CONTACT, LOCALE_TAG, type Locale } from '../site.ts';
 interface Props {
   locale: Locale;
   t: ResumeContent;
-  num: string;
 }
 
-const { locale, t, num } = Astro.props;
+const { locale, t } = Astro.props;
 
 /**
  * The Offers laid out as the life of an application, not as a catalogue: it
@@ -50,7 +49,7 @@ const publicSector = linkTo('public-sector', locale);
 ---
 
 <section id="offers" class="offers container">
-  <p class="kicker"><span class="kicker__num">{num}</span>{t.offersSection.kicker}</p>
+  <p class="kicker">{t.offersSection.kicker}</p>
   <h2 class="section-title offers__title">{t.offersSection.title}</h2>
 
   <ol class="journey">

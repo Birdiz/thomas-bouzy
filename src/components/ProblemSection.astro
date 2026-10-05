@@ -6,17 +6,16 @@ import { LOCALE_TAG, type Locale } from '../site.ts';
 interface Props {
   locale: Locale;
   t: ResumeContent;
-  num: string;
 }
 
-const { locale, t, num } = Astro.props;
+const { locale, t } = Astro.props;
 ---
 
 {/* Without script, or for a visitor who asked for reduced motion, the
     sentences stay a plain list. With both, they pass one at a time, like a
     train of thought: the script adds `is-carousel` and shows the controls. */}
 <section id="problem" class="problem container" data-thoughts>
-  <p class="kicker"><span class="kicker__num">{num}</span>{t.problem.kicker}</p>
+  <p class="kicker">{t.problem.kicker}</p>
   <h2 class="section-title problem__title">{t.problem.title}</h2>
 
   <ul class="problem__modes">

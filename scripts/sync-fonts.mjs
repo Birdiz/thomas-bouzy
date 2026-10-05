@@ -24,6 +24,7 @@ const dest = join(root, 'public', 'fonts');
 const FACES = [
   '@fontsource/figtree/files/figtree-latin-400-normal.woff2',
   '@fontsource/figtree/files/figtree-latin-ext-400-normal.woff2',
+  '@fontsource/figtree/files/figtree-latin-800-normal.woff2',
   '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2',
   '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-ext-400-normal.woff2',
   '@fontsource/spectral/files/spectral-latin-500-normal.woff2',

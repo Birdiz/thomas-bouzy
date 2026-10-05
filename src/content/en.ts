@@ -79,7 +79,7 @@ export const en = {
   work: {
     kicker: 'References',
     title: 'Where I have already kept production running',
-    intro: 'Industry, fintech, SaaS, the non-profit sector. Open a row for the detail.',
+    intro: 'Industry, fintech, SaaS, the non-profit sector.',
     labelPlain: 'In plain terms:',
     labelApproach: 'Approach',
     labelResult: 'Result',
@@ -213,9 +213,8 @@ export const en = {
     kicker: 'About',
     title: 'In short',
     paragraphs: [
-      'I work in PHP and Symfony, and I also take on the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, histories you can replay, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
-      'I have taught at university, brought juniors to autonomy and started a backend community of practice: passing it on is part of the job.',
-      'I live in the Grand Est countryside. I work mostly remotely, and come on site when needed.',
+      'I work in PHP and Symfony, with the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
+      'I have taught at university and brought juniors to autonomy. I live in the Grand Est countryside; I work mostly remotely, and come on site when needed.',
     ],
     careerLine: 'Hiring rather than contracting?',
     careerLink: 'My career is on LinkedIn.',
@@ -742,6 +741,7 @@ export const en = {
     title: "Let's talk about your application.",
     blurb: 'A free 30-minute call: I tell you plainly whether I can help.',
     cta: 'Book a call',
+    orReach: 'Or, if you prefer:',
     revealPhone: 'Show phone number',
     locationLine: 'Grand Est, France · On site in {towns} · Remote for 8+ years',
   },

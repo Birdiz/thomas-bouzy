@@ -453,6 +453,8 @@ export interface ResumeContent {
     blurb: string;
     /** The booking link, first of the ways to reach Thomas. */
     cta: string;
+    /** Lead-in to the secondary ways in: email, phone, LinkedIn. */
+    orReach: string;
     revealPhone: string;
     /** `{towns}` is replaced by SITE.serviceArea, as on the Offer pages. */
     locationLine: string;

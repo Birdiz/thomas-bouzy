@@ -94,7 +94,7 @@ html {
   top: -100px;
   z-index: 100;
   padding: 10px 18px;
-  background: var(--color-accent);
+  background: var(--color-accent-fill);
   color: var(--color-on-accent);
   border-radius: 0 0 var(--radius-md) 0;
   font-family: var(--font-body);
@@ -121,9 +121,9 @@ html {
    Measured with `node scripts/contrast.mjs --audit`.
 
    On the dark ground (ADR 13) the accent no longer has to be dimmed for text —
-   it has to be lifted a little. --color-accent-text measures 6.61:1 on bg and
-   5.41:1 on sunken; the button keeps the full-strength --color-accent as its
-   fill, with the ground colour as its label (5.57:1).
+   it has to be lifted a little. --color-accent-text measures 6.01:1 on bg and
+   4.91:1 on sunken; the button takes --color-accent-fill, with the ground
+   colour as its label (6.01:1).
 
    The budget is ADR 10's and has not moved: the section numbers, the primary
    button and the links, and nowhere else. Decorative uses that carry no text
@@ -275,7 +275,7 @@ a {
   color: var(--color-accent-text);
 }
 .lang-switch a[aria-current="true"] {
-  background: var(--color-accent);
+  background: var(--color-accent-fill);
   color: var(--color-on-accent);
   opacity: 1;
 }
@@ -325,16 +325,11 @@ a {
 
 .hero__name {
   margin: 0 0 22px;
-  font-size: clamp(20px, 2vw, 26px);
-  line-height: 1.2;
-  letter-spacing: 0;
-  color: var(--color-accent-text);
 }
 /* The promise, inside the H1 under the name, at display size. Two lines,
    each of which may wrap again on a narrow screen. */
 .hero__promise {
   display: block;
-  margin-top: 14px;
   font-size: clamp(34px, 4.4vw, 58px);
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -512,7 +507,7 @@ a {
   display: none;
 }
 .is-carousel .problem__mode-quote {
-  font-size: clamp(28px, 4.4vw, 54px);
+  font-size: clamp(25px, 3.3vw, 42px);
   line-height: 1.12;
   letter-spacing: -0.015em;
   max-width: 22ch;
@@ -596,16 +591,16 @@ a {
 }
 .audit-call__link {
   display: block;
-  padding-block: clamp(56px, 9vw, 112px);
+  padding-block: clamp(44px, 6vw, 76px);
   color: var(--color-text);
   text-decoration: none;
-  /* The system's own heavy sans: every platform ships one, and a webfont
-     weight for a single band would cost the home page its font budget. */
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Figtree at 800, the one heavy line on the page. Loud, but a step under
+     the hero's promise: it is an invitation, not the headline. */
+  font-family: var(--font-body);
   font-weight: 800;
-  font-size: clamp(42px, 8.4vw, 116px);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
+  font-size: clamp(32px, 4.2vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
 }
 .audit-call__question {
   display: block;
@@ -914,10 +909,22 @@ a {
   text-wrap: pretty;
 }
 .reference__chevron {
-  font-size: 18px;
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  font-size: 17px;
   color: var(--color-accent-text);
-  transition: transform 0.3s ease;
-  display: inline-block;
+  transition:
+    transform 0.3s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+.reference__summary:hover .reference__chevron {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
 .reference[open] .reference__chevron {
   transform: rotate(180deg);
@@ -988,7 +995,7 @@ a {
 /* — contact —————————————————————————————————————————————————————————————— */
 
 .contact {
-  padding-block: 40px 90px;
+  padding-block: 40px 24px;
 }
 /* Was a dark block on a light page. On a dark page it is the one raised panel:
    a step up in ground, a hairline edge, and the cover's terracotta glow low in
@@ -1073,21 +1080,40 @@ a {
   gap: 12px;
 }
 .contact__actions .btn {
-  padding: 12px 24px;
+  padding: 13px 28px;
+  font-size: 16px;
+}
+/* The secondary ways in: links in a row, under the one button. */
+.contact__others {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+  margin: 20px 0 0;
   font-size: 15px;
+  color: var(--color-muted);
 }
-/* The secondary actions: an outline in the text colour. The global `a:hover`
-   would otherwise turn their label terracotta and let them compete with the
-   primary button. */
-.contact__actions .btn-outline {
-  border-color: var(--color-divider);
+.contact__others a,
+.contact__link {
+  /* A 24px target at least, for a thumb. */
+  display: inline-block;
+  padding-block: 4px;
   color: var(--color-text);
-  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: var(--color-divider);
+  text-underline-offset: 3px;
 }
-.contact__actions .btn-outline:hover {
-  border-color: color-mix(in srgb, var(--color-text) 40%, transparent);
-  background: color-mix(in srgb, var(--color-text) 6%, transparent);
-  color: var(--color-text);
+.contact__others a:hover,
+.contact__link:hover {
+  color: var(--color-accent-text);
+  text-decoration-color: currentColor;
+}
+.contact__link {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
 }
 .contact__location {
   margin-top: 30px;
@@ -1409,7 +1435,7 @@ a {
 
 @media (max-width: 640px) {
   .contact {
-    padding-block: 32px 64px;
+    padding-block: 32px 16px;
   }
   .reference__summary {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -1498,7 +1524,7 @@ a {
 
 .site-footer {
   border-top: 1px solid var(--color-divider);
-  margin-top: 96px;
+  margin-top: 64px;
   padding: 32px 0 40px;
 }
 

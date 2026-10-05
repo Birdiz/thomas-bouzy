@@ -31,6 +31,11 @@ import { expect, PATHS, test } from './fixtures.ts';
  * (Figtree 400 + JetBrains Mono + Spectral 500), still under the limit, which
  * did not move. The ridge is inline SVG, ~2 kB of document, no request.
  *
+ * Re-measured on 2026-10-05: Figtree 800 (latin, 11.1 kB) arrived for the one
+ * heavy line on the home page, the invitation to the Audit. The system's heavy
+ * sans was tried first and drew a different face on every OS. Fonts 55.4 →
+ * 66.8 kB on the home page; the limit moved 60 → 72 kB, the same headroom.
+ *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.
@@ -40,7 +45,7 @@ const BUDGET = {
   cssBytes: 34_000,
   externalJsBytes: 4_000,
   inlineJsBytes: 2_000,
-  fontBytes: 60_000,
+  fontBytes: 72_000,
   requests: 12,
 } as const;
 

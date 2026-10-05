@@ -79,7 +79,7 @@ export const fr = {
   work: {
     kicker: 'Références',
     title: "Là où j'ai déjà tenu la production",
-    intro: 'Industrie, fintech, SaaS, associatif. Dépliez une ligne pour le détail.',
+    intro: 'Industrie, fintech, SaaS, associatif.',
     labelPlain: 'En clair :',
     labelApproach: 'Approche',
     labelResult: 'Résultat',
@@ -215,9 +215,8 @@ export const fr = {
     kicker: 'À propos',
     title: 'En bref',
     paragraphs: [
-      "Je travaille en PHP et Symfony, et je reprends aussi le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des historiques qu'on peut rejouer, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
-      "J'ai enseigné à l'université, mené des juniors jusqu'à l'autonomie et lancé une communauté de pratique backend : transmettre fait partie du travail.",
-      'Je vis dans le Grand Est, à la campagne. Je travaille surtout à distance, et viens sur place si besoin.',
+      "Je travaille en PHP et Symfony, avec le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
+      "J'ai enseigné à l'université et mené des juniors jusqu'à l'autonomie. Je vis dans le Grand Est, à la campagne ; je travaille surtout à distance, et viens sur place si besoin.",
     ],
     careerLine: "En poste plutôt qu'en mission ?",
     careerLink: 'Mon parcours est sur LinkedIn.',
@@ -934,6 +933,7 @@ export const fr = {
     title: 'Parlons de votre application.',
     blurb: 'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider.',
     cta: 'Réserver un appel',
+    orReach: 'Ou, si vous préférez :',
     revealPhone: 'Afficher le numéro',
     locationLine: 'Grand Est, France · Sur place à {towns} · À distance depuis 8 ans',
   },
