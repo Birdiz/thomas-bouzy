@@ -844,7 +844,7 @@ a {
   gap: 14px;
 }
 
-.achievement {
+.reference {
   border-radius: calc(var(--radius-lg) * 1.15);
   background: color-mix(in srgb, var(--color-surface) 55%, transparent);
   transition:
@@ -852,54 +852,33 @@ a {
     box-shadow 0.25s ease;
   overflow: hidden;
 }
-.achievement[open] {
+.reference[open] {
   background: var(--color-surface);
   box-shadow: var(--shadow-md);
 }
 
-.achievement__summary {
+.reference__summary {
   cursor: pointer;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto;
   gap: 20px;
   align-items: center;
   padding: 24px 28px;
   list-style: none;
 }
-.achievement__summary::-webkit-details-marker {
+.reference__summary::-webkit-details-marker {
   display: none;
 }
-.achievement__summary::marker {
+.reference__summary::marker {
   content: "";
 }
-.achievement__summary:focus-visible {
+.reference__summary:focus-visible {
   outline: 2px solid var(--color-accent-text);
   outline-offset: -4px;
   border-radius: calc(var(--radius-lg) * 1.15);
 }
 
-.achievement__num {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 15px;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background 0.25s ease,
-    color 0.25s ease;
-  background: var(--color-sunken);
-  color: var(--color-accent-text);
-}
-.achievement[open] .achievement__num {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.achievement__heading {
+.reference__heading {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -911,14 +890,14 @@ a {
   letter-spacing: normal;
   line-height: inherit;
 }
-.achievement__title {
+.reference__title {
   font-family: var(--font-heading);
   font-weight: var(--font-heading-weight);
   font-size: clamp(19px, 2vw, 25px);
   line-height: 1.15;
   letter-spacing: -0.015em;
 }
-.achievement__meta {
+.reference__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -927,13 +906,20 @@ a {
   opacity: 0.7;
 }
 
-.achievement__chevron {
+.reference__headline {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+.reference__chevron {
   font-size: 18px;
   color: var(--color-accent-text);
   transition: transform 0.3s ease;
   display: inline-block;
 }
-.achievement[open] .achievement__chevron {
+.reference[open] .reference__chevron {
   transform: rotate(180deg);
 }
 
@@ -945,6 +931,17 @@ a {
   height: 1px;
   background: var(--color-divider);
   margin-bottom: 24px;
+}
+/* One case per Achievement done for this Reference. */
+.reference__case + .reference__case {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--color-divider);
+}
+.reference__case-title {
+  font-size: 19px;
+  line-height: 1.25;
+  margin: 0 0 12px;
 }
 /* The plain-language line, above the three facets and set larger than them:
    whoever needs it is the reader least likely to stay for the rest. */
@@ -988,86 +985,6 @@ a {
   text-wrap: pretty;
 }
 
-/* — about ———————————————————————————————————————————————————————————————— */
-
-.about {
-  padding-block: 66px 40px;
-}
-.about__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 46px;
-  /* The canvas stretches the aside to the prose column and centres the card in
-     it, rather than leaving a small card floating beside three paragraphs. */
-  align-items: stretch;
-}
-.about .section-title {
-  margin: 0 0 18px;
-}
-.about__prose p {
-  font-size: 16.5px;
-  line-height: 1.7;
-  opacity: 0.9;
-  max-width: 56ch;
-  text-wrap: pretty;
-}
-/* The salaried route, once and at the end of the prose. Separated by a rule
-   rather than by size: it has to read as an aside to the section, not as its
-   conclusion, and it must not compete with the contact CTA further down. */
-.about__prose .about__career {
-  font-size: 15px;
-  margin: 26px 0 0;
-  padding-top: 22px;
-  border-top: 1px solid var(--color-divider);
-  color: var(--color-muted);
-}
-
-.about__aside {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  height: 100%;
-}
-.mentoring {
-  background: var(--color-sunken);
-  padding: 28px 30px;
-  flex: 1;
-  justify-content: center;
-}
-.mentoring .card-kicker {
-  color: var(--color-muted);
-  font-size: 16px;
-  letter-spacing: 0.02em;
-  margin-bottom: 6px;
-}
-.mentoring__list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.mentoring__row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
-  align-items: baseline;
-}
-.mentoring__year {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 15px;
-  color: var(--color-text);
-  white-space: nowrap;
-}
-.mentoring__text {
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--color-text);
-  text-wrap: pretty;
-}
-
 /* — contact —————————————————————————————————————————————————————————————— */
 
 .contact {
@@ -1097,8 +1014,46 @@ a {
   );
   pointer-events: none;
 }
-.contact__body {
+.contact__body,
+.contact__about {
   position: relative;
+}
+.contact__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 48px;
+}
+.contact__about {
+  padding-left: 40px;
+  border-left: 1px solid var(--color-divider);
+}
+.contact__about-title {
+  font-size: 24px;
+  margin: 0 0 14px;
+}
+.contact__about p:not(.kicker) {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--color-muted);
+  margin: 0 0 14px;
+  text-wrap: pretty;
+}
+/* The salaried route, once and at the end, set apart by a rule. */
+.contact__about .about__career {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-divider);
+}
+@media (max-width: 900px) {
+  .contact__panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contact__about {
+    padding-left: 0;
+    padding-top: 32px;
+    border-left: 0;
+    border-top: 1px solid var(--color-divider);
+  }
 }
 .contact__title {
   font-size: clamp(32px, 4.4vw, 58px);
@@ -1453,21 +1408,16 @@ a {
 }
 
 @media (max-width: 640px) {
-  .about {
-    padding-block: 48px 20px;
-  }
   .contact {
     padding-block: 32px 64px;
   }
-  .achievement__summary {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 14px;
+  .reference__summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
     padding: 20px;
   }
-  .achievement__num {
-    width: 34px;
-    height: 34px;
-    font-size: 13px;
+  .reference__headline {
+    grid-row: 2;
   }
   .achievement__panel {
     padding: 0 20px 22px;
@@ -1475,9 +1425,6 @@ a {
   .achievement__facets {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
-  }
-  .about__grid {
-    gap: 32px;
   }
   .hero__portrait {
     --portrait-size: 150px;

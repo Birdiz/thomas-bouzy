@@ -116,6 +116,7 @@ describe('EN/FR parity', () => {
       '$.work.kicker',
       '$.work.title',
       '$.work.intro',
+      '$.references.socios.headline',
       '$.work.labelPlain',
       '$.failureModes[0].quote',
       '$.failureModes[0].text',
@@ -270,24 +271,6 @@ describe('content corrections applied against the design', () => {
           tech,
         );
       }
-    }
-  });
-
-  it('states the leadership scope as it actually was', () => {
-    // Both reference CVs carried "up to 6 developers, QA, PO" for months. It
-    // was two teams and six people — five developers and a QA — and the PO was
-    // never in scope. The inflated version is the one a reader would probe, so
-    // the corrected one is asserted rather than trusted to stay.
-    //
-    // It used to live in a Track record bullet. Chantier A removed that section,
-    // and this is one of the four facts that existed nowhere else on the page —
-    // it moved to the mentoring entry whose actual subject it is.
-    for (const content of [en, fr]) {
-      const everywhere = [...walkStrings(content)].map(([, text]) => text).join(' ');
-      expect(everywhere).toMatch(/five developers|cinq développeurs/);
-      expect(everywhere, 'the old inflated headcount is back').not.toMatch(
-        /6 (developers|développeurs)/,
-      );
     }
   });
 

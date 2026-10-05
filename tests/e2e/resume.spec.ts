@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { RESUME } from '../../src/content/index.ts';
-import { ACHIEVEMENT_IDS, OFFER_IDS } from '../../src/content/offers.ts';
+import { ACHIEVEMENT_IDS, OFFER_IDS, REFERENCES } from '../../src/content/offers.ts';
 import { fromPrice } from '../../src/content/prices.ts';
 import { formatEuros } from '../../src/lib/money.ts';
 import { homePath, pathOf } from '../../src/routes.ts';
@@ -21,15 +21,11 @@ test.describe('routing and locales', () => {
     // The name, then the promise, in the one H1 (ADR 18).
     await expect(page.locator('h1')).toContainText('Thomas Bouzy');
     await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title.join(' '));
-    await expect(
-      page.getByRole('heading', { name: "Ce que j'ai déjà tenu en production" }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: RESUME.fr.work.title })).toBeVisible();
 
     await gotoHome(page, '/en/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(
-      page.getByRole('heading', { name: 'What I have already kept running in production' }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: RESUME.en.work.title })).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {
@@ -88,40 +84,49 @@ test.describe('routing and locales', () => {
   });
 });
 
-test.describe('achievements accordion', () => {
-  test('opens the first achievement and keeps only one open at a time', async ({ page }) => {
+test.describe('references accordion', () => {
+  test('opens one reference at a time, all closed at first', async ({ page }) => {
     await gotoHome(page, '/en/');
-    const achievements = page.locator('details.achievement');
-    await expect(achievements).toHaveCount(ACHIEVEMENT_IDS.length);
-    await expect(achievements.nth(0)).toHaveAttribute('open', '');
+    const references = page.locator('details.reference');
+    await expect(references).toHaveCount(REFERENCES.length);
+    for (const reference of await references.all()) {
+      await expect(reference).not.toHaveAttribute('open', '');
+    }
 
-    await achievements.nth(2).locator('summary').click();
-    await expect(achievements.nth(2)).toHaveAttribute('open', '');
-    await expect(achievements.nth(0)).not.toHaveAttribute('open', '');
+    await references.nth(1).locator('summary').click();
+    await expect(references.nth(1)).toHaveAttribute('open', '');
 
     // The last one too: `name` groups the whole list, not the first few.
-    const last = achievements.nth(ACHIEVEMENT_IDS.length - 1);
+    const last = references.nth(REFERENCES.length - 1);
     await last.locator('summary').click();
     await expect(last).toHaveAttribute('open', '');
-    await expect(achievements.nth(2)).not.toHaveAttribute('open', '');
+    await expect(references.nth(1)).not.toHaveAttribute('open', '');
   });
 
-  test('exposes each achievement as a heading with its panel content', async ({ page }) => {
+  test('opens on every achievement done for that reference', async ({ page }) => {
     await gotoHome(page, '/en/');
-    const first = page.locator('details.achievement').first();
-    await expect(
-      first.getByRole('heading', { name: RESUME.en.achievements[0]?.title ?? '∅' }),
-    ).toBeVisible();
-    // Two facets: "Context" repeated the plain line above it (ADR 18).
-    await expect(first.getByText('Context', { exact: true })).toHaveCount(0);
-    await expect(first.getByText('Approach', { exact: true })).toBeVisible();
-    await expect(first.getByText('Result', { exact: true })).toBeVisible();
+    for (const reference of REFERENCES) {
+      const row = page.locator(`details.reference[data-reference="${reference.id}"]`);
+      await expect(row.locator('.reference__title')).toHaveText(
+        RESUME.en.references[reference.id].name,
+      );
+      await expect(row.locator('article.reference__case')).toHaveCount(
+        reference.achievements.length,
+      );
+    }
+    // Every achievement is reachable from exactly one reference.
+    await expect(page.locator('article.reference__case')).toHaveCount(ACHIEVEMENT_IDS.length);
+
+    const socios = page.locator('details.reference[data-reference="socios"]');
+    await socios.locator('summary').click();
+    await expect(socios.getByText('Approach', { exact: true }).first()).toBeVisible();
+    await expect(socios.getByText('Result', { exact: true }).first()).toBeVisible();
   });
 
   test('is operable from the keyboard', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'WebKit needs full keyboard access enabled at OS level');
     await gotoHome(page, '/en/');
-    const second = page.locator('details.achievement').nth(1);
+    const second = page.locator('details.reference').nth(1);
     await second.locator('summary').focus();
     await page.keyboard.press('Enter');
     await expect(second).toHaveAttribute('open', '');
@@ -159,7 +164,7 @@ test.describe('the page is not a CV', () => {
 
   test('points the salaried route at LinkedIn, from About', async ({ page }) => {
     await gotoHome(page, '/');
-    const career = page.locator('#about .about__career a');
+    const career = page.locator('#contact #about .about__career a');
     await expect(career).toHaveCount(1);
     await expect(career).toHaveAttribute('href', /linkedin\.com\/in\//);
   });
@@ -208,7 +213,7 @@ test.describe('phone number is not harvestable', () => {
     // page without it (ADR 18). A link, never an embed.
     await expect(contact.getByRole('link').first()).toHaveAttribute('href', CONTACT.booking);
     await expect(page.locator('iframe')).toHaveCount(0);
-    await expect(contact.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
+    await expect(contact.getByRole('link', { name: 'LinkedIn', exact: true })).toBeVisible();
     await context.close();
   });
 
@@ -366,12 +371,12 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
 
-    test(`reads problem, offers, proof, person on ${home}`, async ({ page }) => {
+    test(`reads problem, offers, proof, contact on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const order = await page.$$eval('main > section[id]', (sections) =>
         sections.map((section) => section.id),
       );
-      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'about', 'contact']);
+      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'contact']);
     });
 
     test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({

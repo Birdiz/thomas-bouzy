@@ -37,6 +37,22 @@ export const ACHIEVEMENT_IDS = [
 ] as const;
 export type AchievementId = (typeof ACHIEVEMENT_IDS)[number];
 
+/**
+ * The home page's References: one row per client or context, each opening on
+ * the Achievements done there. Socios is one Reference with three of them.
+ */
+export const REFERENCES = [
+  { id: 'arcelormittal', achievements: ['industrial-erp'] },
+  {
+    id: 'socios',
+    achievements: ['live-api-redesign', 'wallet-event-sourcing', 'on-chain-operations'],
+  },
+  { id: 'kiss-the-bride', achievements: ['enterprise-onboarding'] },
+  { id: 'civic-tech', achievements: ['codebase-audit'] },
+  { id: 'open-data', achievements: ['open-data-directories'] },
+] as const satisfies readonly { id: string; achievements: readonly AchievementId[] }[];
+export type ReferenceId = (typeof REFERENCES)[number]['id'];
+
 export interface OfferFacts {
   segments: readonly SegmentId[];
   /** The Achievements shown on the Offer's page as its proof, in that order. */

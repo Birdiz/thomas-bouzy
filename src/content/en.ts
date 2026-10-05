@@ -24,7 +24,7 @@ export const en = {
   nav: {
     offers: 'Offers',
     partners: 'Partners',
-    work: 'Achievements',
+    work: 'References',
     about: 'About',
     contact: 'Get in touch',
   },
@@ -76,9 +76,9 @@ export const en = {
   ],
 
   work: {
-    kicker: 'Achievements',
-    title: 'What I have already kept running in production',
-    intro: 'What I did, and what it changed.',
+    kicker: 'References',
+    title: 'Where I have already kept production running',
+    intro: 'Industry, fintech, SaaS, the non-profit sector. Open a row for the detail.',
     labelPlain: 'In plain terms:',
     labelApproach: 'Approach',
     labelResult: 'Result',
@@ -173,27 +173,52 @@ export const en = {
     },
   ],
 
+  references: {
+    arcelormittal: {
+      name: 'ArcelorMittal',
+      sector: 'Industry · through Quadra Informatique',
+      period: '2016 – 2017',
+      headline: 'The ERP of several plants, kept running, from suppliers to invoices.',
+    },
+    socios: {
+      name: 'Socios.com (Chiliz)',
+      sector: 'Fintech · 1.5 million users',
+      period: '2022 – 2026',
+      headline:
+        'An API rebuilt without an outage, every money movement traced, reported bugs cut by four.',
+    },
+    'kiss-the-bride': {
+      name: 'Kiss The Bride',
+      sector: 'SaaS for large accounts',
+      period: '2018 – 2022',
+      headline:
+        'A new enterprise account live in a day, on a monolith taken over without ever stopping it.',
+    },
+    'civic-tech': {
+      name: 'Civic tech',
+      sector: 'Volunteer',
+      period: '2026',
+      headline: 'Three applications audited, 17 security findings, the critical ones fixed.',
+    },
+    'open-data': {
+      name: 'Association directory',
+      sector: 'Open data · for a client',
+      period: '2026',
+      headline: '31,273 associations listed in 40 seconds, instead of by hand, town by town.',
+    },
+  },
+
   about: {
     kicker: 'About',
     title: 'In short',
     paragraphs: [
       'I work in PHP and Symfony, and I also take on the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, histories you can replay, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
+      'I have taught at university, brought juniors to autonomy and started a backend community of practice: passing it on is part of the job.',
       'I live in the Grand Est countryside. I work mostly remotely, and come on site when needed.',
     ],
-    mentoringKicker: 'Passing it on — a thread through all of it',
     careerLine: 'Hiring rather than contracting?',
     careerLink: 'My career is on LinkedIn.',
   },
-
-  mentoring: [
-    { year: '2016', text: 'Undergraduate lecturer at the University of Reims.' },
-    { year: '2018', text: 'Four juniors brought to autonomy at Kiss The Bride.' },
-    {
-      year: '2022',
-      text: 'Architecture reviews for two teams at Socios: five developers and a QA engineer.',
-    },
-    { year: '2024', text: 'Founded the backend community of practice: RFCs, ADRs, standards.' },
-  ],
 
   languages: [
     { name: 'French', level: 'native' },

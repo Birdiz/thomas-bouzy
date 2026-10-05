@@ -1,4 +1,4 @@
-import type { AchievementId, OfferId } from './offers.ts';
+import type { AchievementId, OfferId, ReferenceId } from './offers.ts';
 import type { AmountId } from './prices.ts';
 
 /**
@@ -77,16 +77,19 @@ export interface FailureMode {
   offer: OfferId;
 }
 
-export interface MentoringEntry {
-  year: string;
-  text: string;
+/**
+ * A client or a context, in one row: who, in what field, and the one line
+ * worth remembering. The Achievements done there open underneath.
+ */
+export interface Reference {
+  name: string;
+  sector: string;
+  period: string;
+  headline: string;
 }
 
 /**
- * Not rendered. The About aside shows the mentoring card alone, as the canvas
- * does — see docs/design-deltas.md entry 24. This survives it because
- * BaseLayout feeds `knowsLanguage` on the Person schema from it, which is a
- * different surface from the page and was not part of that decision.
+ * Not rendered: BaseLayout feeds `knowsLanguage` on the Person schema from it.
  */
 export interface LanguageSkill {
   name: string;
@@ -348,12 +351,12 @@ export interface ResumeContent {
     labelResult: string;
   };
   achievements: Achievement[];
+  references: Record<ReferenceId, Reference>;
 
   about: {
     kicker: string;
     title: string;
     paragraphs: string[];
-    mentoringKicker: string;
     /**
      * The salaried route, stated once and at the end, as one line whose last
      * words link to LinkedIn.
@@ -367,7 +370,6 @@ export interface ResumeContent {
     /** The link text, to the LinkedIn profile. */
     careerLink: string;
   };
-  mentoring: MentoringEntry[];
   languages: LanguageSkill[];
   schema: SchemaOnly;
 

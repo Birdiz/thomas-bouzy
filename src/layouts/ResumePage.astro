@@ -1,13 +1,12 @@
 ---
-import AboutSection from '../components/AboutSection.astro';
 import AuditCall from '../components/AuditCall.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Hero from '../components/Hero.astro';
 import OffersSection from '../components/OffersSection.astro';
 import ProblemSection from '../components/ProblemSection.astro';
+import ReferencesSection from '../components/ReferencesSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import WorkSection from '../components/WorkSection.astro';
 import { RESUME } from '../content/index.ts';
 import { profilePage } from '../lib/structured-data.ts';
 import type { Route } from '../routes.ts';
@@ -32,12 +31,11 @@ const t = RESUME[locale];
   <SiteHeader route={route} t={t} />
   <main id="main">
     <Hero t={t} home={route.path} />
-    {/* Problem → invitation → offer → proof → person → contact. */}
+    {/* Problem → invitation → offer → proof → contact, with the person. */}
     <ProblemSection locale={locale} t={t} num="01" />
     <AuditCall locale={locale} t={t} />
     <OffersSection locale={locale} t={t} num="02" />
-    <WorkSection t={t} num="03" />
-    <AboutSection t={t} num="04" />
+    <ReferencesSection t={t} num="03" />
     <ContactSection locale={locale} t={t} />
   </main>
   <SiteFooter t={t} locale={locale} />

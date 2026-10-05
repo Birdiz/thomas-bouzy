@@ -47,5 +47,19 @@ const { locale, t } = Astro.props;
         {t.contact.locationLine.replace('{towns}', serviceAreaTowns(locale))}
       </p>
     </div>
+
+    {/* Who answers the call, beside the call itself: About used to be a
+        section of its own, one more between the Offers and Contact. */}
+    <div id="about" class="contact__about">
+      <p class="kicker">{t.about.kicker}</p>
+      <h3 class="contact__about-title">{t.about.title}</h3>
+      {t.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      {/* The salaried route, named once and at the end, and pointed at
+          LinkedIn, which carries the career. */}
+      <p class="about__career">
+        {t.about.careerLine}{' '}
+        <a href={CONTACT.linkedin} target="_blank" rel="noopener">{t.about.careerLink}</a>
+      </p>
+    </div>
   </div>
 </section>
