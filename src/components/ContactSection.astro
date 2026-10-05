@@ -4,11 +4,11 @@ import { CONTACT, type Locale, serviceAreaTowns } from '../site.ts';
 import RevealPhone from './RevealPhone.astro';
 
 interface Props {
-  t: ResumeContent;
   locale: Locale;
+  t: ResumeContent;
 }
 
-const { t, locale } = Astro.props;
+const { locale, t } = Astro.props;
 ---
 
 <section id="contact" class="contact container">
@@ -27,7 +27,7 @@ const { t, locale } = Astro.props;
           {t.contact.cta}
         </a>
         <a class="btn btn-outline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-        <RevealPhone label={t.contact.revealPhone} />
+        <RevealPhone locale={locale} label={t.contact.revealPhone} />
         <a
           class="btn btn-outline"
           href={CONTACT.linkedin}
