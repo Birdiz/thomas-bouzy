@@ -56,7 +56,7 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
 
   await page.goto('/en/');
   await page.getByRole('button', { name: 'Show phone number' }).click();
-  await expect(page.getByRole('link', { name: '06 32 13 45 47' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '+33 6 32 13 45 47' })).toBeVisible();
   expect(violations).toEqual([]);
 });
 
