@@ -34,6 +34,7 @@ export const en = {
     title: ['I take over your business software', 'and keep it moving.'],
     blurb:
       'Even the one nobody dares touch any more. Without stopping it, without rewriting everything.',
+    ctaBook: 'Book a 30-minute call',
     ctaOffers: 'See the offers',
   },
 
@@ -254,8 +255,9 @@ export const en = {
     kicker: 'Offers',
     title: 'An offer for every stage of your application, each with its price.',
     stages: ['Build', 'Make reliable and migrate, side by side', 'Hold the load'],
-    alongside: 'Throughout its life',
-    from: { fee: 'from', setup: 'from', plan: 'plan from', monthly: 'from' },
+    alongside: 'At any stage',
+    lifecycle: 'The life of your application',
+    from: { fee: 'from', setup: 'from', plan: 'first step from', monthly: 'from' },
     followedBy: 'then',
     start: 'Where to start',
     inFrench: '(in French)',

@@ -15,9 +15,12 @@ const { locale, t } = Astro.props;
     sentences stay a plain list. With both, they pass one at a time, like a
     train of thought: the script adds `is-carousel` and shows the controls. */}
 <section id="problem" class="problem container" data-thoughts>
-  <p class="kicker">{t.problem.kicker}</p>
-  <h2 class="section-title problem__title">{t.problem.title}</h2>
+  <div class="problem__head">
+    <p class="kicker">{t.problem.kicker}</p>
+    <h2 class="section-title problem__title">{t.problem.title}</h2>
+  </div>
 
+  <div class="problem__body">
   <ul class="problem__modes">
     {
       t.failureModes.map((mode, i) => {
@@ -64,6 +67,7 @@ const { locale, t } = Astro.props;
         </button>
       ))
     }
+  </div>
   </div>
 </section>
 

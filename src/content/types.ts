@@ -341,7 +341,9 @@ export interface ResumeContent {
      * plain-line rule: no `schema.knowsAbout` term, and short.
      */
     blurb: string;
-    /** The hero's one button, to the Offers section. */
+    /** The primary button: the 30-minute call. */
+    ctaBook: string;
+    /** The secondary button, to the Offers section. */
     ctaOffers: string;
   };
 
@@ -410,6 +412,8 @@ export interface ResumeContent {
      */
     stages: readonly [string, string, string];
     alongside: string;
+    /** Accessible name of the three stages, read as one list. */
+    lifecycle: string;
     /**
      * Before each amount's lowest price, the headline first. A Migration's
      * headline is its plan, not the whole Migration, and the card says so.

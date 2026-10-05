@@ -241,6 +241,10 @@ figcaption {
 }
 .btn-secondary {
   border-color: var(--color-divider);
+  color: var(--color-text);
+}
+.btn-secondary:hover {
+  color: var(--color-text);
 }
 .btn-secondary:hover {
   background: color-mix(in srgb, var(--color-text) 7%, transparent);

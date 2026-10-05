@@ -34,6 +34,7 @@ export const fr = {
   hero: {
     title: ['Je reprends et fais évoluer', 'vos applications métier.'],
     blurb: "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
+    ctaBook: 'Réserver un appel de 30 minutes',
     ctaOffers: 'Voir les offres',
   },
 
@@ -256,11 +257,12 @@ export const fr = {
     kicker: 'Les offres',
     title: 'Une offre pour chaque moment de votre application, chacune avec son prix.',
     stages: ['Créer', 'Fiabiliser et migrer, en parallèle', 'Tenir la charge'],
-    alongside: 'Tout au long de sa vie',
+    alongside: 'À tout moment',
+    lifecycle: 'La vie de votre application',
     from: {
       fee: 'à partir de',
       setup: 'à partir de',
-      plan: 'plan à partir de',
+      plan: 'première étape à partir de',
       monthly: 'à partir de',
     },
     followedBy: 'puis',

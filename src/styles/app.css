@@ -473,6 +473,19 @@ a {
 .problem.is-carousel .problem__title {
   margin-bottom: 28px;
 }
+/* Wide: the question on the left, the sentence answering it on the right,
+   so the section uses the whole measure instead of its left half. */
+@media (min-width: 1024px) {
+  .problem.is-carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    column-gap: 72px;
+    align-items: center;
+  }
+  .problem.is-carousel .problem__title {
+    margin-bottom: 0;
+  }
+}
 .is-carousel .problem__modes {
   grid-template-columns: minmax(0, 1fr);
   border: 0;
@@ -590,7 +603,10 @@ a {
   background: var(--color-surface);
 }
 .audit-call__link {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 32px;
   padding-block: clamp(44px, 6vw, 76px);
   color: var(--color-text);
   text-decoration: none;
@@ -610,11 +626,22 @@ a {
   display: block;
   text-wrap: balance;
 }
+/* The arrow sits alone at the right edge, in a ring: the band reads as one
+   wide button rather than a headline with a glyph at its end. */
 .audit-call__arrow {
-  display: inline-block;
-  margin-left: 0.25em;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 7vw, 96px);
+  aspect-ratio: 1;
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
   color: var(--color-accent-text);
-  transition: transform 0.2s ease;
+  font-size: 0.8em;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 .audit-call__link:hover .audit-call__invite,
 .audit-call__link:focus-visible .audit-call__invite {
@@ -622,7 +649,8 @@ a {
 }
 .audit-call__link:hover .audit-call__arrow,
 .audit-call__link:focus-visible .audit-call__arrow {
-  transform: translateX(0.15em);
+  transform: translateX(6px);
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
 }
 
 /* — offers ————————————————————————————————————————————————————————————————— */
@@ -647,13 +675,21 @@ a {
 }
 .journey__label {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: 0 0 14px;
-  font-size: 15px;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-size: 16.5px;
   color: var(--color-text);
 }
+/* The step number in a ring, the stops of a timeline. */
 .journey__step {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 999px;
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--color-accent-text);
@@ -691,6 +727,14 @@ a {
     position: relative;
     align-content: center;
   }
+  /* The labels joined into one timeline, running into the next stage. */
+  .journey__stage:not(:last-child) .journey__label::after {
+    content: "";
+    flex: 1;
+    height: 1.5px;
+    margin-right: calc(var(--link) * -1);
+    background: linear-gradient(to right, var(--color-accent), var(--color-divider));
+  }
   .journey__stage[data-stage="2"] .journey__cards {
     grid-template-rows: 1fr 1fr;
     align-content: stretch;
@@ -704,7 +748,7 @@ a {
     width: var(--link);
     background: var(--color-accent);
     mask:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 50C55 50 45 25 100 25M0 50C55 50 45 75 100 75' fill='none' stroke='%23000' stroke-width='2' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 50C55 50 45 25 100 25M0 50C55 50 45 75 100 75' fill='none' stroke='%23000' stroke-width='2.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
       0 0 / 100% 100% no-repeat;
   }
   .journey__stage[data-stage="2"] .journey__cards::before {
@@ -734,11 +778,12 @@ a {
   }
 }
 
-/* The rail: the Offers that run alongside every stage, on a dashed track. */
+/* The rail: the Offers that run alongside every stage, above the stages and
+   set off from them by a dashed track. */
 .journey__alongside {
-  margin-top: 40px;
-  padding-top: 26px;
-  border-top: 2px dashed color-mix(in srgb, var(--color-accent) 55%, transparent);
+  margin-bottom: 44px;
+  padding-bottom: 34px;
+  border-bottom: 2px dashed color-mix(in srgb, var(--color-accent) 55%, transparent);
 }
 
 .offers__card {
@@ -764,9 +809,9 @@ a {
   text-wrap: pretty;
 }
 .offers__from {
-  font-family: var(--font-mono);
-  font-size: 13px;
   margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--color-muted);
 }
 /* The Entry offer's badge: the one card that says "start here". */
 .offers__badge {

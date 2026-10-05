@@ -52,7 +52,34 @@ const publicSector = linkTo('public-sector', locale);
   <p class="kicker">{t.offersSection.kicker}</p>
   <h2 class="section-title offers__title">{t.offersSection.title}</h2>
 
-  <ol class="journey">
+  {/* The Offers that run alongside every stage come first: the Audit, the
+      way in for everyone, is the first card read, as the band above says. */}
+  <div class="journey__alongside">
+    <p class="journey__label">
+      {t.offersSection.alongside}
+    </p>
+    <ul class="journey__cards">
+      {
+        alongside.map((c) => (
+          <li class="offers__card" data-offer={c.id}>
+            {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
+            {/* The name is the link, and it covers the card: identical "See
+                the offer" anchors told a search engine nothing. */}
+            <h3 class="offers__name">
+              <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
+                {c.name}
+              </a>
+            </h3>
+            <p class="offers__plain">{c.plain}</p>
+            <p class="offers__from">{c.from}</p>
+            {c.hreflang && <span class="offers__link">{t.offersSection.inFrench}</span>}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <ol class="journey" aria-label={t.offersSection.lifecycle}>
     {
       stages.map((stage, i) => (
         <li class="journey__stage" data-stage={i + 1}>
@@ -80,32 +107,6 @@ const publicSector = linkTo('public-sector', locale);
       ))
     }
   </ol>
-
-  <div class="journey__alongside">
-    <p class="journey__label">
-      <span class="journey__step" aria-hidden="true">‖</span>
-      {t.offersSection.alongside}
-    </p>
-    <ul class="journey__cards">
-      {
-        alongside.map((c) => (
-          <li class="offers__card" data-offer={c.id}>
-            {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
-            {/* The name is the link, and it covers the card: identical "See
-                the offer" anchors told a search engine nothing. */}
-            <h3 class="offers__name">
-              <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
-                {c.name}
-              </a>
-            </h3>
-            <p class="offers__plain">{c.plain}</p>
-            <p class="offers__from">{c.from}</p>
-            {c.hreflang && <span class="offers__link">{t.offersSection.inFrench}</span>}
-          </li>
-        ))
-      }
-    </ul>
-  </div>
 
   <p class="offers__book">
     <span>{t.offersSection.book.text}</span>

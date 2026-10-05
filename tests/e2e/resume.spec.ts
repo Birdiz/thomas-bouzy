@@ -147,16 +147,20 @@ test.describe('the page is not a CV', () => {
     });
   }
 
-  test('offers one call to action in the hero, and it reaches the Offers', async ({ page }) => {
-    for (const [path, label] of [
-      ['/', 'Voir les offres'],
-      ['/en/', 'See the offers'],
+  test('leads the hero with the call, and offers the Offers second', async ({ page }) => {
+    for (const [path, book, offers] of [
+      ['/', 'Réserver un appel de 30 minutes', 'Voir les offres'],
+      ['/en/', 'Book a 30-minute call', 'See the offers'],
     ] as const) {
       await gotoHome(page, path);
       const ctas = page.locator('.hero a');
-      await expect(ctas).toHaveCount(1);
-      await expect(ctas.first()).toHaveText(label);
-      await ctas.first().click();
+      await expect(ctas).toHaveCount(2);
+      // The call first, and as the primary button: it is the page's one ask.
+      await expect(ctas.first()).toHaveText(book);
+      await expect(ctas.first()).toHaveAttribute('href', CONTACT.booking);
+      await expect(ctas.first()).toHaveClass(/btn-primary/);
+      await expect(ctas.nth(1)).toHaveText(offers);
+      await ctas.nth(1).click();
       await expect(page).toHaveURL(new RegExp(`${path}#offers$`));
       await expect(page.locator('#offers')).toBeInViewport();
     }
