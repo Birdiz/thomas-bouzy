@@ -1,15 +1,1 @@
-# thomas-bouzy
-
-## Agent skills
-
-### Issue tracker
-
-GitHub Issues on Birdiz/thomas-bouzy, via the `gh` CLI. The repo is public. See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-The five default labels: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Single-context: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+@AGENTS.md
