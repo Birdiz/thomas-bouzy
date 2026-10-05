@@ -228,7 +228,9 @@ export const fr = {
 
   offersSection: {
     kicker: 'Les offres',
-    title: 'Des offres pour vos applications métier, chacune avec son prix.',
+    title: 'Une offre pour chaque moment de votre application, chacune avec son prix.',
+    stages: ['Créer', 'Fiabiliser et migrer, en parallèle', 'Tenir la charge'],
+    alongside: 'Tout au long de sa vie',
     from: {
       fee: 'à partir de',
       setup: 'à partir de',
@@ -237,7 +239,6 @@ export const fr = {
     },
     followedBy: 'puis',
     start: 'Par où commencer',
-    see: "Voir l'offre",
     inFrench: '(en français)',
     book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel de 30 minutes' },
     partners: 'Agence ou société de services ?',

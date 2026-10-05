@@ -376,6 +376,13 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     /**
+     * The Offers as the life of an application: three stages in order, the
+     * second holding two Offers side by side, then the Offers that run
+     * alongside all three. See `JOURNEY` in OffersSection.astro.
+     */
+    stages: readonly [string, string, string];
+    alongside: string;
+    /**
      * Before each amount's lowest price, the headline first. A Migration's
      * headline is its plan, not the whole Migration, and the card says so.
      */
@@ -384,7 +391,6 @@ export interface ResumeContent {
     followedBy: string;
     /** The badge on the Entry offer's card: the way in for every Segment. */
     start: string;
-    see: string;
     /**
      * Said after a link to a page that exists only in French, from a page in
      * another language. Never shown on a French page.

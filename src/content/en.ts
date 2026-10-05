@@ -227,11 +227,12 @@ export const en = {
 
   offersSection: {
     kicker: 'Offers',
-    title: 'Offers for your business applications, each with its price.',
+    title: 'An offer for every stage of your application, each with its price.',
+    stages: ['Build', 'Make reliable and migrate, side by side', 'Hold the load'],
+    alongside: 'Throughout its life',
     from: { fee: 'from', setup: 'from', plan: 'plan from', monthly: 'from' },
     followedBy: 'then',
     start: 'Where to start',
-    see: 'See the offer',
     inFrench: '(in French)',
     book: { text: 'Already know what you need?', cta: 'Book a 30-minute call' },
     partners: 'An agency or an IT services firm?',
