@@ -399,8 +399,15 @@ export interface ResumeContent {
   offersSection: {
     kicker: string;
     title: string;
-    /** Before the lowest headline amount the price table holds. */
-    from: string;
+    /**
+     * Before each amount's lowest price, the headline first. A Migration's
+     * headline is its plan, not the whole Migration, and the card says so.
+     */
+    from: Record<AmountId, string>;
+    /** Between the headline and the amount that follows it: "2 000 €, then 350 € / month". */
+    followedBy: string;
+    /** The badge on the Entry offer's card: the way in for every Segment. */
+    start: string;
     see: string;
     /**
      * Said after a link to a page that exists only in French, from a page in
@@ -429,6 +436,7 @@ export interface ResumeContent {
     /** The booking link, first of the ways to reach Thomas. */
     cta: string;
     revealPhone: string;
+    /** `{towns}` is replaced by SITE.serviceArea, as on the Offer pages. */
     locationLine: string;
   };
 

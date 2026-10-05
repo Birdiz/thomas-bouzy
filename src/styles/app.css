@@ -63,6 +63,10 @@ html {
    button. Everything else that used to be orange is now ink or muted. */
 .kicker__num {
   color: var(--color-accent-text);
+  /* A long label used to squeeze the number until its rule wrapped under it,
+     on a phone (ADR 19). */
+  flex: none;
+  white-space: nowrap;
 }
 .kicker__num::after {
   content: "";
@@ -552,6 +556,16 @@ a {
   font-size: 13px;
   margin: 6px 0 0;
 }
+/* The Entry offer's badge: the one card that says "start here". */
+.offers__badge {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  margin: 0;
+}
 .offers__card {
   position: relative;
 }
@@ -982,6 +996,17 @@ a {
   max-width: 52ch;
   margin: 0;
   text-wrap: pretty;
+}
+/* The lowest price, under the plain line: in the first screen on a phone. */
+.offer__glance {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin: 18px 0 0;
+}
+.offer__glance a {
+  /* Ink, not accent: the accent's budget is the kickers and the button. */
+  color: inherit;
+  text-underline-offset: 3px;
 }
 .offer__section {
   padding-block: 34px;

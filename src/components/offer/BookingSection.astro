@@ -1,6 +1,6 @@
 ---
 import type { OfferPageLabels } from '../../content/types.ts';
-import { CONTACT, LOCALE_TAG, type Locale, SITE } from '../../site.ts';
+import { CONTACT, type Locale, serviceAreaTowns } from '../../site.ts';
 
 interface Props {
   labels: OfferPageLabels['book'];
@@ -8,11 +8,6 @@ interface Props {
 }
 
 const { labels, locale } = Astro.props;
-
-/* "Nancy, Strasbourg, Colmar, Obernai et Épinal" — listed in the reader's language. */
-const towns = new Intl.ListFormat(LOCALE_TAG[locale], { type: 'conjunction' }).format(
-  SITE.serviceArea,
-);
 ---
 
 {/* The last section of every Offer page: the first step, which costs the
@@ -35,7 +30,7 @@ const towns = new Intl.ListFormat(LOCALE_TAG[locale], { type: 'conjunction' }).f
       <p class="contact__location">
         {labels.orWrite} <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
         <br />
-        {labels.serviceArea.replace('{towns}', towns)}
+        {labels.serviceArea.replace('{towns}', serviceAreaTowns(locale))}
       </p>
     </div>
   </div>

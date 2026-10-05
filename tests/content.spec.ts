@@ -163,12 +163,21 @@ describe('content corrections applied against the design', () => {
     //
     // "Available now" went too: it is not true before the business is
     // registered, and nothing on the page could make it so (ADR 14).
-    expect(en.hero.availability).toMatch(/first engagements in preparation/i);
-    expect(fr.hero.availability).toMatch(/premières missions en préparation/i);
+    //
+    // ADR 19 lets the line name one year, the year the business is registered:
+    // "first engagements in preparation" read as "a beginner" to a buyer. A
+    // year can rot, so the test compares it with the clock again, and fails
+    // the first build of the year after.
+    expect(en.hero.availability).toMatch(/2027 calendar/i);
+    expect(fr.hero.availability).toMatch(/calendrier 2027/i);
 
     for (const line of [en.hero.availability, fr.hero.availability]) {
       expect(line.trim().length, 'the availability line is blank').toBeGreaterThan(0);
-      expect(line.match(/\b(19|20)\d{2}\b/), `${line} names a year that will go stale`).toBeNull();
+      for (const year of line.match(/\b(19|20)\d{2}\b/g) ?? []) {
+        expect(Number(year), `${line} names a year that has gone stale`).toBeGreaterThanOrEqual(
+          new Date().getFullYear(),
+        );
+      }
       expect(line, `${line} still claims immediate availability`).not.toMatch(
         /available now|disponible imm/i,
       );
@@ -230,27 +239,29 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('states the three honesty levels as a position, not as a grid', () => {
+  it('applies the three honesty levels to the Achievements themselves', () => {
     // §4.5 of the pitch master is a strict personal rule: "production
     // experience" / "personal projects" / "currently learning", never merged
-    // into one undifferentiated list. It used to be carried by the Toolkit
-    // grid's group names; the Toolkit is gone, so the rule moved into the
-    // Approach section as principle 5 — see docs/adr/0009, postscript 2. It is
-    // asserted here rather than left to care, because a rule nobody can see is
-    // a rule that quietly stops applying.
+    // into one undifferentiated list. It was carried by the Toolkit grid, then
+    // stated as a principle (ADR 9, postscript 2). ADR 19 gave that principle's
+    // place to one a Client buys on, and the rule is now held where it applies:
+    // a card that was not paid production work says so in its byline.
+    for (const content of [en, fr]) {
+      const byline = (id: string) =>
+        content.achievements.find((achievement) => achievement.id === id)?.org ?? '';
+      expect(byline('open-data-directories')).toMatch(/personal project|projet personnel/i);
+      expect(byline('codebase-audit')).toMatch(/volunteer|bénévolat/i);
+    }
+  });
+
+  it('promises the Client owns what is left behind (ADR 19)', () => {
+    // The orphan-app Client was left by the last provider. The principle that
+    // answers "and if you leave too?" is on the home page, with its price.
     for (const content of [en, fr]) {
       const principle = content.principles.find((p) =>
-        /honesty levels|niveaux d'honnêteté/i.test(p.title),
+        /belongs to you|vous appartient/i.test(p.title),
       );
-      expect(principle, 'the honesty-levels principle is on the page').toBeDefined();
-
-      const stated = `${principle?.title} ${principle?.text}`;
-      expect(stated).toMatch(/[Pp]roduction/);
-      expect(stated).toMatch(/personal projects|projets personnels/i);
-      expect(stated).toMatch(/currently learning|apprentissage/i);
-
-      // A principle without its price is a slogan; this one's price is the
-      // reason it is credible at all.
+      expect(principle, 'the ownership principle is on the page').toBeDefined();
       expect(principle?.cost.trim().length ?? 0).toBeGreaterThan(0);
     }
   });

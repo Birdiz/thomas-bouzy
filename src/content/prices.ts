@@ -271,13 +271,25 @@ export function combinationFor(
   );
 }
 
-/** The lowest headline amount an Offer is sold for: the "from" on its card. */
-export function fromPrice(id: OfferId): { amount: AmountId; min: number } {
+/**
+ * The lowest price of every amount an Offer charges, headline first: a
+ * Takeover's set-up, then its monthly plan. Showing the headline alone made a
+ * Takeover read as a one-off 2,000 € (ADR 19).
+ */
+export function fromPrices(id: OfferId): { amount: AmountId; min: number }[] {
   const table = PRICES[id];
-  const [amount] = table.amounts;
-  if (!amount) throw new Error(`${id} declares no amount`);
-  const min = Math.min(
-    ...table.combinations.map((combination) => combination.amounts[amount]?.min ?? Infinity),
-  );
-  return { amount, min };
+  if (table.amounts.length === 0) throw new Error(`${id} declares no amount`);
+  return table.amounts.map((amount) => ({
+    amount,
+    min: Math.min(
+      ...table.combinations.map((combination) => combination.amounts[amount]?.min ?? Infinity),
+    ),
+  }));
+}
+
+/** The lowest headline amount an Offer is sold for: the first "from" on its card. */
+export function fromPrice(id: OfferId): { amount: AmountId; min: number } {
+  const [headline] = fromPrices(id);
+  if (!headline) throw new Error(`${id} declares no amount`);
+  return headline;
 }

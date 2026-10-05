@@ -69,8 +69,8 @@ ${RIDGE}
 <div class="stack">
   <div class="rule"></div>
   <h1>Thomas Bouzy</h1>
-  <p class="line">I design transactional systems that have to stay correct while they stay up.</p>
-  <p class="foot">Backend &amp; architecture</p>
+  <p class="line">Je reprends, fiabilise et fais évoluer vos applications métier.</p>
+  <p class="foot">Freelance PHP/Symfony</p>
 </div>`;
 
 const browser = await chromium.launch();

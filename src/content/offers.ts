@@ -17,6 +17,9 @@ export const OFFER_IDS = [
 ] as const;
 export type OfferId = (typeof OFFER_IDS)[number];
 
+/** The Entry offer: the small, fixed-price Offer every Segment can buy first. */
+export const ENTRY_OFFER: OfferId = 'audit';
+
 /** Populations of Clients who buy for the same reason (ADR 14). */
 export type SegmentId = 'critical-systems' | 'orphan-app' | 'partners';
 

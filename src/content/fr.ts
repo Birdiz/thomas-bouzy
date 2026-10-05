@@ -7,11 +7,11 @@ import type { ResumeContent } from './types.ts';
  */
 export const fr = {
   meta: {
-    title: 'Thomas Bouzy — Freelance PHP/Symfony, applications métier',
+    title: 'Thomas Bouzy — Freelance PHP/Symfony, Nancy et Strasbourg',
     description:
-      'Je reprends, fiabilise et fais évoluer les applications métier PHP/Symfony dont votre activité dépend. Grand Est ou à distance. Prix publics.',
+      'Je reprends, fiabilise et fais évoluer vos applications métier PHP/Symfony. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.',
     ogImageAlt:
-      'Thomas Bouzy — « I design transactional systems that have to stay correct while they stay up. » Backend & architecture.',
+      'Thomas Bouzy — « Je reprends, fiabilise et fais évoluer vos applications métier. » Freelance PHP/Symfony.',
   },
 
   a11y: {
@@ -32,7 +32,7 @@ export const fr = {
   },
 
   hero: {
-    availability: 'Premières missions en préparation — parlons-en dès maintenant',
+    availability: 'Je prépare mon calendrier 2027 — parlons-en dès maintenant',
     title: 'Je reprends, fiabilise et fais évoluer vos applications métier.',
     blurb:
       "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire, avec des prix affichés.",
@@ -41,8 +41,8 @@ export const fr = {
 
   problem: {
     audit: {
-      text: 'Pas sûr de savoir laquelle est la vôtre ?',
-      cta: 'Commencer par un audit',
+      text: 'Vous hésitez ?',
+      cta: 'Commencez par un audit',
     },
     kicker: 'Le problème',
     title: "Vous reconnaissez l'une de ces phrases ?",
@@ -66,7 +66,7 @@ export const fr = {
     },
     {
       quote: '« Ce sont nos clients qui trouvent les bugs. »',
-      text: 'Les défauts trouvés par les utilisateurs. Le bug était visible des heures plus tôt ; personne ne regardait.',
+      text: 'Les défauts trouvés par les utilisateurs. Le bug était visible des heures plus tôt ; rien ne le signalait.',
       offer: 'reliability',
     },
   ],
@@ -86,20 +86,20 @@ export const fr = {
     },
     {
       title: "Ce qui n'est pas instrumenté n'est pas fiable.",
-      text: "OpenTelemetry et Datadog sur tous les services backend, des alertes avant la panne : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
+      text: "Des alertes avant la panne sur tous les services backend (OpenTelemetry et Datadog) : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
       cost: 'Du temps pris sur les livraisons, et choisir quoi surveiller.',
     },
     {
-      title: "Trois niveaux d'honnêteté, jamais compressés.",
-      text: "Production, projets personnels, en cours d'apprentissage : je les annonce séparément, pour que vous sachiez ce que vous achetez.",
-      cost: "Une liste plus courte, et dire « pas en production » quand c'est le cas.",
+      title: 'Ce que je laisse derrière moi vous appartient.',
+      text: "Le code, les accès, les tests et les décisions écrites restent chez vous : n'importe quel développeur Symfony peut reprendre là où je m'arrête.",
+      cost: 'Du temps passé à écrire, facturé comme le reste.',
     },
   ],
 
   work: {
     kicker: 'Réalisations',
-    title: 'Des réalisations à ouvrir',
-    intro: "Ouvrez une carte : ce que j'ai fait, et ce que ça a changé.",
+    title: "Ce que j'ai déjà tenu en production",
+    intro: "Ce que j'ai fait, et ce que ça a changé.",
     labelPlain: 'En clair :',
     labelApproach: 'Approche',
     labelResult: 'Résultat',
@@ -132,7 +132,7 @@ export const fr = {
     },
     {
       id: 'wallet-event-sourcing',
-      title: 'Event Sourcing sur les transactions wallet',
+      title: "Retracer chaque mouvement d'argent de 1,5 million d'utilisateurs",
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
       plain:
@@ -144,7 +144,7 @@ export const fr = {
     },
     {
       id: 'on-chain-operations',
-      title: 'Des transactions on-chain qui engagent des fonds réels',
+      title: "Déplacer de l'argent réel, sans droit à l'erreur",
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
       plain:
@@ -180,7 +180,7 @@ export const fr = {
     },
     {
       id: 'open-data-directories',
-      title: "Annuaires associatifs depuis l'open data",
+      title: 'Reconstituer en 40 secondes un annuaire fait à la main',
       org: 'Projet personnel',
       period: '2026',
       plain:
@@ -201,7 +201,7 @@ export const fr = {
     title: 'En bref',
     paragraphs: [
       "Je travaille en PHP et Symfony, et je reprends aussi le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des historiques qu'on peut rejouer, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
-      "Je vis dans le Grand Est, à la campagne. L'écrit et l'asynchrone sont mon mode par défaut ; je me déplace quand il faut une salle.",
+      'Je vis dans le Grand Est, à la campagne. Je travaille surtout à distance, et je viens sur place quand il le faut.',
     ],
     mentoringKicker: 'Transmettre, un fil rouge',
     careerLine: "En poste plutôt qu'en mission ?",
@@ -225,7 +225,7 @@ export const fr = {
   ],
 
   schema: {
-    jobTitle: 'Ingénieur logiciel senior — architecture backend',
+    jobTitle: 'Développeur freelance PHP/Symfony',
     knowsAbout: [
       'PHP',
       'Symfony',
@@ -251,7 +251,14 @@ export const fr = {
   offersSection: {
     kicker: 'Les offres',
     title: 'Des offres pour vos applications métier, chacune avec son prix.',
-    from: 'à partir de',
+    from: {
+      fee: 'à partir de',
+      setup: 'à partir de',
+      plan: 'plan à partir de',
+      monthly: 'à partir de',
+    },
+    followedBy: 'puis',
+    start: 'Par où commencer',
     see: "Voir l'offre",
     inFrench: '(en français)',
     partners: 'Agence ou société de services ?',
@@ -288,7 +295,7 @@ export const fr = {
   offerPage: {
     kicker: 'Offre',
     sentences: 'Vous reconnaissez-vous ici ?',
-    delivered: "Ce que vous recevez, dans l'ordre",
+    delivered: 'Ce que vous recevez',
     disclaimer: 'Ordre de grandeur, pas un devis.',
     tableCaption: 'Toutes les fourchettes, hors taxes',
     excludingVat: 'HT',
@@ -313,7 +320,7 @@ export const fr = {
       meta: {
         title: 'Audit de code PHP/Symfony et due diligence technique',
         description:
-          "Audit d'application PHP/Symfony : rapport écrit, registre des risques, plan d'action priorisé. Prix publics, déduit de la mission qui suit.",
+          "Audit d'application PHP/Symfony : rapport écrit, registre des risques, plan d'action priorisé. L'express, à prix fixe, est déduit de la mission qui suit.",
       },
       heading: 'Audit technique de votre application',
       priceHeading: 'Combien coûte un audit de code ?',
@@ -384,9 +391,9 @@ export const fr = {
     },
     takeover: {
       meta: {
-        title: "Maintenance d'application métier : reprise, prix publics",
+        title: "TMA PHP/Symfony : reprise et maintenance d'application métier",
         description:
-          "Votre prestataire est parti, plus personne n'ose toucher l'application ? Reprise, filet de tests, puis maintenance mensuelle à prix publié.",
+          "Votre prestataire est parti, plus personne n'ose toucher l'application ? Reprise, filet de tests, puis maintenance mensuelle sans engagement, à prix publié.",
       },
       heading: 'Reprise et maintenance de votre application métier',
       priceHeading: "Combien coûte la maintenance d'une application ?",
@@ -452,6 +459,15 @@ export const fr = {
         {
           question: "Faut-il récupérer le code auprès de l'ancien prestataire ?",
           answer: "Oui, c'est la première chose à faire ; la carte dit ce qui manque.",
+        },
+        {
+          question: 'Et si vous partez à votre tour ?',
+          answer:
+            "La carte, les accès, les tests et la documentation vous appartiennent : un autre développeur Symfony reprend là où je m'arrête.",
+        },
+        {
+          question: 'La formule est-elle avec engagement ?',
+          answer: "Non. Elle est mensuelle, avec un mois de préavis de part et d'autre.",
         },
       ],
     },
@@ -526,7 +542,7 @@ export const fr = {
     },
     reliability: {
       meta: {
-        title: "Écarts de stock, bugs en prod : fiabiliser l'application",
+        title: 'Fiabiliser une application PHP/Symfony : écarts, bugs en prod',
         description:
           "Un stock, un solde ou une facturation qui ne tombe pas juste ? Traçabilité des flux et observabilité pour expliquer l'écart. Prix publics.",
       },
@@ -703,7 +719,7 @@ export const fr = {
       'Un appel de 30 minutes, gratuit : vous décrivez la situation, je vous dis franchement si je peux aider.',
     cta: 'Réserver un appel',
     revealPhone: 'Afficher le numéro',
-    locationLine: 'Grand Est, France · Full remote depuis 8 ans · CET',
+    locationLine: 'Grand Est, France · Sur place à {towns} · À distance depuis 8 ans',
   },
 
   footer: {

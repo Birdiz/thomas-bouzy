@@ -7,6 +7,7 @@ import { RESUME } from '../content/index.ts';
 import { OFFERS, type OfferId } from '../content/offers.ts';
 import { DAY_RATE } from '../content/prices.ts';
 import { formatEuros } from '../lib/money.ts';
+import { fromLine } from '../lib/offer-price.ts';
 import { fillPrices } from '../lib/price-tokens.ts';
 import { service } from '../lib/structured-data.ts';
 import { linkTo, type Route } from '../routes.ts';
@@ -71,6 +72,11 @@ const num = (n: number) => String(n).padStart(2, '0');
       <p class="kicker">{labels.kicker} · {summary.name}</p>
       <h1 class="offer__name">{page.heading}</h1>
       <p class="offer__plain">{summary.plain}</p>
+      {/* The price, in the first screen: on a phone it used to be three
+          sections down (ADR 19). The line leads to the estimator. */}
+      <p class="offer__glance">
+        <a href="#offer-price">{fromLine(offer, locale, t)}</a>
+      </p>
     </header>
 
     {/* 2. The Client sentences it answers, in the Client's words. */}

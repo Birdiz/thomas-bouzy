@@ -21,11 +21,15 @@ test.describe('routing and locales', () => {
     // The name, then the promise, in the one H1 (ADR 18).
     await expect(page.locator('h1')).toContainText('Thomas Bouzy');
     await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title);
-    await expect(page.getByRole('heading', { name: 'Des réalisations à ouvrir' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: "Ce que j'ai déjà tenu en production" }),
+    ).toBeVisible();
 
     await gotoHome(page, '/en/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByRole('heading', { name: 'Work worth opening' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'What I have already kept running in production' }),
+    ).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {

@@ -1,13 +1,14 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { CONTACT } from '../site.ts';
+import { CONTACT, type Locale, serviceAreaTowns } from '../site.ts';
 import RevealPhone from './RevealPhone.astro';
 
 interface Props {
   t: ResumeContent;
+  locale: Locale;
 }
 
-const { t } = Astro.props;
+const { t, locale } = Astro.props;
 ---
 
 <section id="contact" class="contact container">
@@ -40,7 +41,11 @@ const { t } = Astro.props;
             altogether (ADR 11, postscript). */}
       </div>
 
-      <p class="contact__location">{t.contact.locationLine}</p>
+      {/* The Service area, so that the home page names the towns a local
+          Client searches with, and not only the Offer pages (ADR 19). */}
+      <p class="contact__location">
+        {t.contact.locationLine.replace('{towns}', serviceAreaTowns(locale))}
+      </p>
     </div>
   </div>
 </section>
