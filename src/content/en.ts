@@ -68,6 +68,11 @@ export const en = {
       text: 'Defects found by users. The bug was visible hours earlier; nobody was watching.',
       offer: 'reliability',
     },
+    {
+      quote: '“The day of the big campaign, everything goes down.”',
+      text: 'The peak that brings everything down. The system holds every day, and gives way the day everyone shows up.',
+      offer: 'scaling',
+    },
   ],
 
   position: {
@@ -149,7 +154,7 @@ export const en = {
       plain:
         'A service that places and readjusts money on markets by itself, where an order once sent cannot be called back.',
       approach:
-        'DeFi operations on Solana, from a Node.js microservice with the Meteora SDK and Fireblocks for signing. Devnet first, then real funds. SDK integration and transaction operation, no smart contract authoring.',
+        'DeFi operations on Solana, from a Node.js microservice with the Meteora SDK and Fireblocks for signing. SDK integration and transaction operation, no smart contract authoring.',
       result:
         'In production on real funds. Idempotent signing and reconciliation against the chain designed in from the start, then opened to other teams as a shared service.',
     },
@@ -184,7 +189,7 @@ export const en = {
       plain:
         'Rebuilding in seconds a directory that used to be compiled by hand, one town at a time.',
       approach:
-        "Open data (the RNA and the government directory), enriched from the public sites of local authorities, with the provenance of every value. Local-first: one SQLite file on the user's machine.",
+        "Open data, enriched from the public sites of local authorities, with the provenance of every value. Local-first: one SQLite file on the user's machine.",
       result:
         'On Ille-et-Vilaine, 31,273 associations from 332 communes in 40 seconds. A measured pre-filter cut the pages to analyse from 40% to 6.5%.',
       link: {
@@ -273,6 +278,11 @@ export const en = {
     reliability: {
       name: 'Reliability',
       plain: 'Being able to explain a stock gap, a balance or a bug, instead of guessing.',
+    },
+    scaling: {
+      name: 'Scaling',
+      plain:
+        'Keeping your system standing on the day everyone shows up, and back on its feet when a part fails.',
     },
     reinforcement: {
       name: 'Senior reinforcement',
@@ -502,6 +512,77 @@ export const en = {
         },
       ],
     },
+    scaling: {
+      meta: {
+        title: 'Scaling PHP/Symfony under load, with high availability',
+        description:
+          'Does your application slow down or fall over at peak traffic? Load test, bottleneck found, measured fixes: a fixed-price diagnosis. Public prices.',
+      },
+      heading: 'Scaling and high availability for your PHP/Symfony application',
+      priceHeading: 'How much does a load diagnosis cost?',
+      sentences: [
+        '“It crawls as soon as we get busy.”',
+        '“We doubled the servers, and nothing changed.”',
+      ],
+      delivered: [
+        {
+          title: 'Phase 1: a load test that reproduces your peak',
+          text: 'Before changing anything: we start from a number, not an impression.',
+        },
+        {
+          title: 'The bottleneck, found and costed',
+          text: 'Database, cache, message queues or code: what gives way first, and what each fix buys.',
+        },
+        {
+          title: 'Phase 2: the fixes, measured',
+          text: 'Each one goes back under the same load test.',
+        },
+        {
+          title: 'A system that fails gracefully',
+          text: 'Backpressure on queues, circuit breakers, a degraded mode: in a distributed system, one part failing no longer takes the rest down. The load scenario stays in your CI, with an incident runbook.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          services: {
+            label: 'Services involved',
+            options: { one: 'One service', some: '2 to 5', many: '6 or more' },
+          },
+          observability: {
+            label: 'Existing monitoring',
+            options: { good: 'Good', partial: 'Partial', none: 'None' },
+          },
+        },
+        amounts: { plan: 'Diagnosis, phase 1 at a fixed price' },
+        duration: 'Fixes, by the day',
+      },
+      rules: [
+        'Scaling always starts with a load test that reproduces the peak, before any change.',
+        'It is sold in two phases: the fixed-price diagnosis, then the fixes at {dayRate} excl. VAT a day.',
+      ],
+      notTheRightChoice: [
+        {
+          text: 'The problem is a wrong figure, not a slow system: {offer} deals with that.',
+          offer: 'reliability',
+        },
+        {
+          text: "You don't know yet where the problem is: an {offer} will locate it first.",
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: "Isn't adding servers enough?",
+          answer:
+            'Rarely. If the bottleneck is the database or an external service, ten servers wait for it together. The load test says where it is.',
+        },
+        {
+          question: 'Could the load test bring production down?',
+          answer:
+            'It runs on a faithful copy, or on production in steps, outside peak hours, with a stop ready.',
+        },
+      ],
+    },
     reinforcement: {
       meta: {
         title: 'Part-time Symfony tech lead / architect, freelance',
@@ -577,8 +658,7 @@ export const en = {
   contact: {
     kicker: 'Contact',
     title: "Let's talk about your application.",
-    blurb:
-      'A free 30-minute call: you describe the situation, I tell you plainly whether I can help.',
+    blurb: 'A free 30-minute call: I tell you plainly whether I can help.',
     cta: 'Book a call',
     revealPhone: 'Show phone number',
     locationLine: 'Grand Est, France · Fully remote for 8+ years · CET',

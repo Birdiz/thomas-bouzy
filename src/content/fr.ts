@@ -69,6 +69,11 @@ export const fr = {
       text: 'Les défauts trouvés par les utilisateurs. Le bug était visible des heures plus tôt ; personne ne regardait.',
       offer: 'reliability',
     },
+    {
+      quote: "« Le jour de l'opération commerciale, tout tombe. »",
+      text: 'Le pic qui fait tout tomber. Le système tient au quotidien, et lâche le jour où tout le monde arrive.',
+      offer: 'scaling',
+    },
   ],
 
   position: {
@@ -150,7 +155,7 @@ export const fr = {
       plain:
         "Un service qui place et réajuste tout seul de l'argent sur des marchés, où un ordre parti ne se rattrape pas.",
       approach:
-        "Des opérations DeFi sur Solana, depuis un microservice Node.js avec le SDK Meteora et Fireblocks pour la signature. Devnet, puis fonds réels. Intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
+        "Des opérations DeFi sur Solana, depuis un microservice Node.js avec le SDK Meteora et Fireblocks pour la signature. Intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
       result:
         'En production sur fonds réels. Signature idempotente et réconciliation avec la chaîne conçues dès le départ, puis ouvertes aux autres équipes en service partagé.',
     },
@@ -186,7 +191,7 @@ export const fr = {
       plain:
         "Reconstituer en quelques secondes un annuaire qu'on établissait à la main, commune par commune.",
       approach:
-        "Les données ouvertes (RNA, Annuaire de l'administration), enrichies depuis les sites publics des collectivités, avec la provenance de chaque valeur. Local-first : un fichier SQLite sur la machine de l'utilisateur.",
+        "Les données ouvertes, enrichies depuis les sites publics des collectivités, avec la provenance de chaque valeur. Local-first : un fichier SQLite sur la machine de l'utilisateur.",
       result:
         "Sur l'Ille-et-Vilaine, 31 273 associations de 332 communes en 40 secondes. Un pré-filtre mesuré ramène les pages à analyser de 40 % à 6,5 %.",
       link: {
@@ -277,6 +282,11 @@ export const fr = {
     reliability: {
       name: 'Fiabilisation',
       plain: 'Savoir expliquer un écart de stock, un solde ou un bug, au lieu de le deviner.',
+    },
+    scaling: {
+      name: 'Tenue en charge',
+      plain:
+        'Que votre système tienne le jour où tout le monde arrive, et se relève seul quand une pièce lâche.',
     },
     reinforcement: {
       name: 'Renfort senior',
@@ -584,6 +594,77 @@ export const fr = {
         },
       ],
     },
+    scaling: {
+      meta: {
+        title: 'Montée en charge et haute disponibilité PHP/Symfony',
+        description:
+          'Votre application ralentit ou tombe aux pics de trafic ? Tir de charge, goulot trouvé, corrections mesurées : diagnostic à prix fixe. Prix publics.',
+      },
+      heading: 'Montée en charge et haute disponibilité de votre application PHP/Symfony',
+      priceHeading: 'Combien coûte un diagnostic de montée en charge ?',
+      sentences: [
+        "« Ça rame dès qu'on a du monde. »",
+        "« On a doublé les serveurs, et ça n'a rien changé. »",
+      ],
+      delivered: [
+        {
+          title: 'Phase 1 : un tir de charge qui reproduit votre pic',
+          text: "Avant de rien modifier : on part d'un chiffre, pas d'une impression.",
+        },
+        {
+          title: 'Le goulot, trouvé et chiffré',
+          text: 'Base de données, cache, files de messages ou code : ce qui cède en premier, et ce que chaque correction rapporte.',
+        },
+        {
+          title: 'Phase 2 : les corrections, mesurées',
+          text: 'Chacune repasse sous le même tir de charge.',
+        },
+        {
+          title: 'Un système qui tombe proprement',
+          text: "Contre-pression sur les files, disjoncteurs, mode dégradé : dans un système distribué, une pièce qui lâche n'emporte plus le reste. Le scénario de charge reste dans votre CI, avec un runbook d'incident.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          services: {
+            label: 'Services concernés',
+            options: { one: 'Un service', some: '2 à 5', many: '6 ou plus' },
+          },
+          observability: {
+            label: 'Supervision existante',
+            options: { good: 'Bonne', partial: 'Partielle', none: 'Aucune' },
+          },
+        },
+        amounts: { plan: 'Diagnostic, phase 1 à prix fixe' },
+        duration: 'Corrections, à la journée',
+      },
+      rules: [
+        'Une Tenue en charge commence toujours par un tir de charge qui reproduit le pic, avant toute modification.',
+        'Elle se vend en deux phases : le diagnostic à prix fixe, puis les corrections à {dayRate} HT la journée.',
+      ],
+      notTheRightChoice: [
+        {
+          text: "Le problème est un chiffre faux, pas un système lent : la {offer} s'en occupe.",
+          offer: 'reliability',
+        },
+        {
+          text: "Vous ne savez pas encore où est le problème : un {offer} le situera d'abord.",
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: 'Ajouter des serveurs ne suffit-il pas ?',
+          answer:
+            "Rarement. Si le goulot est la base de données ou un service externe, dix serveurs l'attendent ensemble. Le tir de charge dit où il est.",
+        },
+        {
+          question: 'Le tir de charge risque-t-il de faire tomber la production ?',
+          answer:
+            "Il se fait sur une copie fidèle, ou en production par paliers, hors des heures d'affluence, avec un arrêt prêt.",
+        },
+      ],
+    },
     reinforcement: {
       meta: {
         title: 'Tech lead / architecte Symfony freelance à temps partiel',
@@ -699,8 +780,7 @@ export const fr = {
   contact: {
     kicker: 'Contact',
     title: 'Parlons de votre application.',
-    blurb:
-      'Un appel de 30 minutes, gratuit : vous décrivez la situation, je vous dis franchement si je peux aider.',
+    blurb: 'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider.',
     cta: 'Réserver un appel',
     revealPhone: 'Afficher le numéro',
     locationLine: 'Grand Est, France · Full remote depuis 8 ans · CET',

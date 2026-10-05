@@ -383,7 +383,7 @@ describe('Chantier C — the mirror', () => {
       ['fr', fr],
     ] as const) {
       const [open, close] = marks[locale];
-      expect(content.failureModes).toHaveLength(4);
+      expect(content.failureModes).toHaveLength(5);
       for (const mode of content.failureModes) {
         expect(mode.quote.startsWith(open), `${locale}: ${mode.quote} is not quoted`).toBe(true);
         expect(mode.quote.endsWith(close), `${locale}: ${mode.quote} is not quoted`).toBe(true);
@@ -405,6 +405,8 @@ describe('Chantier C — the mirror', () => {
       [/^The migration that never happens\./, /^La migration qui n'arrive jamais\./],
       [/^The discrepancy nobody can explain\./, /^L'écart que personne ne sait expliquer\./],
       [/^Defects found by users\./, /^Les défauts trouvés par les utilisateurs\./],
+      // ADR 19: the load, which keeps a system up where Reliability keeps it correct.
+      [/^The peak that brings everything down\./, /^Le pic qui fait tout tomber\./],
     ];
     names.forEach(([enPattern, frPattern], i) => {
       expect(en.failureModes[i]?.text, `EN mode ${i} lost its name`).toMatch(enPattern);
@@ -651,6 +653,37 @@ describe('what each Offer page has to say (ADR 17)', () => {
     }
   });
 
+  it('sells Scaling in two phases, load test first, priced by services and monitoring', () => {
+    // ADR 19: a load test that reproduces the peak comes before any change, as
+    // the test safety net does for a Takeover; and without metrics, finding the
+    // bottleneck costs more, which is what the second slider teaches.
+    expect(PRICES.scaling.dimensions.map((d) => d.id)).toEqual(['services', 'observability']);
+    expect(PRICES.scaling.amounts).toEqual(['plan']);
+    expect(pagesOf(en).scaling?.rules.join(' ')).toMatch(/two phases/);
+    expect(pagesOf(fr).scaling?.rules.join(' ')).toMatch(/deux phases/);
+    expect(pagesOf(en).scaling?.rules.join(' ')).toMatch(/load test that reproduces the peak/);
+    expect(pagesOf(fr).scaling?.rules.join(' ')).toMatch(/tir de charge qui reproduit le pic/);
+    // Less monitoring never costs less.
+    for (const services of ['one', 'some', 'many']) {
+      const plans = ['good', 'partial', 'none'].map(
+        (observability) =>
+          combinationFor(PRICES.scaling, [services, observability])?.amounts.plan?.min ?? 0,
+      );
+      expect(plans, services).toEqual([...plans].sort((a, b) => a - b));
+    }
+  });
+
+  it('keeps the words of a distributed system off the Scaling plain line', () => {
+    // They are for the technical buyer, in the body and the metadata (ADR 19).
+    for (const content of [en, fr]) {
+      expect(content.offers.scaling.plain).not.toMatch(
+        /distribu|resilien|résilien|availab|disponib/i,
+      );
+      const body = [...walkStrings(pagesOf(content).scaling)].map(([, text]) => text).join(' ');
+      expect(body).toMatch(/distributed system|système distribué/);
+    }
+  });
+
   it('addresses double execution on the Reliability page, with one slider', () => {
     expect(PRICES.reliability.dimensions).toHaveLength(1);
     for (const content of [en, fr]) {
@@ -823,11 +856,12 @@ describe('each Failure mode is treated by one Offer (ADR 14)', () => {
         'migration',
         'reliability',
         'reliability',
+        'scaling',
       ]);
     }
   });
 
-  it('leaves the Audit treating none: it is the way in for all four', () => {
+  it('leaves the Audit treating none: it is the way in for all of them', () => {
     for (const content of [en, fr] as ResumeContent[]) {
       expect(content.failureModes.some((mode) => mode.offer === 'audit')).toBe(false);
       expect(content.problem.audit.cta.trim().length).toBeGreaterThan(0);

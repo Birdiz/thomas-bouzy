@@ -128,8 +128,8 @@ export interface SchemaOnly {
 /**
  * What every mention of an Offer needs: its name and its plain line.
  *
- * Every locale carries all five, even for an Offer whose page exists in one
- * language only, because the home page shows all five cards in both — the
+ * Every locale carries every Offer, even one whose page exists in one
+ * language only, because the home page shows every card in both — the
  * Takeover's English card links to its French page.
  */
 export interface OfferSummary {
@@ -343,7 +343,7 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     /**
-     * Under the four Failure modes, for the Client who cannot yet name theirs:
+     * Under the Failure modes, for the Client who cannot yet name theirs:
      * the Audit treats none of them, and is the way in for all.
      */
     audit: {
@@ -395,7 +395,7 @@ export interface ResumeContent {
   languages: LanguageSkill[];
   schema: SchemaOnly;
 
-  /** The home page's Offers section: five cards, each with a "from" price. */
+  /** The home page's Offers section: one card per Offer, each with a "from" price. */
   offersSection: {
     kicker: string;
     title: string;

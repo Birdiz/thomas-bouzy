@@ -34,6 +34,7 @@ export const PAGES: readonly Page[] = [
   { id: 'takeover', paths: { fr: '/offres/reprise-et-maintenance/' } },
   { id: 'migration', paths: { fr: '/offres/migration/', en: '/en/offers/migration/' } },
   { id: 'reliability', paths: { fr: '/offres/fiabilisation/', en: '/en/offers/reliability/' } },
+  { id: 'scaling', paths: { fr: '/offres/tenue-en-charge/', en: '/en/offers/scaling/' } },
   {
     id: 'reinforcement',
     paths: { fr: '/offres/renfort-senior/', en: '/en/offers/reinforcement/' },
