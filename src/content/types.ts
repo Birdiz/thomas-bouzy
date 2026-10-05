@@ -13,25 +13,6 @@ import type { AmountId } from './prices.ts';
  */
 
 /**
- * One named capability, on the page of the Offer it describes (ADR 14). It
- * used to sit in a grid under the hero; under a hero written for the least
- * technical reader, that grid of vocabulary undid the sorting the hero had
- * just done.
- *
- * This replaced a grid of six figures. The figures answered "how much" to a
- * reader who had not yet been told "of what" — and read as a CV's numbers.
- * A proof line briefly survived underneath, carrying the measurement; it went
- * the same way and for the same reason. A ratio from one engagement does not
- * travel: the concept is the part that does, and the measurements sit in the
- * Achievement cards and the principles, where they have a context.
- */
-export interface Concept {
-  /** One or two words. A named concept, never a skill label. */
-  label: string;
-  gloss: string;
-}
-
-/**
  * Past work Thomas actually did, shown as proof of a capability. It is never
  * itself for sale: an Achievement proves what an Offer sells (CONTEXT.md).
  */
@@ -54,9 +35,21 @@ export interface Achievement {
    * plain line names a technology.
    */
   plain: string;
-  context: string;
+  /**
+   * Two facets, not three. A third, "Context", repeated the plain line above
+   * it, and two read better than three on a phone (ADR 18).
+   */
   approach: string;
   result: string;
+  /**
+   * Where the work can be seen for oneself, when it is public: the releases of
+   * a personal project, say. A proof a reader can check beats one they must take
+   * on trust.
+   */
+  link?: {
+    href: string;
+    label: string;
+  };
 }
 
 /**
@@ -87,7 +80,7 @@ export interface FailureMode {
 /**
  * A position, and what holding it costs. The cost is the half that convinces.
  *
- * Principle 5 carries the pitch master's three-honesty-levels rule, which used
+ * One principle carries the pitch master's three-honesty-levels rule, which used
  * to live in the Toolkit grid. Stating it as a position one holds — at a price
  * — says more than a grid of tags ever did. See docs/adr/0009, postscript 2.
  */
@@ -149,7 +142,7 @@ export interface OfferSummary {
   plain: string;
 }
 
-/** A titled item: one deliverable, or one step. */
+/** A titled item: one deliverable, or one point. */
 export interface Titled {
   title: string;
   text: string;
@@ -170,7 +163,17 @@ export interface EstimatorLabels {
 }
 
 /**
- * One Offer's page, in the section order of ADR 17. Its name and plain line are
+ * One line of "not the right choice when". When it names another Offer, `{offer}`
+ * in the text is where that Offer's name goes, as a link to its page: the
+ * qualification the reader is doing is also the site's internal linking.
+ */
+export interface Redirect {
+  text: string;
+  offer?: OfferId;
+}
+
+/**
+ * One Offer's page, in the section order of ADR 18. Its name and plain line are
  * the Offer's `OfferSummary`; its Achievements are cited in offers.ts.
  */
 export interface OfferPage {
@@ -179,17 +182,26 @@ export interface OfferPage {
     description: string;
   };
   /**
+   * The H1. Distinct from the Offer's catalogue name, which stays the kicker and
+   * the card title: the name is the glossary's, the heading carries the words
+   * a buyer searches with (ADR 18).
+   */
+  heading: string;
+  /** The price section's heading: the question the buyer is actually asking. */
+  priceHeading: string;
+  /**
    * Client sentences this Offer answers beyond those of the Failure modes it
    * treats — the page shows those first, from `failureModes`, so a sentence is
    * written once. In the Client's words and quote marks.
    */
   sentences: string[];
-  /** The Concepts this Offer carries (ADR 14). May be empty. */
-  concepts: Concept[];
+  /**
+   * What the Client receives, in the order they receive it. The steps used to
+   * be a section of their own and repeated this one (ADR 18).
+   */
   delivered: Titled[];
   /** A variant of the Offer worth naming on its page, e.g. the Due diligence. */
   variant?: Titled;
-  steps: Titled[];
   estimator: EstimatorLabels;
   /**
    * The commercial rules this page governs, stated where they apply (ADR 17):
@@ -202,11 +214,10 @@ export interface OfferPage {
    */
   dayRate?: {
     label: string;
-    /** What follows the range, e.g. that it is lower for long full-time Engagements. */
+    /** What follows the rate: the cap on days a week. */
     note: string;
   };
-  goodChoice: string[];
-  notTheRightChoice: string[];
+  notTheRightChoice: Redirect[];
   faq: { question: string; answer: string }[];
 }
 
@@ -215,8 +226,6 @@ export interface OfferPageLabels {
   kicker: string;
   sentences: string;
   delivered: string;
-  steps: string;
-  price: string;
   /** Says what the numbers are: an order of magnitude, never a quote. */
   disclaimer: string;
   /** Caption of the static table of every range. */
@@ -225,12 +234,9 @@ export interface OfferPageLabels {
   perMonth: string;
   weekOne: string;
   weekMany: string;
-  fit: string;
-  goodChoice: string;
   notTheRightChoice: string;
   achievements: string;
   faq: string;
-  concepts: string;
   book: {
     kicker: string;
     title: string;
@@ -291,6 +297,8 @@ export interface ResumeContent {
 
   nav: {
     offers: string;
+    /** The Partners page, in the footer's list of pages. */
+    partners: string;
     work: string;
     approach: string;
     about: string;
@@ -316,6 +324,12 @@ export interface ResumeContent {
   hero: {
     availability: string;
     /**
+     * The promise, rendered in the H1 after the name (ADR 18). The reader
+     * arrives warm and already knows the name; what they do not know yet is
+     * what it is for. Held to the plain-line rule, like the blurb.
+     */
+    title: string;
+    /**
      * Written for the least technical reader (ADR 14), so it is held to the
      * plain-line rule: no `schema.knowsAbout` term, and short.
      */
@@ -328,7 +342,6 @@ export interface ResumeContent {
   problem: {
     kicker: string;
     title: string;
-    paragraphs: string[];
     /**
      * Under the four Failure modes, for the Client who cannot yet name theirs:
      * the Audit treats none of them, and is the way in for all.
@@ -355,7 +368,6 @@ export interface ResumeContent {
     intro: string;
     /** Lead-in for `Achievement.plain`. Carries its own colon: French spaces it. */
     labelPlain: string;
-    labelContext: string;
     labelApproach: string;
     labelResult: string;
   };
@@ -387,7 +399,6 @@ export interface ResumeContent {
   offersSection: {
     kicker: string;
     title: string;
-    intro: string;
     /** Before the lowest headline amount the price table holds. */
     from: string;
     see: string;
@@ -415,6 +426,8 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     blurb: string;
+    /** The booking link, first of the ways to reach Thomas. */
+    cta: string;
     revealPhone: string;
     locationLine: string;
   };

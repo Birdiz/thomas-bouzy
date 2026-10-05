@@ -19,7 +19,13 @@ const { t } = Astro.props;
       <p class="contact__blurb">{t.contact.blurb}</p>
 
       <div class="contact__actions">
-        <a class="btn btn-primary" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        {/* The booking link first: it is what the whole page asks for, and the
+            home page used to be the one page without it (ADR 18). A plain
+            outbound link, never an embed (ADR 17). */}
+        <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+          {t.contact.cta}
+        </a>
+        <a class="btn btn-outline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
         <RevealPhone label={t.contact.revealPhone} />
         <a
           class="btn btn-outline"

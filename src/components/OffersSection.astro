@@ -37,24 +37,24 @@ const partners = linkTo('partners', locale);
 <section id="offers" class="offers container">
   <p class="kicker"><span class="kicker__num">{num}</span>{t.offersSection.kicker}</p>
   <h2 class="section-title">{t.offersSection.title}</h2>
-  <p class="offers__intro">{t.offersSection.intro}</p>
 
   <ul class="offers__grid">
     {
       cards.map((card) => (
         <li class="offers__card" data-offer={card.id}>
-          <h3 class="offers__name">{card.name}</h3>
+          <h3 class="offers__name">
+            <a href={card.href} hreflang={card.hreflang && LOCALE_TAG[card.hreflang]}>
+              {card.name}
+            </a>
+          </h3>
           <p class="offers__plain">{card.plain}</p>
           <p class="offers__from">{card.from}</p>
-          <a
-            class="offers__link"
-            href={card.href}
-            hreflang={card.hreflang && LOCALE_TAG[card.hreflang]}
-          >
+          {/* The name is the link, and it covers the card: five identical
+              "See the offer" anchors told a search engine nothing (ADR 18). */}
+          <span class="offers__link" aria-hidden="true">
             {t.offersSection.see}
-            {card.hreflang && ` ${t.offersSection.inFrench}`}
-            <span aria-hidden="true"> →</span>
-          </a>
+            {card.hreflang && ` ${t.offersSection.inFrench}`} →
+          </span>
         </li>
       ))
     }

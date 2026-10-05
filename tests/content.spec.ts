@@ -1,9 +1,19 @@
+import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
 import { contentOfPage, type ResumeContent } from '../src/content/index.ts';
 import { OFFER_IDS, OFFERS } from '../src/content/offers.ts';
-import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../src/content/prices.ts';
+import {
+  AUDIT_CREDIT,
+  AUDIT_EXPRESS_FEE,
+  combinationFor,
+  DAY_RATE,
+  MAX_DAYS_PER_WEEK,
+  optionCombinations,
+  PRICES,
+} from '../src/content/prices.ts';
+import { fillPrices } from '../src/lib/price-tokens.ts';
 import { PAGES } from '../src/routes.ts';
 import { LOCALES } from '../src/site.ts';
 
@@ -97,13 +107,12 @@ describe('EN/FR parity', () => {
       '$.nav.about',
       '$.nav.contact',
       '$.hero.availability',
+      '$.hero.title',
       '$.hero.blurb',
       '$.hero.ctaOffers',
       '$.offersSection.title',
-      '$.offersSection.intro',
       '$.problem.kicker',
       '$.problem.title',
-      '$.problem.paragraphs[0]',
       '$.position.kicker',
       '$.position.title',
       '$.position.intro',
@@ -115,14 +124,15 @@ describe('EN/FR parity', () => {
       '$.failureModes[0].quote',
       '$.failureModes[0].text',
       '$.achievements[0].plain',
-      '$.offerPages.audit.concepts[0].gloss',
-      '$.offerPages.migration.concepts[0].label',
+      '$.offerPages.audit.heading',
+      '$.offerPages.audit.priceHeading',
       '$.about.title',
       '$.about.paragraphs[0]',
       '$.about.careerLine',
       '$.about.careerLink',
       '$.contact.title',
       '$.contact.blurb',
+      '$.contact.cta',
       '$.contact.revealPhone',
     ];
     const enStrings = walkStrings(en);
@@ -201,15 +211,22 @@ describe('content corrections applied against the design', () => {
     // A commune of a few hundred people, beside a name and a job title, is a
     // near-deducible home address. Thomas's call is to stop at the region and
     // not publish the département either: a recruiter needs the timezone and
-    // the country, and neither Grandrupt nor the Vosges tells them more.
+    // the country, and neither tells them more.
+    //
+    // The two names are checked by hash, so that the repository, which is
+    // public, does not publish what the page withholds.
+    const WITHHELD = new Set([
+      'dc2e79e4da46ba0099b80a9474e6b8cd3b33d546eaa6ed44d2330a7aef92094c',
+      '813fda261f058093793ac9cf52f4f99613455fe90500724565653bf06c01dc76',
+    ]);
+    const hashOf = (word: string) => createHash('sha256').update(word).digest('hex');
     for (const content of [en, fr]) {
       expect(content.contact.locationLine).toMatch(/Grand Est, France/);
-      const everywhere = [
-        content.contact.locationLine,
-        content.contact.blurb,
-        ...content.about.paragraphs,
-      ].join(' ');
-      expect(everywhere).not.toMatch(/Grandrupt|Vosges|\(88\)/);
+      const everywhere = [...walkStrings(content)].map(([, text]) => text).join(' ');
+      const words = everywhere.toLowerCase().match(/\p{L}+/gu) ?? [];
+      expect(words.filter((word) => WITHHELD.has(hashOf(word)))).toEqual([]);
+      // Nor a département number, the way "Grand Est (NN)" would give it.
+      expect(everywhere).not.toMatch(/\(\d{2}\)/);
     }
   });
 
@@ -313,7 +330,7 @@ describe('content corrections applied against the design', () => {
       // Selected on the card's own prose now: the stack chips it used to be
       // found by went with the rest of the chips.
       const onChain = content.achievements.find((achievement) =>
-        /Solana|Meteora/.test(`${achievement.context} ${achievement.approach}`),
+        /Solana|Meteora/.test(achievement.approach),
       );
       expect(onChain, 'the on-chain achievement card is present').toBeDefined();
       expect(`${onChain?.approach} ${onChain?.result}`).toMatch(
@@ -415,8 +432,8 @@ describe('Chantier C — the mirror', () => {
           `${locale}: ${achievement.title} has no plain line`,
         ).toBeGreaterThan(0);
 
-        // A lede, not a fourth facet. The context paragraph is where the detail
-        // goes; this line has one job and loses it at four clauses.
+        // A lede, not a third facet. The approach and the result are where the
+        // detail goes; this line has one job and loses it at four clauses.
         expect(
           achievement.plain.length,
           `${locale}: the plain line on ${achievement.title} is a paragraph`,
@@ -446,7 +463,7 @@ describe('Chantier C — the mirror', () => {
   });
 
   it('carries the plain-terms marker in the label, never inline in the prose', () => {
-    // It used to be the first two words of one context paragraph. Now the
+    // It used to be the first two words of one card's prose. Now the
     // component renders it, so a second copy inside the content would print it
     // twice — and the card that has it inline is the card that stops being
     // rewritable without noticing.
@@ -455,7 +472,7 @@ describe('Chantier C — the mirror', () => {
       ['fr', fr],
     ] as const) {
       for (const achievement of content.achievements) {
-        const body = `${achievement.plain} ${achievement.context} ${achievement.approach} ${achievement.result}`;
+        const body = `${achievement.plain} ${achievement.approach} ${achievement.result}`;
         expect(body, `${locale}: ${achievement.title} still says it inline`).not.toMatch(
           /In plain terms|En clair/i,
         );
@@ -595,6 +612,12 @@ describe('Offers and the price table (ADR 17)', () => {
   it("states the Audit's commercial rule and its due diligence variant", () => {
     expect(en.offerPages.audit?.rules.join(' ')).toMatch(/deducted/);
     expect(fr.offerPages.audit?.rules.join(' ')).toMatch(/déduit/);
+    // The credit is the express fee, read from the price table: uncapped, a
+    // full Audit would wipe out a Takeover's set-up (ADR 18).
+    expect(AUDIT_CREDIT).toBe(AUDIT_EXPRESS_FEE);
+    for (const content of [en, fr]) {
+      expect(content.offerPages.audit?.rules.join(' ')).toContain('{credit}');
+    }
     expect(en.offerPages.audit?.variant?.title).toMatch(/due diligence/i);
     expect(fr.offerPages.audit?.variant?.title).toMatch(/due diligence/i);
   });
@@ -607,7 +630,8 @@ describe('what each Offer page has to say (ADR 17)', () => {
     const takeover = pagesOf(fr).takeover;
     expect(takeover, 'the Takeover page exists in French').toBeDefined();
     expect(pagesOf(en).takeover, 'the Takeover is French only').toBeUndefined();
-    expect(takeover?.steps[0]?.title).toMatch(/filet de tests/i);
+    // The deliverables are listed in the order the Client receives them.
+    expect(takeover?.delivered[0]?.title).toMatch(/filet de tests/i);
     expect(takeover?.rules.join(' ')).toMatch(/filet de tests/i);
     const delivered = takeover?.delivered.map((item) => item.title).join(' ') ?? '';
     expect(delivered).toMatch(/Veille/);
@@ -636,51 +660,92 @@ describe('what each Offer page has to say (ADR 17)', () => {
     }
   });
 
-  it('publishes a 600–750 € day rate, and Reinforcement is priced from it', () => {
-    expect(DAY_RATE).toEqual({ min: 600, max: 750 });
+  it('publishes one day rate, for a Client and a Partner alike, and prices Reinforcement from it', () => {
+    // One figure, not a range: a range is read from its low end, and a Partner
+    // cannot build a margin on a number that moves (ADR 18).
+    expect(DAY_RATE).toBe(550);
     expect(PRICES.reinforcement.dimensions.map((d) => d.id)).toEqual(['days']);
     const oneDay = combinationFor(PRICES.reinforcement, ['1'])?.amounts.monthly;
-    // "from about 2,600 a month at one day a week"
-    expect(oneDay?.min).toBe(2600);
+    // "about 2,400 a month at one day a week"
+    expect(oneDay).toEqual({ min: 2400, max: 2400 });
     for (const content of [en, fr]) {
       expect(pagesOf(content).reinforcement?.dayRate).toBeDefined();
     }
   });
 
-  it('states the capacity rule as a rule, never as a state that could go stale', () => {
-    // "Two Clients at a time, never more" (ADR 17) — a rule cannot expire; a
-    // "currently available" or a date can, like the line ADR 11 removed.
-    expect(pagesOf(en).reinforcement?.rules.join(' ')).toMatch(
-      /two clients at a time, never more/i,
-    );
-    expect(pagesOf(fr).reinforcement?.rules.join(' ')).toMatch(
-      /deux clients à la fois, jamais plus/i,
-    );
+  it('sells at most four days a week, as a rule that cannot go stale', () => {
+    // The only capacity statement left (ADR 18). "Two clients at a time" went:
+    // a Watch plan took a whole place for a few hundred euros a month. A rule
+    // cannot expire; a "currently available" or a date can, like the line ADR
+    // 11 removed.
+    expect(MAX_DAYS_PER_WEEK).toBe(4);
+    expect(PRICES.reinforcement.dimensions[0]?.options).toEqual(['1', '2', '3', '4']);
     for (const content of [en, fr]) {
       const page = pagesOf(content).reinforcement;
+      expect(page?.rules.join(' ')).toContain('{maxDays}');
       const everywhere = [...walkStrings(page)].map(([, text]) => text).join(' ');
+      expect(everywhere).not.toMatch(/two clients|deux clients/i);
       expect(everywhere).not.toMatch(/\b(19|20)\d{2}\b/);
       expect(everywhere).not.toMatch(/available|disponible|currently|actuellement|complet/i);
     }
+    expect(fr.partnersPage.dayRate.note).toContain('{maxDays}');
   });
 
-  it('puts each Concept on the Offer ADR 14 moves it to', () => {
-    const expected: Record<string, [string, string][]> = {
-      audit: [
-        ['Footprint', 'Empreinte'],
-        ['Build-vs-buy', 'Build-vs-buy'],
-      ],
-      migration: [['Invisible redesign', 'Refonte invisible']],
-      reliability: [['Traceable', 'Traçable']],
-      reinforcement: [
-        ['Shared service', 'Service partagé'],
-        ['Handover', 'Transmission'],
-      ],
-    };
-    for (const [offer, labels] of Object.entries(expected)) {
-      const id = offer as keyof ResumeContent['offerPages'];
-      expect(pagesOf(en)[id]?.concepts.map((c) => c.label)).toEqual(labels.map(([e]) => e));
-      expect(pagesOf(fr)[id]?.concepts.map((c) => c.label)).toEqual(labels.map(([, f]) => f));
+  it('links each "not the right choice" line to the Offer it names, and only then', () => {
+    // The reader's qualification is also the site's internal linking: a line
+    // that sends them elsewhere links there (ADR 18).
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const [offer, page] of Object.entries(pagesOf(content))) {
+        for (const line of page.notTheRightChoice) {
+          const where = `${locale}: ${offer}: ${line.text}`;
+          expect(line.text.includes('{offer}'), where).toBe(line.offer !== undefined);
+          expect(line.text.split('{offer}').length, where).toBeLessThanOrEqual(2);
+          expect(line.offer, where).not.toBe(offer);
+          if (line.offer) {
+            expect(
+              PAGES.some((registered) => registered.id === line.offer),
+              where,
+            ).toBe(true);
+          }
+        }
+      }
+    }
+  });
+
+  it('quotes no price in prose: every amount comes from the price table', () => {
+    // A number typed into a sentence is a second copy of a price that goes
+    // stale the day prices.ts changes. Prose names the price instead.
+    const amounts = new Set(
+      [DAY_RATE, AUDIT_EXPRESS_FEE].flatMap((amount) => [
+        String(amount),
+        amount.toLocaleString('fr-FR'),
+        amount.toLocaleString('en-GB'),
+      ]),
+    );
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const [offer, page] of Object.entries(pagesOf(content))) {
+        for (const [path, text] of walkStrings(page)) {
+          if (path.startsWith('$.estimator')) continue;
+          for (const amount of amounts) {
+            expect(text, `${locale}: ${offer}${path.slice(1)} quotes ${amount}`).not.toContain(
+              amount,
+            );
+          }
+          // And every name it uses is one the price table can answer.
+          if (!/\{(offer|towns)\}/.test(text)) {
+            expect(
+              () => fillPrices(text, locale),
+              `${locale}: ${offer}${path.slice(1)}`,
+            ).not.toThrow();
+          }
+        }
+      }
     }
   });
 });
@@ -709,9 +774,7 @@ describe('the Partners page (ADR 14)', () => {
 
   it('carries no copy of the day rate: it is read from the price table', () => {
     for (const [path, text] of walkStrings(fr.partnersPage)) {
-      expect(text, `a price is copied at ${path}`).not.toMatch(
-        new RegExp(`\\b(${DAY_RATE.min}|${DAY_RATE.max})\\b`),
-      );
+      expect(text, `a price is copied at ${path}`).not.toMatch(new RegExp(`\\b${DAY_RATE}\\b`));
     }
   });
 });
@@ -771,14 +834,41 @@ describe('each Failure mode is treated by one Offer (ADR 14)', () => {
     }
   });
 
-  it('attaches each Concept to exactly one Offer, and none to the home page', () => {
+  it('carries no Concepts, on the home page or on an Offer page', () => {
+    // ADR 14 moved them from the home page to the Offers; ADR 18 took them off
+    // the site. Under the H1 of the Entry offer, two words of vocabulary were
+    // the grid ADR 14 removed, in miniature.
     for (const content of [en, fr] as ResumeContent[]) {
-      const labels = Object.values(content.offerPages).flatMap((page) =>
-        page.concepts.map((concept) => concept.label),
-      );
-      expect(labels).toHaveLength(6);
-      expect(new Set(labels).size, 'a Concept is on two Offers').toBe(labels.length);
-      expect('concepts' in content, 'the home page still carries Concepts').toBe(false);
+      expect('concepts' in content).toBe(false);
+      for (const page of Object.values(content.offerPages)) {
+        expect('concepts' in page).toBe(false);
+      }
     }
   });
+});
+
+describe('a site short enough to be read (ADR 18)', () => {
+  // The copy was cut by half on 5 October 2026: the home page was thirteen
+  // minutes of reading for a reader who gives it thirty seconds. A ceiling
+  // nobody checks grows back, as ADR 6 says of bytes; this is the same rule
+  // for words. Counted: what the page renders as prose, not its <head>, its
+  // assistive-only strings, its structured data or its price labels.
+  const BUDGET: Record<string, number> = { home: 1200, partners: 220 };
+  const OFFER_BUDGET = 400;
+  const NOT_PROSE = /^\$\.(meta|a11y|schema|languages|footer|estimator|offerPage|offers)\b/;
+
+  const wordsOf = (content: unknown) =>
+    [...walkStrings(content)]
+      .filter(([path]) => !NOT_PROSE.test(path))
+      .reduce((sum, [, text]) => sum + text.split(/\s+/).filter(Boolean).length, 0);
+
+  for (const page of PAGES) {
+    for (const locale of LOCALES) {
+      if (!page.paths[locale]) continue;
+      const budget = BUDGET[page.id] ?? OFFER_BUDGET;
+      it(`keeps ${page.id} (${locale}) under ${budget} words`, () => {
+        expect(wordsOf(contentOfPage(locale, page.id))).toBeLessThanOrEqual(budget);
+      });
+    }
+  }
 });

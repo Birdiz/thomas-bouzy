@@ -72,8 +72,8 @@ _Avoid_: TMA, support, rescue
 
 **Maintenance plan** (FR *Formule*):
 The monthly half of a Takeover, at one of two levels: **Watch** (FR *Veille*),
-for updates and supervision, or **Evolution** (FR *Évolution*), for days of change
-each month.
+for updates and supervision, or **Evolution** (FR *Évolution*), which adds days of
+change each month.
 _Avoid_: retainer, subscription, SLA
 
 **Migration** (FR *Migration sans interruption*):
@@ -88,8 +88,13 @@ a defect can be explained instead of guessed.
 _Avoid_: observability (that is one means), monitoring, quality
 
 **Reinforcement** (FR *Renfort senior*):
-Thomas as a part-time lead or architect inside the Client's team, billed by the day.
+Thomas as a part-time lead or architect inside the Client's team, billed by the day,
+at most four days a week.
 _Avoid_: staff augmentation, fractional CTO, régie (as a term)
+
+**Day rate** (FR *Taux journalier*):
+The one price of a day of Thomas's work, the same for a Client and for a Partner.
+_Avoid_: TJM (as a term), partner rate
 
 **Engagement** (FR *Mission*):
 One Offer sold to one Client: the instance, not the catalogue entry.
@@ -102,16 +107,14 @@ One way a system of the interesting kind goes wrong, named in Thomas's words.
 _Avoid_: trigger, pain point, problem
 
 **Client sentence** (FR *Phrase client*):
-How a Client says a Failure mode out loud, in their own words and in quotes.
+How a Client would say a Failure mode out loud, in quotes. Written by Thomas, not
+heard from a real Client: the page offers it for the reader to recognise, and never
+attributes it to anyone.
 _Avoid_: quote, label, testimonial
 
 **Achievement** (FR *Réalisation*):
 Past work Thomas actually did, shown as proof of a capability. It is never itself for sale.
 _Avoid_: project, subject, case study, reference
-
-**Concept** (FR *Concept*):
-A named capability, one or two words, on the page of the Offer it describes.
-_Avoid_: skill, competency, figure
 
 **Principle** (FR *Principe*):
 A position Thomas holds, stated together with what holding it costs.
@@ -125,7 +128,8 @@ _Avoid_: value, belief, approach
 - An **Achievement** proves a capability; an **Offer** sells it.
 - An **Engagement** is an instance of one **Offer** for one **Client**.
 - Every **Segment** can buy the **Entry offer**; the other Offers are not all for every Segment.
-- An **Audit**'s price is credited against the **Engagement** that follows it.
+- An **Audit** credits a fixed amount, the express Audit's fee, against the
+  **Engagement** that follows it.
 - A **Takeover** always begins with the test safety net, before any change.
 - An **Engagement** may come through a **Partner**, in which case the Partner is
   the one who pays and the Client is the one being served.
@@ -139,3 +143,9 @@ _Avoid_: value, belief, approach
 - The `Project` type and the "Six sujets à ouvrir" heading both named what is now an
   **Achievement**. Resolved: the contract says `Achievement`, and the heading
   carries no count.
+- The **Concept** was a named capability on an Offer page. ADR 18 took Concepts off
+  the site; the term is retired.
+- The glossary governs the site's voice. Metadata and an FAQ question may quote the
+  words a reader types instead, as a Client sentence quotes the words a Client says:
+  "TMA" in one Takeover question, "sous-traitance" and "ESN" in the Partners page's
+  title and description.

@@ -37,7 +37,13 @@ const portrait = Object.values(portraits)[0]?.default;
           {t.hero.availability}
         </p>
 
-        <h1 class="hero__name">{SITE.author}</h1>
+        {/* The name, then the promise, in one H1 (ADR 18). The reader arrives
+            warm from LinkedIn or a referral and already knows the name; what
+            they do not know yet is what it is for. */}
+        <h1 class="hero__name">
+          {SITE.author}
+          <span class="hero__promise">{t.hero.title}</span>
+        </h1>
         <p class="hero__blurb">{t.hero.blurb}</p>
 
         {/* One button, and it points at the Offers (ADR 14).

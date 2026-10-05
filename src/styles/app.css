@@ -355,6 +355,16 @@ a {
   letter-spacing: -0.02em;
   margin: 0 0 20px;
 }
+/* The promise, inside the H1 under the name, at the size of a lede. */
+.hero__promise {
+  display: block;
+  margin-top: 18px;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  max-width: 24ch;
+  text-wrap: balance;
+}
 
 .hero__blurb {
   font-size: 16px;
@@ -425,30 +435,10 @@ a {
   max-width: 16ch;
   margin-bottom: 40px;
 }
-.problem__grid {
+.problem__modes {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 56px;
-  align-items: start;
-}
-.problem__prose p {
-  font-size: 17px;
-  line-height: 1.7;
-  max-width: 52ch;
-  text-wrap: pretty;
-}
-.problem__prose p:first-child {
-  font-size: 19px;
-  line-height: 1.6;
-  color: var(--color-text);
-}
-.problem__prose p + p {
-  color: var(--color-muted);
-}
-.problem__modes {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  column-gap: 56px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -471,7 +461,7 @@ a {
    than styled as a pull quote: it is the label of the row, and a second display
    treatment beside the numbered eyebrow would fight it. */
 .problem__mode-quote {
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.35;
   margin: 0 0 6px;
   text-wrap: balance;
@@ -562,8 +552,26 @@ a {
   font-size: 13px;
   margin: 6px 0 0;
 }
+.offers__card {
+  position: relative;
+}
+.offers__name a {
+  color: inherit;
+  text-decoration: none;
+}
+/* The stretched link: the name's anchor covers the whole card. */
+.offers__name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.offers__card:hover .offers__name a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .offers__link {
   font-size: 15px;
+  color: var(--color-accent-text);
 }
 .offers__partners {
   margin: 26px 0 0;
@@ -780,6 +788,10 @@ a {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 26px;
 }
+.achievement__link {
+  margin: 22px 0 0;
+  font-size: 15px;
+}
 .achievement__facet-label {
   color: var(--color-muted);
   margin-bottom: 8px;
@@ -971,34 +983,6 @@ a {
   margin: 0;
   text-wrap: pretty;
 }
-.offer__concepts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
-  margin: 32px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.offer__concept {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 18px 22px;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
-.offer__concept-label {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 19px;
-  line-height: 1.15;
-}
-.offer__concept-gloss {
-  font-size: 13.5px;
-  line-height: 1.45;
-  color: var(--color-muted);
-}
-
 .offer__section {
   padding-block: 34px;
 }
@@ -1034,8 +1018,7 @@ a {
   list-style: none;
 }
 .offer__card,
-.offer__variant,
-.offer__step {
+.offer__variant {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1072,20 +1055,15 @@ a {
   text-wrap: pretty;
 }
 
-.offer__steps {
-  counter-reset: step;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* The deliverables, numbered in the order the Client receives them. */
+.offer__delivered {
+  counter-reset: delivered;
 }
-.offer__step {
-  counter-increment: step;
+.offer__delivered > .offer__card {
+  counter-increment: delivered;
 }
-.offer__step::before {
-  content: counter(step, decimal-leading-zero);
+.offer__delivered > .offer__card::before {
+  content: counter(delivered, decimal-leading-zero);
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--color-accent-text);
@@ -1193,18 +1171,9 @@ a {
   max-width: 64ch;
 }
 
-.offer__fit {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-.offer__fit-col {
-  padding: 22px 24px;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
 .offer__fit-list {
-  margin: 12px 0 0;
+  max-width: 64ch;
+  margin: 0;
   padding-left: 20px;
   font-size: 15px;
   line-height: 1.6;
@@ -1256,13 +1225,11 @@ a {
 }
 
 @media (max-width: 860px) {
-  .offer__fit,
   .estimator__live {
     grid-template-columns: minmax(0, 1fr);
   }
-  .problem__grid {
+  .problem__modes {
     grid-template-columns: minmax(0, 1fr);
-    gap: 36px;
   }
   .position__grid {
     grid-template-columns: minmax(0, 1fr);

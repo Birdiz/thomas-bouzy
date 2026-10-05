@@ -18,12 +18,9 @@ const audit = linkTo('audit', locale);
   <p class="kicker"><span class="kicker__num">{num}</span>{t.problem.kicker}</p>
   <h2 class="section-title problem__title">{t.problem.title}</h2>
 
-  <div class="problem__grid">
-    <div class="problem__prose">
-      {t.problem.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-    </div>
-
-    <div>
+  {/* No prose before the sentences any more: the paragraphs that stood here
+      argued with a peer, under a hero written for a business owner (ADR 18). */}
+  <div>
       <ul class="problem__modes">
         {
           t.failureModes.map((mode, i) => {
@@ -62,6 +59,5 @@ const audit = linkTo('audit', locale);
         {t.problem.audit.text}{' '}
         <a class="btn btn-secondary" href={audit.href}>{t.problem.audit.cta}</a>
       </p>
-    </div>
   </div>
 </section>

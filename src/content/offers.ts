@@ -22,11 +22,11 @@ export type SegmentId = 'critical-systems' | 'orphan-app' | 'partners';
 
 /** Stable names for the Achievements, so an Offer can cite one in any locale. */
 export const ACHIEVEMENT_IDS = [
-  'wallet-event-sourcing',
+  'industrial-erp',
   'live-api-redesign',
+  'wallet-event-sourcing',
   'on-chain-operations',
   'enterprise-onboarding',
-  'industrial-erp',
   'codebase-audit',
   'open-data-directories',
 ] as const;

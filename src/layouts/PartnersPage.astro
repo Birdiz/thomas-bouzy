@@ -5,7 +5,8 @@ import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
 import { OFFER_IDS, OFFERS } from '../content/offers.ts';
 import { DAY_RATE } from '../content/prices.ts';
-import { formatEuroRange } from '../lib/money.ts';
+import { formatEuros } from '../lib/money.ts';
+import { fillPrices } from '../lib/price-tokens.ts';
 import { service } from '../lib/structured-data.ts';
 import { linkTo, type Route } from '../routes.ts';
 import { SITE } from '../site.ts';
@@ -54,10 +55,12 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
           ))
         }
       </ul>
-      {/* Read from the price table, like Reinforcement's: one number, one place. */}
+      {/* Read from the price table, like Reinforcement's: one number, one place.
+          The same number: a Partner pays what a Client pays (ADR 18). */}
       <p class="offer__day-rate">
         <strong>{page.dayRate.label}</strong>{' '}
-        {formatEuroRange(DAY_RATE, locale)} {t.offerPage.excludingVat}, {page.dayRate.note}
+        {formatEuros(DAY_RATE, locale)} {t.offerPage.excludingVat},{' '}
+        {fillPrices(page.dayRate.note, locale)}
       </p>
     </section>
 
@@ -80,5 +83,5 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
 
     <BookingSection labels={page.book} locale={locale} />
   </main>
-  <SiteFooter t={t} />
+  <SiteFooter t={t} locale={locale} />
 </BaseLayout>

@@ -1,6 +1,7 @@
 # 17. One page per Offer, public prices, and an estimator that degrades to a table
 
-- Status: accepted, implemented 2026-10-04
+- Status: accepted, implemented 2026-10-04; amended by
+  [ADR 18](0018-one-day-rate-and-half-the-words.md), 2026-10-05
 - Date: 2026-10-03
 - Amends [ADR 4](0004-typed-content-modules.md) and
   [ADR 6](0006-budget-tests-instead-of-lighthouse-ci.md)
@@ -68,13 +69,9 @@ moves its price:
 The Migration's test-coverage slider teaches the Client the real cost driver, as
 well as estimating.
 
-The day rate is published, as a range of 600 to 750 € HT. The low end is for
-long, full-time engagements. At about 140 billable days, a realistic occupancy,
-it fills the micro-enterprise ceiling (83,600 € in 2026) without crossing it. A
-lower rate meant to fill 227 days of a calendar year was considered and rejected:
-the ceiling caps revenue, not days, and a junior rate reads as a risk to the two
-Segments that buy on day rate. The amounts themselves are content, not this
-decision, and are reviewed with the business on 14 October 2027.
+The day rate is published. The amounts themselves are content, not this
+decision, and are reviewed with the business on 14 October 2027 (the rate was
+reset by [ADR 18](0018-one-day-rate-and-half-the-words.md)).
 
 **The estimator is progressive enhancement.** Without JavaScript, the page serves
 a static table of each Offer's ranges, generated from the same typed table. The

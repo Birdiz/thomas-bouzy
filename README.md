@@ -7,6 +7,9 @@ for Partners ([ADR 17](docs/adr/0017-offer-pages-public-prices-and-the-estimator
 French at `/`, English under `/en/` where it sells
 ([ADR 15](docs/adr/0015-french-at-the-root-english-where-it-sells.md)).
 Every page and the locales it exists in are listed once, in `src/routes.ts`.
+Every price is in one table, `src/content/prices.ts`; prose names a price and
+never types it, and each page's prose has a word ceiling
+([ADR 18](docs/adr/0018-one-day-rate-and-half-the-words.md)).
 Built with Astro, containerised, deployed to Railway. The vocabulary is in
 [CONTEXT.md](CONTEXT.md).
 
@@ -59,7 +62,7 @@ is still missing.
 | --- | --- | --- |
 | A portrait of at least 580×580 | `src/assets/portrait.png` (`.jpg` / `.webp` / `.avif` also work) — see [src/assets/README.md](src/assets/README.md) | Absent: the hero shows a labelled placeholder. Too small: the largest variant is upscaled, and `assets:check` says so |
 | Domain | `SITE_DOMAIN`, a Railway service variable | A deployment build **fails** rather than canonicalising the site to a domain that does not resolve |
-| Indexing | `SITE_INDEXABLE=true`, once `SITE_DOMAIN` is the real domain **and** `LEGAL` in `src/site.ts` is complete | `robots.txt` disallows everything, pages carry `noindex`, and every response carries `X-Robots-Tag`. Setting it while `LEGAL` is incomplete **fails** the build ([ADR 16](docs/adr/0016-the-legal-notice-and-a-number-meant-to-be-public.md)) |
+| Indexing | `SITE_INDEXABLE=true`, once `SITE_DOMAIN` is the real domain **and** `LEGAL` in `src/site.ts` is complete | `robots.txt` lets crawlers in so they can read the `noindex` every page carries, and every response carries `X-Robots-Tag`. Railway's `*.up.railway.app` hostname redirects to `SITE_DOMAIN` ([ADR 18](docs/adr/0018-one-day-rate-and-half-the-words.md)). Setting it while `LEGAL` is incomplete **fails** the build ([ADR 16](docs/adr/0016-the-legal-notice-and-a-number-meant-to-be-public.md)) |
 
 ## Going live on a real domain
 
