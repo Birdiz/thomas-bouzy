@@ -328,6 +328,13 @@ export interface ResumeContent {
       text: string;
       cta: string;
     };
+    /**
+     * The sentences pass one at a time, like a train of thought. Labels for
+     * the controls: the pause toggle, and each sentence's own button, where
+     * `{n}` is its number.
+     */
+    pause: string;
+    goTo: string;
   };
   failureModes: FailureMode[];
 

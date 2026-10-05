@@ -472,6 +472,120 @@ a {
   text-wrap: pretty;
 }
 
+/* The carousel: one sentence at a time, stacked in one cell so the section
+   keeps the height of the longest and never jumps. A sentence arrives from
+   below and leaves upwards, slightly blurred, the way a thought passes. */
+.problem.is-carousel .problem__title {
+  margin-bottom: 28px;
+}
+.is-carousel .problem__modes {
+  grid-template-columns: minmax(0, 1fr);
+  border: 0;
+}
+.is-carousel .problem__mode {
+  grid-area: 1 / 1;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-22px);
+  filter: blur(6px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.9s ease,
+    filter 0.7s ease,
+    visibility 0s linear 0.9s;
+}
+.is-carousel .problem__mode.is-active ~ .problem__mode {
+  transform: translateY(22px);
+}
+.is-carousel .problem__mode.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  filter: none;
+  transition-delay: 0.25s, 0.25s, 0.25s, 0s;
+}
+.is-carousel .problem__mode-num,
+.is-carousel .problem__mode-text {
+  display: none;
+}
+.is-carousel .problem__mode-quote {
+  font-size: clamp(28px, 4.4vw, 54px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+}
+.is-carousel .problem__mode-offer {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.thoughts__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 34px;
+}
+.thoughts__pause {
+  margin-right: 8px;
+  padding: 4px 12px;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-muted);
+  font: 12px / 1.6 var(--font-mono);
+  cursor: pointer;
+}
+.thoughts__pause[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+/* A 44px target around a 3px bar. */
+.thoughts__dot {
+  display: grid;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.thoughts__dot span {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-divider);
+  overflow: hidden;
+}
+.thoughts__dot span::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--color-accent);
+}
+.thoughts__dot[aria-current] span::after {
+  animation: thought 5s linear forwards;
+}
+.thoughts__dot:hover span {
+  background: var(--color-muted);
+}
+@keyframes thought {
+  to {
+    width: 100%;
+  }
+}
+/* Paused while read, while off screen, or on request. */
+.is-carousel:has(.problem__modes:hover) .thoughts__dot span::after,
+.is-carousel:has(:focus-visible) .thoughts__dot span::after,
+.is-offscreen .thoughts__dot span::after,
+.is-paused .thoughts__dot span::after {
+  animation-play-state: paused;
+}
+
 /* — audit call ———————————————————————————————————————————————————————————— */
 
 /* The one place the page raises its voice: full-bleed, heavy sans, two lines,

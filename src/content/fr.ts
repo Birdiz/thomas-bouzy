@@ -43,6 +43,8 @@ export const fr = {
     },
     kicker: 'Le problème',
     title: "Vous reconnaissez l'une de ces phrases ?",
+    pause: 'Pause',
+    goTo: 'Phrase {n}',
   },
 
   failureModes: [

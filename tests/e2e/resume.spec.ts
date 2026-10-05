@@ -313,9 +313,25 @@ test.describe('motion preferences', () => {
   test.describe('with no stated preference', () => {
     test.use({ motion: 'no-preference' });
 
-    test('scrolls smoothly', async ({ page }) => {
+    test('scrolls smoothly, and the Client sentences pass one at a time', async ({ page }) => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
+
+      const problem = page.locator('#problem');
+      await expect(problem).toHaveClass(/is-carousel/);
+      await expect(problem.locator('.problem__mode.is-active')).toHaveCount(1);
+
+      // Each sentence has its own button, and the pause is a toggle.
+      const dots = problem.locator('.thoughts__dot');
+      await expect(dots).toHaveCount(RESUME.fr.failureModes.length);
+      await dots.nth(2).click();
+      await expect(problem.locator('.problem__mode').nth(2)).toHaveClass(/is-active/);
+      await expect(problem.locator('.problem__mode').nth(0)).toHaveJSProperty('inert', true);
+
+      const pause = problem.locator('.thoughts__pause');
+      await pause.click();
+      await expect(pause).toHaveAttribute('aria-pressed', 'true');
+      await expect(problem).toHaveClass(/is-paused/);
     });
   });
 
@@ -325,6 +341,13 @@ test.describe('motion preferences', () => {
     test('stops animating and jumps instead of gliding', async ({ page }) => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
+
+      // No carousel: every Client sentence stays on the page, as a list.
+      await expect(page.locator('#problem')).not.toHaveClass(/is-carousel/);
+      await expect(page.locator('.thoughts__controls')).toBeHidden();
+      for (const mode of await page.locator('.problem__mode').all()) {
+        await expect(mode).toBeVisible();
+      }
 
       const durations = await page.evaluate(() =>
         [...document.querySelectorAll('.hero__blob, .contact__blob')].map(
@@ -359,7 +382,9 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       const failureModes = RESUME[locale].failureModes;
       await expect(modes).toHaveCount(failureModes.length);
       for (const [i, mode] of failureModes.entries()) {
-        const link = modes.nth(i).getByRole('heading').getByRole('link');
+        // By selector, not by role: in the carousel, the sentences not on
+        // screen are hidden from the accessibility tree, as they should be.
+        const link = modes.nth(i).locator('h3 a');
         await expect(link).toContainText(mode.quote);
         await expect(link).toHaveAttribute(
           'href',

@@ -43,6 +43,8 @@ export const en = {
     },
     kicker: 'The problem',
     title: 'Do any of these sound familiar?',
+    pause: 'Pause',
+    goTo: 'Sentence {n}',
   },
 
   failureModes: [
