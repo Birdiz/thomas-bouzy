@@ -179,7 +179,7 @@ export const en = {
     {
       id: 'open-data-directories',
       title: 'Association directories from open data',
-      org: 'Personal project',
+      org: 'For a client',
       period: '2026',
       plain:
         'Rebuilding in seconds a directory that used to be compiled by hand, one town at a time.',

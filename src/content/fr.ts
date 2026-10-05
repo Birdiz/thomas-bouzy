@@ -181,7 +181,7 @@ export const fr = {
     {
       id: 'open-data-directories',
       title: "Annuaires associatifs depuis l'open data",
-      org: 'Projet personnel',
+      org: 'Pour un client',
       period: '2026',
       plain:
         "Reconstituer en quelques secondes un annuaire qu'on établissait à la main, commune par commune.",

@@ -120,13 +120,21 @@ metadata. They never go in a plain line, a Client sentence or the hero (ADR 12).
   Offer serves them under that Segment's population for now. A fourth Segment
   is opened only if real conversations show that they buy for a different
   reason. This is flagged in CONTEXT.md.
-- **The proof has to reach the site first, through the pitch master** (ADR 9:
-  it owns the past):
-  - the artist sites become an Achievement;
-  - the open-data directory card is described as a delivery to a Client;
-  - the load practice at Socios goes onto the cards whose subject it already is.
-  A page whose proof has not reached the site cites what exists, and nothing
-  more.
+- **The Build is opened ahead of its proof, on purpose.** Its page cites the
+  on-chain service and the open-data directory, and nothing older. The artist
+  sites (2013–2016) are no longer online, so they get no card. Thomas's reason:
+  the Offer is there to be built, not justified, and a route nobody can see
+  brings no first Client. What it costs: the Build page has the thinnest proof
+  in the catalogue until its first Engagement supplies one. The review of
+  14 October 2027 checks whether a Build has been sold.
+- **The open-data directory was delivered to a Client**, who stays unnamed.
+  Its card said "personal project", which was wrong.
+- **The Achievement cards state only what the CV states** (ADR 9: the pitch
+  master owns the past). The CV carries the load tests, BlazeMeter, Redis,
+  incident management and the Kubernetes footprint. It does not carry
+  autoscaling, database tuning, backpressure, circuit breakers or post-mortems,
+  which were daily work at Socios. The Scaling page may say what the Offer
+  does, but a card claims these only once the CV does.
 - **"Scale-up" keeps two meanings, and they are kept apart.** In the Critical-
   systems Segment it names a kind of company. The Offer is *Scaling*, never
   "scale-up".
