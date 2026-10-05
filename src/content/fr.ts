@@ -25,6 +25,7 @@ export const fr = {
   nav: {
     offers: 'Offres',
     partners: 'Partenaires',
+    publicSector: 'Collectivités',
     work: 'Références',
     about: 'À propos',
     contact: 'Me contacter',
@@ -78,7 +79,7 @@ export const fr = {
   work: {
     kicker: 'Références',
     title: "Là où j'ai déjà tenu la production",
-    intro: 'Industrie, fintech, SaaS, secteur associatif. Dépliez une ligne pour le détail.',
+    intro: 'Industrie, fintech, SaaS, associatif. Dépliez une ligne pour le détail.',
     labelPlain: 'En clair :',
     labelApproach: 'Approche',
     labelResult: 'Résultat',
@@ -267,6 +268,8 @@ export const fr = {
     start: 'Par où commencer',
     inFrench: '(en français)',
     book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel de 30 minutes' },
+    publicSector: 'Une collectivité ?',
+    publicSectorLink: 'Voir la page dédiée',
     partners: 'Agence ou société de services ?',
     partnersLink: 'Voir la page partenaires',
   },
@@ -830,6 +833,62 @@ export const fr = {
     },
   },
 
+  publicSectorPage: {
+    meta: {
+      title: 'Développeur PHP/Symfony pour collectivités et établissements publics',
+      description:
+        'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de vos applications métier PHP/Symfony. Réversibilité, accessibilité RGAA, prix publics.',
+    },
+    kicker: 'Collectivités',
+    title: 'Collectivités et établissements publics : vos applications métier, reprises et tenues',
+    plain:
+      "Le logiciel d'un service, le portail d'une régie, l'outil d'une structure subventionnée : je les reprends, les maintiens et les fais évoluer, avec ce qu'exige l'achat public.",
+    points: [
+      {
+        title: 'Un achat simple',
+        text: "Mes offres d'entrée, comme l'audit, restent sous le seuil des marchés passés sans publicité ni mise en concurrence préalables. Un devis suffit pour commencer.",
+      },
+      {
+        title: 'La réversibilité, par écrit',
+        text: 'Code, accès, tests, documentation et décisions écrites vous appartiennent. Vos agents ou un autre prestataire reprennent derrière moi.',
+      },
+      {
+        title: 'Accessibilité',
+        text: "Ce que je construis ou reprends vise le RGAA, avec des tests d'accessibilité automatiques à chaque livraison.",
+      },
+      {
+        title: 'Hébergement et données',
+        text: "Hébergement en France ou dans l'Union européenne, chez l'hébergeur de votre choix. Aucune donnée ne part chez un service tiers sans votre accord.",
+      },
+    ],
+    proof: {
+      heading: 'Déjà au service du public',
+      items: [
+        {
+          title: 'La Cartonnerie, à Reims',
+          text: 'Consultant pour cette scène de musiques actuelles (SMAC), un lieu culturel labellisé et soutenu par des fonds publics.',
+        },
+        {
+          title: 'Un annuaire associatif, tiré des sites publics',
+          text: "31 273 associations d'Ille-et-Vilaine recensées en 40 secondes, depuis les données ouvertes et les sites des communes.",
+        },
+        {
+          title: 'Civic tech, bénévolat',
+          text: 'Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées.',
+        },
+      ],
+    },
+    offers: 'Ce que vous pouvez me confier',
+    offerLink: "Voir l'offre",
+    book: {
+      kicker: 'Premier pas',
+      title: 'Un appel de 30 minutes sur votre application.',
+      text: "Je vous dis franchement si je peux aider, et sous quelle forme d'achat.",
+      cta: 'Réserver un appel',
+      orWrite: 'Vous préférez écrire ?',
+      serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
+    },
+  },
   partnersPage: {
     meta: {
       title: 'Sous-traitance PHP/Symfony en marque blanche pour agences',

@@ -24,6 +24,7 @@ export const en = {
   nav: {
     offers: 'Offers',
     partners: 'Partners',
+    publicSector: 'Public sector',
     work: 'References',
     about: 'About',
     contact: 'Get in touch',
@@ -260,6 +261,8 @@ export const en = {
     start: 'Where to start',
     inFrench: '(in French)',
     book: { text: 'Already know what you need?', cta: 'Book a 30-minute call' },
+    publicSector: 'A local authority?',
+    publicSectorLink: 'See the dedicated page (in French)',
     partners: 'An agency or an IT services firm?',
     partnersLink: 'See the partners page (in French)',
   },

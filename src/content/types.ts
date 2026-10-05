@@ -246,6 +246,30 @@ export interface OfferPageLabels {
  * The page for agencies and IT services firms (ADR 14): they buy from Thomas
  * for their own client. French only, like the Segment.
  */
+/**
+ * Local authorities, public bodies and publicly funded organisations: what
+ * public purchasing asks of a provider, then the proof, then the Offers.
+ */
+export interface PublicSectorPage {
+  meta: {
+    title: string;
+    description: string;
+  };
+  kicker: string;
+  title: string;
+  plain: string;
+  /** Simple purchasing, reversibility, accessibility, hosting. */
+  points: Titled[];
+  proof: {
+    heading: string;
+    items: Titled[];
+  };
+  /** Heading over the Offers a public buyer can order. */
+  offers: string;
+  offerLink: string;
+  book: OfferPageLabels['book'];
+}
+
 export interface PartnersPage {
   meta: {
     title: string;
@@ -289,6 +313,8 @@ export interface ResumeContent {
     offers: string;
     /** The Partners page, in the footer's list of pages. */
     partners: string;
+    /** The public-sector page, likewise. */
+    publicSector: string;
     work: string;
     about: string;
     contact: string;
@@ -405,6 +431,8 @@ export interface ResumeContent {
     book: { text: string; cta: string };
     partners: string;
     partnersLink: string;
+    publicSector: string;
+    publicSectorLink: string;
   };
 
   /** Every Offer's name and plain line, wherever the Offer is mentioned. */
@@ -417,6 +445,7 @@ export interface ResumeContent {
   offerPages: Partial<Record<OfferId, OfferPage>>;
   /** Exists only in the locales the registry declares the Partners page in. */
   partnersPage?: PartnersPage;
+  publicSectorPage?: PublicSectorPage;
 
   contact: {
     kicker: string;

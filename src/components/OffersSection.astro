@@ -46,6 +46,7 @@ const stages = JOURNEY.map((ids, i) => ({
 const alongside = ALONGSIDE.map(card);
 
 const partners = linkTo('partners', locale);
+const publicSector = linkTo('public-sector', locale);
 ---
 
 <section id="offers" class="offers container">
@@ -118,6 +119,14 @@ const partners = linkTo('partners', locale);
     {t.offersSection.partners}{' '}
     <a href={partners.href} hreflang={partners.hreflang && LOCALE_TAG[partners.hreflang]}>
       {t.offersSection.partnersLink}
+    </a>
+    <br />
+    {t.offersSection.publicSector}{' '}
+    <a
+      href={publicSector.href}
+      hreflang={publicSector.hreflang && LOCALE_TAG[publicSector.hreflang]}
+    >
+      {t.offersSection.publicSectorLink}
     </a>
   </p>
 </section>

@@ -15,7 +15,7 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from './site.ts';
  * gets no alternate and no language switch, rather than a link to a page that
  * does not exist.
  */
-export type PageId = 'home' | OfferId | 'partners';
+export type PageId = 'home' | OfferId | 'partners' | 'public-sector';
 
 export interface Page {
   id: PageId;
@@ -42,6 +42,8 @@ export const PAGES: readonly Page[] = [
   },
   // Agencies and IT services firms: French, like the Segment (ADR 14).
   { id: 'partners', paths: { fr: '/partenaires/' } },
+  // Local authorities and public bodies: French, like the buyers.
+  { id: 'public-sector', paths: { fr: '/collectivites/' } },
 ];
 
 /** One served URL: a page, in one of its locales. */
