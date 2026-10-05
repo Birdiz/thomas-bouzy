@@ -16,10 +16,10 @@ const TOKENS = {
   divider: '#2a3540',
   text: '#eef2f3',
   muted: '#93a5ae',
-  accent: '#c8785e',
-  'accent-text': '#d4876c',
-  'accent-500': '#d4876c',
-  'accent-400': '#dc9479',
+  accent: '#ac6d67',
+  'accent-text': '#c3827b',
+  'accent-500': '#c3827b',
+  'accent-400': '#d3918a',
   'on-accent': '#0e1418',
 };
 

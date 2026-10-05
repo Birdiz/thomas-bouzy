@@ -32,17 +32,14 @@ const portrait = Object.values(portraits)[0]?.default;
 
     <div class="hero__grid">
       <div class="hero__intro">
-        <p class="hero__availability">
-          <span class="hero__pulse" aria-hidden="true"></span>
-          {t.hero.availability}
-        </p>
-
-        {/* The name, then the promise, in one H1 (ADR 18). The reader arrives
-            warm from LinkedIn or a referral and already knows the name; what
-            they do not know yet is what it is for. */}
+        {/* The name, then the promise, in one H1. The name is set small: the
+            reader arrives warm from LinkedIn or a referral and already knows
+            it; the promise is what they came to read. */}
         <h1 class="hero__name">
           {SITE.author}
-          <span class="hero__promise">{t.hero.title}</span>
+          <span class="hero__promise">
+            {t.hero.title.map((line) => <span class="hero__promise-line">{line} </span>)}
+          </span>
         </h1>
         <p class="hero__blurb">{t.hero.blurb}</p>
 

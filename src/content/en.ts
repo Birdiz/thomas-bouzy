@@ -10,7 +10,7 @@ export const en = {
     description:
       'I take over, stabilise and upgrade the PHP/Symfony business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
     ogImageAlt:
-      'Thomas Bouzy — in French: “I take over, stabilise and upgrade your business applications.” Freelance PHP/Symfony.',
+      'Thomas Bouzy — in French: “I take over and evolve your business applications.” Freelance PHP/Symfony.',
   },
 
   a11y: {
@@ -25,16 +25,14 @@ export const en = {
     offers: 'Offers',
     partners: 'Partners',
     work: 'Achievements',
-    approach: 'Approach',
     about: 'About',
     contact: 'Get in touch',
   },
 
   hero: {
-    availability: "Planning my 2027 calendar — let's talk now",
-    title: 'I take over your business software, make it reliable and keep it moving forward.',
+    title: ['I take over your business software', 'and keep it moving.'],
     blurb:
-      'Even the one nobody dares touch any more. Without stopping it, without rewriting everything, at published prices.',
+      'Even the one nobody dares touch any more. Without stopping it, without rewriting everything.',
     ctaOffers: 'See the offers',
   },
 
@@ -72,31 +70,6 @@ export const en = {
       quote: '“The day of the big campaign, everything goes down.”',
       text: 'The peak that brings everything down. The system holds every day, and gives way the day everyone shows up.',
       offer: 'scaling',
-    },
-  ],
-
-  position: {
-    kicker: 'Approach',
-    title: 'What I stand for, and what it costs.',
-    intro: 'Every recommendation comes with what it gives up.',
-    costLabel: 'The cost',
-  },
-
-  principles: [
-    {
-      title: 'Migrate in steps, never rewrite everything.',
-      text: 'Three major Symfony migrations on a system in continuous service, none of them a big bang.',
-      cost: 'A period where old and new run side by side, which must not be allowed to drag on.',
-    },
-    {
-      title: 'What is not instrumented is not reliable.',
-      text: 'Alerts before the failure on every backend service (OpenTelemetry and Datadog): reported bugs went from around twenty a month to five.',
-      cost: 'Time taken from delivery, and choosing what to watch.',
-    },
-    {
-      title: 'What I leave behind belongs to you.',
-      text: 'Code, access, tests and written decisions stay with you: another developer picks up after me.',
-      cost: 'Time spent writing, billed like the rest.',
     },
   ],
 
@@ -143,7 +116,7 @@ export const en = {
       approach:
         'Wallets holding real assets, for 1.5M+ active users. Event Sourcing and an outbox over SNS/SQS: every movement becomes a stored, replayable fact.',
       result:
-        '1,000+ transactions a minute with a complete audit trail, and peaks of 10,000–20,000 users within minutes, load-tested.',
+        '1,000+ transactions a minute with a complete audit trail, and peaks of 10,000–20,000 users within minutes, load-tested. Alerts before failure on every backend service (OpenTelemetry and Datadog): reported bugs went from about twenty a month to five.',
     },
     {
       id: 'on-chain-operations',
@@ -258,6 +231,7 @@ export const en = {
     start: 'Where to start',
     see: 'See the offer',
     inFrench: '(in French)',
+    book: { text: 'Already know what you need?', cta: 'Book a 30-minute call' },
     partners: 'An agency or an IT services firm?',
     partnersLink: 'See the partners page (in French)',
   },

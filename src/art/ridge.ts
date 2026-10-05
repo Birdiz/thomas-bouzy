@@ -6,13 +6,13 @@
  * two different mountains. The paths were generated once from a seeded noise
  * function and pasted here; they are not meant to be edited by hand.
  *
- * Back to front. The first layer carries the terracotta rim the cover has
- * along its crest. See docs/adr/0013.
+ * Back to front. The first layer carries a sandstone rim where the cover had terracotta,
+ * along its crest.
  */
 export const RIDGE_VIEWBOX = { width: 1600, height: 400 } as const;
 
-export const RIDGE_GLOW = '#c8785e';
-export const RIDGE_RIM = '#b98470';
+export const RIDGE_GLOW = '#ac6d67';
+export const RIDGE_RIM = '#b67770';
 
 export const RIDGE_LAYERS: readonly { d: string; fill: string }[] = [
   {

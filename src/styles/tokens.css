@@ -5,7 +5,8 @@
    accent. This keeps the second half and turns the first upside down: the
    ground is now the cover's slate night (#0e1418, hue ~205°, low saturation —
    the same "drain it, don't half-colour it" finding, on the dark side), the
-   text is the cover's off-white, and the terracotta is the one it already had.
+   text is the cover's off-white. The accent was the cover's terracotta; it is
+   now Vosges sandstone (#ac6d67), the pink-red of Strasbourg cathedral.
 
    On a dark ground "raised" means lighter. Surface and sunken keep their names
    and their order of use; both are now a step *up* from the ground.
@@ -30,9 +31,9 @@
   --color-muted: #93a5ae;
 
   /* Accent — decorative at full strength (rules, dots, the button fill). Text
-     in the accent uses --color-accent-text: 6.61:1 on bg, 5.41 on sunken. */
-  --color-accent: #c8785e;
-  --color-accent-text: #d4876c;
+     in the accent uses --color-accent-text: 6.01:1 on bg, 4.91 on sunken. */
+  --color-accent: #ac6d67;
+  --color-accent-text: #c3827b;
   --color-on-accent: #0e1418;
 
   --color-neutral-100: #eef2f3;
@@ -45,15 +46,15 @@
   --color-neutral-800: #1d272f;
   --color-neutral-900: #151d23;
 
-  --color-accent-100: #f6ddd3;
-  --color-accent-200: #edc0af;
-  --color-accent-300: #e3a28a;
-  --color-accent-400: #dc9479;
-  --color-accent-500: #d4876c;
-  --color-accent-600: #c8785e;
-  --color-accent-700: #a8603f;
-  --color-accent-800: #7a4530;
-  --color-accent-900: #4a2c21;
+  --color-accent-100: #f8e2df;
+  --color-accent-200: #e8c8c5;
+  --color-accent-300: #dea8a2;
+  --color-accent-400: #d3918a;
+  --color-accent-500: #c3827b;
+  --color-accent-600: #ac6d67;
+  --color-accent-700: #8c504b;
+  --color-accent-800: #6d3430;
+  --color-accent-900: #4f1917;
 
   /* Spectral carries the headings, as it carries the cover's title. Figtree
      stays for prose, JetBrains Mono for the numbered eyebrows. */

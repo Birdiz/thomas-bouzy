@@ -77,19 +77,6 @@ export interface FailureMode {
   offer: OfferId;
 }
 
-/**
- * A position, and what holding it costs. The cost is the half that convinces.
- *
- * One principle carries the pitch master's three-honesty-levels rule, which used
- * to live in the Toolkit grid. Stating it as a position one holds — at a price
- * — says more than a grid of tags ever did. See docs/adr/0009, postscript 2.
- */
-export interface Principle {
-  title: string;
-  text: string;
-  cost: string;
-}
-
 export interface MentoringEntry {
   year: string;
   text: string;
@@ -300,7 +287,6 @@ export interface ResumeContent {
     /** The Partners page, in the footer's list of pages. */
     partners: string;
     work: string;
-    approach: string;
     about: string;
     contact: string;
   };
@@ -313,22 +299,14 @@ export interface ResumeContent {
    * enough to hire", and the CV button offered the salaried route as an equal
    * alternative to the work itself, in the first viewport. The career is on
    * LinkedIn, reached once from the About section — see `about.careerLine`.
-   *
-   * `availability` carries no date. It said "permanent roles from September
-   * 2026" on a page whose own thesis is that what is not instrumented is not
-   * reliable, and it was one day from expiring. Then it said "available now",
-   * which is not true of a business that is not registered yet: it says that
-   * first engagements are in preparation, which stays true until it is not
-   * needed (ADR 14).
    */
   hero: {
-    availability: string;
     /**
-     * The promise, rendered in the H1 after the name (ADR 18). The reader
-     * arrives warm and already knows the name; what they do not know yet is
-     * what it is for. Held to the plain-line rule, like the blurb.
+     * The promise, rendered in the H1 after the name, as two lines: the break
+     * is part of the wording, so it is written here rather than left to the
+     * browser. Held to the plain-line rule, like the blurb.
      */
-    title: string;
+    title: readonly [string, string];
     /**
      * Written for the least technical reader (ADR 14), so it is held to the
      * plain-line rule: no `schema.knowsAbout` term, and short.
@@ -352,15 +330,6 @@ export interface ResumeContent {
     };
   };
   failureModes: FailureMode[];
-
-  /** The section a résumé never has: an argued opinion, with its price. */
-  position: {
-    kicker: string;
-    title: string;
-    intro: string;
-    costLabel: string;
-  };
-  principles: Principle[];
 
   work: {
     kicker: string;
@@ -414,6 +383,11 @@ export interface ResumeContent {
      * another language. Never shown on a French page.
      */
     inFrench: string;
+    /**
+     * Halfway down the page, for the reader who already knows: the booking
+     * link, so they need not scroll on to Contact.
+     */
+    book: { text: string; cta: string };
     partners: string;
     partnersLink: string;
   };

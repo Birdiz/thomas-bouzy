@@ -9,9 +9,9 @@ export const fr = {
   meta: {
     title: 'Thomas Bouzy — Freelance PHP/Symfony, Nancy et Strasbourg',
     description:
-      'Je reprends, fiabilise et fais évoluer vos applications métier PHP/Symfony. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.',
+      "Je reprends et fais évoluer vos applications métier PHP/Symfony, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
     ogImageAlt:
-      'Thomas Bouzy — « Je reprends, fiabilise et fais évoluer vos applications métier. » Freelance PHP/Symfony.',
+      'Thomas Bouzy — « Je reprends et fais évoluer vos applications métier. » Freelance PHP/Symfony.',
   },
 
   a11y: {
@@ -26,16 +26,13 @@ export const fr = {
     offers: 'Offres',
     partners: 'Partenaires',
     work: 'Réalisations',
-    approach: 'Ma position',
     about: 'À propos',
     contact: 'Me contacter',
   },
 
   hero: {
-    availability: 'Je prépare mon calendrier 2027 — parlons-en dès maintenant',
-    title: 'Je reprends, fiabilise et fais évoluer vos applications métier.',
-    blurb:
-      "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire, avec des prix affichés.",
+    title: ['Je reprends et fais évoluer', 'vos applications métier.'],
+    blurb: "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
     ctaOffers: 'Voir les offres',
   },
 
@@ -73,31 +70,6 @@ export const fr = {
       quote: "« Le jour de l'opération commerciale, tout tombe. »",
       text: 'Le pic qui fait tout tomber. Le système tient au quotidien, et lâche le jour où tout le monde arrive.',
       offer: 'scaling',
-    },
-  ],
-
-  position: {
-    kicker: 'Ma position',
-    title: 'Ce que je défends, et ce que ça coûte.',
-    intro: "Chaque recommandation vient avec ce qu'elle sacrifie.",
-    costLabel: 'Le coût assumé',
-  },
-
-  principles: [
-    {
-      title: 'Migrer par étapes, jamais tout réécrire.',
-      text: 'Trois migrations majeures de Symfony sur un système en service continu, aucune en big bang.',
-      cost: 'Une période où ancien et nouveau cohabitent, à ne pas laisser durer.',
-    },
-    {
-      title: "Ce qui n'est pas instrumenté n'est pas fiable.",
-      text: "Des alertes avant la panne sur tous les services backend (OpenTelemetry et Datadog) : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
-      cost: 'Du temps pris sur les livraisons, et choisir quoi surveiller.',
-    },
-    {
-      title: 'Ce que je laisse derrière moi vous appartient.',
-      text: 'Code, accès, tests et décisions écrites restent chez vous : un autre développeur reprend derrière moi.',
-      cost: 'Du temps passé à écrire, facturé comme le reste.',
     },
   ],
 
@@ -144,7 +116,7 @@ export const fr = {
       approach:
         "Des portefeuilles d'actifs réels, pour plus de 1,5 million d'utilisateurs actifs. Event Sourcing et outbox via SNS/SQS : chaque mouvement devient un fait stocké et rejouable.",
       result:
-        "Plus de 1 000 transactions par minute avec une piste d'audit complète, et des pics de 10 000 à 20 000 utilisateurs en quelques minutes, testés en charge.",
+        "Plus de 1 000 transactions par minute avec une piste d'audit complète, et des pics de 10 000 à 20 000 utilisateurs en quelques minutes, testés en charge. Des alertes avant la panne sur tous les services backend (OpenTelemetry et Datadog) : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
     },
     {
       id: 'on-chain-operations',
@@ -265,6 +237,7 @@ export const fr = {
     start: 'Par où commencer',
     see: "Voir l'offre",
     inFrench: '(en français)',
+    book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel de 30 minutes' },
     partners: 'Agence ou société de services ?',
     partnersLink: 'Voir la page partenaires',
   },

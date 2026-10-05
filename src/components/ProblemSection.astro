@@ -10,8 +10,6 @@ interface Props {
 }
 
 const { locale, t, num } = Astro.props;
-
-const audit = linkTo('audit', locale);
 ---
 
 <section id="problem" class="problem container">
@@ -55,9 +53,5 @@ const audit = linkTo('audit', locale);
           })
         }
       </ul>
-      <p class="problem__audit">
-        {t.problem.audit.text}{' '}
-        <a class="btn btn-secondary" href={audit.href}>{t.problem.audit.cta}</a>
-      </p>
   </div>
 </section>

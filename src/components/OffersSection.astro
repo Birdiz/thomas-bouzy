@@ -3,7 +3,7 @@ import type { ResumeContent } from '../content/index.ts';
 import { ENTRY_OFFER, OFFER_IDS } from '../content/offers.ts';
 import { fromLine } from '../lib/offer-price.ts';
 import { linkTo } from '../routes.ts';
-import { LOCALE_TAG, type Locale } from '../site.ts';
+import { CONTACT, LOCALE_TAG, type Locale } from '../site.ts';
 
 interface Props {
   locale: Locale;
@@ -57,6 +57,13 @@ const partners = linkTo('partners', locale);
       ))
     }
   </ul>
+
+  <p class="offers__book">
+    <span>{t.offersSection.book.text}</span>
+    <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+      {t.offersSection.book.cta}
+    </a>
+  </p>
 
   <p class="offers__partners">
     {t.offersSection.partners}{' '}

@@ -157,15 +157,6 @@ a {
 
 /* — motion ——————————————————————————————————————————————————————————————— */
 
-@keyframes tb-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 @keyframes tb-in {
   from {
     opacity: 0;
@@ -326,52 +317,36 @@ a {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: 56px;
   align-items: center;
   position: relative;
 }
 
-.hero__availability {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 15px 6px 11px;
-  border-radius: 999px;
-  background: var(--color-sunken);
-  color: var(--color-text);
-  font-size: 13px;
-  margin-bottom: 22px;
-}
-.hero__pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--color-accent);
-  display: inline-block;
-  flex: none;
-  animation: tb-float 2.6s ease-in-out infinite;
-}
-
 .hero__name {
-  font-size: clamp(46px, 6.4vw, 86px);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  margin: 0 0 20px;
+  margin: 0 0 22px;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--color-accent-text);
 }
-/* The promise, inside the H1 under the name, at the size of a lede. */
+/* The promise, inside the H1 under the name, at display size. Two lines,
+   each of which may wrap again on a narrow screen. */
 .hero__promise {
   display: block;
-  margin-top: 18px;
-  font-size: clamp(22px, 2.6vw, 32px);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  max-width: 24ch;
-  text-wrap: balance;
+  margin-top: 14px;
+  font-size: clamp(34px, 4.4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.hero__promise-line {
+  display: block;
+  text-wrap: pretty;
 }
 
 .hero__blurb {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.65;
   max-width: 56ch;
   margin: 0 0 26px;
@@ -489,21 +464,56 @@ a {
   font-size: 13.5px;
   color: var(--color-accent-text);
 }
-.problem__audit {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 16px;
-  margin: 24px 0 0;
-  font-size: 15.5px;
-  color: var(--color-muted);
-}
 .problem__mode-text {
   font-size: 14.5px;
   line-height: 1.6;
   color: var(--color-muted);
   margin: 0;
   text-wrap: pretty;
+}
+
+/* — audit call ———————————————————————————————————————————————————————————— */
+
+/* The one place the page raises its voice: full-bleed, heavy sans, two lines,
+   and the whole band is the link. */
+.audit-call {
+  border-block: 1px solid var(--color-divider);
+  background: var(--color-surface);
+}
+.audit-call__link {
+  display: block;
+  padding-block: clamp(56px, 9vw, 112px);
+  color: var(--color-text);
+  text-decoration: none;
+  /* The system's own heavy sans: every platform ships one, and a webfont
+     weight for a single band would cost the home page its font budget. */
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-weight: 800;
+  font-size: clamp(42px, 8.4vw, 116px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+.audit-call__question {
+  display: block;
+  color: var(--color-muted);
+}
+.audit-call__invite {
+  display: block;
+  text-wrap: balance;
+}
+.audit-call__arrow {
+  display: inline-block;
+  margin-left: 0.25em;
+  color: var(--color-accent-text);
+  transition: transform 0.2s ease;
+}
+.audit-call__link:hover .audit-call__invite,
+.audit-call__link:focus-visible .audit-call__invite {
+  color: var(--color-accent-text);
+}
+.audit-call__link:hover .audit-call__arrow,
+.audit-call__link:focus-visible .audit-call__arrow {
+  transform: translateX(0.15em);
 }
 
 /* — offers ————————————————————————————————————————————————————————————————— */
@@ -587,76 +597,26 @@ a {
   font-size: 15px;
   color: var(--color-accent-text);
 }
+.offers__book {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 36px 0 0;
+  padding: 22px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-sunken);
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.25;
+}
+.offers__book .btn {
+  font-family: var(--font-body);
+}
 .offers__partners {
   margin: 26px 0 0;
   font-size: 15.5px;
   color: var(--color-muted);
-}
-
-/* — position ——————————————————————————————————————————————————————————————— */
-
-/* The section a résumé never has. Four positions, each with what it costs —
-   an answer that exposes no cost sounds false at this level. */
-.position {
-  background: var(--color-surface);
-  padding-block: 72px;
-  margin-block: 20px;
-}
-.position__intro {
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--color-muted);
-  max-width: 58ch;
-  margin: 0 0 42px;
-  text-wrap: pretty;
-}
-.position__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.position__card {
-  background: var(--color-bg);
-  border-radius: calc(var(--radius-lg) * 1.15);
-  padding: 30px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.position__card-title {
-  font-size: 20px;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  margin: 0;
-  max-width: 22ch;
-}
-.position__card-text {
-  font-size: 15px;
-  line-height: 1.65;
-  margin: 0;
-  flex: 1;
-  text-wrap: pretty;
-}
-.position__cost {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--color-muted);
-  margin: 0;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-divider);
-  text-wrap: pretty;
-}
-.position__cost-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
-  margin-bottom: 6px;
 }
 
 /* — work / achievements —————————————————————————————————————————————————————— */
@@ -852,7 +812,7 @@ a {
   margin: 26px 0 0;
   padding-top: 22px;
   border-top: 1px solid var(--color-divider);
-  opacity: 0.8;
+  color: var(--color-muted);
 }
 
 .about__aside {
@@ -1254,9 +1214,6 @@ a {
     grid-template-columns: minmax(0, 1fr);
   }
   .problem__modes {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .position__grid {
     grid-template-columns: minmax(0, 1fr);
   }
   /* Below this width the nav always wraps to its own row. Measured: ~97px here,

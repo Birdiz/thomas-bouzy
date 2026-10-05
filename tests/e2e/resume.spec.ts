@@ -20,7 +20,7 @@ test.describe('routing and locales', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
     // The name, then the promise, in the one H1 (ADR 18).
     await expect(page.locator('h1')).toContainText('Thomas Bouzy');
-    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title);
+    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title.join(' '));
     await expect(
       page.getByRole('heading', { name: "Ce que j'ai déjà tenu en production" }),
     ).toBeVisible();
@@ -235,11 +235,11 @@ test.describe('navigation', () => {
     await gotoHome(page, '/en/');
     await page
       .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'Approach' })
+      .getByRole('link', { name: 'About' })
       .click();
-    await expect(page).toHaveURL(/#approach$/);
+    await expect(page).toHaveURL(/#about$/);
 
-    const box = await page.locator('#approach').boundingBox();
+    const box = await page.locator('#about').boundingBox();
     const headerHeight = (await page.locator('.site-header').boundingBox())?.height ?? 0;
     expect(box).not.toBeNull();
     // The heading must land below the sticky header, never behind it.
@@ -313,14 +313,9 @@ test.describe('motion preferences', () => {
   test.describe('with no stated preference', () => {
     test.use({ motion: 'no-preference' });
 
-    test('scrolls smoothly and runs the ambient animations', async ({ page }) => {
+    test('scrolls smoothly', async ({ page }) => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
-
-      const running = await page.evaluate(
-        () => document.querySelector('.hero__pulse')?.getAnimations().length ?? 0,
-      );
-      expect(running).toBeGreaterThan(0);
     });
   });
 
@@ -332,7 +327,7 @@ test.describe('motion preferences', () => {
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
 
       const durations = await page.evaluate(() =>
-        [...document.querySelectorAll('.hero__pulse, .hero__blob, .contact__blob')].map(
+        [...document.querySelectorAll('.hero__blob, .contact__blob')].map(
           (el) => getComputedStyle(el).animationDuration,
         ),
       );
@@ -348,12 +343,12 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
 
-    test(`reads problem, offers, proof, position, person on ${home}`, async ({ page }) => {
+    test(`reads problem, offers, proof, person on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const order = await page.$$eval('main > section[id]', (sections) =>
         sections.map((section) => section.id),
       );
-      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'approach', 'about', 'contact']);
+      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'about', 'contact']);
     });
 
     test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({
@@ -371,8 +366,8 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
           pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
         );
       }
-      // Under the Failure modes, for the Client who cannot yet name theirs.
-      const audit = page.locator('#problem .problem__audit a');
+      // Right after the Failure modes, for the Client who cannot yet name theirs.
+      const audit = page.locator('.audit-call a');
       await expect(audit).toHaveAttribute('href', pathOf('audit', locale) ?? '∅');
       await expect(page.locator('.concepts')).toHaveCount(0);
     });

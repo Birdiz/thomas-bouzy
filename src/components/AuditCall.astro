@@ -1,0 +1,28 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { linkTo } from '../routes.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+}
+
+const { locale, t } = Astro.props;
+const audit = linkTo('audit', locale);
+---
+
+{/* For the reader who recognised nothing above, or too much. No price here:
+    an invitation to let the idea ripen; the price waits on the Audit page. */}
+<section class="audit-call" aria-label={t.problem.audit.cta}>
+  <a
+    class="audit-call__link container"
+    href={audit.href}
+    hreflang={audit.hreflang && LOCALE_TAG[audit.hreflang]}
+  >
+    <span class="audit-call__question">{t.problem.audit.text}</span>
+    <span class="audit-call__invite">
+      {t.problem.audit.cta}<span class="audit-call__arrow" aria-hidden="true">→</span>
+    </span>
+  </a>
+</section>

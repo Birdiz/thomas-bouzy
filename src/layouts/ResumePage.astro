@@ -1,9 +1,9 @@
 ---
 import AboutSection from '../components/AboutSection.astro';
+import AuditCall from '../components/AuditCall.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Hero from '../components/Hero.astro';
 import OffersSection from '../components/OffersSection.astro';
-import PositionSection from '../components/PositionSection.astro';
 import ProblemSection from '../components/ProblemSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -32,12 +32,12 @@ const t = RESUME[locale];
   <SiteHeader route={route} t={t} />
   <main id="main">
     <Hero t={t} home={route.path} />
-    {/* ADR 14: problem → offer → proof → position → person. */}
+    {/* Problem → invitation → offer → proof → person → contact. */}
     <ProblemSection locale={locale} t={t} num="01" />
+    <AuditCall locale={locale} t={t} />
     <OffersSection locale={locale} t={t} num="02" />
     <WorkSection t={t} num="03" />
-    <PositionSection t={t} num="04" />
-    <AboutSection t={t} num="05" />
+    <AboutSection t={t} num="04" />
     <ContactSection locale={locale} t={t} />
   </main>
   <SiteFooter t={t} locale={locale} />
