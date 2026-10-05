@@ -14,10 +14,10 @@ interface Props {
 const { locale, t, num } = Astro.props;
 
 /**
- * Five cards: each Offer's plain line, its lowest prices from the price table,
+ * One card per Offer: its plain line, its lowest prices from the price table,
  * and its page. An Offer with no page in this locale links to the French one
  * and says so — the Takeover is French only (ADR 15), and its card is here in
- * English too because the home page sells all five.
+ * English too because the home page sells them all.
  */
 const cards = OFFER_IDS.map((id) => ({
   id,
@@ -38,7 +38,7 @@ const partners = linkTo('partners', locale);
     {
       cards.map((card) => (
         <li class="offers__card" data-offer={card.id}>
-          {/* Five cards of equal weight did not say where to start (ADR 19). */}
+          {/* Cards of equal weight did not say where to start (ADR 20). */}
           {card.entry && <p class="offers__badge">{t.offersSection.start}</p>}
           <h3 class="offers__name">
             <a href={card.href} hreflang={card.hreflang && LOCALE_TAG[card.hreflang]}>
@@ -47,7 +47,7 @@ const partners = linkTo('partners', locale);
           </h3>
           <p class="offers__plain">{card.plain}</p>
           <p class="offers__from">{card.from}</p>
-          {/* The name is the link, and it covers the card: five identical
+          {/* The name is the link, and it covers the card: identical
               "See the offer" anchors told a search engine nothing (ADR 18). */}
           <span class="offers__link" aria-hidden="true">
             {t.offersSection.see}

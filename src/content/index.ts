@@ -1,10 +1,12 @@
+import { withFrenchSpacing } from '../lib/french-spacing.ts';
 import type { PageId } from '../routes.ts';
 import type { Locale } from '../site.ts';
 import { en } from './en.ts';
 import { fr } from './fr.ts';
 import type { ResumeContent } from './types.ts';
 
-export const RESUME: Record<Locale, ResumeContent> = { fr, en };
+/** The content as the pages read it: the French with its unbreakable spaces. */
+export const RESUME: Record<Locale, ResumeContent> = { fr: withFrenchSpacing(fr), en };
 
 /**
  * The part of a locale's content that one page renders, or undefined when that

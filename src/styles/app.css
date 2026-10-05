@@ -64,7 +64,7 @@ html {
 .kicker__num {
   color: var(--color-accent-text);
   /* A long label used to squeeze the number until its rule wrapped under it,
-     on a phone (ADR 19). */
+     on a phone (ADR 20). */
   flex: none;
   white-space: nowrap;
 }
@@ -472,7 +472,7 @@ a {
 }
 /* The whole quote is the link: it is the largest target in the row, and the
    sentence a reader recognises is the thing they would click. It keeps the
-   ink colour so the four still read as quotes, and the Offer it leads to is
+   ink colour so they still read as quotes, and the Offer it leads to is
    named underneath, in the link colour. */
 .problem__mode-quote a {
   color: inherit;

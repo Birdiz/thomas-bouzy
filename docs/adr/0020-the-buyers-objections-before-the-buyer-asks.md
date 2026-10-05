@@ -1,4 +1,4 @@
-# 19. The buyer's objections, before the buyer asks them
+# 20. The buyer's objections, before the buyer asks them
 
 - Status: accepted, implemented 2026-10-05
 - Date: 2026-10-05
@@ -36,7 +36,7 @@ unanswered, and two places where the page says something untrue by omission.
 - **The price was three sections down.** On a phone, an Offer page's first
   screen held neither the price nor the way to it; the Audit's fixed price is
   its argument.
-- **Nothing said where to start.** Five Offer cards of equal weight, and the
+- **Nothing said where to start.** The Offer cards had equal weight, and the
   Entry offer was not marked as one.
 
 **Search:**
@@ -88,14 +88,15 @@ carries a "Par où commencer" badge.
   under its 400 words.
 - The third principle becomes **"Ce que je laisse derrière moi vous
   appartient"**: the code, the access, the tests and the written decisions,
-  so that any Symfony developer can carry on. Its cost: time spent writing,
+  so that another developer can carry on. Its cost: time spent writing,
   billed like the rest.
 
 **The honesty rule is applied rather than stated.** ADR 9 named it
 load-bearing, and it still is: no list on the site merges production work with
 personal projects. With no skills list left to apply it to, it holds on the
-Achievements, whose byline says "Projet personnel" or "bénévolat". The test
-moves there.
+Achievements, whose byline says what the work was: "Pour un client" (the
+open-data tool, per [ADR 19](0019-building-new-and-holding-the-load.md)) or
+"bénévolat". The test moves there.
 
 **The share image says what the hero says,** in French: the name, the
 promise, "Freelance PHP/Symfony". The English pages share it, and their
@@ -116,8 +117,8 @@ work.
 | Achievements H2 | Des réalisations à ouvrir | Ce que j'ai déjà tenu en production |
 | `jobTitle` | Ingénieur logiciel senior — architecture backend | Développeur freelance PHP/Symfony |
 
-**Achievement titles say the outcome:** "Retracer chaque mouvement d'argent de
-1,5 million d'utilisateurs", "Déplacer de l'argent réel, sans droit à
+**Achievement titles say the outcome:** "Tracer l'argent de 1,5 million
+d'utilisateurs", "Déplacer de l'argent réel, sans droit à
 l'erreur", "Reconstituer en 40 secondes un annuaire fait à la main". The
 vocabulary stays in the card body, where `knowsAbout` finds it.
 

@@ -371,13 +371,13 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
           pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
         );
       }
-      // Under the four, for the Client who cannot yet name theirs.
+      // Under the Failure modes, for the Client who cannot yet name theirs.
       const audit = page.locator('#problem .problem__audit a');
       await expect(audit).toHaveAttribute('href', pathOf('audit', locale) ?? '∅');
       await expect(page.locator('.concepts')).toHaveCount(0);
     });
 
-    test(`shows five Offers with a price from the table on ${home}`, async ({ page }) => {
+    test(`shows every Offer with a price from the table on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const cards = page.locator('#offers .offers__card');
       await expect(cards).toHaveCount(OFFER_IDS.length);

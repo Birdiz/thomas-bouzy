@@ -1,7 +1,8 @@
 # 17. One page per Offer, public prices, and an estimator that degrades to a table
 
 - Status: accepted, implemented 2026-10-04; amended by
-  [ADR 18](0018-one-day-rate-and-half-the-words.md), 2026-10-05
+  [ADR 18](0018-one-day-rate-and-half-the-words.md), 2026-10-05, and by
+  [ADR 19](0019-building-new-and-holding-the-load.md), 2026-10-05
 - Date: 2026-10-03
 - Amends [ADR 4](0004-typed-content-modules.md) and
   [ADR 6](0006-budget-tests-instead-of-lighthouse-ci.md)

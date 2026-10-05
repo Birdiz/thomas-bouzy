@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
-import { contentOfPage, type ResumeContent } from '../src/content/index.ts';
+import { contentOfPage, RESUME, type ResumeContent } from '../src/content/index.ts';
 import { OFFER_IDS, OFFERS } from '../src/content/offers.ts';
 import {
   AUDIT_CREDIT,
@@ -13,6 +14,7 @@ import {
   optionCombinations,
   PRICES,
 } from '../src/content/prices.ts';
+import { frenchSpacing } from '../src/lib/french-spacing.ts';
 import { fillPrices } from '../src/lib/price-tokens.ts';
 import { PAGES } from '../src/routes.ts';
 import { LOCALES } from '../src/site.ts';
@@ -149,6 +151,33 @@ describe('EN/FR parity', () => {
   });
 });
 
+describe('French typography', () => {
+  // A plain space before `?` lets the browser wrap the mark onto a line of its
+  // own: the home page's Problem title ended on a lone "?" at 1280px. fr.ts is
+  // typed with plain spaces; src/lib/french-spacing.ts makes them unbreakable
+  // on the way to the page.
+  it('never leaves a plain space before ? : ; ! » or after « in the French the pages read', () => {
+    const breakable = [...walkStrings(RESUME.fr)]
+      .filter(([, text]) => / [?:;!»]|« /.test(text))
+      .map(([path, text]) => `${path}: ${text}`);
+    expect(breakable).toEqual([]);
+  });
+
+  it('gives the French to the pages through RESUME only', () => {
+    // A page that imported fr.ts itself would get the plain spaces back.
+    const sources = readdirSync('src', { recursive: true, encoding: 'utf8' })
+      .filter((file) => /\.(ts|astro)$/.test(file) && file !== 'content/index.ts')
+      .filter((file) => /from '[^']*\/fr\.ts'/.test(readFileSync(`src/${file}`, 'utf8')));
+    expect(sources).toEqual([]);
+  });
+
+  it('uses a thin space before ; ? ! and a word space before : and inside guillemets', () => {
+    expect(frenchSpacing('« Et ça ; et ça ? Oui ! Enfin : non. »')).toBe(
+      '«\u00a0Et ça\u202f; et ça\u202f? Oui\u202f! Enfin\u00a0: non.\u00a0»',
+    );
+  });
+});
+
 describe('content corrections applied against the design', () => {
   it('states availability without a date that can rot', () => {
     // Three versions of this line have gone stale in place: the design's "from
@@ -164,7 +193,7 @@ describe('content corrections applied against the design', () => {
     // "Available now" went too: it is not true before the business is
     // registered, and nothing on the page could make it so (ADR 14).
     //
-    // ADR 19 lets the line name one year, the year the business is registered:
+    // ADR 20 lets the line name one year, the year the business is registered:
     // "first engagements in preparation" read as "a beginner" to a buyer. A
     // year can rot, so the test compares it with the clock again, and fails
     // the first build of the year after.
@@ -243,18 +272,19 @@ describe('content corrections applied against the design', () => {
     // §4.5 of the pitch master is a strict personal rule: "production
     // experience" / "personal projects" / "currently learning", never merged
     // into one undifferentiated list. It was carried by the Toolkit grid, then
-    // stated as a principle (ADR 9, postscript 2). ADR 19 gave that principle's
+    // stated as a principle (ADR 9, postscript 2). ADR 20 gave that principle's
     // place to one a Client buys on, and the rule is now held where it applies:
-    // a card that was not paid production work says so in its byline.
+    // a card that was not salaried production work says what it was in its
+    // byline (ADR 19 records the open-data tool as client work).
     for (const content of [en, fr]) {
       const byline = (id: string) =>
         content.achievements.find((achievement) => achievement.id === id)?.org ?? '';
-      expect(byline('open-data-directories')).toMatch(/personal project|projet personnel/i);
+      expect(byline('open-data-directories')).toMatch(/for a client|pour un client/i);
       expect(byline('codebase-audit')).toMatch(/volunteer|bénévolat/i);
     }
   });
 
-  it('promises the Client owns what is left behind (ADR 19)', () => {
+  it('promises the Client owns what is left behind (ADR 20)', () => {
     // The orphan-app Client was left by the last provider. The principle that
     // answers "and if you leave too?" is on the home page, with its price.
     for (const content of [en, fr]) {
@@ -394,7 +424,7 @@ describe('Chantier C — the mirror', () => {
       ['fr', fr],
     ] as const) {
       const [open, close] = marks[locale];
-      expect(content.failureModes).toHaveLength(4);
+      expect(content.failureModes).toHaveLength(5);
       for (const mode of content.failureModes) {
         expect(mode.quote.startsWith(open), `${locale}: ${mode.quote} is not quoted`).toBe(true);
         expect(mode.quote.endsWith(close), `${locale}: ${mode.quote} is not quoted`).toBe(true);
@@ -416,6 +446,8 @@ describe('Chantier C — the mirror', () => {
       [/^The migration that never happens\./, /^La migration qui n'arrive jamais\./],
       [/^The discrepancy nobody can explain\./, /^L'écart que personne ne sait expliquer\./],
       [/^Defects found by users\./, /^Les défauts trouvés par les utilisateurs\./],
+      // ADR 19: the load, which keeps a system up where Reliability keeps it correct.
+      [/^The peak that brings everything down\./, /^Le pic qui fait tout tomber\./],
     ];
     names.forEach(([enPattern, frPattern], i) => {
       expect(en.failureModes[i]?.text, `EN mode ${i} lost its name`).toMatch(enPattern);
@@ -662,6 +694,64 @@ describe('what each Offer page has to say (ADR 17)', () => {
     }
   });
 
+  it('sells Scaling in two phases, load test first, priced by services and monitoring', () => {
+    // ADR 19: a load test that reproduces the peak comes before any change, as
+    // the test safety net does for a Takeover; and without metrics, finding the
+    // bottleneck costs more, which is what the second slider teaches.
+    expect(PRICES.scaling.dimensions.map((d) => d.id)).toEqual(['services', 'observability']);
+    expect(PRICES.scaling.amounts).toEqual(['plan']);
+    expect(pagesOf(en).scaling?.rules.join(' ')).toMatch(/two phases/);
+    expect(pagesOf(fr).scaling?.rules.join(' ')).toMatch(/deux phases/);
+    expect(pagesOf(en).scaling?.rules.join(' ')).toMatch(/load test that reproduces the peak/);
+    expect(pagesOf(fr).scaling?.rules.join(' ')).toMatch(/tir de charge qui reproduit le pic/);
+    // Less monitoring never costs less.
+    for (const services of ['one', 'some', 'many']) {
+      const plans = ['good', 'partial', 'none'].map(
+        (observability) =>
+          combinationFor(PRICES.scaling, [services, observability])?.amounts.plan?.min ?? 0,
+      );
+      expect(plans, services).toEqual([...plans].sort((a, b) => a - b));
+    }
+  });
+
+  it('sells a Build in two phases, priced by size and systems to connect', () => {
+    expect(PRICES.build.dimensions.map((d) => d.id)).toEqual(['size', 'integrations']);
+    expect(PRICES.build.amounts).toEqual(['plan']);
+    expect(pagesOf(en).build?.rules.join(' ')).toMatch(/two phases/);
+    expect(pagesOf(fr).build?.rules.join(' ')).toMatch(/deux phases/);
+    // More systems to connect never costs less.
+    for (const size of ['small', 'medium', 'large']) {
+      const plans = ['none', 'few', 'many'].map(
+        (integrations) =>
+          combinationFor(PRICES.build, [size, integrations])?.amounts.plan?.min ?? 0,
+      );
+      expect(plans, size).toEqual([...plans].sort((a, b) => a - b));
+    }
+  });
+
+  it('never sells a Build as the rewrite of a running system', () => {
+    // ADR 19: without this rule, the Offer contradicts a site whose hero says
+    // "without rewriting everything". The page states the rule, and never uses
+    // the words that would sell the opposite.
+    expect(pagesOf(en).build?.rules.join(' ')).toMatch(/never replaces a running system/);
+    expect(pagesOf(fr).build?.rules.join(' ')).toMatch(/ne remplace jamais un système qui tourne/);
+    for (const content of [en, fr]) {
+      const page = [...walkStrings(pagesOf(content).build)].map(([, text]) => text).join(' ');
+      expect(page).not.toMatch(/rewrit|refonte|réécri|from scratch/i);
+    }
+  });
+
+  it('keeps the words of a distributed system off the Scaling plain line', () => {
+    // They are for the technical buyer, in the body and the metadata (ADR 19).
+    for (const content of [en, fr]) {
+      expect(content.offers.scaling.plain).not.toMatch(
+        /distribu|resilien|résilien|availab|disponib/i,
+      );
+      const body = [...walkStrings(pagesOf(content).scaling)].map(([, text]) => text).join(' ');
+      expect(body).toMatch(/distributed system|système distribué/);
+    }
+  });
+
   it('addresses double execution on the Reliability page, with one slider', () => {
     expect(PRICES.reliability.dimensions).toHaveLength(1);
     for (const content of [en, fr]) {
@@ -834,13 +924,17 @@ describe('each Failure mode is treated by one Offer (ADR 14)', () => {
         'migration',
         'reliability',
         'reliability',
+        'scaling',
       ]);
     }
   });
 
-  it('leaves the Audit treating none: it is the way in for all four', () => {
+  it('leaves the Audit treating none: it is the way in for all of them', () => {
     for (const content of [en, fr] as ResumeContent[]) {
       expect(content.failureModes.some((mode) => mode.offer === 'audit')).toBe(false);
+      // Nor the Build: the reader who wants something built is not suffering a
+      // failure (ADR 19).
+      expect(content.failureModes.some((mode) => mode.offer === 'build')).toBe(false);
       expect(content.problem.audit.cta.trim().length).toBeGreaterThan(0);
     }
   });
@@ -872,6 +966,12 @@ describe('a site short enough to be read (ADR 18)', () => {
     [...walkStrings(content)]
       .filter(([path]) => !NOT_PROSE.test(path))
       .reduce((sum, [, text]) => sum + text.split(/\s+/).filter(Boolean).length, 0);
+
+  it('counts the same words whether the French spaces break or not', () => {
+    // The budgets were set on plain spaces; `\s` also matches U+00A0 and
+    // U+202F, so the unbreakable ones neither add nor merge a word.
+    expect(wordsOf(RESUME.fr)).toBe(wordsOf(fr));
+  });
 
   for (const page of PAGES) {
     for (const locale of LOCALES) {

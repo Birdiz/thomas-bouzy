@@ -42,7 +42,7 @@ const { locale, t } = Astro.props;
       </div>
 
       {/* The Service area, so that the home page names the towns a local
-          Client searches with, and not only the Offer pages (ADR 19). */}
+          Client searches with, and not only the Offer pages (ADR 20). */}
       <p class="contact__location">
         {t.contact.locationLine.replace('{towns}', serviceAreaTowns(locale))}
       </p>

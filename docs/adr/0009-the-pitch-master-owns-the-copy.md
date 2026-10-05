@@ -1,7 +1,7 @@
 # 9. The design canvas owns the design; the pitch master owns the copy
 
 - Status: amended by [ADR 10](0010-the-site-owns-its-own-design.md), 2026-08-29, and by
-  [ADR 19](0019-the-buyers-objections-before-the-buyer-asks.md), 2026-10-05 (the honesty
+  [ADR 20](0020-the-buyers-objections-before-the-buyer-asks.md), 2026-10-05 (the honesty
   rule is applied on the Achievements, no longer stated as a principle)
 - Date: 2026-08-29
 

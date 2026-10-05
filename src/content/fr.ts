@@ -69,6 +69,11 @@ export const fr = {
       text: 'Les défauts trouvés par les utilisateurs. Le bug était visible des heures plus tôt ; rien ne le signalait.',
       offer: 'reliability',
     },
+    {
+      quote: "« Le jour de l'opération commerciale, tout tombe. »",
+      text: 'Le pic qui fait tout tomber. Le système tient au quotidien, et lâche le jour où tout le monde arrive.',
+      offer: 'scaling',
+    },
   ],
 
   position: {
@@ -91,7 +96,7 @@ export const fr = {
     },
     {
       title: 'Ce que je laisse derrière moi vous appartient.',
-      text: "Le code, les accès, les tests et les décisions écrites restent chez vous : n'importe quel développeur Symfony peut reprendre là où je m'arrête.",
+      text: 'Code, accès, tests et décisions écrites restent chez vous : un autre développeur reprend derrière moi.',
       cost: 'Du temps passé à écrire, facturé comme le reste.',
     },
   ],
@@ -132,7 +137,7 @@ export const fr = {
     },
     {
       id: 'wallet-event-sourcing',
-      title: "Retracer chaque mouvement d'argent de 1,5 million d'utilisateurs",
+      title: "Tracer l'argent de 1,5 million d'utilisateurs",
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
       plain:
@@ -150,7 +155,7 @@ export const fr = {
       plain:
         "Un service qui place et réajuste tout seul de l'argent sur des marchés, où un ordre parti ne se rattrape pas.",
       approach:
-        "Des opérations DeFi sur Solana, depuis un microservice Node.js avec le SDK Meteora et Fireblocks pour la signature. Devnet, puis fonds réels. Intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
+        "Des opérations DeFi sur Solana, depuis un microservice Node.js avec le SDK Meteora et Fireblocks pour la signature. Intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
       result:
         'En production sur fonds réels. Signature idempotente et réconciliation avec la chaîne conçues dès le départ, puis ouvertes aux autres équipes en service partagé.',
     },
@@ -181,12 +186,12 @@ export const fr = {
     {
       id: 'open-data-directories',
       title: 'Reconstituer en 40 secondes un annuaire fait à la main',
-      org: 'Projet personnel',
+      org: 'Pour un client',
       period: '2026',
       plain:
         "Reconstituer en quelques secondes un annuaire qu'on établissait à la main, commune par commune.",
       approach:
-        "Les données ouvertes (RNA, Annuaire de l'administration), enrichies depuis les sites publics des collectivités, avec la provenance de chaque valeur. Local-first : un fichier SQLite sur la machine de l'utilisateur.",
+        "Les données ouvertes, enrichies depuis les sites publics des collectivités, avec la provenance de chaque valeur. Local-first : un fichier SQLite sur la machine de l'utilisateur.",
       result:
         "Sur l'Ille-et-Vilaine, 31 273 associations de 332 communes en 40 secondes. Un pré-filtre mesuré ramène les pages à analyser de 40 % à 6,5 %.",
       link: {
@@ -201,7 +206,7 @@ export const fr = {
     title: 'En bref',
     paragraphs: [
       "Je travaille en PHP et Symfony, et je reprends aussi le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des historiques qu'on peut rejouer, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
-      'Je vis dans le Grand Est, à la campagne. Je travaille surtout à distance, et je viens sur place quand il le faut.',
+      'Je vis dans le Grand Est, à la campagne. Je travaille surtout à distance, et viens sur place si besoin.',
     ],
     mentoringKicker: 'Transmettre, un fil rouge',
     careerLine: "En poste plutôt qu'en mission ?",
@@ -284,6 +289,16 @@ export const fr = {
     reliability: {
       name: 'Fiabilisation',
       plain: 'Savoir expliquer un écart de stock, un solde ou un bug, au lieu de le deviner.',
+    },
+    scaling: {
+      name: 'Tenue en charge',
+      plain:
+        'Que votre système tienne le jour où tout le monde arrive, et se relève seul quand une pièce lâche.',
+    },
+    build: {
+      name: 'Création sur mesure',
+      plain:
+        "Construire l'application qui vous manque, pensée dès le départ pour qu'un autre puisse la reprendre.",
     },
     reinforcement: {
       name: 'Renfort senior',
@@ -600,6 +615,148 @@ export const fr = {
         },
       ],
     },
+    scaling: {
+      meta: {
+        title: 'Montée en charge et haute disponibilité PHP/Symfony',
+        description:
+          'Votre application ralentit ou tombe aux pics de trafic ? Tir de charge, goulot trouvé, corrections mesurées : diagnostic à prix fixe. Prix publics.',
+      },
+      heading: 'Montée en charge et haute disponibilité de votre application PHP/Symfony',
+      priceHeading: 'Combien coûte un diagnostic de montée en charge ?',
+      sentences: [
+        "« Ça rame dès qu'on a du monde. »",
+        "« On a doublé les serveurs, et ça n'a rien changé. »",
+      ],
+      delivered: [
+        {
+          title: 'Phase 1 : un tir de charge qui reproduit votre pic',
+          text: "Avant de rien modifier : on part d'un chiffre, pas d'une impression.",
+        },
+        {
+          title: 'Le goulot, trouvé et chiffré',
+          text: 'Base de données, cache, files de messages ou code : ce qui cède en premier, et ce que chaque correction rapporte.',
+        },
+        {
+          title: 'Phase 2 : les corrections, mesurées',
+          text: 'Chacune repasse sous le même tir de charge.',
+        },
+        {
+          title: 'Un système qui tombe proprement',
+          text: "Contre-pression sur les files, disjoncteurs, mode dégradé : dans un système distribué, une pièce qui lâche n'emporte plus le reste. Le scénario de charge reste dans votre CI, avec un runbook d'incident.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          services: {
+            label: 'Services concernés',
+            options: { one: 'Un service', some: '2 à 5', many: '6 ou plus' },
+          },
+          observability: {
+            label: 'Supervision existante',
+            options: { good: 'Bonne', partial: 'Partielle', none: 'Aucune' },
+          },
+        },
+        amounts: { plan: 'Diagnostic, phase 1 à prix fixe' },
+        duration: 'Corrections, à la journée',
+      },
+      rules: [
+        'Une Tenue en charge commence toujours par un tir de charge qui reproduit le pic, avant toute modification.',
+        'Elle se vend en deux phases : le diagnostic à prix fixe, puis les corrections à {dayRate} HT la journée.',
+      ],
+      notTheRightChoice: [
+        {
+          text: "Le problème est un chiffre faux, pas un système lent : la {offer} s'en occupe.",
+          offer: 'reliability',
+        },
+        {
+          text: "Vous ne savez pas encore où est le problème : un {offer} le situera d'abord.",
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: 'Ajouter des serveurs ne suffit-il pas ?',
+          answer:
+            "Rarement. Si le goulot est la base de données ou un service externe, dix serveurs l'attendent ensemble. Le tir de charge dit où il est.",
+        },
+        {
+          question: 'Le tir de charge risque-t-il de faire tomber la production ?',
+          answer:
+            "Il se fait sur une copie fidèle, ou en production par paliers, hors des heures d'affluence, avec un arrêt prêt.",
+        },
+      ],
+    },
+    build: {
+      meta: {
+        title: "Développement d'application métier sur mesure en PHP/Symfony",
+        description:
+          'Une application métier sur mesure en PHP/Symfony, construite pour être reprise : cadrage à prix fixe, puis développement à la journée. Prix publics.',
+      },
+      heading: "Développement d'application sur mesure en PHP/Symfony",
+      priceHeading: 'Combien coûte une application sur mesure ?',
+      sentences: [
+        '« Toute notre activité tient sur un fichier Excel que tout le monde modifie en même temps. »',
+        "« On a l'idée du service, pas l'équipe pour le construire. »",
+      ],
+      delivered: [
+        {
+          title: 'Phase 1 : le cadrage, à prix fixe',
+          text: "L'architecture, les décisions écrites, et un premier squelette qui tourne de bout en bout. Il vous appartient.",
+        },
+        {
+          title: 'Phase 2 : la construction, testée dès la première semaine',
+          text: 'Livrée par étapes que vous utilisez, pas en un bloc à la fin.',
+        },
+        {
+          title: 'Une passation, pas une dépendance',
+          text: "Le code, les tests et les décisions écrites : une autre équipe peut prendre le relais sans moi. C'est ce qui manque aux applications que je reprends.",
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: "Ce qu'il faut construire",
+            options: {
+              small: 'Un outil interne',
+              medium: 'Une application métier',
+              large: 'Un service critique',
+            },
+          },
+          integrations: {
+            label: 'Systèmes à relier',
+            options: { none: 'Aucun', few: '1 ou 2', many: '3 ou plus' },
+          },
+        },
+        amounts: { plan: 'Cadrage, phase 1 à prix fixe' },
+        duration: 'Construction, à la journée',
+      },
+      rules: [
+        "Une Création sur mesure ne remplace jamais un système qui tourne : celui-là relève d'une Migration, ou d'abord d'un Audit.",
+        'Elle se vend en deux phases : le cadrage à prix fixe, puis la construction à {dayRate} HT la journée. Vous décidez de la seconde cadrage en main.',
+      ],
+      notTheRightChoice: [
+        {
+          text: 'Votre application existe déjà et tourne : la {offer} la fera évoluer sans la remplacer.',
+          offer: 'migration',
+        },
+        {
+          text: "Un logiciel du marché fait déjà le travail : un {offer} vous dira si c'est le bon calcul.",
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: 'Pourquoi le nombre de systèmes à relier pèse-t-il sur le prix ?',
+          answer:
+            "Chaque système à relier (ERP, paiement, comptabilité) a ses règles, ses pannes et ses délais. C'est là qu'un projet dérape, plus souvent que dans les écrans.",
+        },
+        {
+          question: "Et une fois l'application livrée ?",
+          answer:
+            'Votre équipe la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
+        },
+      ],
+    },
     reinforcement: {
       meta: {
         title: 'Tech lead / architecte Symfony freelance à temps partiel',
@@ -715,8 +872,7 @@ export const fr = {
   contact: {
     kicker: 'Contact',
     title: 'Parlons de votre application.',
-    blurb:
-      'Un appel de 30 minutes, gratuit : vous décrivez la situation, je vous dis franchement si je peux aider.',
+    blurb: 'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider.',
     cta: 'Réserver un appel',
     revealPhone: 'Afficher le numéro',
     locationLine: 'Grand Est, France · Sur place à {towns} · À distance depuis 8 ans',

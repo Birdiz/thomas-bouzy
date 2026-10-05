@@ -68,6 +68,11 @@ export const en = {
       text: 'Defects found by users. The bug was visible hours earlier; nothing flagged it.',
       offer: 'reliability',
     },
+    {
+      quote: '“The day of the big campaign, everything goes down.”',
+      text: 'The peak that brings everything down. The system holds every day, and gives way the day everyone shows up.',
+      offer: 'scaling',
+    },
   ],
 
   position: {
@@ -90,7 +95,7 @@ export const en = {
     },
     {
       title: 'What I leave behind belongs to you.',
-      text: 'The code, the access, the tests and the written decisions stay with you: any Symfony developer can pick up where I stop.',
+      text: 'Code, access, tests and written decisions stay with you: another developer picks up after me.',
       cost: 'Time spent writing, billed like the rest.',
     },
   ],
@@ -131,7 +136,7 @@ export const en = {
     },
     {
       id: 'wallet-event-sourcing',
-      title: 'Tracing every money movement for 1.5 million users',
+      title: 'Tracing the money of 1.5 million users',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
       plain:
@@ -149,7 +154,7 @@ export const en = {
       plain:
         'A service that places and readjusts money on markets by itself, where an order once sent cannot be called back.',
       approach:
-        'DeFi operations on Solana, from a Node.js microservice with the Meteora SDK and Fireblocks for signing. Devnet first, then real funds. SDK integration and transaction operation, no smart contract authoring.',
+        'DeFi operations on Solana, from a Node.js microservice with the Meteora SDK and Fireblocks for signing. SDK integration and transaction operation, no smart contract authoring.',
       result:
         'In production on real funds. Idempotent signing and reconciliation against the chain designed in from the start, then opened to other teams as a shared service.',
     },
@@ -179,12 +184,12 @@ export const en = {
     {
       id: 'open-data-directories',
       title: 'Rebuilding in 40 seconds a directory once compiled by hand',
-      org: 'Personal project',
+      org: 'For a client',
       period: '2026',
       plain:
         'Rebuilding in seconds a directory that used to be compiled by hand, one town at a time.',
       approach:
-        "Open data (the RNA and the government directory), enriched from the public sites of local authorities, with the provenance of every value. Local-first: one SQLite file on the user's machine.",
+        "Open data, enriched from the public sites of local authorities, with the provenance of every value. Local-first: one SQLite file on the user's machine.",
       result:
         'On Ille-et-Vilaine, 31,273 associations from 332 communes in 40 seconds. A measured pre-filter cut the pages to analyse from 40% to 6.5%.',
       link: {
@@ -199,7 +204,7 @@ export const en = {
     title: 'In short',
     paragraphs: [
       'I work in PHP and Symfony, and I also take on the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, histories you can replay, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
-      'I live in the Grand Est countryside. I work mostly remotely, and come on site when it is needed.',
+      'I live in the Grand Est countryside. I work mostly remotely, and come on site when needed.',
     ],
     mentoringKicker: 'Passing it on — a thread through all of it',
     careerLine: 'Hiring rather than contracting?',
@@ -275,6 +280,16 @@ export const en = {
     reliability: {
       name: 'Reliability',
       plain: 'Being able to explain a stock gap, a balance or a bug, instead of guessing.',
+    },
+    scaling: {
+      name: 'Scaling',
+      plain:
+        'Keeping your system standing on the day everyone shows up, and back on its feet when a part fails.',
+    },
+    build: {
+      name: 'Custom build',
+      plain:
+        'Building the application you are missing, designed from day one so that someone else can take it over.',
     },
     reinforcement: {
       name: 'Senior reinforcement',
@@ -504,6 +519,148 @@ export const en = {
         },
       ],
     },
+    scaling: {
+      meta: {
+        title: 'Scaling PHP/Symfony under load, with high availability',
+        description:
+          'Does your application slow down or fall over at peak traffic? Load test, bottleneck found, measured fixes: a fixed-price diagnosis. Public prices.',
+      },
+      heading: 'Scaling and high availability for your PHP/Symfony application',
+      priceHeading: 'How much does a load diagnosis cost?',
+      sentences: [
+        '“It crawls as soon as we get busy.”',
+        '“We doubled the servers, and nothing changed.”',
+      ],
+      delivered: [
+        {
+          title: 'Phase 1: a load test that reproduces your peak',
+          text: 'Before changing anything: we start from a number, not an impression.',
+        },
+        {
+          title: 'The bottleneck, found and costed',
+          text: 'Database, cache, message queues or code: what gives way first, and what each fix buys.',
+        },
+        {
+          title: 'Phase 2: the fixes, measured',
+          text: 'Each one goes back under the same load test.',
+        },
+        {
+          title: 'A system that fails gracefully',
+          text: 'Backpressure on queues, circuit breakers, a degraded mode: in a distributed system, one part failing no longer takes the rest down. The load scenario stays in your CI, with an incident runbook.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          services: {
+            label: 'Services involved',
+            options: { one: 'One service', some: '2 to 5', many: '6 or more' },
+          },
+          observability: {
+            label: 'Existing monitoring',
+            options: { good: 'Good', partial: 'Partial', none: 'None' },
+          },
+        },
+        amounts: { plan: 'Diagnosis, phase 1 at a fixed price' },
+        duration: 'Fixes, by the day',
+      },
+      rules: [
+        'Scaling always starts with a load test that reproduces the peak, before any change.',
+        'It is sold in two phases: the fixed-price diagnosis, then the fixes at {dayRate} excl. VAT a day.',
+      ],
+      notTheRightChoice: [
+        {
+          text: 'The problem is a wrong figure, not a slow system: {offer} deals with that.',
+          offer: 'reliability',
+        },
+        {
+          text: "You don't know yet where the problem is: an {offer} will locate it first.",
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: "Isn't adding servers enough?",
+          answer:
+            'Rarely. If the bottleneck is the database or an external service, ten servers wait for it together. The load test says where it is.',
+        },
+        {
+          question: 'Could the load test bring production down?',
+          answer:
+            'It runs on a faithful copy, or on production in steps, outside peak hours, with a stop ready.',
+        },
+      ],
+    },
+    build: {
+      meta: {
+        title: 'Custom PHP/Symfony business application development',
+        description:
+          'A custom PHP/Symfony business application, built to be taken over: a fixed-price framing, then development by the day. Public prices.',
+      },
+      heading: 'Custom application development in PHP/Symfony',
+      priceHeading: 'How much does a custom application cost?',
+      sentences: [
+        '“Our whole business runs on a spreadsheet everyone edits at the same time.”',
+        '“We have the idea for the service, not the team to build it.”',
+      ],
+      delivered: [
+        {
+          title: 'Phase 1: the framing, at a fixed price',
+          text: 'The architecture, the decisions written down, and a first skeleton that runs end to end. It is yours.',
+        },
+        {
+          title: 'Phase 2: the build, tested from the first week',
+          text: 'Delivered in steps you use, not in one block at the end.',
+        },
+        {
+          title: 'A handover, not a dependency',
+          text: 'The code, the tests and the written decisions: another team can take over without me. It is what the applications I take over are missing.',
+        },
+      ],
+      estimator: {
+        dimensions: {
+          size: {
+            label: 'What needs building',
+            options: {
+              small: 'An internal tool',
+              medium: 'A business application',
+              large: 'A critical service',
+            },
+          },
+          integrations: {
+            label: 'Systems to connect',
+            options: { none: 'None', few: '1 or 2', many: '3 or more' },
+          },
+        },
+        amounts: { plan: 'Framing, phase 1 at a fixed price' },
+        duration: 'Build, by the day',
+      },
+      rules: [
+        'A Custom build never replaces a running system: that is a Migration, or first an Audit.',
+        'It is sold in two phases: the fixed-price framing, then the build at {dayRate} excl. VAT a day. You decide on the second with the framing in hand.',
+      ],
+      notTheRightChoice: [
+        {
+          text: 'Your application already exists and runs: a {offer} will evolve it without replacing it.',
+          offer: 'migration',
+        },
+        {
+          text: 'An off-the-shelf product already does the job: an {offer} will tell you whether it is the right call.',
+          offer: 'audit',
+        },
+      ],
+      faq: [
+        {
+          question: 'Why does the number of systems to connect weigh on the price?',
+          answer:
+            'Each system to connect (ERP, payments, accounting) has its own rules, failures and delays. That is where a project overruns, more often than in the screens.',
+        },
+        {
+          question: 'And once the application is delivered?',
+          answer:
+            'Your team takes it over with the tests and the written decisions, or I maintain it monthly, under a Takeover.',
+        },
+      ],
+    },
     reinforcement: {
       meta: {
         title: 'Part-time Symfony tech lead / architect, freelance',
@@ -579,8 +736,7 @@ export const en = {
   contact: {
     kicker: 'Contact',
     title: "Let's talk about your application.",
-    blurb:
-      'A free 30-minute call: you describe the situation, I tell you plainly whether I can help.',
+    blurb: 'A free 30-minute call: I tell you plainly whether I can help.',
     cta: 'Book a call',
     revealPhone: 'Show phone number',
     locationLine: 'Grand Est, France · On site in {towns} · Remote for 8+ years',

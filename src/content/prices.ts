@@ -235,6 +235,60 @@ export const PRICES: Record<OfferId, PriceTable> = {
     ],
   },
 
+  // Shaped like the Migration: the load diagnosis is the fixed-price first
+  // phase, and the corrections are billed by the day, so the sliders move the
+  // diagnosis and the duration. Observability is the teaching slider: without
+  // metrics, finding the bottleneck costs more (ADR 19).
+  scaling: {
+    dimensions: [
+      { id: 'services', options: ['one', 'some', 'many'] },
+      { id: 'observability', options: ['good', 'partial', 'none'] },
+    ],
+    amounts: ['plan'],
+    duration: 'execution',
+    combinations: [
+      // 4–5, 5–6 and 6–7 days.
+      { options: ['one', 'good'], amounts: { plan: range(2200, 2750) }, weeks: range(2, 4) },
+      { options: ['one', 'partial'], amounts: { plan: range(2750, 3300) }, weeks: range(3, 5) },
+      { options: ['one', 'none'], amounts: { plan: range(3300, 3850) }, weeks: range(4, 6) },
+      // 6–7, 7–8 and 8–10 days.
+      { options: ['some', 'good'], amounts: { plan: range(3300, 3850) }, weeks: range(4, 6) },
+      { options: ['some', 'partial'], amounts: { plan: range(3850, 4400) }, weeks: range(5, 8) },
+      { options: ['some', 'none'], amounts: { plan: range(4400, 5500) }, weeks: range(6, 10) },
+      // 9–10, 10–12 and 12–14 days.
+      { options: ['many', 'good'], amounts: { plan: range(4950, 5500) }, weeks: range(6, 10) },
+      { options: ['many', 'partial'], amounts: { plan: range(5500, 6600) }, weeks: range(8, 12) },
+      { options: ['many', 'none'], amounts: { plan: range(6600, 7700) }, weeks: range(10, 16) },
+    ],
+  },
+
+  // Shaped like the Migration too: the framing is the fixed-price first phase,
+  // ending in a walking skeleton, and the build is billed by the day. Each
+  // system to connect has its own rules, failures and delays, which is where
+  // a build overruns: the integrations slider says so (ADR 19).
+  build: {
+    dimensions: [
+      { id: 'size', options: ['small', 'medium', 'large'] },
+      { id: 'integrations', options: ['none', 'few', 'many'] },
+    ],
+    amounts: ['plan'],
+    duration: 'execution',
+    combinations: [
+      // 3–4, 4–5 and 5–6 days.
+      { options: ['small', 'none'], amounts: { plan: range(1650, 2200) }, weeks: range(3, 5) },
+      { options: ['small', 'few'], amounts: { plan: range(2200, 2750) }, weeks: range(4, 6) },
+      { options: ['small', 'many'], amounts: { plan: range(2750, 3300) }, weeks: range(5, 8) },
+      // 5–6, 6–8 and 8–10 days.
+      { options: ['medium', 'none'], amounts: { plan: range(2750, 3300) }, weeks: range(6, 10) },
+      { options: ['medium', 'few'], amounts: { plan: range(3300, 4400) }, weeks: range(8, 12) },
+      { options: ['medium', 'many'], amounts: { plan: range(4400, 5500) }, weeks: range(10, 16) },
+      // 8–10, 10–12 and 12–15 days.
+      { options: ['large', 'none'], amounts: { plan: range(4400, 5500) }, weeks: range(10, 16) },
+      { options: ['large', 'few'], amounts: { plan: range(5500, 6600) }, weeks: range(14, 20) },
+      { options: ['large', 'many'], amounts: { plan: range(6600, 8250) }, weeks: range(18, 28) },
+    ],
+  },
+
   reinforcement: {
     dimensions: [
       {
@@ -274,7 +328,7 @@ export function combinationFor(
 /**
  * The lowest price of every amount an Offer charges, headline first: a
  * Takeover's set-up, then its monthly plan. Showing the headline alone made a
- * Takeover read as a one-off 2,000 € (ADR 19).
+ * Takeover read as a one-off 2,000 € (ADR 20).
  */
 export function fromPrices(id: OfferId): { amount: AmountId; min: number }[] {
   const table = PRICES[id];
