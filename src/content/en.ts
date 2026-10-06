@@ -17,11 +17,13 @@ export const en = {
     skipToContent: 'Skip to content',
     languageSwitcher: 'Language',
     switchToOther: 'Lire en français',
+    breadcrumb: 'Breadcrumb',
     mainNavigation: 'Main',
     portraitAlt: 'Portrait of Thomas Bouzy',
   },
 
   nav: {
+    home: 'Home',
     offers: 'Offers',
     partners: 'Partners',
     publicSector: 'Public sector',
@@ -303,7 +305,6 @@ export const en = {
   },
 
   offerPage: {
-    kicker: 'Offer',
     sentences: 'Does this sound like you?',
     delivered: 'What you receive',
     disclaimer: 'An order of magnitude, not a quote.',

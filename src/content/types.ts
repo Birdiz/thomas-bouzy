@@ -218,7 +218,6 @@ export interface OfferPage {
 
 /** Labels every Offer page shares. */
 export interface OfferPageLabels {
-  kicker: string;
   sentences: string;
   delivered: string;
   /** Says what the numbers are: an order of magnitude, never a quote. */
@@ -311,10 +310,14 @@ export interface ResumeContent {
     languageSwitcher: string;
     switchToOther: string;
     mainNavigation: string;
+    /** Names the trail from the home page to the page the reader is on. */
+    breadcrumb: string;
     portraitAlt: string;
   };
 
   nav: {
+    /** The home page, first in the breadcrumb of every other page. */
+    home: string;
     offers: string;
     /** The Partners page, in the footer's list of pages. */
     partners: string;

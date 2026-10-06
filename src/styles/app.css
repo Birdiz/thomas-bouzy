@@ -1188,6 +1188,38 @@ a {
 .offer__head {
   padding-block: 64px 36px;
 }
+
+/* The kicker of every page but the home page, as a trail back to it. */
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.breadcrumb__list li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.breadcrumb a {
+  /* A 24px-tall target on a 12px line. */
+  display: inline-block;
+  padding-block: 5px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-divider);
+  text-underline-offset: 4px;
+}
+.breadcrumb a:hover {
+  color: var(--color-text);
+  text-decoration-color: currentColor;
+}
+.breadcrumb [aria-current="page"] {
+  color: var(--color-text);
+}
 .offer__name {
   font-size: clamp(38px, 5vw, 60px);
   line-height: 1.05;
@@ -1319,6 +1351,16 @@ a {
 }
 .estimator__amount {
   white-space: nowrap;
+}
+/* What a monthly amount is made of, under it: in the table and in the figure. */
+.estimator__detail {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-muted);
+  white-space: normal;
 }
 
 /* The live estimator: one slider per dimension, then the figures it selects.

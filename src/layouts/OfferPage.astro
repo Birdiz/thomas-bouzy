@@ -1,4 +1,5 @@
 ---
+import Breadcrumb from '../components/Breadcrumb.astro';
 import BookingSection from '../components/offer/BookingSection.astro';
 import Estimator from '../components/offer/Estimator.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -10,7 +11,7 @@ import { formatEuros } from '../lib/money.ts';
 import { fromLine } from '../lib/offer-price.ts';
 import { fillPrices } from '../lib/price-tokens.ts';
 import { service } from '../lib/structured-data.ts';
-import { linkTo, type Route } from '../routes.ts';
+import { homePath, linkTo, type Route } from '../routes.ts';
 import { LOCALE_TAG, SITE } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
@@ -67,9 +68,14 @@ const num = (n: number) => String(n).padStart(2, '0');
   <main id="main" class="offer">
     {/* 1. The plain line: what the Offer does, before any word to learn. The
         H1 carries the words a buyer searches with; the catalogue name stays
-        in the kicker. */}
+        in the breadcrumb above it. */}
     <header class="offer__head container">
-      <p class="kicker">{labels.kicker} · {summary.name}</p>
+      <Breadcrumb
+        locale={locale}
+        t={t}
+        via={[{ name: t.nav.offers, href: `${homePath(locale)}#offers` }]}
+        current={summary.name}
+      />
       <h1 class="offer__name">{page.heading}</h1>
       <p class="offer__plain">{summary.plain}</p>
       {/* The price, in the first screen: on a phone it used to be three

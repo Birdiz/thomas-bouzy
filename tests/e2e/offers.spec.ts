@@ -2,7 +2,7 @@ import { RESUME } from '../../src/content/index.ts';
 import { OFFER_IDS, type OfferId } from '../../src/content/offers.ts';
 import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../../src/content/prices.ts';
 import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
-import { linkTo, ROUTES } from '../../src/routes.ts';
+import { homePath, linkTo, ROUTES } from '../../src/routes.ts';
 import { CONTACT } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
@@ -24,9 +24,15 @@ for (const route of OFFER_ROUTES) {
     test('opens on the Offer, its search heading and its plain line', async ({ page }) => {
       await page.goto(route.path);
       // The H1 carries the words a buyer searches with; the catalogue name is
-      // the kicker above it (ADR 18).
+      // the last step of the breadcrumb above it (ADR 18), which leads back to
+      // the Offers without going through the menu.
       await expect(page.locator('h1')).toHaveText(t.offerPages[offer]?.heading ?? '∅');
-      await expect(page.locator('.offer__head .kicker')).toContainText(t.offers[offer].name);
+      const breadcrumb = page.getByRole('navigation', { name: t.a11y.breadcrumb });
+      await expect(breadcrumb.locator('[aria-current="page"]')).toHaveText(t.offers[offer].name);
+      await expect(breadcrumb.getByRole('link', { name: t.nav.offers })).toHaveAttribute(
+        'href',
+        `${homePath(route.locale)}#offers`,
+      );
       await expect(page.getByText(t.offers[offer].plain)).toBeVisible();
     });
 

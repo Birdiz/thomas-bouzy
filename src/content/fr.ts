@@ -18,11 +18,13 @@ export const fr = {
     skipToContent: 'Aller au contenu',
     languageSwitcher: 'Langue',
     switchToOther: 'Read in English',
+    breadcrumb: "Fil d'Ariane",
     mainNavigation: 'Principale',
     portraitAlt: 'Portrait de Thomas Bouzy',
   },
 
   nav: {
+    home: 'Accueil',
     offers: 'Offres',
     partners: 'Partenaires',
     publicSector: 'Collectivités',
@@ -313,7 +315,6 @@ export const fr = {
   },
 
   offerPage: {
-    kicker: 'Offre',
     sentences: 'Vous reconnaissez-vous ici ?',
     delivered: 'Ce que vous recevez',
     disclaimer: 'Ordre de grandeur, pas un devis.',
