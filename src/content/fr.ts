@@ -878,7 +878,7 @@ export const fr = {
         },
         {
           title: 'Civic tech, bénévolat',
-          text: 'Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées.',
+          text: "Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées. Et un CRM repris de A à Z à deux développeurs, en production : plus de 1 000 membres s'y connectent en SSO pour suivre leurs démarches.",
         },
       ],
     },
