@@ -1,0 +1,103 @@
+---
+/**
+ * PROTOTYPE — throwaway, branch `prototype/segment-entry`. Never merge.
+ * The floating bar that cycles `?variant=`. Rendered on the dev server only.
+ */
+import { VARIANTS } from './segments.ts';
+---
+
+{
+  import.meta.env.DEV && (
+    <div class="proto-bar" role="region" aria-label="Prototype : variantes">
+      <button type="button" data-step="-1" aria-label="Variante précédente">
+        ←
+      </button>
+      <div class="proto-bar__label">
+        <strong data-proto-name />
+        <span data-proto-note />
+      </div>
+      <button type="button" data-step="1" aria-label="Variante suivante">
+        →
+      </button>
+      <script type="application/json" id="proto-variants" set:html={JSON.stringify(VARIANTS)} />
+    </div>
+  )
+}
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.proto-bar');
+  if (bar) {
+    const variants: { key: string; name: string; note: string }[] = JSON.parse(
+      document.getElementById('proto-variants')?.textContent ?? '[]',
+    );
+    const keys = variants.map((v) => v.key);
+    const show = (key: string) => {
+      const v = variants.find((x) => x.key === key) ?? variants[1];
+      for (const el of document.querySelectorAll<HTMLElement>('[data-proto-variant]')) {
+        el.hidden = el.dataset.protoVariant !== v.key;
+      }
+      bar.querySelector('[data-proto-name]')!.textContent = `${v.key} · ${v.name}`;
+      bar.querySelector('[data-proto-note]')!.textContent = v.note;
+      const url = new URL(location.href);
+      url.searchParams.set('variant', v.key);
+      history.replaceState(null, '', url);
+      document.dispatchEvent(new CustomEvent('proto:variant', { detail: v.key }));
+      return v.key;
+    };
+    let current = show(new URLSearchParams(location.search).get('variant') ?? 'A');
+    const step = (d: number) => {
+      current = show(keys[(keys.indexOf(current) + d + keys.length) % keys.length]);
+    };
+    bar.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-step]');
+      if (b) step(Number(b.dataset.step));
+    });
+    document.addEventListener('keydown', (e) => {
+      const el = document.activeElement as HTMLElement | null;
+      if (el?.matches('input, textarea, [contenteditable]')) return;
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+  }
+</script>
+
+<style>
+  .proto-bar {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: calc(100vw - 32px);
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: #fff200;
+    color: #111;
+    font: 14px/1.3 system-ui, sans-serif;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.5);
+  }
+  .proto-bar button {
+    all: unset;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #111;
+    color: #fff200;
+    font-size: 16px;
+  }
+  .proto-bar__label {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .proto-bar__label span {
+    font-size: 12px;
+    opacity: 0.75;
+  }
+</style>

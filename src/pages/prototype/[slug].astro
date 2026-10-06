@@ -1,0 +1,175 @@
+---
+/**
+ * PROTOTYPE — throwaway, branch `prototype/segment-entry`. Never merge.
+ *
+ * The Critical-systems landing page the Segment does not have: what the strip
+ * (variant A) sends an éditeur or a scale-up to. Built on the dev server only:
+ * the production build emits no path here. Copy is provisional and has not been
+ * checked against the pitch master (ADR 9).
+ */
+import type { GetStaticPaths } from 'astro';
+import BookingSection from '../../components/offer/BookingSection.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import { RESUME } from '../../content/index.ts';
+import { OFFERS, type AchievementId, type OfferId } from '../../content/offers.ts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fromLine } from '../../lib/offer-price.ts';
+import { linkTo, type Route } from '../../routes.ts';
+
+export const getStaticPaths = (() =>
+  import.meta.env.DEV ? [{ params: { slug: 'systemes-critiques' } }] : []) satisfies GetStaticPaths;
+
+const locale = 'fr';
+const t = RESUME[locale];
+// A borrowed registry entry: the page is not in src/routes.ts, on purpose.
+const route: Route = {
+  page: { id: 'partners', paths: { fr: '/prototype/systemes-critiques/' } },
+  locale,
+  path: '/prototype/systemes-critiques/',
+};
+
+/* In the order this reader would buy them, each re-angled for them. */
+const ANGLES: [OfferId, string][] = [
+  ['audit', "Avant une levée ou un rachat : sa variante due diligence, écrite pour qui n'est pas l'équipe."],
+  ['reliability', "Paiements, soldes, double exécution : l'écart s'explique au lieu de se deviner."],
+  ['scaling', 'Le pic reproduit en test de charge, avant de toucher à quoi que ce soit.'],
+  ['migration', "Nouvelle version, nouveau contrat d'API, sans coupure pour vos utilisateurs."],
+  ['reinforcement', 'Lead ou architecte à temps partiel dans votre équipe.'],
+  ['build', 'Un nouveau service, conçu pour être repris dès la première semaine.'],
+];
+const offers = ANGLES.filter(([id]) => OFFERS[id].segments.includes('critical-systems')).map(
+  ([id, angle]) => ({ ...t.offers[id], angle, href: linkTo(id, locale).href, from: fromLine(id, locale, t) }),
+);
+
+/* The home page's Client sentences, kept to the Offers this Segment buys. */
+const mine = new Set(offers.map((o) => o.name));
+const quotes = [
+  ...t.failureModes.filter((m) => mine.has(t.offers[m.offer].name)).map((m) => m.quote),
+  // Not on the site today: the Reliability page's double execution, said out loud.
+  '« Un paiement est parti deux fois, et personne ne sait dire lequel. »',
+];
+
+const PROOF: AchievementId[] = ['wallet-event-sourcing', 'live-api-redesign', 'on-chain-operations'];
+const proof = PROOF.map((id) => t.achievements.find((a) => a.id === id)!);
+
+const points = [
+  {
+    title: 'Exactement une fois',
+    text: "Idempotence, outbox, rejeu : un message reçu deux fois n'est appliqué qu'une fois, et on peut le prouver.",
+  },
+  {
+    title: 'Chaque mouvement explicable',
+    text: 'Event Sourcing ou piste d’audit : un solde se reconstruit à partir des faits, il ne se devine pas.',
+  },
+  {
+    title: 'Fullstack, la profondeur côté back-end',
+    text: "Architecture logicielle, API et données, jusqu'au front quand il le faut. PHP/Symfony au quotidien, Node.js en production, ouvert à Python.",
+  },
+  {
+    title: 'À distance, dans votre équipe',
+    text: 'Vos outils, vos rituels. Les décisions sont écrites et la passation commence dès la première semaine.',
+  },
+];
+
+const book = {
+  ...t.partnersPage!.book,
+  title: 'Un appel de 30 minutes sur votre système.',
+  text: 'Je vous dis franchement si je peux aider, et par quelle offre commencer.',
+  orWrite: 'Vous préférez écrire ?',
+};
+---
+
+<BaseLayout
+  route={route}
+  title="PROTOTYPE · Éditeurs et scale-ups : systèmes où une erreur coûte de l'argent"
+  description="Prototype"
+  ogType="website"
+  structuredData={{}}
+>
+  <SiteHeader route={route} t={t} contactHref="#book" />
+  <main id="main" class="offer">
+    <header class="offer__head container">
+      <nav class="kicker breadcrumb" aria-label={t.a11y.breadcrumb}>
+        <ol class="breadcrumb__list">
+          <li><a href="/">Accueil</a><span class="breadcrumb__sep" aria-hidden="true">/</span></li>
+          <li aria-current="page">Systèmes critiques</li>
+        </ol>
+      </nav>
+      <p class="proto-note">PROTOTYPE · copy provisoire, non relue contre le pitch master (ADR 9)</p>
+      <h1 class="offer__name">Éditeurs et scale-ups : quand une erreur se paie en euros</h1>
+      <p class="offer__plain">
+        Votre produit déplace de l'argent ou des engagements : paiements, soldes, commandes,
+        réservations. Je le rends traçable, je le fais tenir au pic et je le migre sans l'arrêter,
+        aux côtés de votre équipe.
+      </p>
+    </header>
+
+    <section class="offer__section container" aria-labelledby="crit-offers">
+      <h2 class="kicker offer__heading" id="crit-offers">Ce que vous pouvez me confier</h2>
+      <ul class="offer__cards">
+        {
+          offers.map((offer) => (
+            <li class="offer__card">
+              <h3 class="offer__card-title">{offer.name}</h3>
+              <p class="offer__card-text">{offer.angle}</p>
+              <p class="offers__from">{offer.from}</p>
+              <a class="offer__card-link" href={offer.href}>
+                Voir l'offre <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="offer__section container" aria-labelledby="crit-quotes">
+      <h2 class="kicker offer__heading" id="crit-quotes">Vous reconnaissez l'une de ces phrases ?</h2>
+      <ul class="offer__cards">
+        {quotes.map((q) => <li class="offer__card"><p class="offer__card-title">{q}</p></li>)}
+      </ul>
+    </section>
+
+    <section class="offer__section container" aria-label="Comment je travaille">
+      <ul class="offer__cards">
+        {
+          points.map((point) => (
+            <li class="offer__card">
+              <h2 class="offer__card-title">{point.title}</h2>
+              <p class="offer__card-text">{point.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="offer__section container" aria-labelledby="crit-proof">
+      <h2 class="kicker offer__heading" id="crit-proof">Déjà tenu en production</h2>
+      <ul class="offer__cards">
+        {
+          proof.map((a) => (
+            <li class="offer__card">
+              <h3 class="offer__card-title">{a.title}</h3>
+              <p class="offer__card-text">{a.result}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <BookingSection labels={book} locale={locale} />
+  </main>
+  <SiteFooter t={t} locale={locale} />
+</BaseLayout>
+
+<style>
+  .proto-note {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #111;
+    background: #fff200;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+</style>

@@ -1,0 +1,298 @@
+---
+/**
+ * PROTOTYPE — throwaway, branch `prototype/segment-entry`. Never merge.
+ * See segments.ts for the question. Every variant is rendered, hidden; the
+ * switcher shows the one named by `?variant=`.
+ */
+import { OFFER_IDS } from '../../content/offers.ts';
+import type { ResumeContent } from '../../content/index.ts';
+import { linkTo } from '../../routes.ts';
+import { AUDIENCES, REFERRER } from './segments.ts';
+
+interface Props {
+  t: ResumeContent;
+  /** Above the Offer cards (the filter) or below them (the strip, the matrix). */
+  at: 'top' | 'bottom';
+}
+
+const { t, at } = Astro.props;
+const LANDING_NOTE = {
+  own: 'sa page',
+  prototype: 'sa page (prototype)',
+  'offer-page': "une page d'Offre",
+  none: 'aucune page',
+} as const;
+---
+
+{
+  at === 'top' && (
+    <div class="proto-filter" data-proto-variant="B" hidden>
+      <p class="journey__label" id="proto-filter-label">
+        Montrer les offres pour
+      </p>
+      <div class="proto-filter__chips" role="group" aria-labelledby="proto-filter-label">
+        <button type="button" aria-pressed="true" data-audience="all">
+          Tout le monde
+        </button>
+        {AUDIENCES.map((a) => (
+          <button
+            type="button"
+            aria-pressed="false"
+            data-audience={a.id}
+            data-offers={a.offers.join(' ')}
+          >
+            {a.short}
+          </button>
+        ))}
+      </div>
+      <p class="proto-filter__state" aria-live="polite" data-proto-state>
+        7 offres sur 7
+      </p>
+    </div>
+  )
+}
+
+{
+  at === 'bottom' && (
+    <>
+      <nav class="proto-strip" data-proto-variant="A" hidden aria-labelledby="proto-strip-title">
+        <p class="journey__label" id="proto-strip-title">
+          Vous êtes…
+        </p>
+        <ul class="proto-strip__list">
+          {AUDIENCES.map((a) => (
+            <li>
+              <a href={a.href}>
+                <span class="proto-strip__who">{a.label}</span>
+                <span class="proto-strip__hint">{a.hint}</span>
+              </a>
+              <span class="proto-meta">
+                → {LANDING_NOTE[a.landing]}
+                {a.unnamed && ' · pas un Segment'}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p class="proto-strip__referrer">
+          <strong>{REFERRER.label}</strong> {REFERRER.hint}{' '}
+          <a href={REFERRER.href}>Me présenter quelqu'un</a>
+        </p>
+      </nav>
+
+      <div class="proto-matrix" data-proto-variant="C" hidden>
+        <p class="journey__label" id="proto-matrix-title">
+          Quelle offre pour qui
+        </p>
+        <div class="proto-matrix__scroll">
+          <table aria-labelledby="proto-matrix-title">
+            <thead>
+              <tr>
+                <th scope="col">Offre</th>
+                {AUDIENCES.map((a) => (
+                  <th scope="col">
+                    <a href={a.href}>{a.short}</a>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {OFFER_IDS.map((id) => (
+                <tr>
+                  <th scope="row">
+                    <a href={linkTo(id, 'fr').href}>{t.offers[id].name}</a>
+                  </th>
+                  {AUDIENCES.map((a) =>
+                    a.offers.includes(id) ? (
+                      <td class="proto-yes">
+                        <span aria-hidden="true">●</span>
+                        <span class="visually-hidden">oui</span>
+                      </td>
+                    ) : (
+                      <td class="proto-no">
+                        <span aria-hidden="true">·</span>
+                        <span class="visually-hidden">non</span>
+                      </td>
+                    ),
+                  )}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row">Offres utiles</th>
+                {AUDIENCES.map((a) => (
+                  <td>
+                    {a.offers.length}/{OFFER_IDS.length}
+                  </td>
+                ))}
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </>
+  )
+}
+
+<script>
+  // PROTOTYPE: the filter. Dims the cards that are not for the chosen audience.
+  const filter = document.querySelector<HTMLElement>('.proto-filter');
+  const cards = document.querySelectorAll<HTMLElement>('#offers .offers__card[data-offer]');
+  const state = document.querySelector<HTMLElement>('[data-proto-state]');
+  filter?.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest('button');
+    if (!button) return;
+    for (const b of filter.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b === button));
+    const offers = button.dataset.offers?.split(' ');
+    let shown = 0;
+    for (const card of cards) {
+      const on = !offers || offers.includes(card.dataset.offer ?? '');
+      card.classList.toggle('proto-dim', !on);
+      if (on) shown++;
+    }
+    if (state) state.textContent = `${shown} offres sur ${cards.length}`;
+  });
+  // Leaving variant B must not leave cards dimmed.
+  document.addEventListener('proto:variant', () => {
+    for (const card of cards) card.classList.remove('proto-dim');
+    filter?.querySelector<HTMLButtonElement>('[data-audience="all"]')?.click();
+  });
+</script>
+
+<style is:global>
+  .proto-dim {
+    opacity: 0.28;
+    filter: grayscale(1);
+    transition: opacity 0.2s;
+  }
+</style>
+
+<style>
+  .proto-filter {
+    margin: 0 0 28px;
+  }
+  .proto-filter__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .proto-filter__chips button {
+    font: inherit;
+    font-size: 15px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--color-divider);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .proto-filter__chips button[aria-pressed='true'] {
+    background: var(--color-accent-fill);
+    color: var(--color-on-accent);
+    border-color: transparent;
+  }
+  .proto-filter__state {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--color-muted);
+  }
+
+  .proto-strip {
+    margin: 36px 0 0;
+  }
+  .proto-strip__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .proto-strip__list li {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .proto-strip__list a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    background: var(--color-sunken);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .proto-strip__list a:hover .proto-strip__who {
+    text-decoration: underline;
+  }
+  .proto-strip__who {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.25;
+  }
+  .proto-strip__who::first-letter {
+    text-transform: uppercase;
+  }
+  .proto-strip__hint {
+    font-size: 15px;
+    color: var(--color-muted);
+  }
+  .proto-strip__referrer {
+    margin: 16px 0 0;
+    color: var(--color-muted);
+  }
+  .proto-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-accent-text);
+    outline: 1px dashed var(--color-accent-text);
+    outline-offset: 2px;
+    align-self: flex-start;
+    padding: 0 4px;
+  }
+
+  .proto-matrix {
+    margin: 36px 0 0;
+  }
+  .proto-matrix__scroll {
+    overflow-x: auto;
+  }
+  .proto-matrix table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .proto-matrix th,
+  .proto-matrix td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-divider);
+    text-align: center;
+  }
+  .proto-matrix th[scope='row'] {
+    text-align: left;
+    white-space: nowrap;
+  }
+  .proto-matrix thead th {
+    font-weight: 600;
+    vertical-align: bottom;
+  }
+  .proto-matrix a {
+    color: inherit;
+  }
+  .proto-yes {
+    color: var(--color-accent-text);
+    font-size: 18px;
+  }
+  .proto-no {
+    color: var(--color-neutral-600);
+  }
+  .proto-matrix tfoot td,
+  .proto-matrix tfoot th {
+    color: var(--color-muted);
+    font-size: 14px;
+    border-bottom: 0;
+  }
+</style>

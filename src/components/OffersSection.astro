@@ -4,6 +4,9 @@ import { ENTRY_OFFER, type OfferId } from '../content/offers.ts';
 import { fromLine } from '../lib/offer-price.ts';
 import { linkTo } from '../routes.ts';
 import { CONTACT, LOCALE_TAG, type Locale } from '../site.ts';
+// PROTOTYPE (branch prototype/segment-entry): never merge.
+import PrototypeSwitcher from './prototype/PrototypeSwitcher.astro';
+import SegmentVariants from './prototype/SegmentVariants.astro';
 
 interface Props {
   locale: Locale;
@@ -46,6 +49,7 @@ const alongside = ALONGSIDE.map(card);
 
 const partners = linkTo('partners', locale);
 const publicSector = linkTo('public-sector', locale);
+const proto = import.meta.env.DEV && locale === 'fr';
 ---
 
 <section id="offers" class="offers container">
@@ -54,6 +58,7 @@ const publicSector = linkTo('public-sector', locale);
 
   {/* The Offers that run alongside every stage come first: the Audit, the
       way in for everyone, is the first card read, as the band above says. */}
+  {proto && <SegmentVariants t={t} at="top" />}
   <div class="journey__alongside">
     <p class="journey__label">
       {t.offersSection.alongside}
@@ -113,7 +118,9 @@ const publicSector = linkTo('public-sector', locale);
     </a>
   </p>
 
-  <p class="offers__partners">
+  {proto && <SegmentVariants t={t} at="bottom" />}
+  {proto && <PrototypeSwitcher />}
+  <p class="offers__partners" data-proto-variant={proto ? '0' : undefined}>
     {t.offersSection.partners}{' '}
     <a href={partners.href} hreflang={partners.hreflang && LOCALE_TAG[partners.hreflang]}>
       {t.offersSection.partnersLink}
