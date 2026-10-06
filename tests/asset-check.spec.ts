@@ -1,5 +1,8 @@
 import { spawnSync } from 'node:child_process';
+import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { OG_CARDS } from '../src/lib/og.ts';
+import { ROUTES } from '../src/routes.ts';
 import { LEGAL } from '../src/site.ts';
 
 /**
@@ -33,5 +36,41 @@ describe('the indexing guard (ADR 16)', () => {
   it('lets an incomplete legal notice pass while the site is not indexable', () => {
     const { status, output } = runAssetCheck({});
     expect(status, output).toBe(0);
+  });
+});
+
+describe('the Open Graph cards (issue #30)', () => {
+  // Each case takes something away from the working tree, runs the check, and
+  // puts it back whatever happens.
+  const card = OG_CARDS.find((candidate) => candidate.src.endsWith('-audit.png'));
+  if (!card) throw new Error('No Audit card in OG_CARDS');
+  const file = `public${card.src}`;
+
+  it('gives every route a card of its own', () => {
+    expect(new Set(OG_CARDS.map((candidate) => candidate.src)).size).toBe(ROUTES.length);
+  });
+
+  it('fails the check when a route has no card', () => {
+    renameSync(file, `${file}.away`);
+    try {
+      const { status, output } = runAssetCheck({});
+      expect(status, output).not.toBe(0);
+      expect(output).toContain(`missing ${file}`);
+    } finally {
+      renameSync(`${file}.away`, file);
+    }
+  });
+
+  it('fails the check when a card was drawn from words its page no longer says', () => {
+    const manifest = 'scripts/og-manifest.json';
+    const recorded = readFileSync(manifest, 'utf8');
+    writeFileSync(manifest, JSON.stringify({ ...JSON.parse(recorded), [card.src]: 'stale' }));
+    try {
+      const { status, output } = runAssetCheck({});
+      expect(status, output).not.toBe(0);
+      expect(output).toMatch(new RegExp(`${file} no longer matches`));
+    } finally {
+      writeFileSync(manifest, recorded);
+    }
   });
 });

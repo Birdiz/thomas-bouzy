@@ -10,8 +10,6 @@ export const fr = {
     title: 'Thomas Bouzy — Freelance PHP/Symfony, Nancy et Strasbourg',
     description:
       "Je reprends et fais évoluer vos applications métier PHP/Symfony, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
-    ogImageAlt:
-      'Thomas Bouzy — « Je reprends et fais évoluer vos applications métier. » Freelance PHP/Symfony.',
   },
 
   a11y: {

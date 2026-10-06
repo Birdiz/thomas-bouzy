@@ -2,7 +2,7 @@
 
 Images that Astro processes at build time — optimised, resized and served as
 AVIF/WebP. Anything that must keep its exact filename and be served verbatim
-(the fonts, `og.png`) belongs in `public/` instead.
+(the fonts, the Open Graph cards) belongs in `public/` instead.
 
 Git does not track empty directories, so this file is what keeps the folder
 here after a clone.

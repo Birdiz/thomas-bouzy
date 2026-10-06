@@ -9,8 +9,6 @@ export const en = {
     title: 'Thomas Bouzy — Freelance Symfony & PHP backend consultant',
     description:
       'I take over, stabilise and upgrade the PHP/Symfony business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
-    ogImageAlt:
-      'Thomas Bouzy — in French: “I take over and evolve your business applications.” Freelance PHP/Symfony.',
   },
 
   a11y: {

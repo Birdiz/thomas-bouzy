@@ -106,9 +106,9 @@ npm run verify         # everything CI runs, in the same order
 | `npm run lint` / `format` | Biome |
 | `npm run test` | Vitest — EN/FR content parity on bilingual pages, and the asset check's verdict |
 | `npm run test:e2e` | Playwright — chromium, webkit, mobile chromium |
-| `npm run assets:check` | Missing files, portrait format and size, `SITE_DOMAIN` on a deployment build, no indexing without a legal notice |
+| `npm run assets:check` | Missing files, a missing or stale Open Graph card, portrait format and size, `SITE_DOMAIN` on a deployment build, no indexing without a legal notice |
 | `npm run fonts` / `fonts:check` | Copy the woff2 faces out of `@fontsource` / verify they match |
-| `npm run og` | Regenerate `public/og.png` and the touch icon |
+| `npm run og` | Redraw each route's Open Graph card into `public/og/`, and the touch icon |
 | `docker build --build-arg SITE_DOMAIN=… -t cv .` | Build the deployment image locally |
 | `npm run contrast` | Print WCAG ratios for the site palette (ADR 13) |
 

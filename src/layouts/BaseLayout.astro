@@ -1,5 +1,6 @@
 ---
 import { RESUME } from '../content/index.ts';
+import { ogCard, ogImageAlt } from '../lib/og.ts';
 import { alternatesOf, defaultAlternateOf, type Route } from '../routes.ts';
 import { absoluteUrl, CONTACT, LOCALE_TAG, type Locale, SITE } from '../site.ts';
 import '../styles/fonts.css';
@@ -21,7 +22,8 @@ const { locale } = route;
 const t = RESUME[locale];
 
 const canonical = absoluteUrl(route.path);
-const ogImage = absoluteUrl('/og.png');
+/* The page's own card, not the home page's: see src/lib/og.ts. */
+const og = ogCard(route);
 
 /* Only between versions of this page that exist: see src/routes.ts. */
 const alternates = alternatesOf(route.page);
@@ -88,10 +90,10 @@ const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', fr: 'fr_FR' };
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={absoluteUrl(og.src)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={t.meta.ogImageAlt} />
+    <meta property="og:image:alt" content={ogImageAlt(og)} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- The h1 and every heading are Figtree 600: it is on the LCP path. -->
