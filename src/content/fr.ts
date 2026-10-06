@@ -910,7 +910,7 @@ export const fr = {
       },
       {
         title: 'Vos conventions, pas les miennes',
-        text: 'Votre code PHP/Symfony, vos outils, vos rituels, dès le premier jour.',
+        text: 'Votre code, vos outils, vos rituels, dès le premier jour.',
       },
       {
         title: 'CV sur demande',

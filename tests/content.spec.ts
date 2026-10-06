@@ -821,6 +821,17 @@ describe('the Partners page (ADR 14)', () => {
     }
   });
 
+  it("promises to follow the Partner's stack whatever it is, naming no technology", () => {
+    // A Partner's mission can be in any language: naming one turns the others away.
+    for (const point of fr.partnersPage.points) {
+      for (const tech of fr.schema.knowsAbout) {
+        expect(`${point.title} ${point.text}`, `"${point.title}" names ${tech}`).not.toContain(
+          tech,
+        );
+      }
+    }
+  });
+
   it('carries no copy of the day rate: it is read from the price table', () => {
     for (const [path, text] of walkStrings(fr.partnersPage)) {
       expect(text, `a price is copied at ${path}`).not.toMatch(new RegExp(`\\b${DAY_RATE}\\b`));
