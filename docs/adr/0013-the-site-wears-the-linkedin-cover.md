@@ -1,6 +1,7 @@
 # 13. The site wears the LinkedIn cover
 
-- Status: accepted; type superseded by [ADR 21](0021-one-family.md), 2026-10-06
+- Status: accepted; type superseded by [ADR 21](0021-one-family.md), 2026-10-06;
+  the ridge's "static" amended by [ADR 23](0023-motion-that-answers.md), 2026-10-06
 - Date: 2026-09-16
 - Supersedes the colour and type half of [ADR 10](0010-the-site-owns-its-own-design.md)
 
@@ -57,7 +58,8 @@ the limit did not move. Buttons and the language switch are set in Figtree —
 a control is not a title.
 
 **The ridge is the one illustration.** Its paths live once, in `src/art/ridge.ts`,
-and are drawn by the hero (`Ridge.astro`, inline SVG, static, `aria-hidden`) and
+and are drawn by the hero (`Ridge.astro`, inline SVG, `aria-hidden`; it rises once on
+load since [ADR 23](0023-motion-that-answers.md), and never loops) and
 by the social card (`scripts/build-og.mjs`). In the hero it is mirrored so the
 crest and glow rise behind the portrait, and masked so no text is ever set over
 the slate. The drifting blobs are gone.

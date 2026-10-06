@@ -185,15 +185,11 @@ a {
 }
 
 /* From one page to the next, a cross-fade instead of a blink: the site reads as
-   one place. Browsers without cross-document view transitions cut, as before. */
+   one place. The browser's own 250 ms fade is --dur-base already. Browsers
+   without cross-document view transitions cut, as before. */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
-  }
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: var(--dur-base);
-    animation-timing-function: var(--ease-out);
   }
 }
 
@@ -337,6 +333,33 @@ a {
     linear-gradient(to right, transparent 0, #000 45%),
     linear-gradient(to top, transparent 0, #000 35%);
   mask-composite: intersect;
+}
+
+/* The ridge rises once as the page opens, the far layers least, the near ones
+   most, and the glow comes up behind them (docs/adr/0023). Decoration only: no
+   text sits on it, and it settles before a reader is past the promise. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The depth of a layer, as an index: the site's CSP allows no style
+     attribute, so it is set here rather than in the markup. */
+  .ridge path:nth-of-type(2) {
+    --i: 1;
+  }
+  .ridge path:nth-of-type(3) {
+    --i: 2;
+  }
+  .ridge path:nth-of-type(4) {
+    --i: 3;
+  }
+  /* The glow (the rect) comes up with the farthest layer. */
+  .ridge g > * {
+    animation: ridge-rise 1.1s var(--ease-out) calc(var(--i, 0) * 80ms) both;
+  }
+}
+@keyframes ridge-rise {
+  from {
+    transform: translateY(calc(16px + var(--i, 0) * 20px));
+    opacity: 0;
+  }
 }
 
 .hero__grid {
@@ -854,6 +877,63 @@ a {
   }
 }
 
+/* The track draws itself as the panel scrolls into view, one stage after the
+   other, and each stop lights up as the line reaches it: the life of the
+   application read in order (docs/adr/0023). Tied to scroll, so it stops when
+   the reader stops. Without scroll-driven animations, or under reduced
+   motion, the track is simply drawn, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .journey {
+      view-timeline: --journey block;
+    }
+    .journey__stage:nth-child(2) {
+      --i: 1;
+    }
+    .journey__stage:nth-child(3) {
+      --i: 2;
+    }
+    /* Longhands only: given all of them, the minifier folds them into an
+       `animation` shorthand carrying the timeline, which browsers reject. */
+    .journey__stage::before,
+    .journey__step {
+      animation-name: journey-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --journey;
+      animation-range: cover calc(24% + var(--i, 0) * 8%) cover calc(32% + var(--i, 0) * 8%);
+      transform-origin: 0 0;
+    }
+    .journey__step {
+      animation-name: journey-stop;
+      animation-range: cover calc(22% + var(--i, 0) * 8%) cover calc(26% + var(--i, 0) * 8%);
+    }
+  }
+}
+/* Wide, the track runs right; narrow, it runs down. */
+@keyframes journey-draw {
+  from {
+    scale: var(--track, 0 1);
+  }
+}
+@media (max-width: 860px) {
+  .journey__stage::before {
+    --track: 1 0;
+  }
+}
+/* A stop starts as a dim ring and ends as the drawn one, its number always
+   legible: the ring and the ground change, the figure stays. */
+@keyframes journey-stop {
+  from {
+    border-color: var(--color-divider);
+    background-color: var(--color-bg);
+  }
+  to {
+    border-color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-accent) 22%, var(--color-bg));
+  }
+}
+
 .offers__card {
   display: flex;
   flex-direction: column;
@@ -898,7 +978,11 @@ a {
   position: relative;
   transition:
     background-color var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+.offers__name {
+  transition: color var(--dur-fast) var(--ease-out);
 }
 .offers__name a {
   color: inherit;
@@ -931,7 +1015,10 @@ a {
     transform var(--dur-fast) var(--ease-out);
 }
 .offers__card:is(:hover, :has(a:focus-visible)) {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) .offers__name {
+  color: var(--color-accent-text);
 }
 .offers__card:is(:hover, :has(a:focus-visible)) .offers__name::after {
   opacity: 1;
@@ -939,6 +1026,9 @@ a {
 }
 .journey__alongside .offers__card:is(:hover, :has(a:focus-visible)) {
   background: var(--color-sunken);
+  box-shadow:
+    0 0 0 1px var(--color-accent),
+    var(--shadow-lg);
 }
 .offers__link {
   font-size: 15px;
@@ -1053,7 +1143,8 @@ a {
   color: var(--color-muted);
   text-wrap: pretty;
 }
-.reference__chevron {
+.reference__chevron,
+.offer__question summary::after {
   display: inline-grid;
   place-items: center;
   width: 38px;
@@ -1063,15 +1154,17 @@ a {
   font-size: 17px;
   color: var(--color-accent-text);
   transition:
-    transform 0.3s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
 }
-.reference__summary:hover .reference__chevron {
+.reference__summary:hover .reference__chevron,
+.offer__question summary:hover::after {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
-.reference[open] .reference__chevron {
+.reference[open] .reference__chevron,
+.offer__question[open] summary::after {
   transform: rotate(180deg);
 }
 
@@ -1589,28 +1682,10 @@ a {
 .offer__question summary::after {
   content: "↓" / "";
   flex: none;
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--color-divider);
-  border-radius: 999px;
-  font-size: 14px;
-  color: var(--color-accent-text);
-  transition:
-    transform var(--dur-base) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out),
-    background-color var(--dur-fast) var(--ease-out);
+  scale: 0.8;
 }
 .offer__question summary:hover {
   color: var(--color-accent-text);
-}
-.offer__question summary:hover::after {
-  border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
-}
-.offer__question[open] summary::after {
-  transform: rotate(180deg);
 }
 .offer__question p {
   margin: 0 0 18px;

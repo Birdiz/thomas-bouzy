@@ -217,7 +217,8 @@ figcaption {
   background: transparent;
   border: 1px solid transparent;
   padding: var(--space-2) calc(var(--space-3) * 1.2);
-  border-radius: var(--radius-md);
+  /* Small controls go pill. */
+  border-radius: 999px;
   transition:
     background-color var(--dur-fast) var(--ease-out),
     color var(--dur-fast) var(--ease-out),
@@ -245,9 +246,6 @@ figcaption {
 }
 .btn-secondary {
   border-color: var(--color-divider);
-  color: var(--color-text);
-}
-.btn-secondary:hover {
   color: var(--color-text);
 }
 .btn-secondary:hover {
@@ -282,9 +280,4 @@ figcaption {
 }
 .table tbody tr:hover {
   background: color-mix(in srgb, var(--color-text) 4%, transparent);
-}
-
-/* — rounded frame: small controls go pill — */
-.btn {
-  border-radius: 999px;
 }

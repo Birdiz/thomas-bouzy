@@ -30,6 +30,9 @@ async function revealedWithTransition(page: Page): Promise<boolean> {
   await gotoHome(page, '/');
   await page.locator('[data-offer="audit"] .offers__name a').first().click();
   await page.waitForURL(`**${pathOf('audit', 'fr')}`);
+  // `load` can come before the first rendering opportunity, which is when
+  // `pagereveal` fires: wait for the flag rather than read it at once.
+  await page.waitForFunction(() => 'revealedWith' in window);
   return page.evaluate(
     () => (window as unknown as { revealedWith?: boolean }).revealedWith === true,
   );
@@ -386,6 +389,23 @@ test.describe('motion preferences', () => {
 
       expect(await revealedWithTransition(page)).toBe(true);
     });
+
+    test('raises the ridge once, and draws the journey as it scrolls', async ({ page }) => {
+      await gotoHome(page, '/');
+      const motion = await page.evaluate(() => ({
+        ridge: [...document.querySelectorAll('.ridge path')].map(
+          (el) => getComputedStyle(el).animationName,
+        ),
+        ridgeLoops: getComputedStyle(document.querySelector('.ridge path') as Element)
+          .animationIterationCount,
+        scrollDriven: CSS.supports('animation-timeline: view()'),
+        stop: getComputedStyle(document.querySelector('.journey__step') as Element).animationName,
+      }));
+      expect(motion.ridge.length).toBeGreaterThan(0);
+      for (const name of motion.ridge) expect(name).toBe('ridge-rise');
+      expect(motion.ridgeLoops).toBe('1');
+      expect(motion.stop).toBe(motion.scrollDriven ? 'journey-stop' : 'none');
+    });
   });
 
   test.describe('when the visitor asks for reduced motion', () => {
@@ -407,6 +427,13 @@ test.describe('motion preferences', () => {
       for (const duration of durations) {
         expect(duration).toBeLessThan(0.01);
       }
+
+      // Nothing runs at rest: no entrance, no scroll-driven track. (WebKit keeps
+      // the closed References' panel fade, finished in 0.001 ms.)
+      const running = await page.evaluate(
+        () => document.getAnimations().filter((a) => a.playState === 'running').length,
+      );
+      expect(running).toBe(0);
 
       expect(await revealedWithTransition(page)).toBe(false);
     });

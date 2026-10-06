@@ -154,6 +154,7 @@ const resultLabels = [
 </div>
 
 <script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
   for (const root of document.querySelectorAll<HTMLElement>('[data-estimator]')) {
     const sliders = [...root.querySelectorAll<HTMLInputElement>('input[type=range]')];
     const choices = root.querySelectorAll('[data-choice]');
@@ -172,9 +173,17 @@ const resultLabels = [
         const choice = choices[i];
         if (choice) choice.textContent = text;
       });
-      // A figure is a copy of its cell, detail line included.
+      // A figure is a copy of its cell, detail line included. One that changes
+      // comes up into place, so the reader sees which figure the slider moved.
       figures.forEach((figure, i) => {
+        const before = figure.textContent;
         figure.replaceChildren(...(cells[sliders.length + i]?.cloneNode(true).childNodes ?? []));
+        if (before && before !== figure.textContent && !still.matches) {
+          figure.animate([{ opacity: 0.3, transform: 'translateY(6px)' }, {}], {
+            duration: 220,
+            easing: 'ease-out',
+          });
+        }
       });
     };
 

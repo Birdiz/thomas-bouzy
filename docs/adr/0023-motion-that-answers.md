@@ -2,6 +2,8 @@
 
 - Status: accepted, implemented 2026-10-06
 - Date: 2026-10-06
+- Amends [ADR 13](0013-the-site-wears-the-linkedin-cover.md): the ridge is no
+  longer static
 
 ## Context
 
@@ -25,7 +27,8 @@ every SaaS landing page.
 
 ## Decision
 
-**Motion answers what the reader did, or shows an order. It never decorates.**
+**Motion answers what the reader did, or shows an order. Beyond that, one
+entrance, once.**
 
 1. **Opt-in.** Anything that moves on its own (a disclosure's height, the page
    cross-fade) is declared under `prefers-reduced-motion: no-preference`. The
@@ -38,8 +41,8 @@ every SaaS landing page.
    CSS, and browsers without them cut, as before.
 3. **Once, short, decelerating.** One curve, `--ease-out`, and two durations,
    `--dur-fast` (150 ms, a control answering) and `--dur-base` (250 ms, a panel
-   opening, a page changing). Nothing loops, nothing overshoots, nothing moves
-   more than a few pixels.
+   opening, a page changing). Nothing loops and nothing overshoots. Text moves
+   a few pixels at most; only the ridge, which carries none, travels further.
 4. **What stays still:** the H1 and the hero's promise, the portrait, every
    price and figure (no counters), the booking buttons beyond their hover, the
    footer and the legal notice. Nothing fades in on scroll.
@@ -48,12 +51,28 @@ Shipped with this ADR:
 
 - transitions on `.btn` (with a 1 px press) and on the header, breadcrumb and
   footer links;
-- an Offer card lifts 2 px, its ground lightens a step where it has one, and
-  an arrow slides in after its name, on hover and on keyboard focus;
+- an Offer card lifts 4 px, its name takes the accent, its ground lightens a
+  step and takes an accent edge where it has one, and an arrow slides in
+  after its name, on hover and on keyboard focus;
 - References and FAQ answers open and close to their height
   (`::details-content`, `interpolate-size`), and the FAQ takes the References'
   ring chevron;
-- a 250 ms cross-fade between pages (`@view-transition`).
+- a 250 ms cross-fade between pages (`@view-transition`);
+- the journey track draws itself stage by stage as the panel scrolls into
+  view, and each stop lights up as the line reaches it
+  (`animation-timeline`, under `@supports`). Tied to scroll, it stops when the
+  reader stops;
+- an estimator figure that changes comes up into place in 220 ms (the
+  figure's box only, through the Web Animations API, skipped under reduced
+  motion: the reset in `app.css` does not reach script);
+- the hero's ridge rises once on load, the near layers more than the far ones,
+  and its glow fades up behind it. It is the page's one entrance, on
+  decoration only, and it never loops.
+
+The first cut shipped only the controls' answers. Looked at, the page at rest
+was the same to the pixel, and the owner saw no difference. A reader would not
+either: the track, the estimator and the ridge are what make the change
+visible without a click.
 
 ## Consequences
 
@@ -61,15 +80,11 @@ Shipped with this ADR:
   so it sees none of this. `resume.spec.ts` checks both sides: with no stated
   preference the controls have transitions and the next page is revealed
   through a view transition; under reduced motion neither.
-- Scroll-driven animation (`animation-timeline: view()`) is not used yet. The
-  reduced-motion reset cannot stop it: its duration maps to scroll distance, not
-  time, so it must sit under `no-preference` and `@supports`, and never start
-  from a hidden state. A scroll-driven animation that is not wrapped this way
-  also never finishes, so `settle()` in `a11y.spec.ts` would wait it out until
-  the test times out.
-- Candidates for a next step, each to be argued on its own: drawing the
-  journey track as it scrolls into view; a short fade on the estimator's figure
-  when a slider moves it (the figure only, never the `role="status"` text); the
-  hero's ridge rising once on load, which would amend
-  [ADR 13](0013-the-site-wears-the-linkedin-cover.md)'s "static"; and the
-  carousel of Client sentences, whose pace and existence are both in question.
+- The reduced-motion reset cannot stop a scroll-driven animation: its
+  duration maps to scroll distance, not time. The journey's sits under
+  `no-preference` and `@supports`, and starts from a drawn stop number, never
+  from hidden content. A scroll-driven animation never finishes either, so
+  `settle()` in `a11y.spec.ts` would wait on one until the test times out; the
+  audit runs under reduced motion, where none is declared.
+- Still open: the carousel of Client sentences, whose pace and existence are
+  both in question, and which turns on its copy first.
