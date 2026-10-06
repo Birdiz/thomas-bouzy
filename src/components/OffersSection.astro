@@ -83,12 +83,10 @@ const publicSector = linkTo('public-sector', locale);
     {
       stages.map((stage, i) => (
         <li class="journey__stage" data-stage={i + 1}>
-          <p class="journey__label">
-            <span class="journey__step" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            {stage.label}
-          </p>
+          <span class="journey__step" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <p class="journey__label">{stage.label}</p>
           <ul class="journey__cards">
             {stage.cards.map((c) => (
               <li class="offers__card" data-offer={c.id}>

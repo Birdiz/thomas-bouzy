@@ -663,10 +663,12 @@ a {
 
 /* — offers ————————————————————————————————————————————————————————————————— */
 
-/* The Offers as the life of an application: three stages joined by curves,
-   the second holding two Offers in parallel, then a rail of Offers that run
-   alongside all three. Each card ends on a price: the plain line says what it
-   is, the "from" says whether it is in reach. */
+/* The Offers in two shapes. Those that run alongside every stage are cards,
+   the Audit first. The life of the application is one framed panel, not a
+   second row of cards: a track with three stops at even intervals, a label
+   under each, and the stage's Offers as plain entries. Each Offer ends on a
+   price: the plain line says what it is, the "from" says whether it is in
+   reach. */
 .offers {
   padding-block: 40px 64px;
 }
@@ -681,19 +683,38 @@ a {
   padding: 0;
   list-style: none;
 }
+/* When an Offer applies, set like the section kicker: a step under the
+   Offers' names, so the stage reads as a heading over them, not as one. */
 .journey__label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   margin: 0 0 18px;
-  font-size: 16.5px;
-  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
 }
-/* The step number in a ring, the stops of a timeline. */
+.journey__alongside {
+  margin-bottom: 48px;
+}
+.journey__cards {
+  display: grid;
+  gap: 14px;
+}
+
+/* The panel: one frame round the three stages. */
+.journey {
+  --pad: 28px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+.journey__stage {
+  position: relative;
+}
+/* The step number in a ring, the stops on the track. */
 .journey__step {
   display: inline-grid;
   place-items: center;
-  flex: none;
   width: 30px;
   height: 30px;
   border: 1.5px solid var(--color-accent);
@@ -701,70 +722,62 @@ a {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--color-accent-text);
+  background: var(--color-bg);
 }
-.journey__cards {
-  display: grid;
-  gap: 14px;
+.journey__stage .journey__label {
+  text-wrap: balance;
+}
+/* Inside the panel an Offer is an entry, not a card: no ground of its own,
+   a hairline between two Offers of the same stage. */
+.journey .journey__cards {
+  gap: 0;
+}
+.journey .offers__card {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+.journey .offers__card + .offers__card {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-divider);
 }
 
-/* Wide: three stages in a row, the gaps between them carrying the curves.
-   Subgrid lines the labels up, so the card areas share one height and the
-   curves meet each card at its middle. */
+/* Wide: three equal columns. Subgrid lines up the stops, the labels and the
+   entries; the track runs from each stop to the next, so every segment has
+   the same length, and fades out after the last: the application lives on. */
 @media (min-width: 861px) {
   .journey {
-    --link: 76px;
     display: grid;
-    grid-template-columns: 1fr var(--link) 1fr var(--link) 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    padding-block: var(--pad);
   }
   .journey__stage {
-    grid-row: span 2;
+    grid-row: span 3;
     display: grid;
     grid-template-rows: subgrid;
+    row-gap: 0;
+    padding-inline: var(--pad);
   }
-  .journey__stage:nth-child(1) {
-    grid-column: 1;
+  .journey__step {
+    margin-bottom: 16px;
   }
-  .journey__stage:nth-child(2) {
-    grid-column: 3;
-  }
-  .journey__stage:nth-child(3) {
-    grid-column: 5;
-  }
-  .journey__stage .journey__cards {
-    position: relative;
-    align-content: center;
-  }
-  /* The labels joined into one timeline, running into the next stage. */
-  .journey__stage:not(:last-child) .journey__label::after {
-    content: "";
-    flex: 1;
-    height: 1.5px;
-    margin-right: calc(var(--link) * -1);
-    background: linear-gradient(to right, var(--color-accent), var(--color-divider));
-  }
-  .journey__stage[data-stage="2"] .journey__cards {
-    grid-template-rows: 1fr 1fr;
-    align-content: stretch;
-  }
-  /* The fork into the second stage, and the join out of it. */
-  .journey__stage[data-stage="2"] .journey__cards::before,
-  .journey__stage[data-stage="2"] .journey__cards::after {
+  .journey__stage::before {
     content: "";
     position: absolute;
-    inset-block: 0;
-    width: var(--link);
+    top: 15px;
+    left: calc(var(--pad) + 30px + 10px);
+    right: calc(var(--pad) * -1 + 10px);
+    height: 1.5px;
     background: var(--color-accent);
-    mask:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 50C55 50 45 25 100 25M0 50C55 50 45 75 100 75' fill='none' stroke='%23000' stroke-width='2.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
-      0 0 / 100% 100% no-repeat;
   }
-  .journey__stage[data-stage="2"] .journey__cards::before {
-    right: 100%;
+  .journey__stage:last-child::before {
+    right: 0;
+    background: linear-gradient(to right, var(--color-accent), transparent);
   }
-  .journey__stage[data-stage="2"] .journey__cards::after {
-    left: 100%;
-    transform: scaleX(-1);
+  .journey .journey__cards {
+    align-content: start;
   }
 
   .journey__alongside .journey__cards {
@@ -772,26 +785,40 @@ a {
   }
 }
 
-/* Narrow: one column, a line down the left joining the stages. */
+/* Narrow: the track runs down the left, a stop at the head of each stage. */
 @media (max-width: 860px) {
   .journey {
     display: grid;
-    gap: 28px;
-    padding-left: 22px;
-    border-left: 2px solid var(--color-accent);
+    gap: 32px;
+    padding: 24px 22px;
   }
-  .journey__stage[data-stage="2"] .journey__cards {
-    padding-left: 14px;
-    border-left: 2px dashed var(--color-divider);
+  .journey__stage {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: start;
   }
-}
-
-/* The rail: the Offers that run alongside every stage, above the stages and
-   set off from them by a dashed track. */
-.journey__alongside {
-  margin-bottom: 44px;
-  padding-bottom: 34px;
-  border-bottom: 2px dashed color-mix(in srgb, var(--color-accent) 55%, transparent);
+  .journey__step {
+    grid-row: span 2;
+  }
+  .journey__label {
+    align-self: center;
+  }
+  .journey__stage .journey__label {
+    margin: 4px 0 14px;
+  }
+  .journey__stage .journey__cards {
+    grid-column: 2;
+  }
+  .journey__stage:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 14.25px;
+    top: 40px;
+    bottom: -22px;
+    width: 1.5px;
+    background: var(--color-accent);
+  }
 }
 
 .offers__card {
