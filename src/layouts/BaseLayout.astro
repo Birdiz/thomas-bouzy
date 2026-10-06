@@ -113,6 +113,20 @@ const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', fr: 'fr_FR' };
     />
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+    {/* A page reached from this site that was not revealed through a view
+        transition (Firefox, or any browser that skipped it) still gets the
+        arriving half of the change (docs/adr/0023). Asking whether the
+        transition happened, not whether the browser claims support: a browser
+        can know `@view-transition` and still not run it across documents.
+        `pagereveal` fires before the first paint, and so does this script. */}
+    <script is:inline>
+      if (document.referrer.startsWith(location.origin + '/')) {
+        const arrive = () => document.documentElement.classList.add('page-in');
+        'onpagereveal' in window
+          ? addEventListener('pagereveal', (e) => e.viewTransition || arrive(), { once: true })
+          : arrive();
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{t.a11y.skipToContent}</a>

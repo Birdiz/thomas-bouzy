@@ -20,7 +20,7 @@ function describe(violations: Result[]): string[] {
 // sees. The suite runs under reduced motion (see playwright.config.ts) and
 // settle() waits out whatever is still running, so the audit sees the end state.
 
-/** Wait for every finite animation to finish (the ambient loops never do). */
+/** Wait for every finite animation to finish (an infinite one never would). */
 async function settle(page: Page) {
   await page.evaluate(() =>
     Promise.all(

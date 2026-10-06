@@ -41,13 +41,18 @@ import { expect, PATHS, test } from './fixtures.ts';
  * did. Fonts 66.8 → 55.5 kB on the home page (Figtree 400/600/800 + JetBrains
  * Mono); the limit goes back 72 → 60 kB, since the page no longer needs it.
  *
+ * Re-measured on 2026-10-06, with motion (docs/adr/0023): CSS 33.0 → 34.3 kB
+ * after the unused components left tokens.css. The owner ruled that motion the
+ * reader can see is worth a few hundred bytes (about 0.2 kB compressed); the CSS
+ * limit moves 34 → 35 kB. Motion stays CSS-first, so no script limit moved.
+ *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.
  */
 const BUDGET = {
   documentBytes: 50_000,
-  cssBytes: 34_000,
+  cssBytes: 35_000,
   externalJsBytes: 4_000,
   inlineJsBytes: 2_000,
   fontBytes: 60_000,

@@ -14,6 +14,39 @@ async function gotoHome(page: Page, path: string) {
   await expect(page.locator('h1')).toBeVisible();
 }
 
+/**
+ * Follows the home page's link to the Audit and reports whether the new page was
+ * revealed through a view transition. `pagereveal` carries it, and fires before
+ * the page's own scripts run, hence the init script.
+ */
+async function revealedWithTransition(page: Page): Promise<boolean> {
+  await page.addInitScript(() => {
+    window.addEventListener('pagereveal', (event) => {
+      (window as unknown as { revealedWith?: boolean }).revealedWith = Boolean(
+        (event as Event & { viewTransition?: unknown }).viewTransition,
+      );
+    });
+  });
+  await gotoHome(page, '/');
+  await page.locator('[data-offer="audit"] .offers__name a').first().click();
+  await page.waitForURL(`**${pathOf('audit', 'fr')}`);
+  // `load` can come before the first rendering opportunity, which is when
+  // `pagereveal` fires: wait for the flag rather than read it at once.
+  await page.waitForFunction(() => 'revealedWith' in window);
+  return page.evaluate(
+    () => (window as unknown as { revealedWith?: boolean }).revealedWith === true,
+  );
+}
+
+/** The transition durations, in seconds, of the controls that answer the pointer. */
+async function controlTransitions(page: Page): Promise<number[]> {
+  return page.evaluate(() =>
+    [...document.querySelectorAll('.btn, .site-nav a, .offers__card')].flatMap((el) =>
+      getComputedStyle(el).transitionDuration.split(',').map(Number.parseFloat),
+    ),
+  );
+}
+
 test.describe('routing and locales', () => {
   test('serves French at / and English at /en/', async ({ page }) => {
     await gotoHome(page, '/');
@@ -345,6 +378,36 @@ test.describe('motion preferences', () => {
       await expect(pause).toHaveAttribute('aria-pressed', 'true');
       await expect(problem).toHaveClass(/is-paused/);
     });
+
+    test('answers the pointer, and cross-fades from one page to the next', async ({ page }) => {
+      await gotoHome(page, '/');
+      const durations = await controlTransitions(page);
+      expect(durations.length).toBeGreaterThan(0);
+      for (const duration of durations) {
+        expect(duration).toBeGreaterThan(0.1);
+      }
+
+      expect(await revealedWithTransition(page)).toBe(true);
+      // Revealed through the transition, so the fallback arrival stays off.
+      await expect(page.locator('html')).not.toHaveClass(/page-in/);
+    });
+
+    test('raises the ridge once, and draws the journey as it scrolls', async ({ page }) => {
+      await gotoHome(page, '/');
+      const motion = await page.evaluate(() => ({
+        ridge: [...document.querySelectorAll('.ridge path')].map(
+          (el) => getComputedStyle(el).animationName,
+        ),
+        ridgeLoops: getComputedStyle(document.querySelector('.ridge path') as Element)
+          .animationIterationCount,
+        scrollDriven: CSS.supports('animation-timeline: view()'),
+        stop: getComputedStyle(document.querySelector('.journey__step') as Element).animationName,
+      }));
+      expect(motion.ridge.length).toBeGreaterThan(0);
+      for (const name of motion.ridge) expect(name).toBe('ridge-rise');
+      expect(motion.ridgeLoops).toBe('1');
+      expect(motion.stop).toBe(motion.scrollDriven ? 'journey-stop' : 'none');
+    });
   });
 
   test.describe('when the visitor asks for reduced motion', () => {
@@ -361,15 +424,28 @@ test.describe('motion preferences', () => {
         await expect(mode).toBeVisible();
       }
 
-      const durations = await page.evaluate(() =>
-        [...document.querySelectorAll('.hero__blob, .contact__blob')].map(
-          (el) => getComputedStyle(el).animationDuration,
-        ),
-      );
+      const durations = await controlTransitions(page);
       expect(durations.length).toBeGreaterThan(0);
       for (const duration of durations) {
-        expect(Number.parseFloat(duration)).toBeLessThan(0.01);
+        expect(duration).toBeLessThan(0.01);
       }
+
+      // Nothing runs at rest: no entrance, no scroll-driven track. (WebKit keeps
+      // the closed References' panel fade, finished in 0.001 ms.)
+      const running = await page.evaluate(
+        () => document.getAnimations().filter((a) => a.playState === 'running').length,
+      );
+      expect(running).toBe(0);
+
+      expect(await revealedWithTransition(page)).toBe(false);
+      // No transition ran, so the page is marked for the fallback arrival, which
+      // reduced motion then keeps still.
+      await expect(page.locator('html')).toHaveClass(/page-in/);
+      expect(
+        await page.evaluate(
+          () => getComputedStyle(document.querySelector('main') as Element).animationName,
+        ),
+      ).toBe('none');
     });
   });
 });

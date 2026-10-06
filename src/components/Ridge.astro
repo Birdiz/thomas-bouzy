@@ -5,7 +5,8 @@ import { RIDGE_GLOW, RIDGE_LAYERS, RIDGE_RIM, RIDGE_VIEWBOX } from '../art/ridge
  * The cover's mountain, behind the hero. Mirrored so the crest and its glow sit
  * under the portrait rather than under the text: nothing the reader has to read
  * is ever drawn over the slate, so contrast is measured against the plain ground
- * alone. Decorative, static, and inline — one SVG, no request.
+ * alone. Decorative and inline — one SVG, no request. It rises once on load
+ * (docs/adr/0023).
  */
 const { width, height } = RIDGE_VIEWBOX;
 ---

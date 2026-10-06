@@ -128,3 +128,24 @@ const publicSector = linkTo('public-sector', locale);
     </a>
   </p>
 </section>
+
+<script>
+  // Where the browser cannot tie the journey's track to scroll (Firefox), it is
+  // held back, then drawn once on a clock when the panel is well into view.
+  const journey = document.querySelector('.journey');
+  if (
+    journey &&
+    !CSS.supports('animation-timeline: view()') &&
+    matchMedia('(prefers-reduced-motion: no-preference)').matches
+  ) {
+    journey.classList.add('is-waiting');
+    new IntersectionObserver(
+      ([entry], observer) => {
+        if (!entry?.isIntersecting) return;
+        journey.classList.replace('is-waiting', 'is-drawn');
+        observer.disconnect();
+      },
+      { rootMargin: '0px 0px -30% 0px' },
+    ).observe(journey);
+  }
+</script>

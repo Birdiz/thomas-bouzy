@@ -159,6 +159,10 @@ a {
   }
 }
 
+/* Motion is opt-in (docs/adr/0023): what moves is declared under
+   `no-preference`, and this reset is the net under it. The delays go too, or a
+   staggered entrance would hold its content invisible for the length of the
+   delay. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -170,9 +174,50 @@ a {
        beat every component-level animation and transition declaration. */
     animation-duration: 0.001ms !important;
     /* biome-ignore lint/complexity/noImportantStyles: as above. */
+    animation-delay: 0s !important;
+    /* biome-ignore lint/complexity/noImportantStyles: as above. */
     animation-iteration-count: 1 !important;
     /* biome-ignore lint/complexity/noImportantStyles: as above. */
     transition-duration: 0.001ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: as above. */
+    transition-delay: 0s !important;
+  }
+}
+
+/* From one page to the next, the header stays put and the page under it
+   changes: the old one lifts away, the new one comes up into place. The site
+   reads as one place, and the reader sees that they moved. A plain cross-fade
+   was tried first: between two dark pages it could not be told from a cut.
+   Browsers without cross-document view transitions cut, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  .site-header {
+    view-transition-name: site-header;
+  }
+  ::view-transition-old(root) {
+    animation: page-out 0.2s ease-in both;
+  }
+  ::view-transition-new(root) {
+    animation: page-in 0.4s var(--ease-out) 0.12s both;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page-in main {
+    animation: page-in 0.4s var(--ease-out) both;
+  }
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
   }
 }
 
@@ -210,6 +255,18 @@ a {
 }
 .site-header__brand:hover {
   color: var(--color-accent-text);
+}
+
+/* Every text link in the chrome answers the pointer in the same beat. */
+.site-header__brand,
+.site-nav a,
+.lang-switch a,
+.breadcrumb a,
+.site-footer a {
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out);
 }
 
 .site-header__dot {
@@ -304,6 +361,33 @@ a {
     linear-gradient(to right, transparent 0, #000 45%),
     linear-gradient(to top, transparent 0, #000 35%);
   mask-composite: intersect;
+}
+
+/* The ridge rises once as the page opens, the far layers least, the near ones
+   most, and the glow comes up behind them (docs/adr/0023). Decoration only: no
+   text sits on it, and it settles before a reader is past the promise. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The depth of a layer, as an index: the site's CSP allows no style
+     attribute, so it is set here rather than in the markup. */
+  .ridge path:nth-of-type(2) {
+    --i: 1;
+  }
+  .ridge path:nth-of-type(3) {
+    --i: 2;
+  }
+  .ridge path:nth-of-type(4) {
+    --i: 3;
+  }
+  /* The glow (the rect) comes up with the farthest layer. */
+  .ridge g > * {
+    animation: ridge-rise 1.1s var(--ease-out) calc(var(--i, 0) * 80ms) both;
+  }
+}
+@keyframes ridge-rise {
+  from {
+    transform: translateY(calc(16px + var(--i, 0) * 20px));
+    opacity: 0;
+  }
 }
 
 .hero__grid {
@@ -492,23 +576,23 @@ a {
   border: 0;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-22px);
-  filter: blur(6px);
+  transform: translateY(-16px);
+  filter: blur(3px);
   transition:
-    opacity 0.7s ease,
-    transform 0.9s ease,
-    filter 0.7s ease,
-    visibility 0s linear 0.9s;
+    opacity 0.4s ease,
+    transform 0.5s ease-out,
+    filter 0.4s ease,
+    visibility 0s linear 0.5s;
 }
 .is-carousel .problem__mode.is-active ~ .problem__mode {
-  transform: translateY(22px);
+  transform: translateY(16px);
 }
 .is-carousel .problem__mode.is-active {
   opacity: 1;
   visibility: visible;
   transform: none;
   filter: none;
-  transition-delay: 0.25s, 0.25s, 0.25s, 0s;
+  transition-delay: 0.1s, 0.1s, 0.1s, 0s;
 }
 .is-carousel .problem__mode-num,
 .is-carousel .problem__mode-text {
@@ -769,7 +853,7 @@ a {
     top: 15px;
     left: calc(var(--pad) + 30px + 10px);
     right: calc(var(--pad) * -1 + 10px);
-    height: 1.5px;
+    height: 2px;
     background: var(--color-accent);
   }
   .journey__stage:last-child::before {
@@ -813,11 +897,84 @@ a {
   .journey__stage:not(:last-child)::before {
     content: "";
     position: absolute;
-    left: 14.25px;
+    left: 14px;
     top: 40px;
     bottom: -22px;
-    width: 1.5px;
+    width: 2px;
     background: var(--color-accent);
+  }
+}
+
+/* The track draws itself as the panel scrolls into view, one stage after the
+   other, and each stop lights up as the line reaches it: the life of the
+   application read in order (docs/adr/0023). Tied to scroll where the browser
+   can, so it stops when the reader stops. Elsewhere (Firefox) the script in
+   OffersSection.astro holds the track back with `is-waiting`, then draws it
+   once, on a clock, with `is-drawn`. Under reduced motion, or with no script,
+   the track is simply drawn, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  .journey__stage:nth-child(2) {
+    --i: 1;
+  }
+  .journey__stage:nth-child(3) {
+    --i: 2;
+  }
+  .journey__stage::before {
+    transform-origin: 0 0;
+  }
+  @supports (animation-timeline: view()) {
+    .journey {
+      view-timeline: --journey block;
+    }
+    /* Longhands only: given all of them, the minifier folds them into an
+       `animation` shorthand carrying the timeline, which browsers reject. */
+    .journey__stage::before,
+    .journey__step {
+      animation-name: journey-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --journey;
+      animation-range: cover calc(12% + var(--i, 0) * 13%) cover calc(25% + var(--i, 0) * 13%);
+    }
+    .journey__step {
+      animation-name: journey-stop;
+      animation-range: cover calc(10% + var(--i, 0) * 13%) cover calc(13% + var(--i, 0) * 13%);
+    }
+  }
+  .journey.is-waiting .journey__stage::before {
+    scale: var(--track, 0 1);
+  }
+  .journey.is-waiting .journey__step {
+    border-color: var(--color-divider);
+  }
+  .journey.is-drawn .journey__stage::before {
+    animation: journey-draw 0.6s var(--ease-out) calc(var(--i, 0) * 0.5s) both;
+  }
+  .journey.is-drawn .journey__step {
+    animation: journey-stop 0.3s calc(var(--i, 0) * 0.5s) both;
+  }
+}
+/* Wide, the track runs right; narrow, it runs down. */
+@keyframes journey-draw {
+  from {
+    scale: var(--track, 0 1);
+  }
+}
+@media (max-width: 860px) {
+  .journey__stage::before {
+    --track: 1 0;
+  }
+}
+/* A stop starts as a dim ring and lights up, filled, when the line reaches it.
+   Its number stays legible all the way: 6.01:1 at both ends. */
+@keyframes journey-stop {
+  from {
+    border-color: var(--color-divider);
+  }
+  to {
+    border-color: var(--color-accent-fill);
+    background: var(--color-accent-fill);
+    color: var(--color-on-accent);
   }
 }
 
@@ -863,6 +1020,13 @@ a {
 }
 .offers__card {
   position: relative;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+.offers__name {
+  transition: color var(--dur-fast) var(--ease-out);
 }
 .offers__name a {
   color: inherit;
@@ -877,6 +1041,38 @@ a {
 .offers__card:hover .offers__name a {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+/* The whole card is the link, so the whole card answers: it lifts, its ground
+   lightens a step, and an arrow comes in after the name, as on the invitation
+   to the Audit. The arrow is drawn from the start, only transparent, so the
+   name never rewraps under the pointer; its alt text is empty, so it is not
+   read out. */
+.offers__name::after {
+  content: "→" / "";
+  display: inline-block;
+  margin-left: 0.3em;
+  color: var(--color-accent-text);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) {
+  transform: translateY(-4px);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) .offers__name {
+  color: var(--color-accent-text);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) .offers__name::after {
+  opacity: 1;
+  transform: none;
+}
+.journey__alongside .offers__card:is(:hover, :has(a:focus-visible)) {
+  background: var(--color-sunken);
+  box-shadow:
+    0 0 0 1px var(--color-accent),
+    var(--shadow-lg);
 }
 .offers__link {
   font-size: 15px;
@@ -991,7 +1187,8 @@ a {
   color: var(--color-muted);
   text-wrap: pretty;
 }
-.reference__chevron {
+.reference__chevron,
+.offer__question summary::after {
   display: inline-grid;
   place-items: center;
   width: 38px;
@@ -1001,21 +1198,45 @@ a {
   font-size: 17px;
   color: var(--color-accent-text);
   transition:
-    transform 0.3s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
 }
-.reference__summary:hover .reference__chevron {
+.reference__summary:hover .reference__chevron,
+.offer__question summary:hover::after {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
-.reference[open] .reference__chevron {
+.reference[open] .reference__chevron,
+.offer__question[open] summary::after {
   transform: rotate(180deg);
 }
 
 .achievement__panel {
   padding: 0 28px 28px;
   animation: tb-in 0.3s ease both;
+}
+
+/* A disclosure opens to its height instead of jumping to it, and closes the
+   same way, so the eye follows what moved: the Reference that closes while
+   another opens (they share a name), the FAQ answer. Where the browser cannot
+   size to `auto`, both still open and close at once, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  .reference::details-content,
+  .offer__question::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--dur-base) var(--ease-out),
+      content-visibility var(--dur-base) allow-discrete;
+  }
+  .reference[open]::details-content,
+  .offer__question[open]::details-content {
+    block-size: auto;
+  }
 }
 .achievement__rule {
   height: 1px;
@@ -1491,6 +1712,24 @@ a {
   cursor: pointer;
   padding: 16px 0;
   font-size: 16.5px;
+  /* The References' chevron, smaller: the two disclosures read as one kind. */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.offer__question summary::-webkit-details-marker {
+  display: none;
+}
+.offer__question summary::after {
+  content: "↓" / "";
+  flex: none;
+  scale: 0.8;
+}
+.offer__question summary:hover {
+  color: var(--color-accent-text);
 }
 .offer__question p {
   margin: 0 0 18px;
