@@ -13,8 +13,9 @@ never types it, and each page's prose has a word ceiling
 Built with Astro, containerised, deployed to Railway. The vocabulary is in
 [CONTEXT.md](CONTEXT.md).
 
-The home page reads problem → offer → proof → position → person — which is the
-opposite of a CV, and deliberate:
+The home page reads promise → problem → invitation to the Audit → offer → proof
+→ contact, with the person beside the call — which is the opposite of a CV, and
+deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
 behind the running order. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
