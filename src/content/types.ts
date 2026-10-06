@@ -150,6 +150,11 @@ export interface EstimatorLabels {
   amounts: Partial<Record<AmountId, string>>;
   /** A label for the duration, when the Offer's table has one. */
   duration?: string;
+  /**
+   * What a monthly amount is made of, when its combination includes days at
+   * the day rate. `{days}` is replaced by that number of days.
+   */
+  daysIncluded?: string;
 }
 
 /**

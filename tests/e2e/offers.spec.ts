@@ -175,6 +175,14 @@ test('the Takeover starts with the test safety net and is proven by the industri
   const result = page.getByRole('status');
   await expect(result).toContainText(takeover?.estimator.amounts.setup ?? '∅');
   await expect(result).toContainText(takeover?.estimator.amounts.monthly ?? '∅');
+  // An Evolution month says what it adds to a Watch month.
+  const detail = (takeover?.estimator.daysIncluded ?? '∅').replace('{days}', '2');
+  await expect(result).not.toContainText(detail);
+  await page
+    .getByRole('slider', { name: takeover?.estimator.dimensions.plan?.label ?? '∅' })
+    .focus();
+  await page.keyboard.press('End');
+  await expect(result).toContainText(detail);
 });
 
 test('Reinforcement shows the day rate the price table holds', async ({ page }) => {

@@ -436,7 +436,7 @@ export const fr = {
         },
         {
           title: 'La formule Veille ou Évolution',
-          text: "Chaque mois : sécurité, surveillance, incidents corrigés jusqu'à une demi-journée. L'Évolution ajoute {evolutionDays} jours pour vos demandes.",
+          text: "Chaque mois : sécurité, surveillance, incidents corrigés jusqu'à une demi-journée chacun. L'Évolution ajoute {evolutionDays} jours pour vos demandes.",
         },
       ],
       estimator: {
@@ -454,11 +454,13 @@ export const fr = {
             options: { watch: 'Veille', evolution: 'Évolution' },
           },
         },
-        amounts: { setup: 'Mise en place', monthly: 'Formule mensuelle' },
+        amounts: { setup: '01–03 · Mise en place, une fois', monthly: '04 · Formule mensuelle' },
         duration: 'Durée de la mise en place',
+        daysIncluded: 'Veille + {days} jours pour vos demandes',
       },
       rules: [
         "Une Reprise commence toujours par un filet de tests : on ne modifie pas ce qu'on ne sait pas vérifier.",
+        "En Veille, il couvre les parcours critiques ; en Évolution, toute l'application, puisqu'elle va changer. C'est ce qui rend sa mise en place plus chère.",
       ],
       notTheRightChoice: [
         {
