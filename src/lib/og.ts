@@ -1,6 +1,9 @@
 import { RESUME } from '../content/index.ts';
 import { ROUTES, type Route } from '../routes.ts';
-import { SITE } from '../site.ts';
+import { type Locale, SITE } from '../site.ts';
+
+/** What the home page's title says after the name; short enough to stay on one line after it. */
+const SIGNATURE: Record<Locale, string> = { fr: 'Freelance fullstack', en: 'Full-stack freelance' };
 
 /**
  * The Open Graph card of each route: what LinkedIn shows under a shared link,
@@ -35,12 +38,12 @@ export function ogCard(route: Route): OgCard {
       src,
       title: SITE.author,
       line: t.hero.title.join(' '),
-      foot: 'Freelance PHP/Symfony',
+      foot: SIGNATURE[locale],
       home: true,
     };
   }
 
-  const foot = `${SITE.author} · Freelance PHP/Symfony`;
+  const foot = `${SITE.author} · ${SIGNATURE[locale]}`;
   if (page.id === 'partners' || page.id === 'public-sector') {
     const content = page.id === 'partners' ? t.partnersPage : t.publicSectorPage;
     if (!content) throw new Error(`${path}: no ${locale} content for the ${page.id} page`);
