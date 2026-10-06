@@ -13,8 +13,9 @@ never types it, and each page's prose has a word ceiling
 Built with Astro, containerised, deployed to Railway. The vocabulary is in
 [CONTEXT.md](CONTEXT.md).
 
-The home page reads problem → offer → proof → position → person — which is the
-opposite of a CV, and deliberate:
+The home page reads promise → problem → invitation to the Audit → offer → proof
+→ contact, with the person beside the call — which is the opposite of a CV, and
+deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
 behind the running order. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
@@ -38,8 +39,9 @@ the structured data claim a technology the page never states.
 
 The page is not a CV, and the tests keep it from becoming one again: there is no
 chronology, no job title, no years badge, no stack chips and no CV download. The
-career is on LinkedIn, which the page names exactly once, from About; a Partner
-gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its
+career is on LinkedIn, and the page points to it for the career exactly once,
+from About; elsewhere LinkedIn is only a way to get in touch, beside the email.
+A Partner gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its
 postscript.
 
 It also speaks in the reader's words rather than in its own: the four failure
