@@ -10,7 +10,7 @@ export const en = {
     description:
       'I take over, stabilise and upgrade the PHP/Symfony business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
     ogImageAlt:
-      'Thomas Bouzy — in French: “I take over, stabilise and upgrade your business applications.” Freelance PHP/Symfony.',
+      'Thomas Bouzy — in French: “I take over and evolve your business applications.” Freelance PHP/Symfony.',
   },
 
   a11y: {
@@ -24,17 +24,17 @@ export const en = {
   nav: {
     offers: 'Offers',
     partners: 'Partners',
-    work: 'Achievements',
-    approach: 'Approach',
+    publicSector: 'Public sector',
+    work: 'References',
     about: 'About',
     contact: 'Get in touch',
   },
 
   hero: {
-    availability: "Planning my 2027 calendar — let's talk now",
-    title: 'I take over your business software, make it reliable and keep it moving forward.',
+    title: ['I take over your business software', 'and keep it moving.'],
     blurb:
-      'Even the one nobody dares touch any more. Without stopping it, without rewriting everything, at published prices.',
+      'Even the one nobody dares touch any more. Without stopping it, without rewriting everything.',
+    ctaBook: 'Book a 30-minute call',
     ctaOffers: 'See the offers',
   },
 
@@ -45,6 +45,8 @@ export const en = {
     },
     kicker: 'The problem',
     title: 'Do any of these sound familiar?',
+    pause: 'Pause',
+    goTo: 'Sentence {n}',
   },
 
   failureModes: [
@@ -75,35 +77,10 @@ export const en = {
     },
   ],
 
-  position: {
-    kicker: 'Approach',
-    title: 'What I stand for, and what it costs.',
-    intro: 'Every recommendation comes with what it gives up.',
-    costLabel: 'The cost',
-  },
-
-  principles: [
-    {
-      title: 'Migrate in steps, never rewrite everything.',
-      text: 'Three major Symfony migrations on a system in continuous service, none of them a big bang.',
-      cost: 'A period where old and new run side by side, which must not be allowed to drag on.',
-    },
-    {
-      title: 'What is not instrumented is not reliable.',
-      text: 'Alerts before the failure on every backend service (OpenTelemetry and Datadog): reported bugs went from around twenty a month to five.',
-      cost: 'Time taken from delivery, and choosing what to watch.',
-    },
-    {
-      title: 'What I leave behind belongs to you.',
-      text: 'Code, access, tests and written decisions stay with you: another developer picks up after me.',
-      cost: 'Time spent writing, billed like the rest.',
-    },
-  ],
-
   work: {
-    kicker: 'Achievements',
-    title: 'What I have already kept running in production',
-    intro: 'What I did, and what it changed.',
+    kicker: 'References',
+    title: 'Where I have already kept production running',
+    intro: 'Industry, fintech, SaaS, the non-profit sector.',
     labelPlain: 'In plain terms:',
     labelApproach: 'Approach',
     labelResult: 'Result',
@@ -143,7 +120,7 @@ export const en = {
       approach:
         'Wallets holding real assets, for 1.5M+ active users. Event Sourcing and an outbox over SNS/SQS: every movement becomes a stored, replayable fact.',
       result:
-        '1,000+ transactions a minute with a complete audit trail, and peaks of 10,000–20,000 users within minutes, load-tested.',
+        '1,000+ transactions a minute with a complete audit trail, and peaks of 10,000–20,000 users within minutes, load-tested. Alerts before failure on every backend service (OpenTelemetry and Datadog): reported bugs went from about twenty a month to five.',
     },
     {
       id: 'on-chain-operations',
@@ -198,27 +175,51 @@ export const en = {
     },
   ],
 
+  references: {
+    arcelormittal: {
+      name: 'ArcelorMittal',
+      sector: 'Industry · through Quadra Informatique',
+      period: '2016 – 2017',
+      headline: 'The ERP of several plants, kept running, from suppliers to invoices.',
+    },
+    socios: {
+      name: 'Socios.com (Chiliz)',
+      sector: 'Fintech · 1.5 million users',
+      period: '2022 – 2026',
+      headline:
+        'An API rebuilt without an outage, every money movement traced, reported bugs cut by four.',
+    },
+    'kiss-the-bride': {
+      name: 'Kiss The Bride',
+      sector: 'SaaS for large accounts',
+      period: '2018 – 2022',
+      headline:
+        'A new enterprise account live in a day, on a monolith taken over without ever stopping it.',
+    },
+    'civic-tech': {
+      name: 'Civic tech',
+      sector: 'Volunteer',
+      period: '2026',
+      headline: 'Three applications audited, 17 security findings, the critical ones fixed.',
+    },
+    'open-data': {
+      name: 'Association directory',
+      sector: 'Open data · for a client',
+      period: '2026',
+      headline: '31,273 associations listed in 40 seconds, instead of by hand, town by town.',
+    },
+  },
+
   about: {
     kicker: 'About',
     title: 'In short',
     paragraphs: [
-      'I work in PHP and Symfony, and I also take on the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, histories you can replay, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
-      'I live in the Grand Est countryside. I work mostly remotely, and come on site when needed.',
+      'I work in PHP and Symfony, with the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
+      'I have taught at university and brought juniors to autonomy. I live in the Grand Est countryside; I work mostly remotely, and come on site when needed.',
     ],
-    mentoringKicker: 'Passing it on — a thread through all of it',
     careerLine: 'Hiring rather than contracting?',
     careerLink: 'My career is on LinkedIn.',
   },
-
-  mentoring: [
-    { year: '2016', text: 'Undergraduate lecturer at the University of Reims.' },
-    { year: '2018', text: 'Four juniors brought to autonomy at Kiss The Bride.' },
-    {
-      year: '2022',
-      text: 'Architecture reviews for two teams at Socios: five developers and a QA engineer.',
-    },
-    { year: '2024', text: 'Founded the backend community of practice: RFCs, ADRs, standards.' },
-  ],
 
   languages: [
     { name: 'French', level: 'native' },
@@ -252,12 +253,17 @@ export const en = {
 
   offersSection: {
     kicker: 'Offers',
-    title: 'Offers for your business applications, each with its price.',
-    from: { fee: 'from', setup: 'from', plan: 'plan from', monthly: 'from' },
+    title: 'An offer for every stage of your application, each with its price.',
+    stages: ['Build', 'Make reliable and migrate, side by side', 'Hold the load'],
+    alongside: 'At any stage',
+    lifecycle: 'The life of your application',
+    from: { fee: 'from', setup: 'from', plan: 'first step from', monthly: 'from' },
     followedBy: 'then',
     start: 'Where to start',
-    see: 'See the offer',
     inFrench: '(in French)',
+    book: { text: 'Already know what you need?', cta: 'Book a 30-minute call' },
+    publicSector: 'A local authority?',
+    publicSectorLink: 'See the dedicated page (in French)',
     partners: 'An agency or an IT services firm?',
     partnersLink: 'See the partners page (in French)',
   },
@@ -737,6 +743,7 @@ export const en = {
     title: "Let's talk about your application.",
     blurb: 'A free 30-minute call: I tell you plainly whether I can help.',
     cta: 'Book a call',
+    orReach: 'Or, if you prefer:',
     revealPhone: 'Show phone number',
     locationLine: 'Grand Est, France · On site in {towns} · Remote for 8+ years',
   },

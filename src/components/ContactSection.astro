@@ -19,32 +19,39 @@ const { locale, t } = Astro.props;
       <h2 class="contact__title">{t.contact.title}</h2>
       <p class="contact__blurb">{t.contact.blurb}</p>
 
+      {/* One primary action, the call: it is what the whole page asks for.
+          A plain outbound link, never an embed. The other ways in are links,
+          one line under it, so they do not compete with it. */}
       <div class="contact__actions">
-        {/* The booking link first: it is what the whole page asks for, and the
-            home page used to be the one page without it (ADR 18). A plain
-            outbound link, never an embed (ADR 17). */}
         <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
           {t.contact.cta}
         </a>
-        <a class="btn btn-outline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-        <RevealPhone locale={locale} label={t.contact.revealPhone} />
-        <a
-          class="btn btn-outline"
-          href={CONTACT.linkedin}
-          target="_blank"
-          rel="noopener"
-        >
-          LinkedIn
-        </a>
-        {/* No CV button. A download among the ways to reach someone reads as
-            a third option, and it is not one — and the PDF has left the site
-            altogether (ADR 11, postscript). */}
       </div>
+      <p class="contact__others">
+        <span>{t.contact.orReach}</span>
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        <RevealPhone locale={locale} label={t.contact.revealPhone} buttonClass="contact__link" />
+        <a href={CONTACT.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      </p>
 
       {/* The Service area, so that the home page names the towns a local
           Client searches with, and not only the Offer pages (ADR 20). */}
       <p class="contact__location">
         {t.contact.locationLine.replace('{towns}', serviceAreaTowns(locale))}
+      </p>
+    </div>
+
+    {/* Who answers the call, beside the call itself: About used to be a
+        section of its own, one more between the Offers and Contact. */}
+    <div id="about" class="contact__about">
+      <p class="kicker">{t.about.kicker}</p>
+      <h3 class="contact__about-title">{t.about.title}</h3>
+      {t.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      {/* The salaried route, named once and at the end, and pointed at
+          LinkedIn, which carries the career. */}
+      <p class="about__career">
+        {t.about.careerLine}{' '}
+        <a href={CONTACT.linkedin} target="_blank" rel="noopener">{t.about.careerLink}</a>
       </p>
     </div>
   </div>

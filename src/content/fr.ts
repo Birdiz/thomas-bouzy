@@ -9,9 +9,9 @@ export const fr = {
   meta: {
     title: 'Thomas Bouzy — Freelance PHP/Symfony, Nancy et Strasbourg',
     description:
-      'Je reprends, fiabilise et fais évoluer vos applications métier PHP/Symfony. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.',
+      "Je reprends et fais évoluer vos applications métier PHP/Symfony, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
     ogImageAlt:
-      'Thomas Bouzy — « Je reprends, fiabilise et fais évoluer vos applications métier. » Freelance PHP/Symfony.',
+      'Thomas Bouzy — « Je reprends et fais évoluer vos applications métier. » Freelance PHP/Symfony.',
   },
 
   a11y: {
@@ -25,17 +25,16 @@ export const fr = {
   nav: {
     offers: 'Offres',
     partners: 'Partenaires',
-    work: 'Réalisations',
-    approach: 'Ma position',
+    publicSector: 'Collectivités',
+    work: 'Références',
     about: 'À propos',
     contact: 'Me contacter',
   },
 
   hero: {
-    availability: 'Je prépare mon calendrier 2027 — parlons-en dès maintenant',
-    title: 'Je reprends, fiabilise et fais évoluer vos applications métier.',
-    blurb:
-      "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire, avec des prix affichés.",
+    title: ['Je reprends et fais évoluer', 'vos applications métier.'],
+    blurb: "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
+    ctaBook: 'Réserver un appel de 30 minutes',
     ctaOffers: 'Voir les offres',
   },
 
@@ -46,6 +45,8 @@ export const fr = {
     },
     kicker: 'Le problème',
     title: "Vous reconnaissez l'une de ces phrases ?",
+    pause: 'Pause',
+    goTo: 'Phrase {n}',
   },
 
   failureModes: [
@@ -76,35 +77,10 @@ export const fr = {
     },
   ],
 
-  position: {
-    kicker: 'Ma position',
-    title: 'Ce que je défends, et ce que ça coûte.',
-    intro: "Chaque recommandation vient avec ce qu'elle sacrifie.",
-    costLabel: 'Le coût assumé',
-  },
-
-  principles: [
-    {
-      title: 'Migrer par étapes, jamais tout réécrire.',
-      text: 'Trois migrations majeures de Symfony sur un système en service continu, aucune en big bang.',
-      cost: 'Une période où ancien et nouveau cohabitent, à ne pas laisser durer.',
-    },
-    {
-      title: "Ce qui n'est pas instrumenté n'est pas fiable.",
-      text: "Des alertes avant la panne sur tous les services backend (OpenTelemetry et Datadog) : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
-      cost: 'Du temps pris sur les livraisons, et choisir quoi surveiller.',
-    },
-    {
-      title: 'Ce que je laisse derrière moi vous appartient.',
-      text: 'Code, accès, tests et décisions écrites restent chez vous : un autre développeur reprend derrière moi.',
-      cost: 'Du temps passé à écrire, facturé comme le reste.',
-    },
-  ],
-
   work: {
-    kicker: 'Réalisations',
-    title: "Ce que j'ai déjà tenu en production",
-    intro: "Ce que j'ai fait, et ce que ça a changé.",
+    kicker: 'Références',
+    title: "Là où j'ai déjà tenu la production",
+    intro: 'Industrie, fintech, SaaS, associatif.',
     labelPlain: 'En clair :',
     labelApproach: 'Approche',
     labelResult: 'Résultat',
@@ -144,7 +120,7 @@ export const fr = {
       approach:
         "Des portefeuilles d'actifs réels, pour plus de 1,5 million d'utilisateurs actifs. Event Sourcing et outbox via SNS/SQS : chaque mouvement devient un fait stocké et rejouable.",
       result:
-        "Plus de 1 000 transactions par minute avec une piste d'audit complète, et des pics de 10 000 à 20 000 utilisateurs en quelques minutes, testés en charge.",
+        "Plus de 1 000 transactions par minute avec une piste d'audit complète, et des pics de 10 000 à 20 000 utilisateurs en quelques minutes, testés en charge. Des alertes avant la panne sur tous les services backend (OpenTelemetry et Datadog) : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
     },
     {
       id: 'on-chain-operations',
@@ -200,27 +176,52 @@ export const fr = {
     },
   ],
 
+  references: {
+    arcelormittal: {
+      name: 'ArcelorMittal',
+      sector: 'Industrie · via Quadra Informatique',
+      period: '2016 – 2017',
+      headline: "L'ERP de plusieurs usines, tenu en production, des fournisseurs aux factures.",
+    },
+    socios: {
+      name: 'Socios.com (Chiliz)',
+      sector: "Fintech · 1,5 million d'utilisateurs",
+      period: '2022 – 2026',
+      headline:
+        "Une API refaite sans coupure, chaque mouvement d'argent tracé, les bugs remontés divisés par quatre.",
+    },
+    'kiss-the-bride': {
+      name: 'Kiss The Bride',
+      sector: 'SaaS pour grands comptes',
+      period: '2018 – 2022',
+      headline:
+        "Un nouveau grand compte en une journée, sur un monolithe repris sans jamais l'arrêter.",
+    },
+    'civic-tech': {
+      name: 'Civic tech',
+      sector: 'Bénévolat',
+      period: '2026',
+      headline: 'Trois applications auditées, 17 failles trouvées, les plus graves corrigées.',
+    },
+    'open-data': {
+      name: 'Annuaire associatif',
+      sector: 'Open data · pour un client',
+      period: '2026',
+      headline:
+        "31 273 associations recensées en 40 secondes, au lieu d'un relevé à la main, commune par commune.",
+    },
+  },
+
   about: {
     kicker: 'À propos',
     title: 'En bref',
     paragraphs: [
-      "Je travaille en PHP et Symfony, et je reprends aussi le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des historiques qu'on peut rejouer, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
-      'Je vis dans le Grand Est, à la campagne. Je travaille surtout à distance, et viens sur place si besoin.',
+      "Je travaille en PHP et Symfony, avec le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
+      "J'ai enseigné à l'université et mené des juniors jusqu'à l'autonomie. Je vis dans le Grand Est, à la campagne ; je travaille surtout à distance, et viens sur place si besoin.",
     ],
-    mentoringKicker: 'Transmettre, un fil rouge',
     careerLine: "En poste plutôt qu'en mission ?",
     careerLink: 'Mon parcours est sur LinkedIn.',
   },
-
-  mentoring: [
-    { year: '2016', text: "Enseignant en premier cycle à l'Université de Reims." },
-    { year: '2018', text: "Quatre juniors menés jusqu'à l'autonomie, chez Kiss The Bride." },
-    {
-      year: '2022',
-      text: "Revues d'architecture pour deux équipes chez Socios : cinq développeurs et un QA.",
-    },
-    { year: '2024', text: 'Création de la communauté de pratique backend : RFC, ADR, standards.' },
-  ],
 
   languages: [
     { name: 'Français', level: 'langue maternelle' },
@@ -254,17 +255,22 @@ export const fr = {
 
   offersSection: {
     kicker: 'Les offres',
-    title: 'Des offres pour vos applications métier, chacune avec son prix.',
+    title: 'Une offre pour chaque moment de votre application, chacune avec son prix.',
+    stages: ['Créer', 'Fiabiliser et migrer, en parallèle', 'Tenir la charge'],
+    alongside: 'À tout moment',
+    lifecycle: 'La vie de votre application',
     from: {
       fee: 'à partir de',
       setup: 'à partir de',
-      plan: 'plan à partir de',
+      plan: 'première étape à partir de',
       monthly: 'à partir de',
     },
     followedBy: 'puis',
     start: 'Par où commencer',
-    see: "Voir l'offre",
     inFrench: '(en français)',
+    book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel de 30 minutes' },
+    publicSector: 'Une collectivité ?',
+    publicSectorLink: 'Voir la page dédiée',
     partners: 'Agence ou société de services ?',
     partnersLink: 'Voir la page partenaires',
   },
@@ -828,6 +834,62 @@ export const fr = {
     },
   },
 
+  publicSectorPage: {
+    meta: {
+      title: 'Développeur PHP/Symfony pour collectivités et établissements publics',
+      description:
+        'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de vos applications métier PHP/Symfony. Réversibilité, accessibilité RGAA, prix publics.',
+    },
+    kicker: 'Collectivités',
+    title: 'Collectivités et établissements publics : vos applications métier, reprises et tenues',
+    plain:
+      "Le logiciel d'un service, le portail d'une régie, l'outil d'une structure subventionnée : je les reprends, les maintiens et les fais évoluer, avec ce qu'exige l'achat public.",
+    points: [
+      {
+        title: 'Un achat simple',
+        text: "Mes offres d'entrée, comme l'audit, restent sous le seuil des marchés passés sans publicité ni mise en concurrence préalables. Un devis suffit pour commencer.",
+      },
+      {
+        title: 'La réversibilité, par écrit',
+        text: 'Code, accès, tests, documentation et décisions écrites vous appartiennent. Vos agents ou un autre prestataire reprennent derrière moi.',
+      },
+      {
+        title: 'Accessibilité',
+        text: "Ce que je construis ou reprends vise le RGAA, avec des tests d'accessibilité automatiques à chaque livraison.",
+      },
+      {
+        title: 'Hébergement et données',
+        text: "Hébergement en France ou dans l'Union européenne, chez l'hébergeur de votre choix. Aucune donnée ne part chez un service tiers sans votre accord.",
+      },
+    ],
+    proof: {
+      heading: 'Déjà au service du public',
+      items: [
+        {
+          title: 'La Cartonnerie, à Reims',
+          text: "Pour cette scène de musiques actuelles (SMAC), j'ai accompagné le responsable artistique face au prestataire : cadrage technique des premières étapes d'une application qui suit les musiciens de l'album à la scène, et besoins du produit traduits en langage technique.",
+        },
+        {
+          title: 'Un annuaire associatif, tiré des sites publics',
+          text: "31 273 associations d'Ille-et-Vilaine recensées en 40 secondes, depuis les données ouvertes et les sites des communes.",
+        },
+        {
+          title: 'Civic tech, bénévolat',
+          text: 'Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées.',
+        },
+      ],
+    },
+    offers: 'Ce que vous pouvez me confier',
+    offerLink: "Voir l'offre",
+    book: {
+      kicker: 'Premier pas',
+      title: 'Un appel de 30 minutes sur votre application.',
+      text: "Je vous dis franchement si je peux aider, et sous quelle forme d'achat.",
+      cta: 'Réserver un appel',
+      orWrite: 'Vous préférez écrire ?',
+      serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
+    },
+  },
   partnersPage: {
     meta: {
       title: 'Sous-traitance PHP/Symfony en marque blanche pour agences',
@@ -873,6 +935,7 @@ export const fr = {
     title: 'Parlons de votre application.',
     blurb: 'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider.',
     cta: 'Réserver un appel',
+    orReach: 'Ou, si vous préférez :',
     revealPhone: 'Afficher le numéro',
     locationLine: 'Grand Est, France · Sur place à {towns} · À distance depuis 8 ans',
   },

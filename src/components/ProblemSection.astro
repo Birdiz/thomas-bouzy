@@ -6,58 +6,114 @@ import { LOCALE_TAG, type Locale } from '../site.ts';
 interface Props {
   locale: Locale;
   t: ResumeContent;
-  num: string;
 }
 
-const { locale, t, num } = Astro.props;
-
-const audit = linkTo('audit', locale);
+const { locale, t } = Astro.props;
 ---
 
-<section id="problem" class="problem container">
-  <p class="kicker"><span class="kicker__num">{num}</span>{t.problem.kicker}</p>
-  <h2 class="section-title problem__title">{t.problem.title}</h2>
+{/* Without script, or for a visitor who asked for reduced motion, the
+    sentences stay a plain list. With both, they pass one at a time, like a
+    train of thought: the script adds `is-carousel` and shows the controls. */}
+<section id="problem" class="problem container" data-thoughts>
+  <div class="problem__head">
+    <p class="kicker">{t.problem.kicker}</p>
+    <h2 class="section-title problem__title">{t.problem.title}</h2>
+  </div>
 
-  {/* No prose before the sentences any more: the paragraphs that stood here
-      argued with a peer, under a hero written for a business owner (ADR 18). */}
-  <div>
-      <ul class="problem__modes">
-        {
-          t.failureModes.map((mode, i) => {
-            const target = linkTo(mode.offer, locale);
-            return (
-              <li class="problem__mode">
-                <span class="problem__mode-num" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div>
-                  {/* The client's sentence is the heading, and it is the way
-                      in: it links to the Offer that treats it. A reader who
-                      recognises his own words has qualified himself, and now
-                      has somewhere to go — see docs/adr/0012 and 0014. */}
-                  <h3 class="problem__mode-quote">
-                    <a
-                      href={target.href}
-                      hreflang={target.hreflang && LOCALE_TAG[target.hreflang]}
-                    >
-                      {mode.quote}
-                      <span class="problem__mode-offer">
-                        {t.offers[mode.offer].name}
-                        {target.hreflang && ` ${t.offersSection.inFrench}`}
-                        <span aria-hidden="true"> →</span>
-                      </span>
-                    </a>
-                  </h3>
-                  <p class="problem__mode-text">{mode.text}</p>
-                </div>
-              </li>
-            );
-          })
-        }
-      </ul>
-      <p class="problem__audit">
-        {t.problem.audit.text}{' '}
-        <a class="btn btn-secondary" href={audit.href}>{t.problem.audit.cta}</a>
-      </p>
+  <div class="problem__body">
+  {/* Above the sentence, like the bars of a story: the space a short sentence
+      leaves falls under it, into the section's margin, not between it and
+      its controls. */}
+  <div class="thoughts__controls" hidden>
+    <button type="button" class="thoughts__pause" aria-pressed="false">{t.problem.pause}</button>
+    {
+      t.failureModes.map((_, i) => (
+        <button
+          type="button"
+          class="thoughts__dot"
+          data-i={i}
+          aria-label={t.problem.goTo.replace('{n}', String(i + 1))}
+        >
+          <span />
+        </button>
+      ))
+    }
+  </div>
+  <ul class="problem__modes">
+    {
+      t.failureModes.map((mode, i) => {
+        const target = linkTo(mode.offer, locale);
+        return (
+          <li class="problem__mode">
+            <span class="problem__mode-num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div>
+              {/* The client's sentence is the heading, and it is the way in:
+                  it links to the Offer that treats it. A reader who
+                  recognises their own words has qualified themselves, and now has
+                  somewhere to go. */}
+              <h3 class="problem__mode-quote">
+                <a href={target.href} hreflang={target.hreflang && LOCALE_TAG[target.hreflang]}>
+                  {mode.quote}
+                  <span class="problem__mode-offer">
+                    {t.offers[mode.offer].name}
+                    {target.hreflang && ` ${t.offersSection.inFrench}`}
+                    <span aria-hidden="true"> →</span>
+                  </span>
+                </a>
+              </h3>
+              <p class="problem__mode-text">{mode.text}</p>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+
   </div>
 </section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-thoughts]');
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  if (root && !still.matches) {
+    const items = [...root.querySelectorAll<HTMLElement>('.problem__mode')];
+    const controls = root.querySelector<HTMLElement>('.thoughts__controls');
+    const dots = [...root.querySelectorAll<HTMLElement>('.thoughts__dot')];
+    const pause = root.querySelector<HTMLElement>('.thoughts__pause');
+    let current = 0;
+
+    // The active dot's bar fills over one sentence; when it is full, the next
+    // sentence comes. Pausing pauses the bar, so a resume picks up mid-way.
+    const show = (n: number) => {
+      current = (n + items.length) % items.length;
+      items.forEach((item, i) => {
+        item.classList.toggle('is-active', i === current);
+        item.inert = i !== current;
+      });
+      dots.forEach((dot, i) => {
+        dot.toggleAttribute('aria-current', i === current);
+      });
+    };
+
+    root.classList.add('is-carousel', 'is-offscreen');
+    if (controls) controls.hidden = false;
+    show(0);
+
+    root.addEventListener('animationend', (event) => {
+      if (!still.matches && (event.target as Element).parentElement?.hasAttribute('aria-current')) {
+        show(current + 1);
+      }
+    });
+    for (const dot of dots) dot.addEventListener('click', () => show(Number(dot.dataset.i)));
+    pause?.addEventListener('click', () => {
+      const paused = root.classList.toggle('is-paused');
+      pause.setAttribute('aria-pressed', String(paused));
+    });
+    // The train starts when the section is on screen, from the first sentence.
+    new IntersectionObserver(([entry]) => {
+      root.classList.toggle('is-offscreen', !entry?.isIntersecting);
+    }).observe(root);
+  }
+</script>

@@ -23,7 +23,7 @@ export type OfferId = (typeof OFFER_IDS)[number];
 export const ENTRY_OFFER: OfferId = 'audit';
 
 /** Populations of Clients who buy for the same reason (ADR 14). */
-export type SegmentId = 'critical-systems' | 'orphan-app' | 'partners';
+export type SegmentId = 'critical-systems' | 'orphan-app' | 'partners' | 'public-sector';
 
 /** Stable names for the Achievements, so an Offer can cite one in any locale. */
 export const ACHIEVEMENT_IDS = [
@@ -37,6 +37,22 @@ export const ACHIEVEMENT_IDS = [
 ] as const;
 export type AchievementId = (typeof ACHIEVEMENT_IDS)[number];
 
+/**
+ * The home page's References: one row per client or context, each opening on
+ * the Achievements done there. Socios is one Reference with three of them.
+ */
+export const REFERENCES = [
+  { id: 'arcelormittal', achievements: ['industrial-erp'] },
+  {
+    id: 'socios',
+    achievements: ['live-api-redesign', 'wallet-event-sourcing', 'on-chain-operations'],
+  },
+  { id: 'kiss-the-bride', achievements: ['enterprise-onboarding'] },
+  { id: 'civic-tech', achievements: ['codebase-audit'] },
+  { id: 'open-data', achievements: ['open-data-directories'] },
+] as const satisfies readonly { id: string; achievements: readonly AchievementId[] }[];
+export type ReferenceId = (typeof REFERENCES)[number]['id'];
+
 export interface OfferFacts {
   segments: readonly SegmentId[];
   /** The Achievements shown on the Offer's page as its proof, in that order. */
@@ -46,15 +62,15 @@ export interface OfferFacts {
 export const OFFERS: Record<OfferId, OfferFacts> = {
   // The Entry offer: every Segment can buy it first.
   audit: {
-    segments: ['critical-systems', 'orphan-app', 'partners'],
+    segments: ['critical-systems', 'orphan-app', 'partners', 'public-sector'],
     achievements: ['codebase-audit', 'live-api-redesign'],
   },
   takeover: {
-    segments: ['orphan-app', 'partners'],
+    segments: ['orphan-app', 'partners', 'public-sector'],
     achievements: ['industrial-erp', 'enterprise-onboarding'],
   },
   migration: {
-    segments: ['critical-systems', 'partners'],
+    segments: ['critical-systems', 'partners', 'public-sector'],
     achievements: ['enterprise-onboarding', 'live-api-redesign'],
   },
   reliability: {
@@ -72,7 +88,7 @@ export const OFFERS: Record<OfferId, OfferFacts> = {
   // ahead of its proof on purpose: the directory leads, because it is a tool
   // delivered to a client that replaced work done by hand.
   build: {
-    segments: ['critical-systems', 'orphan-app', 'partners'],
+    segments: ['critical-systems', 'orphan-app', 'partners', 'public-sector'],
     achievements: ['open-data-directories', 'on-chain-operations'],
   },
   reinforcement: {

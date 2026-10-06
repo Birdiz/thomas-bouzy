@@ -1,4 +1,4 @@
-import type { AchievementId, OfferId } from './offers.ts';
+import type { AchievementId, OfferId, ReferenceId } from './offers.ts';
 import type { AmountId } from './prices.ts';
 
 /**
@@ -78,28 +78,18 @@ export interface FailureMode {
 }
 
 /**
- * A position, and what holding it costs. The cost is the half that convinces.
- *
- * One principle carries the pitch master's three-honesty-levels rule, which used
- * to live in the Toolkit grid. Stating it as a position one holds — at a price
- * — says more than a grid of tags ever did. See docs/adr/0009, postscript 2.
+ * A client or a context, in one row: who, in what field, and the one line
+ * worth remembering. The Achievements done there open underneath.
  */
-export interface Principle {
-  title: string;
-  text: string;
-  cost: string;
-}
-
-export interface MentoringEntry {
-  year: string;
-  text: string;
+export interface Reference {
+  name: string;
+  sector: string;
+  period: string;
+  headline: string;
 }
 
 /**
- * Not rendered. The About aside shows the mentoring card alone, as the canvas
- * does — see docs/design-deltas.md entry 24. This survives it because
- * BaseLayout feeds `knowsLanguage` on the Person schema from it, which is a
- * different surface from the page and was not part of that decision.
+ * Not rendered: BaseLayout feeds `knowsLanguage` on the Person schema from it.
  */
 export interface LanguageSkill {
   name: string;
@@ -256,6 +246,30 @@ export interface OfferPageLabels {
  * The page for agencies and IT services firms (ADR 14): they buy from Thomas
  * for their own client. French only, like the Segment.
  */
+/**
+ * Local authorities, public bodies and publicly funded organisations: what
+ * public purchasing asks of a provider, then the proof, then the Offers.
+ */
+export interface PublicSectorPage {
+  meta: {
+    title: string;
+    description: string;
+  };
+  kicker: string;
+  title: string;
+  plain: string;
+  /** Simple purchasing, reversibility, accessibility, hosting. */
+  points: Titled[];
+  proof: {
+    heading: string;
+    items: Titled[];
+  };
+  /** Heading over the Offers a public buyer can order. */
+  offers: string;
+  offerLink: string;
+  book: OfferPageLabels['book'];
+}
+
 export interface PartnersPage {
   meta: {
     title: string;
@@ -299,8 +313,9 @@ export interface ResumeContent {
     offers: string;
     /** The Partners page, in the footer's list of pages. */
     partners: string;
+    /** The public-sector page, likewise. */
+    publicSector: string;
     work: string;
-    approach: string;
     about: string;
     contact: string;
   };
@@ -313,28 +328,22 @@ export interface ResumeContent {
    * enough to hire", and the CV button offered the salaried route as an equal
    * alternative to the work itself, in the first viewport. The career is on
    * LinkedIn, reached once from the About section — see `about.careerLine`.
-   *
-   * `availability` carries no date. It said "permanent roles from September
-   * 2026" on a page whose own thesis is that what is not instrumented is not
-   * reliable, and it was one day from expiring. Then it said "available now",
-   * which is not true of a business that is not registered yet: it says that
-   * first engagements are in preparation, which stays true until it is not
-   * needed (ADR 14).
    */
   hero: {
-    availability: string;
     /**
-     * The promise, rendered in the H1 after the name (ADR 18). The reader
-     * arrives warm and already knows the name; what they do not know yet is
-     * what it is for. Held to the plain-line rule, like the blurb.
+     * The promise, rendered in the H1 after the name, as two lines: the break
+     * is part of the wording, so it is written here rather than left to the
+     * browser. Held to the plain-line rule, like the blurb.
      */
-    title: string;
+    title: readonly [string, string];
     /**
      * Written for the least technical reader (ADR 14), so it is held to the
      * plain-line rule: no `schema.knowsAbout` term, and short.
      */
     blurb: string;
-    /** The hero's one button, to the Offers section. */
+    /** The primary button: the 30-minute call. */
+    ctaBook: string;
+    /** The secondary button, to the Offers section. */
     ctaOffers: string;
   };
 
@@ -350,17 +359,15 @@ export interface ResumeContent {
       text: string;
       cta: string;
     };
+    /**
+     * The sentences pass one at a time, like a train of thought. Labels for
+     * the controls: the pause toggle, and each sentence's own button, where
+     * `{n}` is its number.
+     */
+    pause: string;
+    goTo: string;
   };
   failureModes: FailureMode[];
-
-  /** The section a résumé never has: an argued opinion, with its price. */
-  position: {
-    kicker: string;
-    title: string;
-    intro: string;
-    costLabel: string;
-  };
-  principles: Principle[];
 
   work: {
     kicker: string;
@@ -372,12 +379,12 @@ export interface ResumeContent {
     labelResult: string;
   };
   achievements: Achievement[];
+  references: Record<ReferenceId, Reference>;
 
   about: {
     kicker: string;
     title: string;
     paragraphs: string[];
-    mentoringKicker: string;
     /**
      * The salaried route, stated once and at the end, as one line whose last
      * words link to LinkedIn.
@@ -391,7 +398,6 @@ export interface ResumeContent {
     /** The link text, to the LinkedIn profile. */
     careerLink: string;
   };
-  mentoring: MentoringEntry[];
   languages: LanguageSkill[];
   schema: SchemaOnly;
 
@@ -399,6 +405,15 @@ export interface ResumeContent {
   offersSection: {
     kicker: string;
     title: string;
+    /**
+     * The Offers as the life of an application: three stages in order, the
+     * second holding two Offers side by side, then the Offers that run
+     * alongside all three. See `JOURNEY` in OffersSection.astro.
+     */
+    stages: readonly [string, string, string];
+    alongside: string;
+    /** Accessible name of the three stages, read as one list. */
+    lifecycle: string;
     /**
      * Before each amount's lowest price, the headline first. A Migration's
      * headline is its plan, not the whole Migration, and the card says so.
@@ -408,14 +423,20 @@ export interface ResumeContent {
     followedBy: string;
     /** The badge on the Entry offer's card: the way in for every Segment. */
     start: string;
-    see: string;
     /**
      * Said after a link to a page that exists only in French, from a page in
      * another language. Never shown on a French page.
      */
     inFrench: string;
+    /**
+     * Halfway down the page, for the reader who already knows: the booking
+     * link, so they need not scroll on to Contact.
+     */
+    book: { text: string; cta: string };
     partners: string;
     partnersLink: string;
+    publicSector: string;
+    publicSectorLink: string;
   };
 
   /** Every Offer's name and plain line, wherever the Offer is mentioned. */
@@ -428,6 +449,7 @@ export interface ResumeContent {
   offerPages: Partial<Record<OfferId, OfferPage>>;
   /** Exists only in the locales the registry declares the Partners page in. */
   partnersPage?: PartnersPage;
+  publicSectorPage?: PublicSectorPage;
 
   contact: {
     kicker: string;
@@ -435,6 +457,8 @@ export interface ResumeContent {
     blurb: string;
     /** The booking link, first of the ways to reach Thomas. */
     cta: string;
+    /** Lead-in to the secondary ways in: email, phone, LinkedIn. */
+    orReach: string;
     revealPhone: string;
     /** `{towns}` is replaced by SITE.serviceArea, as on the Offer pages. */
     locationLine: string;

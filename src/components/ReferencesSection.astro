@@ -1,0 +1,87 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { REFERENCES } from '../content/offers.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+
+/**
+ * One row per client or context, closed by default: a reader skims who, in
+ * what field, and the one line worth remembering. The Achievements done there
+ * open underneath, for the reader who wants the detail.
+ */
+const references = REFERENCES.map((reference) => ({
+  id: reference.id,
+  ...t.references[reference.id],
+  cases: reference.achievements.map((id) => {
+    const achievement = t.achievements.find((a) => a.id === id);
+    if (!achievement) throw new Error(`Reference ${reference.id}: no achievement ${id}`);
+    return achievement;
+  }),
+}));
+---
+
+<section id="work" class="work container">
+  <p class="kicker">{t.work.kicker}</p>
+  <h2 class="section-title">{t.work.title}</h2>
+  <p class="work__intro">{t.work.intro}</p>
+
+  <div class="work__list">
+    {
+      references.map((reference) => (
+        /* `name` makes the browser enforce one-open-at-a-time, with no
+           JavaScript and with correct aria-expanded for free. */
+        <details class="reference" name="references" data-reference={reference.id}>
+          <summary class="reference__summary">
+            <h3 class="reference__heading">
+              <span class="reference__title">{reference.name}</span>
+              <span class="reference__meta">
+                <span>{reference.sector}</span>
+                <span aria-hidden="true">·</span>
+                <span>{reference.period}</span>
+              </span>
+            </h3>
+            <p class="reference__headline">{reference.headline}</p>
+            <span class="reference__chevron" aria-hidden="true">↓</span>
+          </summary>
+
+          <div class="achievement__panel">
+            <div class="achievement__rule" aria-hidden="true" />
+            {reference.cases.map((achievement) => (
+              <article class="reference__case" data-achievement={achievement.id}>
+                <h4 class="reference__case-title">{achievement.title}</h4>
+                {/* Say what the work was before using a word anyone has to
+                    learn. The label carries its own colon because French
+                    spaces it. */}
+                <p class="achievement__plain">
+                  <span class="achievement__plain-label">{t.work.labelPlain}</span>{' '}
+                  {achievement.plain}
+                </p>
+                <div class="achievement__facets">
+                  <div class="achievement__facet">
+                    <p class="kicker achievement__facet-label">{t.work.labelApproach}</p>
+                    <p class="achievement__facet-text">{achievement.approach}</p>
+                  </div>
+                  <div class="achievement__facet">
+                    <p class="kicker achievement__facet-label">{t.work.labelResult}</p>
+                    <p class="achievement__facet-text">{achievement.result}</p>
+                  </div>
+                </div>
+                {achievement.link && (
+                  <p class="achievement__link">
+                    <a href={achievement.link.href} target="_blank" rel="noopener">
+                      {achievement.link.label} <span aria-hidden="true">↗</span>
+                    </a>
+                  </p>
+                )}
+              </article>
+            ))}
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</section>
