@@ -1,6 +1,6 @@
 # 5. The phone number is assembled in the browser
 
-- Status: accepted; superseded by [ADR 16](0016-the-legal-notice-and-a-number-meant-to-be-public.md) from registration (planned 2027-04-14)
+- Status: accepted; superseded by [ADR 16](0016-the-legal-notice-and-a-number-meant-to-be-public.md) from registration
 - Date: 2026-08-28
 
 ## Context
