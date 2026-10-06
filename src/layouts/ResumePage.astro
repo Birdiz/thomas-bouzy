@@ -1,4 +1,5 @@
 ---
+import { getImage } from 'astro:assets';
 import AuditCall from '../components/AuditCall.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Hero from '../components/Hero.astro';
@@ -8,7 +9,8 @@ import ReferencesSection from '../components/ReferencesSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
-import { profilePage } from '../lib/structured-data.ts';
+import { portrait } from '../lib/portrait.ts';
+import { pageGraph } from '../lib/structured-data.ts';
 import type { Route } from '../routes.ts';
 import BaseLayout from './BaseLayout.astro';
 
@@ -19,6 +21,9 @@ interface Props {
 const { route } = Astro.props;
 const { locale } = route;
 const t = RESUME[locale];
+
+/* The Person's image: the portrait at the largest size the hero serves. */
+const image = portrait && (await getImage({ src: portrait, width: 580, height: 580 }));
 ---
 
 <BaseLayout
@@ -26,7 +31,7 @@ const t = RESUME[locale];
   title={t.meta.title}
   description={t.meta.description}
   ogType="profile"
-  structuredData={profilePage(route, t.meta.title, t.meta.description)}
+  structuredData={pageGraph(route, { portrait: image?.src })}
 >
   <SiteHeader route={route} t={t} />
   <main id="main">

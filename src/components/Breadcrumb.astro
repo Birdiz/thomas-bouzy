@@ -1,22 +1,20 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { homePath } from '../routes.ts';
-import type { Locale } from '../site.ts';
+import { breadcrumbOf } from '../lib/breadcrumb.ts';
+import type { Route } from '../routes.ts';
 
 interface Props {
-  locale: Locale;
+  route: Route;
   t: ResumeContent;
-  /** The steps between the home page and this one, each a link to where it is. */
-  via?: readonly { name: string; href: string }[];
-  /** The page the reader is on: the last step, and not a link. */
-  current: string;
 }
 
-const { locale, t, via = [], current } = Astro.props;
+const { route, t } = Astro.props;
 
 /* Every page but the home page says where it sits, in the kicker's place:
-   reaching the Offers from an Offer used to mean going through the menu. */
-const steps = [{ name: t.nav.home, href: homePath(locale) }, ...via];
+   reaching the Offers from an Offer used to mean going through the menu. The
+   JSON-LD's BreadcrumbList reads the same trail. */
+const steps = breadcrumbOf(route);
+const current = steps.pop();
 ---
 
 <nav class="kicker breadcrumb" aria-label={t.a11y.breadcrumb}>
@@ -29,6 +27,6 @@ const steps = [{ name: t.nav.home, href: homePath(locale) }, ...via];
         </li>
       ))
     }
-    <li aria-current="page">{current}</li>
+    <li aria-current="page">{current?.name}</li>
   </ol>
 </nav>
