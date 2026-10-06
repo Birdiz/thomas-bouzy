@@ -27,6 +27,13 @@ function labelOf(dimension: string, option: string): string {
   return label;
 }
 
+/** What a monthly amount is made of, when it includes days at the day rate. */
+function daysIncluded(days: number | undefined): string | undefined {
+  if (days === undefined) return undefined;
+  if (!labels.daysIncluded) throw new Error(`${offer}: no ${locale} label for the days included`);
+  return labels.daysIncluded.replace('{days}', new Intl.NumberFormat(locale).format(days));
+}
+
 const rows = optionCombinations(table).map((options) => {
   const combination = combinationFor(table, options);
   if (!combination) throw new Error(`${offer}: no price for ${options.join(' × ')}`);
@@ -37,7 +44,10 @@ const rows = optionCombinations(table).map((options) => {
       const range = combination.amounts[amount];
       if (!range) throw new Error(`${offer}: ${options.join(' × ')} has no ${amount}`);
       const unit = isMonthly(amount) ? ` ${shared.perMonth}` : '';
-      return `${formatEuroRange(range, locale)}${unit} ${shared.excludingVat}`;
+      return {
+        price: `${formatEuroRange(range, locale)}${unit} ${shared.excludingVat}`,
+        detail: isMonthly(amount) ? daysIncluded(combination.daysIncluded) : undefined,
+      };
     }),
     weeks: combination.weeks
       ? `${formatSpan(combination.weeks)} ${
@@ -129,7 +139,10 @@ const resultLabels = [
                 <td>{option}</td>
               ))}
               {row.amounts.map((amount) => (
-                <td class="estimator__amount">{amount}</td>
+                <td class="estimator__amount">
+                  {amount.price}
+                  {amount.detail && <span class="estimator__detail">{amount.detail}</span>}
+                </td>
               ))}
               {row.weeks && <td>{row.weeks}</td>}
             </tr>
@@ -152,14 +165,16 @@ const resultLabels = [
         .join(' ');
       const row = root.querySelector<HTMLTableRowElement>(`tr[data-options="${key}"]`);
       if (!row) return;
-      const cells = [...row.cells].map((cell) => cell.textContent ?? '');
+      const cells = [...row.cells];
       sliders.forEach((slider, i) => {
-        slider.setAttribute('aria-valuetext', cells[i] ?? '');
+        const text = cells[i]?.textContent ?? '';
+        slider.setAttribute('aria-valuetext', text);
         const choice = choices[i];
-        if (choice) choice.textContent = cells[i] ?? '';
+        if (choice) choice.textContent = text;
       });
+      // A figure is a copy of its cell, detail line included.
       figures.forEach((figure, i) => {
-        figure.textContent = cells[sliders.length + i] ?? '';
+        figure.replaceChildren(...(cells[sliders.length + i]?.cloneNode(true).childNodes ?? []));
       });
     };
 

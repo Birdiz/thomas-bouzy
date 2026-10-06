@@ -616,6 +616,21 @@ describe('what each Offer page has to say (ADR 17)', () => {
     expect(OFFERS.takeover.achievements).toContain('industrial-erp');
   });
 
+  it('shows what an Evolution month is made of: its Watch month, plus days at the day rate', () => {
+    for (const size of ['small', 'medium', 'large']) {
+      const watch = combinationFor(PRICES.takeover, [size, 'watch']);
+      const evolution = combinationFor(PRICES.takeover, [size, 'evolution']);
+      const days = evolution?.daysIncluded ?? 0;
+      expect(watch?.daysIncluded).toBeUndefined();
+      expect(days).toBeGreaterThan(0);
+      expect(evolution?.amounts.monthly).toEqual({
+        min: (watch?.amounts.monthly?.min ?? 0) + days * DAY_RATE,
+        max: (watch?.amounts.monthly?.max ?? 0) + days * DAY_RATE,
+      });
+    }
+    expect(pagesOf(fr).takeover?.estimator.daysIncluded).toContain('{days}');
+  });
+
   it('sells a Migration in two phases, priced by version gap and test coverage', () => {
     expect(PRICES.migration.dimensions.map((d) => d.id)).toEqual(['gap', 'coverage']);
     expect(pagesOf(en).migration?.rules.join(' ')).toMatch(/two phases/);

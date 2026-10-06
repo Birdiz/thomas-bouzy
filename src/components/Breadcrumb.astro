@@ -1,0 +1,34 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { homePath } from '../routes.ts';
+import type { Locale } from '../site.ts';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+  /** The steps between the home page and this one, each a link to where it is. */
+  via?: readonly { name: string; href: string }[];
+  /** The page the reader is on: the last step, and not a link. */
+  current: string;
+}
+
+const { locale, t, via = [], current } = Astro.props;
+
+/* Every page but the home page says where it sits, in the kicker's place:
+   reaching the Offers from an Offer used to mean going through the menu. */
+const steps = [{ name: t.nav.home, href: homePath(locale) }, ...via];
+---
+
+<nav class="kicker breadcrumb" aria-label={t.a11y.breadcrumb}>
+  <ol class="breadcrumb__list">
+    {
+      steps.map((step) => (
+        <li>
+          <a href={step.href}>{step.name}</a>
+          <span class="breadcrumb__sep" aria-hidden="true">/</span>
+        </li>
+      ))
+    }
+    <li aria-current="page">{current}</li>
+  </ol>
+</nav>

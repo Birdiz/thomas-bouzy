@@ -51,6 +51,12 @@ export interface Combination {
   /** One option id per dimension, in dimension order. */
   options: readonly string[];
   amounts: Partial<Record<AmountId, Range>>;
+  /**
+   * Days of work at the day rate that the monthly amount includes. The
+   * estimator says so under it, so a plan that jumps from 400 € to 1,500 € a
+   * month shows where the difference goes.
+   */
+  daysIncluded?: number;
   weeks?: Range;
 }
 
@@ -102,15 +108,16 @@ function monthlyAtDayRate(daysPerWeek: number): Range {
 
 const range = (min: number, max: number): Range => ({ min, max });
 
+/** Watch plans are priced on the market for keeping an application healthy, not on days. */
+const watch = { small: range(350, 450), medium: range(450, 550), large: range(550, 700) };
+
 /** An Evolution plan: its Watch plan, plus its days of change at the day rate. */
-function evolution(watch: Range, days: number): Range {
-  return range(watch.min + days * DAY_RATE, watch.max + days * DAY_RATE);
+function evolution(size: keyof typeof EVOLUTION_DAYS): Range {
+  const days = EVOLUTION_DAYS[size];
+  return range(watch[size].min + days * DAY_RATE, watch[size].max + days * DAY_RATE);
 }
 
 const express = range(AUDIT_EXPRESS_FEE, AUDIT_EXPRESS_FEE);
-
-/** Watch plans are priced on the market for keeping an application healthy, not on days. */
-const watch = { small: range(350, 450), medium: range(450, 550), large: range(550, 700) };
 
 export const PRICES: Record<OfferId, PriceTable> = {
   // Each price below is an effort in days at the day rate, rounded, except the
@@ -154,8 +161,9 @@ export const PRICES: Record<OfferId, PriceTable> = {
         options: ['small', 'evolution'],
         amounts: {
           setup: range(3000, 4500),
-          monthly: evolution(watch.small, EVOLUTION_DAYS.small),
+          monthly: evolution('small'),
         },
+        daysIncluded: EVOLUTION_DAYS.small,
         weeks: range(2, 3),
       },
       {
@@ -167,8 +175,9 @@ export const PRICES: Record<OfferId, PriceTable> = {
         options: ['medium', 'evolution'],
         amounts: {
           setup: range(4500, 7000),
-          monthly: evolution(watch.medium, EVOLUTION_DAYS.medium),
+          monthly: evolution('medium'),
         },
+        daysIncluded: EVOLUTION_DAYS.medium,
         weeks: range(3, 5),
       },
       {
@@ -180,8 +189,9 @@ export const PRICES: Record<OfferId, PriceTable> = {
         options: ['large', 'evolution'],
         amounts: {
           setup: range(7000, 9000),
-          monthly: evolution(watch.large, EVOLUTION_DAYS.large),
+          monthly: evolution('large'),
         },
+        daysIncluded: EVOLUTION_DAYS.large,
         weeks: range(5, 8),
       },
     ],
