@@ -867,7 +867,7 @@ export const fr = {
       items: [
         {
           title: 'La Cartonnerie, à Reims',
-          text: 'Consultant pour cette scène de musiques actuelles (SMAC), un lieu culturel labellisé et soutenu par des fonds publics.',
+          text: "Pour cette scène de musiques actuelles (SMAC), j'ai accompagné le responsable artistique face au prestataire : cadrage technique des premières étapes d'une application qui suit les musiciens de l'album à la scène, et besoins du produit traduits en langage technique.",
         },
         {
           title: 'Un annuaire associatif, tiré des sites publics',
