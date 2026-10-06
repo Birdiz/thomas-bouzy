@@ -80,6 +80,21 @@ cross-fade between two dark pages could not be told from a cut, and a 1.5 px
 track drawn over a single flick of the wheel went unseen. Motion that is meant
 to be seen has to be calibrated by looking at it, not by its numbers.
 
+**Firefox gets a fallback for both.** As of Firefox 153, scroll-driven
+animations are still behind a flag, and cross-document view transitions do
+not run. Both were the visible part of the change, so "the browser cuts, as
+before" was not good enough:
+
+- the journey: a script in `OffersSection.astro` holds the track back
+  (`is-waiting`) and draws it once on a clock (`is-drawn`) when the panel is
+  well into view, through an `IntersectionObserver`;
+- the page change: a script in the head marks a page reached from this site
+  (`page-in`, on `<html>` before the first paint) and its `<main>` comes up
+  into place. The leaving half needs a view transition and is not faked.
+
+Both only add motion: with no script, the track is drawn and the page is
+simply there.
+
 ## Consequences
 
 - The CSS budget (ADR 6) moves 34 → 35 kB. ADR 6 raises a limit only for

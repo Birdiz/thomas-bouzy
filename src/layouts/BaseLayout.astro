@@ -113,6 +113,13 @@ const OG_LOCALE: Record<Locale, string> = { en: 'en_GB', fr: 'fr_FR' };
     />
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+    {/* Without cross-document view transitions (Firefox), a page reached from
+        this site still gets the arriving half of the change (docs/adr/0023).
+        In the head, so the class is there before the first paint. */}
+    <script is:inline>
+      if (!('CSSViewTransitionRule' in window) && document.referrer.startsWith(location.origin + '/'))
+        document.documentElement.classList.add('page-in');
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{t.a11y.skipToContent}</a>

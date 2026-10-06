@@ -203,6 +203,11 @@ a {
     animation: page-in 0.4s var(--ease-out) 0.12s both;
   }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .page-in main {
+    animation: page-in 0.4s var(--ease-out) both;
+  }
+}
 @keyframes page-out {
   to {
     opacity: 0;
@@ -902,19 +907,24 @@ a {
 
 /* The track draws itself as the panel scrolls into view, one stage after the
    other, and each stop lights up as the line reaches it: the life of the
-   application read in order (docs/adr/0023). Tied to scroll, so it stops when
-   the reader stops. Without scroll-driven animations, or under reduced
-   motion, the track is simply drawn, as before. */
+   application read in order (docs/adr/0023). Tied to scroll where the browser
+   can, so it stops when the reader stops. Elsewhere (Firefox) the script in
+   OffersSection.astro holds the track back with `is-waiting`, then draws it
+   once, on a clock, with `is-drawn`. Under reduced motion, or with no script,
+   the track is simply drawn, as before. */
 @media (prefers-reduced-motion: no-preference) {
+  .journey__stage:nth-child(2) {
+    --i: 1;
+  }
+  .journey__stage:nth-child(3) {
+    --i: 2;
+  }
+  .journey__stage::before {
+    transform-origin: 0 0;
+  }
   @supports (animation-timeline: view()) {
     .journey {
       view-timeline: --journey block;
-    }
-    .journey__stage:nth-child(2) {
-      --i: 1;
-    }
-    .journey__stage:nth-child(3) {
-      --i: 2;
     }
     /* Longhands only: given all of them, the minifier folds them into an
        `animation` shorthand carrying the timeline, which browsers reject. */
@@ -925,12 +935,23 @@ a {
       animation-fill-mode: both;
       animation-timeline: --journey;
       animation-range: cover calc(12% + var(--i, 0) * 13%) cover calc(25% + var(--i, 0) * 13%);
-      transform-origin: 0 0;
     }
     .journey__step {
       animation-name: journey-stop;
       animation-range: cover calc(10% + var(--i, 0) * 13%) cover calc(13% + var(--i, 0) * 13%);
     }
+  }
+  .journey.is-waiting .journey__stage::before {
+    scale: var(--track, 0 1);
+  }
+  .journey.is-waiting .journey__step {
+    border-color: var(--color-divider);
+  }
+  .journey.is-drawn .journey__stage::before {
+    animation: journey-draw 0.6s var(--ease-out) calc(var(--i, 0) * 0.5s) both;
+  }
+  .journey.is-drawn .journey__step {
+    animation: journey-stop 0.3s calc(var(--i, 0) * 0.5s) both;
   }
 }
 /* Wide, the track runs right; narrow, it runs down. */
