@@ -184,12 +184,35 @@ a {
   }
 }
 
-/* From one page to the next, a cross-fade instead of a blink: the site reads as
-   one place. The browser's own 250 ms fade is --dur-base already. Browsers
-   without cross-document view transitions cut, as before. */
+/* From one page to the next, the header stays put and the page under it
+   changes: the old one lifts away, the new one comes up into place. The site
+   reads as one place, and the reader sees that they moved. A plain cross-fade
+   was tried first: between two dark pages it could not be told from a cut.
+   Browsers without cross-document view transitions cut, as before. */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
+  }
+  .site-header {
+    view-transition-name: site-header;
+  }
+  ::view-transition-old(root) {
+    animation: page-out 0.2s ease-in both;
+  }
+  ::view-transition-new(root) {
+    animation: page-in 0.4s var(--ease-out) 0.12s both;
+  }
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
   }
 }
 
@@ -825,7 +848,7 @@ a {
     top: 15px;
     left: calc(var(--pad) + 30px + 10px);
     right: calc(var(--pad) * -1 + 10px);
-    height: 1.5px;
+    height: 2px;
     background: var(--color-accent);
   }
   .journey__stage:last-child::before {
@@ -869,10 +892,10 @@ a {
   .journey__stage:not(:last-child)::before {
     content: "";
     position: absolute;
-    left: 14.25px;
+    left: 14px;
     top: 40px;
     bottom: -22px;
-    width: 1.5px;
+    width: 2px;
     background: var(--color-accent);
   }
 }
@@ -901,12 +924,12 @@ a {
       animation-timing-function: linear;
       animation-fill-mode: both;
       animation-timeline: --journey;
-      animation-range: cover calc(24% + var(--i, 0) * 8%) cover calc(32% + var(--i, 0) * 8%);
+      animation-range: cover calc(12% + var(--i, 0) * 13%) cover calc(25% + var(--i, 0) * 13%);
       transform-origin: 0 0;
     }
     .journey__step {
       animation-name: journey-stop;
-      animation-range: cover calc(22% + var(--i, 0) * 8%) cover calc(26% + var(--i, 0) * 8%);
+      animation-range: cover calc(10% + var(--i, 0) * 13%) cover calc(13% + var(--i, 0) * 13%);
     }
   }
 }
@@ -921,16 +944,16 @@ a {
     --track: 1 0;
   }
 }
-/* A stop starts as a dim ring and ends as the drawn one, its number always
-   legible: the ring and the ground change, the figure stays. */
+/* A stop starts as a dim ring and lights up, filled, when the line reaches it.
+   Its number stays legible all the way: 6.01:1 at both ends. */
 @keyframes journey-stop {
   from {
     border-color: var(--color-divider);
-    background-color: var(--color-bg);
   }
   to {
-    border-color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-accent) 22%, var(--color-bg));
+    border-color: var(--color-accent-fill);
+    background: var(--color-accent-fill);
+    color: var(--color-on-accent);
   }
 }
 

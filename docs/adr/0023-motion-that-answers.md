@@ -57,9 +57,12 @@ Shipped with this ADR:
 - References and FAQ answers open and close to their height
   (`::details-content`, `interpolate-size`), and the FAQ takes the References'
   ring chevron;
-- a 250 ms cross-fade between pages (`@view-transition`);
-- the journey track draws itself stage by stage as the panel scrolls into
-  view, and each stop lights up as the line reaches it
+- from one page to the next, the header stays put while the old page lifts
+  away (200 ms) and the new one comes up into place (400 ms), through
+  `@view-transition`;
+- the journey track draws itself stage by stage over half a screen of scroll
+  as the panel comes into view, and each stop fills with the accent as the
+  line reaches it
   (`animation-timeline`, under `@supports`). Tied to scroll, it stops when the
   reader stops;
 - an estimator figure that changes comes up into place in 220 ms (the
@@ -72,9 +75,17 @@ Shipped with this ADR:
 The first cut shipped only the controls' answers. Looked at, the page at rest
 was the same to the pixel, and the owner saw no difference. A reader would not
 either: the track, the estimator and the ridge are what make the change
-visible without a click.
+visible without a click. The second cut was still too quiet: a 250 ms
+cross-fade between two dark pages could not be told from a cut, and a 1.5 px
+track drawn over a single flick of the wheel went unseen. Motion that is meant
+to be seen has to be calibrated by looking at it, not by its numbers.
 
 ## Consequences
+
+- The CSS budget (ADR 6) moves 34 → 35 kB. ADR 6 raises a limit only for
+  content; the owner ruled that motion the reader can see is worth a few
+  hundred bytes (about 0.2 kB compressed). The unused components left in
+  `tokens.css` went first. No script limit moved.
 
 - The e2e suite runs under reduced motion by default (`tests/e2e/fixtures.ts`),
   so it sees none of this. `resume.spec.ts` checks both sides: with no stated
