@@ -4,7 +4,7 @@
  *
  * The card wears the LinkedIn cover (docs/adr/0013): the slate ground, the
  * ridge with its terracotta rim and glow, a short accent rule, the name in
- * Spectral. The ridge is read from src/art/ridge.ts, the same data the hero
+ * Figtree 600, as the site sets it (docs/adr/0021). The ridge is read from src/art/ridge.ts, the same data the hero
  * draws, so the card and the page show one mountain.
  *
  * What it does not take from the cover is the words. The cover is a LinkedIn
@@ -45,7 +45,7 @@ const RIDGE = `<svg class="ridge" viewBox="0 0 ${RW} ${RH}" preserveAspectRatio=
 
 const CARD = `<!doctype html><meta charset="utf-8"><style>
   @font-face { font-family: Figtree; src: url('${asDataUri('figtree-latin-400-normal.woff2')}') format('woff2'); }
-  @font-face { font-family: Spectral; font-weight: 500; src: url('${asDataUri('spectral-latin-500-normal.woff2')}') format('woff2'); }
+  @font-face { font-family: Figtree; font-weight: 600; src: url('${asDataUri('figtree-latin-600-normal.woff2')}') format('woff2'); }
   @font-face { font-family: 'JetBrains Mono'; src: url('${asDataUri('jetbrains-mono-latin-400-normal.woff2')}') format('woff2'); }
   * { box-sizing: border-box; margin: 0; }
   body {
@@ -60,7 +60,7 @@ const CARD = `<!doctype html><meta charset="utf-8"><style>
   .stack { position: absolute; left: 560px; right: 72px; top: 0; bottom: 0;
     display: flex; flex-direction: column; justify-content: center; }
   .rule { width: 64px; height: 3px; background: #ac6d67; margin-bottom: 34px; }
-  h1 { font-family: Spectral, serif; font-weight: 500; font-size: 84px; line-height: 1; letter-spacing: -0.01em; }
+  h1 { font-weight: 600; font-size: 84px; line-height: 1; letter-spacing: -0.02em; }
   .line { font-size: 30px; line-height: 1.35; color: #c9d3d8; margin-top: 28px; max-width: 24ch; }
   .foot { margin-top: 40px; font-family: 'JetBrains Mono', monospace; font-size: 17px;
     letter-spacing: .16em; text-transform: uppercase; color: #c3827b; }

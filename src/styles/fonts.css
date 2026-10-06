@@ -3,14 +3,17 @@
    can never drift apart. Replaces the design system's Google Fonts @import —
    see docs/design-deltas.md.
 
-   Spectral 500 carries the headings, as it carries the title on the LinkedIn
-   cover (docs/adr/0013). Figtree carries the prose at 400. JetBrains Mono
-   carries the structure — the section numbers and the eyebrows above each
-   heading — the device docs/adr/0010 took from the engineering studios.
+   One family (docs/adr/0021). Figtree 600 carries the headings,
+   Figtree 400 the prose and the controls. JetBrains Mono carries the
+   structure — the section numbers and the eyebrows above each heading — the
+   device docs/adr/0010 took from the engineering studios.
 
-   Figtree 700 left as Spectral arrived. Figtree 800 is back, latin only and
-   not preloaded, for the one heavy line: the invitation to the Audit. The
-   system's own heavy sans was tried first, and drew differently on every OS. */
+   Figtree 800, latin only and not preloaded, sets the one heavy line: the
+   invitation to the Audit. The system's own heavy sans was tried first, and
+   drew differently on every OS.
+
+   Spectral left: one Figtree weight costs half of what the serif did, so the
+   swap took the fonts on the home page from 66.8 kB to 55.5 kB (ADR 6). */
 
 @font-face {
   font-family: "Figtree";
@@ -47,6 +50,28 @@
     U+FEFF, U+FFFD;
 }
 @font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/figtree-latin-600-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/figtree-latin-ext-600-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
   font-family: "JetBrains Mono";
   font-style: normal;
   font-weight: 400;
@@ -63,29 +88,6 @@
   font-weight: 400;
   font-display: swap;
   src: url("/fonts/jetbrains-mono-latin-ext-400-normal.woff2") format("woff2");
-  unicode-range:
-    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: "Spectral";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/spectral-latin-500-normal.woff2") format("woff2");
-  unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-    U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "Spectral";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/spectral-latin-ext-500-normal.woff2") format("woff2");
   unicode-range:
     U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
     U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,

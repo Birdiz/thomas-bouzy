@@ -425,8 +425,10 @@ a {
 }
 /* The client's own sentence, quote marks and all. Sized as a heading rather
    than styled as a pull quote: it is the label of the row, and a second display
-   treatment beside the numbered eyebrow would fight it. */
+   treatment beside the numbered eyebrow would fight it. Set at 400, full ink:
+   it is someone speaking, and a sentence in the heading weight reads shouted. */
 .problem__mode-quote {
+  font-weight: 400;
   font-size: 19px;
   line-height: 1.35;
   margin: 0 0 6px;
@@ -448,6 +450,7 @@ a {
   display: block;
   margin-top: 4px;
   font-family: var(--font-body);
+  font-weight: 400;
   font-size: 13.5px;
   color: var(--color-accent-text);
 }
@@ -813,7 +816,10 @@ a {
   flex: 1;
   text-wrap: pretty;
 }
+/* A price in a sentence is read, not scanned: the sans, with figures that
+   keep their width. The mono is kept for labels and ordinals. */
 .offers__from {
+  font-variant-numeric: tabular-nums;
   margin: 6px 0 0;
   font-size: 14px;
   color: var(--color-muted);
@@ -1174,7 +1180,7 @@ a {
 /* — offer pages ————————————————————————————————————————————————————————————
 
    One page per Offer, in ADR 17's order. Same grammar as the home page —
-   numbered mono eyebrows, Spectral headings, surface cards — so a reader who
+   numbered mono eyebrows, Figtree headings, surface cards — so a reader who
    arrives from a link lands on the same site, not on a landing page. The
    section headings are the eyebrows themselves: one level of h2 per section,
    no second display title competing with the Offer's name. */
@@ -1197,8 +1203,8 @@ a {
 }
 /* The lowest price, under the plain line: in the first screen on a phone. */
 .offer__glance {
-  font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
   margin: 18px 0 0;
 }
 .offer__glance a {
@@ -1222,9 +1228,8 @@ a {
   border-top: 1px solid var(--color-divider);
   max-width: 64ch;
 }
+/* The client's sentence, as on the home page's problem rows: 400, full ink. */
 .offer__sentence {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
   font-size: 19px;
   line-height: 1.4;
   padding: 16px 0;
@@ -1260,8 +1265,7 @@ a {
   margin: 0;
 }
 .offer__card-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--color-muted);
   margin: 0;
 }
@@ -1371,6 +1375,7 @@ a {
   margin: 4px 0 0;
   font-family: var(--font-heading);
   font-weight: var(--font-heading-weight);
+  font-variant-numeric: tabular-nums;
   font-size: clamp(20px, 2.4vw, 26px);
   line-height: 1.2;
 }
