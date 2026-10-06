@@ -95,7 +95,7 @@ function person(locale: Locale, portrait: string | undefined) {
     jobTitle: t.schema.jobTitle,
     description: t.meta.description,
     url: absoluteUrl(homePath(locale)),
-    // The portrait, not og.png: a card with his name on it is not a picture of him.
+    // The portrait, not the Open Graph card: a card with his name on it is not a picture of him.
     ...(portrait && { image: absoluteUrl(portrait) }),
     email: `mailto:${CONTACT.email}`,
     address: {

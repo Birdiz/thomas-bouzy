@@ -10,11 +10,13 @@
  *             degrades on purpose rather than shipping an empty circle, so
  *             this reports loudly and exits 0.
  */
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { OG_CARDS } from '../src/lib/og.ts';
 import { LEGAL, SITE } from '../src/site.ts';
+import { cardHash, OG_MANIFEST } from './og-card.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const path = (...p) => join(root, ...p);
@@ -28,10 +30,32 @@ const required = [
   'src/assets/README.md',
   'public/favicon.svg',
   'public/apple-touch-icon.png',
-  'public/og.png',
 ];
 for (const file of required) {
   if (!existsSync(path(file))) errors.push(`missing ${file}`);
+}
+
+// Every route's Open Graph card (src/lib/og.ts): LinkedIn shows it under every
+// shared link, and a page pointing og:image at a missing file shows nothing.
+// The cards are drawn by a browser and committed, so the build cannot redraw
+// one; what it can tell is that a card was drawn from words its page no longer
+// says, which a buyer would read on LinkedIn as the site contradicting itself.
+const drawnFrom = existsSync(OG_MANIFEST) ? JSON.parse(readFileSync(OG_MANIFEST, 'utf8')) : {};
+for (const card of OG_CARDS) {
+  const file = `public${card.src}`;
+  if (!existsSync(path(file))) {
+    errors.push(`missing ${file}: run npm run og`);
+    continue;
+  }
+  const { width, height } = await sharp(path(file)).metadata();
+  if (width !== 1200 || height !== 630) {
+    errors.push(`${file} is ${width}×${height}, not the 1200×630 og:image declares`);
+  }
+  if (drawnFrom[card.src] !== cardHash(card)) {
+    errors.push(
+      `${file} no longer matches its page's words or the card's template: run npm run og`,
+    );
+  }
 }
 
 // A deployment build must name its own hostname. Without this, a missing or

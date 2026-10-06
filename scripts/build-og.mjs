@@ -1,96 +1,72 @@
 #!/usr/bin/env node
 /**
- * Renders public/og.png (1200×630) and public/apple-touch-icon.png.
+ * Renders one Open Graph card per route into public/og/ (1200×630), and
+ * public/apple-touch-icon.png.
  *
- * The card wears the LinkedIn cover (docs/adr/0013): the slate ground, the
- * ridge with its terracotta rim and glow, a short accent rule, the name in
- * Figtree 600, as the site sets it (docs/adr/0021). The ridge is read from src/art/ridge.ts, the same data the hero
- * draws, so the card and the page show one mountain.
- *
- * What it does not take from the cover is the words. The cover is a LinkedIn
- * headline — a job title and a stack list — and ADR 11 took exactly that off
- * this site. The card says what the hero says: the client's problem first.
+ * Which cards, and what each says, is src/lib/og.ts; how they look is
+ * scripts/og-card.mjs. Alongside the images it records what each was drawn
+ * from in scripts/og-manifest.json, so that `npm run assets:check` can tell a
+ * card that no longer matches its page.
  *
  * Drawn in a real browser rather than composited by sharp, because sharp's SVG
  * text goes through fontconfig and would not find the self-hosted faces. The
  * output is committed, so `npm run build` never needs a browser; re-run
- * `npm run og` after changing the copy, the ridge or the palette.
+ * `npm run og` after changing a card's copy, the ridge or the palette.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
 import sharp from 'sharp';
-import { RIDGE_GLOW, RIDGE_LAYERS, RIDGE_RIM, RIDGE_VIEWBOX } from '../src/art/ridge.ts';
+import { OG_CARDS } from '../src/lib/og.ts';
+import { cardHash, cardHtml, OG_MANIFEST } from './og-card.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const asDataUri = (file) =>
-  `data:font/woff2;base64,${readFileSync(join(root, 'public/fonts', file)).toString('base64')}`;
-
-const { width: RW, height: RH } = RIDGE_VIEWBOX;
-const RIDGE = `<svg class="ridge" viewBox="0 0 ${RW} ${RH}" preserveAspectRatio="none">
-  <defs>
-    <radialGradient id="glow" cx="0.28" cy="0.3" r="0.35">
-      <stop offset="0" stop-color="${RIDGE_GLOW}" stop-opacity="0.35"/>
-      <stop offset="1" stop-color="${RIDGE_GLOW}" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="${RW}" height="${RH}" fill="url(#glow)"/>
-  ${RIDGE_LAYERS.map(({ d, fill }, i) =>
-    i === 0
-      ? `<path d="${d}" fill="${fill}" stroke="${RIDGE_RIM}" stroke-opacity="0.6" stroke-width="2"/>`
-      : `<path d="${d}" fill="${fill}"/>`,
-  ).join('')}
-</svg>`;
-
-const CARD = `<!doctype html><meta charset="utf-8"><style>
-  @font-face { font-family: Figtree; src: url('${asDataUri('figtree-latin-400-normal.woff2')}') format('woff2'); }
-  @font-face { font-family: Figtree; font-weight: 600; src: url('${asDataUri('figtree-latin-600-normal.woff2')}') format('woff2'); }
-  @font-face { font-family: 'JetBrains Mono'; src: url('${asDataUri('jetbrains-mono-latin-400-normal.woff2')}') format('woff2'); }
-  * { box-sizing: border-box; margin: 0; }
-  body {
-    width: 1200px; height: 630px; background: #0e1418; color: #eef2f3;
-    font-family: Figtree, sans-serif; position: relative; overflow: hidden;
-  }
-  .ridge {
-    position: absolute; left: 0; bottom: 0; width: 640px; height: 400px;
-    -webkit-mask-image: linear-gradient(to right, #000 70%, transparent 98%);
-            mask-image: linear-gradient(to right, #000 70%, transparent 98%);
-  }
-  .stack { position: absolute; left: 560px; right: 72px; top: 0; bottom: 0;
-    display: flex; flex-direction: column; justify-content: center; }
-  .rule { width: 64px; height: 3px; background: #ac6d67; margin-bottom: 34px; }
-  h1 { font-weight: 600; font-size: 84px; line-height: 1; letter-spacing: -0.02em; }
-  .line { font-size: 30px; line-height: 1.35; color: #c9d3d8; margin-top: 28px; max-width: 24ch; }
-  .foot { margin-top: 40px; font-family: 'JetBrains Mono', monospace; font-size: 17px;
-    letter-spacing: .16em; text-transform: uppercase; color: #c3827b; }
-</style>
-${RIDGE}
-<div class="stack">
-  <div class="rule"></div>
-  <h1>Thomas Bouzy</h1>
-  <p class="line">Je reprends et fais évoluer vos applications métier.</p>
-  <p class="foot">Freelance PHP/Symfony</p>
-</div>`;
+const outDir = join(root, 'public/og');
+mkdirSync(outDir, { recursive: true });
 
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1200, height: 630 },
   deviceScaleFactor: 1,
 });
-await page.setContent(CARD, { waitUntil: 'load' });
-await page.evaluate(() => document.fonts.ready);
-const png = await page.screenshot({ type: 'png' });
+
+const manifest = {};
+for (const card of OG_CARDS) {
+  await page.setContent(cardHtml(card), { waitUntil: 'load' });
+  await page.evaluate(() => document.fonts.ready);
+  // A line that does not fit is set smaller, a pixel at a time, rather than
+  // overflowing the card or being cut.
+  await page.evaluate(() => {
+    const stack = document.querySelector('.stack');
+    const line = document.querySelector('.line');
+    let size = Number.parseFloat(getComputedStyle(line).fontSize);
+    while (stack.scrollHeight > stack.clientHeight && size > 20) {
+      size -= 1;
+      line.style.fontSize = `${size}px`;
+    }
+  });
+  const png = await page.screenshot({ type: 'png' });
+
+  // The card is a handful of flat colours and one soft glow: a palette PNG is
+  // close to identical and a fraction of the size of Chromium's truecolour one.
+  const optimised = await sharp(png).png({ palette: true, quality: 90, effort: 10 }).toBuffer();
+  const file = join(root, 'public', card.src);
+  writeFileSync(file, optimised);
+  manifest[card.src] = cardHash(card);
+  console.log(`Wrote public${card.src} (${(optimised.length / 1024).toFixed(1)} kB)`);
+}
 await browser.close();
 
-// The card is a handful of flat colours and one soft glow — a palette PNG is
-// close to identical and a fraction of the size. Chromium's screenshot is truecolour, so
-// this step is what keeps og.png off the performance budget.
-const optimised = await sharp(png).png({ palette: true, quality: 90, effort: 10 }).toBuffer();
-writeFileSync(join(root, 'public/og.png'), optimised);
-console.log(
-  `Wrote public/og.png (1200×630, ${(optimised.length / 1024).toFixed(1)} kB, was ${(png.length / 1024).toFixed(1)} kB truecolour)`,
-);
+// A card for a route that no longer exists is not served by anything: drop it.
+const current = new Set(OG_CARDS.map((card) => card.src));
+for (const file of readdirSync(outDir)) {
+  if (!current.has(`/og/${file}`)) {
+    rmSync(join(outDir, file));
+    console.log(`Removed public/og/${file}`);
+  }
+}
+writeFileSync(OG_MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`);
 
 // The touch icon is plain shapes, so sharp can rasterise the favicon directly.
 await sharp(join(root, 'public/favicon.svg'))

@@ -301,7 +301,6 @@ export interface ResumeContent {
   meta: {
     title: string;
     description: string;
-    ogImageAlt: string;
   };
 
   /** Strings that exist for assistive technology only. */
