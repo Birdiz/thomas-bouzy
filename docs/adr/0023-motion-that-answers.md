@@ -89,8 +89,11 @@ before" was not good enough:
   (`is-waiting`) and draws it once on a clock (`is-drawn`) when the panel is
   well into view, through an `IntersectionObserver`;
 - the page change: a script in the head marks a page reached from this site
-  (`page-in`, on `<html>` before the first paint) and its `<main>` comes up
-  into place. The leaving half needs a view transition and is not faked.
+  that was not revealed through a view transition (`page-in`, on `<html>`
+  before the first paint), and its `<main>` comes up into place. It asks
+  `pagereveal` whether a transition ran rather than testing for support: a
+  browser can know `@view-transition` and still not run it across documents.
+  The leaving half needs a view transition and is not faked.
 
 Both only add motion: with no script, the track is drawn and the page is
 simply there.

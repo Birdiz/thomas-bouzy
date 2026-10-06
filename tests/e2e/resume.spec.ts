@@ -388,6 +388,8 @@ test.describe('motion preferences', () => {
       }
 
       expect(await revealedWithTransition(page)).toBe(true);
+      // Revealed through the transition, so the fallback arrival stays off.
+      await expect(page.locator('html')).not.toHaveClass(/page-in/);
     });
 
     test('raises the ridge once, and draws the journey as it scrolls', async ({ page }) => {
@@ -436,6 +438,14 @@ test.describe('motion preferences', () => {
       expect(running).toBe(0);
 
       expect(await revealedWithTransition(page)).toBe(false);
+      // No transition ran, so the page is marked for the fallback arrival, which
+      // reduced motion then keeps still.
+      await expect(page.locator('html')).toHaveClass(/page-in/);
+      expect(
+        await page.evaluate(
+          () => getComputedStyle(document.querySelector('main') as Element).animationName,
+        ),
+      ).toBe('none');
     });
   });
 });
