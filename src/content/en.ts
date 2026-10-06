@@ -6,9 +6,9 @@ import type { ResumeContent } from './types.ts';
  */
 export const en = {
   meta: {
-    title: 'Thomas Bouzy — Freelance Symfony & PHP backend consultant',
+    title: 'Thomas Bouzy — Freelance full-stack consultant',
     description:
-      'I take over, stabilise and upgrade the PHP/Symfony business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
+      'Full-stack, with backend expertise in PHP/Symfony: I take over, stabilise and upgrade the business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
   },
 
   a11y: {
@@ -34,7 +34,7 @@ export const en = {
     title: ['I take over your business software', 'and keep it moving.'],
     blurb:
       'Even the one nobody dares touch any more. Without stopping it, without rewriting everything.',
-    ctaBook: 'Book a 30-minute call',
+    ctaBook: 'Book a free call',
     ctaOffers: 'See the offers',
   },
 
@@ -214,7 +214,7 @@ export const en = {
     kicker: 'About',
     title: 'In short',
     paragraphs: [
-      'I work in PHP and Symfony, with the React, TypeScript and Node.js that come with them. I like the unglamorous parts: transactions that stay correct, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
+      'I am full-stack, with the depth on the backend and in architecture: PHP and Symfony first, Node.js and TypeScript, React on the front end; Python, so far in personal projects. I like the unglamorous parts: transactions that stay correct, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
       'I have taught at university and brought juniors to autonomy. I live in the Grand Est countryside; I work mostly remotely, and come on site when needed.',
     ],
     careerLine: 'Hiring rather than contracting?',
@@ -228,7 +228,7 @@ export const en = {
   ],
 
   schema: {
-    jobTitle: 'Freelance PHP/Symfony developer',
+    jobTitle: 'Freelance full-stack developer',
     knowsAbout: [
       'PHP',
       'Symfony',
@@ -261,7 +261,7 @@ export const en = {
     followedBy: 'then',
     start: 'Where to start',
     inFrench: '(in French)',
-    book: { text: 'Already know what you need?', cta: 'Book a 30-minute call' },
+    book: { text: 'Already know what you need?', cta: 'Book a free call' },
     publicSector: 'A local authority?',
     publicSectorLink: 'See the dedicated page (in French)',
     partners: 'An agency or an IT services firm?',
@@ -327,9 +327,9 @@ export const en = {
   offerPages: {
     audit: {
       meta: {
-        title: 'Symfony & PHP code audit and technical due diligence',
+        title: 'Code audit and technical due diligence',
         description:
-          'A written audit of your PHP/Symfony system: report, risk register and prioritised action plan. The express audit, at a fixed price, is credited against the next engagement.',
+          'A written audit of your system: report, risk register and prioritised action plan. The express audit, at a fixed price, is credited against the next engagement.',
       },
       heading: 'A technical audit of your application',
       priceHeading: 'How much does a code audit cost?',
@@ -395,6 +395,11 @@ export const en = {
           question: 'Why a fixed price for the express audit, and a range for the full one?',
           answer:
             'The express audit is capped at under three days, on the application that worries you most. The full one depends on the real size of the system; its quote is firm before anything starts.',
+        },
+        {
+          question: 'Which technologies?',
+          answer:
+            'An architecture and its risks read the same in any stack. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
@@ -466,7 +471,7 @@ export const en = {
     },
     reliability: {
       meta: {
-        title: 'Reliable PHP/Symfony systems: traceable flows, observability',
+        title: 'Reliable systems: traceable flows, observability',
         description:
           "A balance, a stock or an invoice that won't reconcile? Traceable flows, idempotent processing and observability to explain it. Public prices.",
       },
@@ -521,15 +526,20 @@ export const en = {
           question: 'Do we have to change monitoring tools?',
           answer: 'Rarely. We start from what you have: what matters is knowing what to observe.',
         },
+        {
+          question: 'Which technologies?',
+          answer:
+            'Tracing a flow does not depend on the language. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+        },
       ],
     },
     scaling: {
       meta: {
-        title: 'Scaling PHP/Symfony under load, with high availability',
+        title: 'Scaling an application under load, with high availability',
         description:
           'Does your application slow down or fall over at peak traffic? Load test, bottleneck found, measured fixes: a fixed-price diagnosis. Public prices.',
       },
-      heading: 'Scaling and high availability for your PHP/Symfony application',
+      heading: 'Scaling and high availability for your application',
       priceHeading: 'How much does a load diagnosis cost?',
       sentences: [
         '“It crawls as soon as we get busy.”',
@@ -592,15 +602,20 @@ export const en = {
           answer:
             'It runs on a faithful copy, or on production in steps, outside peak hours, with a stop ready.',
         },
+        {
+          question: 'Which technologies?',
+          answer:
+            'A load test does not depend on the language. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+        },
       ],
     },
     build: {
       meta: {
-        title: 'Custom PHP/Symfony business application development',
+        title: 'Custom business application development, front end and back end',
         description:
-          'A custom PHP/Symfony business application, built to be taken over: a fixed-price framing, then development by the day. Public prices.',
+          'A custom business application, front end and back end, built to be taken over: a fixed-price framing, then development by the day. Public prices.',
       },
-      heading: 'Custom application development in PHP/Symfony',
+      heading: 'Custom application development',
       priceHeading: 'How much does a custom application cost?',
       sentences: [
         '“Our whole business runs on a spreadsheet everyone edits at the same time.”',
@@ -663,13 +678,18 @@ export const en = {
           answer:
             'Your team takes it over with the tests and the written decisions, or I maintain it monthly, under a Takeover.',
         },
+        {
+          question: 'Which technologies?',
+          answer:
+            'We choose together what your team will be able to take over. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+        },
       ],
     },
     reinforcement: {
       meta: {
-        title: 'Part-time Symfony tech lead / architect, freelance',
+        title: 'Part-time full-stack tech lead / architect, freelance',
         description:
-          'A senior PHP/Symfony lead or architect inside your team, one to four days a week. Published day rate.',
+          'A senior lead or architect inside your team, one to four days a week: PHP/Symfony, Node.js/TypeScript, React. Published day rate.',
       },
       heading: 'A part-time senior lead inside your team',
       priceHeading: 'How much does a part-time tech lead cost?',
@@ -732,6 +752,11 @@ export const en = {
         {
           question: 'Do you work remotely?',
           answer: 'Yes, by default, with travel when the work needs a room.',
+        },
+        {
+          question: 'Which technologies?',
+          answer:
+            'My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },

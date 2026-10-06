@@ -149,8 +149,8 @@ test.describe('the page is not a CV', () => {
 
   test('leads the hero with the call, and offers the Offers second', async ({ page }) => {
     for (const [path, book, offers] of [
-      ['/', 'Réserver un appel de 30 minutes', 'Voir les offres'],
-      ['/en/', 'Book a 30-minute call', 'See the offers'],
+      ['/', 'Réserver un appel gratuit', 'Voir les offres'],
+      ['/en/', 'Book a free call', 'See the offers'],
     ] as const) {
       await gotoHome(page, path);
       const ctas = page.locator('.hero a');

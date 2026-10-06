@@ -7,9 +7,9 @@ import type { ResumeContent } from './types.ts';
  */
 export const fr = {
   meta: {
-    title: 'Thomas Bouzy — Freelance PHP/Symfony, Nancy et Strasbourg',
+    title: 'Thomas Bouzy — Freelance fullstack, Nancy et Strasbourg',
     description:
-      "Je reprends et fais évoluer vos applications métier PHP/Symfony, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
+      "Fullstack, avec une expertise backend PHP/Symfony : je reprends et fais évoluer vos applications métier, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
   },
 
   a11y: {
@@ -34,7 +34,7 @@ export const fr = {
   hero: {
     title: ['Je reprends et fais évoluer', 'vos applications métier.'],
     blurb: "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
-    ctaBook: 'Réserver un appel de 30 minutes',
+    ctaBook: 'Réserver un appel gratuit',
     ctaOffers: 'Voir les offres',
   },
 
@@ -216,7 +216,7 @@ export const fr = {
     kicker: 'À propos',
     title: 'En bref',
     paragraphs: [
-      "Je travaille en PHP et Symfony, avec le React, le TypeScript et le Node.js qui vont avec. J'aime les sujets peu glamour : des transactions qui restent justes, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
+      "Je suis fullstack, avec la profondeur côté backend et architecture : PHP et Symfony d'abord, Node.js et TypeScript, React côté front ; Python, pour l'instant en projets personnels. J'aime les sujets peu glamour : des transactions qui restent justes, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
       "J'ai enseigné à l'université et mené des juniors jusqu'à l'autonomie. Je vis dans le Grand Est, à la campagne ; je travaille surtout à distance, et viens sur place si besoin.",
     ],
     careerLine: "En poste plutôt qu'en mission ?",
@@ -230,7 +230,7 @@ export const fr = {
   ],
 
   schema: {
-    jobTitle: 'Développeur freelance PHP/Symfony',
+    jobTitle: 'Développeur fullstack freelance',
     knowsAbout: [
       'PHP',
       'Symfony',
@@ -268,7 +268,7 @@ export const fr = {
     followedBy: 'puis',
     start: 'Par où commencer',
     inFrench: '(en français)',
-    book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel de 30 minutes' },
+    book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel gratuit' },
     publicSector: 'Une collectivité ?',
     publicSectorLink: 'Voir la page dédiée',
     partners: 'Agence ou société de services ?',
@@ -337,9 +337,9 @@ export const fr = {
   offerPages: {
     audit: {
       meta: {
-        title: 'Audit de code PHP/Symfony et due diligence technique',
+        title: 'Audit de code et due diligence technique',
         description:
-          "Audit d'application PHP/Symfony : rapport écrit, registre des risques, plan d'action priorisé. L'express, à prix fixe, est déduit de la mission qui suit.",
+          "Audit d'application : rapport écrit, registre des risques, plan d'action priorisé. L'express, à prix fixe, est déduit de la mission qui suit.",
       },
       heading: 'Audit technique de votre application',
       priceHeading: 'Combien coûte un audit de code ?',
@@ -406,11 +406,16 @@ export const fr = {
           answer:
             "L'express est borné à moins de trois jours, sur l'application qui vous inquiète le plus. Le complet dépend de la taille réelle du système ; son devis est ferme avant de commencer.",
         },
+        {
+          question: 'Sur quelles technologies ?',
+          answer:
+            "Une architecture et ses risques se lisent dans toutes les stacks. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+        },
       ],
     },
     takeover: {
       meta: {
-        title: "TMA PHP/Symfony : reprise et maintenance d'application métier",
+        title: "TMA : reprise et maintenance d'application métier",
         description:
           "Votre prestataire est parti, plus personne n'ose toucher l'application ? Reprise, filet de tests, puis maintenance mensuelle sans engagement, à prix publié.",
       },
@@ -475,7 +480,7 @@ export const fr = {
         {
           question: 'Est-ce de la TMA ? Pour quelles technologies ?',
           answer:
-            "Oui : une maintenance mensuelle d'applications web en PHP et Symfony, même anciennes, et du React, TypeScript ou Node.js qui va avec. Pas de WinDev ni d'Access.",
+            "Oui : une maintenance mensuelle d'applications web, même anciennes. PHP et Symfony sont mon expertise ; Node.js, TypeScript et React aussi. Python, pour l'instant en projets personnels. Pas de WinDev ni d'Access.",
         },
         {
           question: "Faut-il récupérer le code auprès de l'ancien prestataire ?",
@@ -484,7 +489,7 @@ export const fr = {
         {
           question: 'Et si vous partez à votre tour ?',
           answer:
-            "La carte, les accès, les tests et la documentation vous appartiennent : un autre développeur Symfony reprend là où je m'arrête.",
+            "La carte, les accès, les tests et la documentation vous appartiennent : un autre développeur reprend là où je m'arrête.",
         },
         {
           question: 'La formule est-elle avec engagement ?',
@@ -563,7 +568,7 @@ export const fr = {
     },
     reliability: {
       meta: {
-        title: 'Fiabiliser une application PHP/Symfony : écarts, bugs en prod',
+        title: 'Fiabiliser une application : écarts, bugs en prod',
         description:
           "Un stock, un solde ou une facturation qui ne tombe pas juste ? Traçabilité des flux et observabilité pour expliquer l'écart. Prix publics.",
       },
@@ -619,15 +624,20 @@ export const fr = {
           answer:
             "Rarement. On part de ce que vous avez : l'essentiel est de savoir quoi observer.",
         },
+        {
+          question: 'Sur quelles technologies ?',
+          answer:
+            "Tracer un flux ne dépend pas du langage. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+        },
       ],
     },
     scaling: {
       meta: {
-        title: 'Montée en charge et haute disponibilité PHP/Symfony',
+        title: "Montée en charge et haute disponibilité d'une application",
         description:
           'Votre application ralentit ou tombe aux pics de trafic ? Tir de charge, goulot trouvé, corrections mesurées : diagnostic à prix fixe. Prix publics.',
       },
-      heading: 'Montée en charge et haute disponibilité de votre application PHP/Symfony',
+      heading: 'Montée en charge et haute disponibilité de votre application',
       priceHeading: 'Combien coûte un diagnostic de montée en charge ?',
       sentences: [
         "« Ça rame dès qu'on a du monde. »",
@@ -690,15 +700,20 @@ export const fr = {
           answer:
             "Il se fait sur une copie fidèle, ou en production par paliers, hors des heures d'affluence, avec un arrêt prêt.",
         },
+        {
+          question: 'Sur quelles technologies ?',
+          answer:
+            "Un tir de charge ne dépend pas du langage. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+        },
       ],
     },
     build: {
       meta: {
-        title: "Développement d'application métier sur mesure en PHP/Symfony",
+        title: "Développement d'application métier sur mesure, front et back",
         description:
-          'Une application métier sur mesure en PHP/Symfony, construite pour être reprise : cadrage à prix fixe, puis développement à la journée. Prix publics.',
+          'Une application métier sur mesure, front et back, construite pour être reprise : cadrage à prix fixe, puis développement à la journée. Prix publics.',
       },
-      heading: "Développement d'application sur mesure en PHP/Symfony",
+      heading: "Développement d'application sur mesure",
       priceHeading: 'Combien coûte une application sur mesure ?',
       sentences: [
         '« Toute notre activité tient sur un fichier Excel que tout le monde modifie en même temps. »',
@@ -761,13 +776,18 @@ export const fr = {
           answer:
             'Votre équipe la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
         },
+        {
+          question: 'Sur quelles technologies ?',
+          answer:
+            "On choisit ensemble ce que votre équipe saura reprendre. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+        },
       ],
     },
     reinforcement: {
       meta: {
-        title: 'Tech lead / architecte Symfony freelance à temps partiel',
+        title: 'Tech lead / architecte fullstack freelance à temps partiel',
         description:
-          'Un tech lead ou architecte PHP/Symfony senior dans votre équipe, 1 à 4 jours par semaine. Taux journalier publié.',
+          'Un tech lead ou architecte senior dans votre équipe, 1 à 4 jours par semaine : PHP/Symfony, Node.js/TypeScript, React. Taux journalier publié.',
       },
       heading: 'Renfort senior : un tech lead à temps partiel dans votre équipe',
       priceHeading: 'Combien coûte un tech lead à temps partiel ?',
@@ -831,15 +851,20 @@ export const fr = {
           question: 'Travaillez-vous à distance ?',
           answer: 'Oui, par défaut, avec des déplacements quand il faut une salle.',
         },
+        {
+          question: 'Sur quelles technologies ?',
+          answer:
+            "Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+        },
       ],
     },
   },
 
   publicSectorPage: {
     meta: {
-      title: 'Développeur PHP/Symfony pour collectivités et établissements publics',
+      title: 'Développeur fullstack pour collectivités et établissements publics',
       description:
-        'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de vos applications métier PHP/Symfony. Réversibilité, accessibilité RGAA, prix publics.',
+        'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de vos applications métier. Réversibilité, accessibilité RGAA, prix publics.',
     },
     kicker: 'Collectivités',
     title: 'Collectivités et établissements publics : vos applications métier, reprises et tenues',
@@ -893,9 +918,9 @@ export const fr = {
   },
   partnersPage: {
     meta: {
-      title: 'Sous-traitance PHP/Symfony en marque blanche pour agences',
+      title: 'Sous-traitance fullstack PHP/Symfony et Node.js en marque blanche',
       description:
-        'Agences web et ESN : un développeur PHP/Symfony senior en renfort sur vos missions, en marque blanche, au taux journalier publié. CV sur demande.',
+        'Agences web et ESN : un développeur fullstack senior en renfort sur vos missions, PHP/Symfony, Node.js ou React, en marque blanche, au taux journalier publié. CV sur demande.',
     },
     kicker: 'Partenaires',
     title: 'Agences et sociétés de services : un renfort senior en marque blanche',

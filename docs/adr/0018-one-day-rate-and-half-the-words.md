@@ -1,7 +1,8 @@
 # 18. One day rate, smaller first tickets, and half the words
 
 - Status: accepted, implemented 2026-10-05; amended by
-  [ADR 20](0020-the-buyers-objections-before-the-buyer-asks.md), 2026-10-05
+  [ADR 20](0020-the-buyers-objections-before-the-buyer-asks.md), 2026-10-05, and by
+  [ADR 22](0022-full-stack-anchored-in-the-backend.md), 2026-10-06
 - Date: 2026-10-05
 - Amends [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and
   [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md)
