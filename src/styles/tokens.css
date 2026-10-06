@@ -55,10 +55,11 @@
   --color-accent-800: #7a4530;
   --color-accent-900: #4a2c21;
 
-  /* Spectral carries the headings, as it carries the cover's title. Figtree
-     stays for prose, JetBrains Mono for the numbered eyebrows. */
-  --font-heading: "Spectral", Georgia, serif;
-  --font-heading-weight: 500;
+  /* One family, two weights (docs/adr/0021): Figtree 600 for the headings,
+     Figtree 400 for prose and controls, JetBrains Mono for the numbered
+     eyebrows. */
+  --font-heading: "Figtree", system-ui, sans-serif;
+  --font-heading-weight: 600;
   --font-body: "Figtree", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
@@ -205,7 +206,7 @@ figcaption {
   gap: 6px;
   cursor: pointer;
   text-decoration: none;
-  /* Figtree, not the serif: a button is a control, not a title. */
+  /* The body weight, not the heading one: a button is a control, not a title. */
   font-family: var(--font-body);
   font-weight: 400;
   font-size: 14px;
@@ -452,8 +453,12 @@ textarea.input {
   border-collapse: collapse;
   font-size: 14px;
 }
+/* The same label as the estimator's <dt>, so the same face. Without a weight
+   it took the <th> default, bold, which no loaded face has. */
 .table th {
   text-align: left;
+  font-family: var(--font-mono);
+  font-weight: 400;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;

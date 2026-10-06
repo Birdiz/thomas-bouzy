@@ -1,6 +1,6 @@
 # 13. The site wears the LinkedIn cover
 
-- Status: accepted
+- Status: accepted; type superseded by [ADR 21](0021-one-family-two-weights.md), 2026-10-06
 - Date: 2026-09-16
 - Supersedes the colour and type half of [ADR 10](0010-the-site-owns-its-own-design.md)
 

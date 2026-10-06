@@ -16,9 +16,11 @@ Built with Astro, containerised, deployed to Railway. The vocabulary is in
 The home page reads problem → offer → proof → position → person — which is the
 opposite of a CV, and deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
-behind the running order. The palette and type are the LinkedIn cover's — dark
-slate, one terracotta, Spectral headings over a ridge —
-[ADR 13](docs/adr/0013-the-site-wears-the-linkedin-cover.md).
+behind the running order. The palette is the LinkedIn cover's — dark slate, one
+terracotta, a ridge —
+[ADR 13](docs/adr/0013-the-site-wears-the-linkedin-cover.md); the type is one
+family, Figtree, at two weights
+([ADR 21](docs/adr/0021-one-family-two-weights.md)).
 
 The site owns its own design. It began as an implementation of a Claude Design
 canvas, and the record of where it departed from it is in

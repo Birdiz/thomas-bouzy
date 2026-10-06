@@ -67,7 +67,7 @@ test('compresses text and leaves already-packed formats alone', async ({ request
     expect(headers.vary).toContain('Accept-Encoding');
   }
   // A font is already compressed; re-encoding it only burns CPU.
-  const font = (await request.get('/fonts/spectral-latin-500-normal.woff2')).headers();
+  const font = (await request.get('/fonts/figtree-latin-600-normal.woff2')).headers();
   expect(font['content-encoding']).toBeUndefined();
 });
 
@@ -84,7 +84,7 @@ test('caches fingerprinted assets hard and HTML not at all', async ({ page, requ
   if (hashed?.startsWith('/_astro/')) {
     expect((await request.get(hashed)).headers()['cache-control']).toContain('immutable');
   }
-  const font = (await request.get('/fonts/spectral-latin-500-normal.woff2')).headers();
+  const font = (await request.get('/fonts/figtree-latin-600-normal.woff2')).headers();
   expect(font['cache-control']).toContain('immutable');
 });
 
