@@ -89,6 +89,12 @@
   --shadow-lg:
     0 0 0 1px color-mix(in srgb, var(--color-text) 10%, transparent),
     0 12px 32px color-mix(in srgb, #000 45%, transparent);
+
+  /* Motion (docs/adr/0023): a control answers in --dur-fast, a panel opens in
+     --dur-base. One curve, decelerating, no overshoot. */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
 }
 
 body {
@@ -207,12 +213,18 @@ figcaption {
   font-weight: 400;
   font-size: 14px;
   line-height: 1.2;
-  color: var(--color-text); /* matches the .input's 14px —
-     the pair sits side by side in sign-up rows */
+  color: var(--color-text);
   background: transparent;
   border: 1px solid transparent;
   padding: var(--space-2) calc(var(--space-3) * 1.2);
   border-radius: var(--radius-md);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 .btn svg {
   display: block;
@@ -245,76 +257,6 @@ figcaption {
   background: color-mix(in srgb, var(--color-text) 14%, transparent);
 }
 
-/* — forms — */
-.field > label {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 5px;
-  color: color-mix(in srgb, var(--color-text) 70%, transparent);
-}
-.input {
-  width: 100%;
-  min-height: 36px;
-  padding: 6px 10px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--color-text);
-  caret-color: var(--color-accent);
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-md);
-}
-.input:hover {
-  border-color: color-mix(in srgb, var(--color-text) 45%, transparent);
-}
-.input:focus-visible {
-  border-color: var(--color-accent);
-  outline-offset: 0;
-}
-textarea.input {
-  min-height: 90px;
-  resize: vertical;
-}
-
-/* — cards — */
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-}
-
-/* — tags — */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  padding: 3px 10px;
-  border-radius: calc(var(--radius-md) * 0.75);
-}
-
-/* — navigation — */
-.nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: none;
-}
-
-.nav a {
-  color: inherit;
-  text-decoration: none;
-  font-size: 14px;
-}
-.nav a:hover,
-.nav a[aria-current="page"] {
-  color: var(--color-accent);
-}
-
 /* — tables — */
 .table {
   width: 100%;
@@ -342,19 +284,7 @@ textarea.input {
   background: color-mix(in srgb, var(--color-text) 4%, transparent);
 }
 
-/* — dialog — */
-
-/* — rounded frame: everything softens, small controls go pill — */
-.card,
-.dialog {
-  border-radius: calc(var(--radius-lg) * 1.15);
-}
-.btn,
-.tag,
-.seg,
-.input {
+/* — rounded frame: small controls go pill — */
+.btn {
   border-radius: 999px;
-}
-.input {
-  padding-inline: 14px;
 }

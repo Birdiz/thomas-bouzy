@@ -14,6 +14,36 @@ async function gotoHome(page: Page, path: string) {
   await expect(page.locator('h1')).toBeVisible();
 }
 
+/**
+ * Follows the home page's link to the Audit and reports whether the new page was
+ * revealed through a view transition. `pagereveal` carries it, and fires before
+ * the page's own scripts run, hence the init script.
+ */
+async function revealedWithTransition(page: Page): Promise<boolean> {
+  await page.addInitScript(() => {
+    window.addEventListener('pagereveal', (event) => {
+      (window as unknown as { revealedWith?: boolean }).revealedWith = Boolean(
+        (event as Event & { viewTransition?: unknown }).viewTransition,
+      );
+    });
+  });
+  await gotoHome(page, '/');
+  await page.locator('[data-offer="audit"] .offers__name a').first().click();
+  await page.waitForURL(`**${pathOf('audit', 'fr')}`);
+  return page.evaluate(
+    () => (window as unknown as { revealedWith?: boolean }).revealedWith === true,
+  );
+}
+
+/** The transition durations, in seconds, of the controls that answer the pointer. */
+async function controlTransitions(page: Page): Promise<number[]> {
+  return page.evaluate(() =>
+    [...document.querySelectorAll('.btn, .site-nav a, .offers__card')].flatMap((el) =>
+      getComputedStyle(el).transitionDuration.split(',').map(Number.parseFloat),
+    ),
+  );
+}
+
 test.describe('routing and locales', () => {
   test('serves French at / and English at /en/', async ({ page }) => {
     await gotoHome(page, '/');
@@ -345,6 +375,17 @@ test.describe('motion preferences', () => {
       await expect(pause).toHaveAttribute('aria-pressed', 'true');
       await expect(problem).toHaveClass(/is-paused/);
     });
+
+    test('answers the pointer, and cross-fades from one page to the next', async ({ page }) => {
+      await gotoHome(page, '/');
+      const durations = await controlTransitions(page);
+      expect(durations.length).toBeGreaterThan(0);
+      for (const duration of durations) {
+        expect(duration).toBeGreaterThan(0.1);
+      }
+
+      expect(await revealedWithTransition(page)).toBe(true);
+    });
   });
 
   test.describe('when the visitor asks for reduced motion', () => {
@@ -361,15 +402,13 @@ test.describe('motion preferences', () => {
         await expect(mode).toBeVisible();
       }
 
-      const durations = await page.evaluate(() =>
-        [...document.querySelectorAll('.hero__blob, .contact__blob')].map(
-          (el) => getComputedStyle(el).animationDuration,
-        ),
-      );
+      const durations = await controlTransitions(page);
       expect(durations.length).toBeGreaterThan(0);
       for (const duration of durations) {
-        expect(Number.parseFloat(duration)).toBeLessThan(0.01);
+        expect(duration).toBeLessThan(0.01);
       }
+
+      expect(await revealedWithTransition(page)).toBe(false);
     });
   });
 });

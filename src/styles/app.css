@@ -159,6 +159,10 @@ a {
   }
 }
 
+/* Motion is opt-in (docs/adr/0023): what moves is declared under
+   `no-preference`, and this reset is the net under it. The delays go too, or a
+   staggered entrance would hold its content invisible for the length of the
+   delay. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -170,9 +174,26 @@ a {
        beat every component-level animation and transition declaration. */
     animation-duration: 0.001ms !important;
     /* biome-ignore lint/complexity/noImportantStyles: as above. */
+    animation-delay: 0s !important;
+    /* biome-ignore lint/complexity/noImportantStyles: as above. */
     animation-iteration-count: 1 !important;
     /* biome-ignore lint/complexity/noImportantStyles: as above. */
     transition-duration: 0.001ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: as above. */
+    transition-delay: 0s !important;
+  }
+}
+
+/* From one page to the next, a cross-fade instead of a blink: the site reads as
+   one place. Browsers without cross-document view transitions cut, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--dur-base);
+    animation-timing-function: var(--ease-out);
   }
 }
 
@@ -210,6 +231,18 @@ a {
 }
 .site-header__brand:hover {
   color: var(--color-accent-text);
+}
+
+/* Every text link in the chrome answers the pointer in the same beat. */
+.site-header__brand,
+.site-nav a,
+.lang-switch a,
+.breadcrumb a,
+.site-footer a {
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out);
 }
 
 .site-header__dot {
@@ -863,6 +896,9 @@ a {
 }
 .offers__card {
   position: relative;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 .offers__name a {
   color: inherit;
@@ -877,6 +913,32 @@ a {
 .offers__card:hover .offers__name a {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+/* The whole card is the link, so the whole card answers: it lifts, its ground
+   lightens a step, and an arrow comes in after the name, as on the invitation
+   to the Audit. The arrow is drawn from the start, only transparent, so the
+   name never rewraps under the pointer; its alt text is empty, so it is not
+   read out. */
+.offers__name::after {
+  content: "→" / "";
+  display: inline-block;
+  margin-left: 0.3em;
+  color: var(--color-accent-text);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) {
+  transform: translateY(-2px);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) .offers__name::after {
+  opacity: 1;
+  transform: none;
+}
+.journey__alongside .offers__card:is(:hover, :has(a:focus-visible)) {
+  background: var(--color-sunken);
 }
 .offers__link {
   font-size: 15px;
@@ -1016,6 +1078,28 @@ a {
 .achievement__panel {
   padding: 0 28px 28px;
   animation: tb-in 0.3s ease both;
+}
+
+/* A disclosure opens to its height instead of jumping to it, and closes the
+   same way, so the eye follows what moved: the Reference that closes while
+   another opens (they share a name), the FAQ answer. Where the browser cannot
+   size to `auto`, both still open and close at once, as before. */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  .reference::details-content,
+  .offer__question::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--dur-base) var(--ease-out),
+      content-visibility var(--dur-base) allow-discrete;
+  }
+  .reference[open]::details-content,
+  .offer__question[open]::details-content {
+    block-size: auto;
+  }
 }
 .achievement__rule {
   height: 1px;
@@ -1491,6 +1575,42 @@ a {
   cursor: pointer;
   padding: 16px 0;
   font-size: 16.5px;
+  /* The References' chevron, smaller: the two disclosures read as one kind. */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.offer__question summary::-webkit-details-marker {
+  display: none;
+}
+.offer__question summary::after {
+  content: "↓" / "";
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--color-accent-text);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.offer__question summary:hover {
+  color: var(--color-accent-text);
+}
+.offer__question summary:hover::after {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+.offer__question[open] summary::after {
+  transform: rotate(180deg);
 }
 .offer__question p {
   margin: 0 0 18px;
