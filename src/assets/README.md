@@ -13,10 +13,10 @@ The hero portrait. Drop the file in as:
 
     src/assets/portrait.jpg      # .jpeg, .png, .webp and .avif also work
 
-`Hero.astro` picks it up through `import.meta.glob`, so there is nothing to
-wire: it appears on the next build. Until then the hero renders a labelled
-placeholder rather than an empty circle, and `npm run assets:check` lists it as
-pending.
+`src/lib/portrait.ts` picks it up through `import.meta.glob`, so there is
+nothing to wire: it appears in the hero and as the Person's image in the JSON-LD
+on the next build. Until then the hero renders a labelled placeholder rather
+than an empty circle, and `npm run assets:check` lists it as pending.
 
 Two things about the source file:
 
@@ -30,7 +30,7 @@ Two things about the source file:
   current one is the 1000×1000 LinkedIn avatar (2026-09-16), so it clears it.
 
 Name the file for what it is: the first version shipped as `portrait.jpg` while
-actually being a PNG. `Hero.astro`'s glob matches on the name, so nothing
+actually being a PNG. `src/lib/portrait.ts`'s glob matches on the name, so nothing
 noticed. `assets:check` now compares the real format against the extension.
 
 The `.washed` filter (a light desaturation) is applied on top. The photo ships

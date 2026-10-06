@@ -8,9 +8,8 @@ import { OFFER_IDS, OFFERS } from '../content/offers.ts';
 import { DAY_RATE } from '../content/prices.ts';
 import { formatEuros } from '../lib/money.ts';
 import { fillPrices } from '../lib/price-tokens.ts';
-import { service } from '../lib/structured-data.ts';
+import { pageGraph } from '../lib/structured-data.ts';
 import { linkTo, type Route } from '../routes.ts';
-import { SITE } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -35,12 +34,12 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
   title={page.meta.title}
   description={page.meta.description}
   ogType="website"
-  structuredData={service(route, page.title, page.plain, SITE.serviceArea)}
+  structuredData={pageGraph(route)}
 >
   <SiteHeader route={route} t={t} contactHref="#book" />
   <main id="main" class="offer">
     <header class="offer__head container">
-      <Breadcrumb locale={locale} t={t} current={page.kicker} />
+      <Breadcrumb route={route} t={t} />
       <h1 class="offer__name">{page.title}</h1>
       <p class="offer__plain">{page.plain}</p>
     </header>

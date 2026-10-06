@@ -51,8 +51,10 @@ line that names no technology. All of it is asserted —
 
 Every price comes from one typed table, `src/content/prices.ts`: the static
 table on each Offer page, the estimator that turns it into sliders, the "from"
-on the home page's cards and the published day rate all read it, so changing a
-price is one edit. The amounts are provisional, like the copy.
+on the home page's cards, the published day rate and the JSON-LD's
+`Service.offers` all read it, so changing a price is one edit
+(`tests/structured-data.spec.ts` holds the JSON-LD to the table). The amounts
+are provisional, like the copy.
 
 ## Still to supply
 

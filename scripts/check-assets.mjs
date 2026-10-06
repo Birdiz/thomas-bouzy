@@ -95,7 +95,7 @@ if (!portrait) {
   const { width, height, format } = await sharp(path('src/assets', portrait)).metadata();
 
   // The file that shipped was called portrait.jpg and was a PNG. The glob in
-  // Hero.astro matches on the name, so nothing complained.
+  // src/lib/portrait.ts matches on the name, so nothing complained.
   const claimed = portrait.split('.').pop().toLowerCase();
   const actual = format === 'jpeg' ? 'jpg' : format;
   if (actual !== claimed && !(actual === 'jpg' && claimed === 'jpeg')) {

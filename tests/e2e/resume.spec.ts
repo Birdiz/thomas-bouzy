@@ -225,16 +225,19 @@ test.describe('phone number is not harvestable', () => {
     await gotoHome(page, '/');
     const raw = await page.locator('script[type="application/ld+json"]').textContent();
     expect(raw).toBeTruthy();
-    const schema = JSON.parse(raw as string);
+    const graph: { '@type': string; [key: string]: unknown }[] = JSON.parse(raw as string)[
+      '@graph'
+    ];
     // The page is a ProfilePage; its subject is the Person. Two things, not one.
-    expect(schema['@type']).toBe('ProfilePage');
-    expect(schema.mainEntity['@type']).toBe('Person');
-    expect(schema.mainEntity.name).toBe('Thomas Bouzy');
+    const profile = graph.find((node) => node['@type'] === 'ProfilePage');
+    const person = graph.find((node) => node['@type'] === 'Person');
+    expect(profile?.mainEntity).toEqual({ '@id': person?.['@id'] });
+    expect(person?.name).toBe('Thomas Bouzy');
 
     // The point of the test: no number anywhere in the graph, at any depth.
-    expect(JSON.stringify(schema)).not.toMatch(/telephone/i);
+    expect(raw).not.toMatch(/telephone/i);
     for (const pattern of PHONE_PATTERNS) {
-      expect(JSON.stringify(schema)).not.toMatch(pattern);
+      expect(raw).not.toMatch(pattern);
     }
   });
 });
