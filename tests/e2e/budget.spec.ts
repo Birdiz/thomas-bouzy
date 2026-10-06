@@ -36,6 +36,11 @@ import { expect, PATHS, test } from './fixtures.ts';
  * sans was tried first and drew a different face on every OS. Fonts 55.4 →
  * 66.8 kB on the home page; the limit moved 60 → 72 kB, the same headroom.
  *
+ * Re-measured on 2026-10-06, after Spectral left (docs/adr/0021): the headings
+ * moved to Figtree 600, and one Figtree weight costs half of what the serif
+ * did. Fonts 66.8 → 55.5 kB on the home page (Figtree 400/600/800 + JetBrains
+ * Mono); the limit goes back 72 → 60 kB, since the page no longer needs it.
+ *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.
@@ -45,7 +50,7 @@ const BUDGET = {
   cssBytes: 34_000,
   externalJsBytes: 4_000,
   inlineJsBytes: 2_000,
-  fontBytes: 72_000,
+  fontBytes: 60_000,
   requests: 12,
 } as const;
 
