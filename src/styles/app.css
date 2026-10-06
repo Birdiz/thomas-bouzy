@@ -94,7 +94,7 @@ html {
   top: -100px;
   z-index: 100;
   padding: 10px 18px;
-  background: var(--color-accent);
+  background: var(--color-accent-fill);
   color: var(--color-on-accent);
   border-radius: 0 0 var(--radius-md) 0;
   font-family: var(--font-body);
@@ -121,9 +121,9 @@ html {
    Measured with `node scripts/contrast.mjs --audit`.
 
    On the dark ground (ADR 13) the accent no longer has to be dimmed for text —
-   it has to be lifted a little. --color-accent-text measures 6.61:1 on bg and
-   5.41:1 on sunken; the button keeps the full-strength --color-accent as its
-   fill, with the ground colour as its label (5.57:1).
+   it has to be lifted a little. --color-accent-text measures 6.01:1 on bg and
+   4.91:1 on sunken; the button takes --color-accent-fill, with the ground
+   colour as its label (6.01:1).
 
    The budget is ADR 10's and has not moved: the section numbers, the primary
    button and the links, and nowhere else. Decorative uses that carry no text
@@ -132,16 +132,7 @@ html {
 a {
   color: var(--color-accent-text);
 }
-.card-kicker {
-  color: var(--color-accent-text);
-}
-.btn-ghost {
-  color: var(--color-accent-text);
-}
-.tag-outline {
-  border-color: var(--color-accent-text);
-  color: var(--color-accent-text);
-}
+
 :focus-visible {
   outline-color: var(--color-accent-text);
 }
@@ -157,15 +148,6 @@ a {
 
 /* — motion ——————————————————————————————————————————————————————————————— */
 
-@keyframes tb-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
 @keyframes tb-in {
   from {
     opacity: 0;
@@ -284,7 +266,7 @@ a {
   color: var(--color-accent-text);
 }
 .lang-switch a[aria-current="true"] {
-  background: var(--color-accent);
+  background: var(--color-accent-fill);
   color: var(--color-on-accent);
   opacity: 1;
 }
@@ -326,55 +308,31 @@ a {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: 56px;
   align-items: center;
   position: relative;
 }
 
-.hero__availability {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 15px 6px 11px;
-  border-radius: 999px;
-  background: var(--color-sunken);
-  color: var(--color-text);
-  font-size: 13px;
-  margin-bottom: 22px;
-}
-.hero__pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--color-accent);
-  display: inline-block;
-  flex: none;
-  animation: tb-float 2.6s ease-in-out infinite;
-}
-
 .hero__name {
-  font-size: clamp(46px, 6.4vw, 86px);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  margin: 0 0 20px;
+  margin: 0 0 22px;
 }
-/* The promise, inside the H1 under the name, at the size of a lede. Set at
-   400 so the name and the sentence are told apart by weight, as on the social
-   card, and not by size alone. */
+/* The promise, inside the H1 under the name, at display size. Two lines,
+   each of which may wrap again on a narrow screen. */
 .hero__promise {
   display: block;
-  margin-top: 18px;
-  font-weight: 400;
-  font-size: clamp(22px, 2.6vw, 32px);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  max-width: 24ch;
-  text-wrap: balance;
+  font-size: clamp(34px, 4.4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.hero__promise-line {
+  display: block;
+  text-wrap: pretty;
 }
 
 .hero__blurb {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.65;
   max-width: 56ch;
   margin: 0 0 26px;
@@ -439,8 +397,9 @@ a {
   padding-block: 78px 64px;
 }
 .problem__title {
-  max-width: 16ch;
+  max-width: 20ch;
   margin-bottom: 40px;
+  text-wrap: balance;
 }
 .problem__modes {
   display: grid;
@@ -495,15 +454,6 @@ a {
   font-size: 13.5px;
   color: var(--color-accent-text);
 }
-.problem__audit {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 16px;
-  margin: 24px 0 0;
-  font-size: 15.5px;
-  color: var(--color-muted);
-}
 .problem__mode-text {
   font-size: 14.5px;
   line-height: 1.6;
@@ -512,29 +462,338 @@ a {
   text-wrap: pretty;
 }
 
+/* The carousel: one sentence at a time, stacked in one cell so the section
+   keeps the height of the longest and never jumps. A sentence arrives from
+   below and leaves upwards, slightly blurred, the way a thought passes. */
+.problem.is-carousel .problem__title {
+  margin-bottom: 28px;
+}
+/* Wide: the question on the left, the sentence answering it on the right,
+   so the section uses the whole measure instead of its left half. */
+@media (min-width: 1024px) {
+  .problem.is-carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    column-gap: 72px;
+    align-items: start;
+  }
+  .problem.is-carousel .problem__title {
+    margin-bottom: 0;
+  }
+}
+.is-carousel .problem__modes {
+  grid-template-columns: minmax(0, 1fr);
+  border: 0;
+}
+.is-carousel .problem__mode {
+  grid-area: 1 / 1;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-22px);
+  filter: blur(6px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.9s ease,
+    filter 0.7s ease,
+    visibility 0s linear 0.9s;
+}
+.is-carousel .problem__mode.is-active ~ .problem__mode {
+  transform: translateY(22px);
+}
+.is-carousel .problem__mode.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  filter: none;
+  transition-delay: 0.25s, 0.25s, 0.25s, 0s;
+}
+.is-carousel .problem__mode-num,
+.is-carousel .problem__mode-text {
+  display: none;
+}
+.is-carousel .problem__mode-quote {
+  font-size: clamp(25px, 3.3vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+}
+.is-carousel .problem__mode-offer {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.thoughts__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+.thoughts__pause {
+  flex: none;
+  margin-right: 10px;
+  padding: 4px 12px;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-muted);
+  font: 12px / 1.6 var(--font-mono);
+  cursor: pointer;
+}
+.thoughts__pause:hover {
+  color: var(--color-text);
+  border-color: var(--color-muted);
+}
+.thoughts__pause[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+/* The bars share the row, as wide as they can be, each a 44px-tall target
+   around a 4px track. */
+.thoughts__dot {
+  flex: 1 1 0;
+  min-width: 32px;
+  max-width: 96px;
+  display: grid;
+  align-items: center;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.thoughts__dot span {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-text) 16%, transparent);
+  overflow: hidden;
+}
+.thoughts__dot span::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--color-accent);
+}
+/* The sentences already passed stay full, a shade quieter. */
+.thoughts__dot:has(~ .thoughts__dot[aria-current]) span::after {
+  width: 100%;
+  opacity: 0.55;
+}
+.thoughts__dot[aria-current] span::after {
+  animation: thought 5s linear forwards;
+}
+.thoughts__dot:hover span {
+  background: color-mix(in srgb, var(--color-text) 32%, transparent);
+}
+@keyframes thought {
+  to {
+    width: 100%;
+  }
+}
+/* Paused while read, while off screen, or on request. */
+.is-carousel:has(.problem__modes:hover) .thoughts__dot span::after,
+.is-carousel:has(:focus-visible) .thoughts__dot span::after,
+.is-offscreen .thoughts__dot span::after,
+.is-paused .thoughts__dot span::after {
+  animation-play-state: paused;
+}
+
+/* — audit call ———————————————————————————————————————————————————————————— */
+
+/* The one place the page raises its voice: full-bleed, heavy sans, two lines,
+   and the whole band is the link. */
+.audit-call {
+  border-block: 1px solid var(--color-divider);
+  background: var(--color-surface);
+}
+.audit-call__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 32px;
+  padding-block: clamp(44px, 6vw, 76px);
+  color: var(--color-text);
+  text-decoration: none;
+  /* Figtree at 800, the one heavy line on the page. Loud, but a step under
+     the hero's promise: it is an invitation, not the headline. */
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: clamp(32px, 4.2vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+.audit-call__question {
+  display: block;
+  color: var(--color-muted);
+}
+.audit-call__invite {
+  display: block;
+  text-wrap: balance;
+}
+/* The arrow sits alone at the right edge, in a ring: the band reads as one
+   wide button rather than a headline with a glyph at its end. */
+.audit-call__arrow {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 7vw, 96px);
+  aspect-ratio: 1;
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
+  color: var(--color-accent-text);
+  font-size: 0.8em;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+.audit-call__link:hover .audit-call__invite,
+.audit-call__link:focus-visible .audit-call__invite {
+  color: var(--color-accent-text);
+}
+.audit-call__link:hover .audit-call__arrow,
+.audit-call__link:focus-visible .audit-call__arrow {
+  transform: translateX(6px);
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
+
 /* — offers ————————————————————————————————————————————————————————————————— */
 
-/* Five cards, the second section of the page: what is for sale, right after
-   what breaks. Each one ends on a price and a way in — the plain line says what
-   it is, the "from" says whether it is in reach. */
+/* The Offers as the life of an application: three stages joined by curves,
+   the second holding two Offers in parallel, then a rail of Offers that run
+   alongside all three. Each card ends on a price: the plain line says what it
+   is, the "from" says whether it is in reach. */
 .offers {
   padding-block: 40px 64px;
 }
-.offers__intro {
-  max-width: 58ch;
-  font-size: 16px;
-  color: var(--color-muted);
-  margin: 0 0 32px;
-  text-wrap: pretty;
+.offers__title {
+  max-width: 24ch;
+  margin-bottom: 36px;
 }
-.offers__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px;
+
+.journey,
+.journey__cards {
   margin: 0;
   padding: 0;
   list-style: none;
 }
+.journey__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-size: 16.5px;
+  color: var(--color-text);
+}
+/* The step number in a ring, the stops of a timeline. */
+.journey__step {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent-text);
+}
+.journey__cards {
+  display: grid;
+  gap: 14px;
+}
+
+/* Wide: three stages in a row, the gaps between them carrying the curves.
+   Subgrid lines the labels up, so the card areas share one height and the
+   curves meet each card at its middle. */
+@media (min-width: 861px) {
+  .journey {
+    --link: 76px;
+    display: grid;
+    grid-template-columns: 1fr var(--link) 1fr var(--link) 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .journey__stage {
+    grid-row: span 2;
+    display: grid;
+    grid-template-rows: subgrid;
+  }
+  .journey__stage:nth-child(1) {
+    grid-column: 1;
+  }
+  .journey__stage:nth-child(2) {
+    grid-column: 3;
+  }
+  .journey__stage:nth-child(3) {
+    grid-column: 5;
+  }
+  .journey__stage .journey__cards {
+    position: relative;
+    align-content: center;
+  }
+  /* The labels joined into one timeline, running into the next stage. */
+  .journey__stage:not(:last-child) .journey__label::after {
+    content: "";
+    flex: 1;
+    height: 1.5px;
+    margin-right: calc(var(--link) * -1);
+    background: linear-gradient(to right, var(--color-accent), var(--color-divider));
+  }
+  .journey__stage[data-stage="2"] .journey__cards {
+    grid-template-rows: 1fr 1fr;
+    align-content: stretch;
+  }
+  /* The fork into the second stage, and the join out of it. */
+  .journey__stage[data-stage="2"] .journey__cards::before,
+  .journey__stage[data-stage="2"] .journey__cards::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    width: var(--link);
+    background: var(--color-accent);
+    mask:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 50C55 50 45 25 100 25M0 50C55 50 45 75 100 75' fill='none' stroke='%23000' stroke-width='2.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+      0 0 / 100% 100% no-repeat;
+  }
+  .journey__stage[data-stage="2"] .journey__cards::before {
+    right: 100%;
+  }
+  .journey__stage[data-stage="2"] .journey__cards::after {
+    left: 100%;
+    transform: scaleX(-1);
+  }
+
+  .journey__alongside .journey__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Narrow: one column, a line down the left joining the stages. */
+@media (max-width: 860px) {
+  .journey {
+    display: grid;
+    gap: 28px;
+    padding-left: 22px;
+    border-left: 2px solid var(--color-accent);
+  }
+  .journey__stage[data-stage="2"] .journey__cards {
+    padding-left: 14px;
+    border-left: 2px dashed var(--color-divider);
+  }
+}
+
+/* The rail: the Offers that run alongside every stage, above the stages and
+   set off from them by a dashed track. */
+.journey__alongside {
+  margin-bottom: 44px;
+  padding-bottom: 34px;
+  border-bottom: 2px dashed color-mix(in srgb, var(--color-accent) 55%, transparent);
+}
+
 .offers__card {
   display: flex;
   flex-direction: column;
@@ -560,9 +819,10 @@ a {
 /* A price in a sentence is read, not scanned: the sans, with figures that
    keep their width. The mono is kept for labels and ordinals. */
 .offers__from {
-  font-size: 13.5px;
   font-variant-numeric: tabular-nums;
   margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--color-muted);
 }
 /* The Entry offer's badge: the one card that says "start here". */
 .offers__badge {
@@ -595,76 +855,26 @@ a {
   font-size: 15px;
   color: var(--color-accent-text);
 }
+.offers__book {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 36px 0 0;
+  padding: 22px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-sunken);
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.25;
+}
+.offers__book .btn {
+  font-family: var(--font-body);
+}
 .offers__partners {
   margin: 26px 0 0;
   font-size: 15.5px;
   color: var(--color-muted);
-}
-
-/* — position ——————————————————————————————————————————————————————————————— */
-
-/* The section a résumé never has. Four positions, each with what it costs —
-   an answer that exposes no cost sounds false at this level. */
-.position {
-  background: var(--color-surface);
-  padding-block: 72px;
-  margin-block: 20px;
-}
-.position__intro {
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--color-muted);
-  max-width: 58ch;
-  margin: 0 0 42px;
-  text-wrap: pretty;
-}
-.position__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.position__card {
-  background: var(--color-bg);
-  border-radius: calc(var(--radius-lg) * 1.15);
-  padding: 30px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.position__card-title {
-  font-size: 20px;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  margin: 0;
-  max-width: 22ch;
-}
-.position__card-text {
-  font-size: 15px;
-  line-height: 1.65;
-  margin: 0;
-  flex: 1;
-  text-wrap: pretty;
-}
-.position__cost {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--color-muted);
-  margin: 0;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-divider);
-  text-wrap: pretty;
-}
-.position__cost-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
-  margin-bottom: 6px;
 }
 
 /* — work / achievements —————————————————————————————————————————————————————— */
@@ -685,7 +895,7 @@ a {
   gap: 14px;
 }
 
-.achievement {
+.reference {
   border-radius: calc(var(--radius-lg) * 1.15);
   background: color-mix(in srgb, var(--color-surface) 55%, transparent);
   transition:
@@ -693,54 +903,33 @@ a {
     box-shadow 0.25s ease;
   overflow: hidden;
 }
-.achievement[open] {
+.reference[open] {
   background: var(--color-surface);
   box-shadow: var(--shadow-md);
 }
 
-.achievement__summary {
+.reference__summary {
   cursor: pointer;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto;
   gap: 20px;
   align-items: center;
   padding: 24px 28px;
   list-style: none;
 }
-.achievement__summary::-webkit-details-marker {
+.reference__summary::-webkit-details-marker {
   display: none;
 }
-.achievement__summary::marker {
+.reference__summary::marker {
   content: "";
 }
-.achievement__summary:focus-visible {
+.reference__summary:focus-visible {
   outline: 2px solid var(--color-accent-text);
   outline-offset: -4px;
   border-radius: calc(var(--radius-lg) * 1.15);
 }
 
-/* An ordinal, like every other 01, 02… on the site: the mono. */
-.achievement__num {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background 0.25s ease,
-    color 0.25s ease;
-  background: var(--color-sunken);
-  color: var(--color-accent-text);
-}
-.achievement[open] .achievement__num {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.achievement__heading {
+.reference__heading {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -752,14 +941,14 @@ a {
   letter-spacing: normal;
   line-height: inherit;
 }
-.achievement__title {
+.reference__title {
   font-family: var(--font-heading);
   font-weight: var(--font-heading-weight);
   font-size: clamp(19px, 2vw, 25px);
   line-height: 1.15;
   letter-spacing: -0.015em;
 }
-.achievement__meta {
+.reference__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -768,13 +957,32 @@ a {
   opacity: 0.7;
 }
 
-.achievement__chevron {
-  font-size: 18px;
-  color: var(--color-accent-text);
-  transition: transform 0.3s ease;
-  display: inline-block;
+.reference__headline {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--color-muted);
+  text-wrap: pretty;
 }
-.achievement[open] .achievement__chevron {
+.reference__chevron {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-divider);
+  border-radius: 999px;
+  font-size: 17px;
+  color: var(--color-accent-text);
+  transition:
+    transform 0.3s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+.reference__summary:hover .reference__chevron {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+.reference[open] .reference__chevron {
   transform: rotate(180deg);
 }
 
@@ -786,6 +994,17 @@ a {
   height: 1px;
   background: var(--color-divider);
   margin-bottom: 24px;
+}
+/* One case per Achievement done for this Reference. */
+.reference__case + .reference__case {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--color-divider);
+}
+.reference__case-title {
+  font-size: 19px;
+  line-height: 1.25;
+  margin: 0 0 12px;
 }
 /* The plain-language line, above the three facets and set larger than them:
    whoever needs it is the reader least likely to stay for the rest. */
@@ -829,93 +1048,10 @@ a {
   text-wrap: pretty;
 }
 
-/* — about ———————————————————————————————————————————————————————————————— */
-
-.about {
-  padding-block: 66px 40px;
-}
-.about__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 46px;
-  /* The canvas stretches the aside to the prose column and centres the card in
-     it, rather than leaving a small card floating beside three paragraphs. */
-  align-items: stretch;
-}
-.about .section-title {
-  margin: 0 0 18px;
-}
-.about__prose p {
-  font-size: 16.5px;
-  line-height: 1.7;
-  opacity: 0.9;
-  max-width: 56ch;
-  text-wrap: pretty;
-}
-/* The salaried route, once and at the end of the prose. Separated by a rule
-   rather than by size: it has to read as an aside to the section, not as its
-   conclusion, and it must not compete with the contact CTA further down. */
-.about__prose .about__career {
-  font-size: 15px;
-  margin: 26px 0 0;
-  padding-top: 22px;
-  border-top: 1px solid var(--color-divider);
-  opacity: 0.8;
-}
-
-.about__aside {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  height: 100%;
-}
-.mentoring {
-  background: var(--color-sunken);
-  padding: 28px 30px;
-  flex: 1;
-  justify-content: center;
-}
-/* A sentence, so not in tracked capitals: those belong to the mono eyebrows. */
-.mentoring .card-kicker {
-  color: var(--color-muted);
-  font-size: 16px;
-  letter-spacing: normal;
-  text-transform: none;
-  margin-bottom: 6px;
-}
-.mentoring__list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.mentoring__row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
-  align-items: baseline;
-}
-.mentoring__year {
-  font-family: var(--font-heading);
-  font-weight: var(--font-heading-weight);
-  font-size: 15px;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text);
-  white-space: nowrap;
-}
-.mentoring__text {
-  font-size: 16px;
-  line-height: 1.55;
-  color: var(--color-text);
-  text-wrap: pretty;
-}
-
 /* — contact —————————————————————————————————————————————————————————————— */
 
 .contact {
-  padding-block: 40px 90px;
+  padding-block: 40px 24px;
 }
 /* Was a dark block on a light page. On a dark page it is the one raised panel:
    a step up in ground, a hairline edge, and the cover's terracotta glow low in
@@ -941,8 +1077,46 @@ a {
   );
   pointer-events: none;
 }
-.contact__body {
+.contact__body,
+.contact__about {
   position: relative;
+}
+.contact__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 48px;
+}
+.contact__about {
+  padding-left: 40px;
+  border-left: 1px solid var(--color-divider);
+}
+.contact__about-title {
+  font-size: 24px;
+  margin: 0 0 14px;
+}
+.contact__about p:not(.kicker) {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--color-muted);
+  margin: 0 0 14px;
+  text-wrap: pretty;
+}
+/* The salaried route, once and at the end, set apart by a rule. */
+.contact__about .about__career {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-divider);
+}
+@media (max-width: 900px) {
+  .contact__panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contact__about {
+    padding-left: 0;
+    padding-top: 32px;
+    border-left: 0;
+    border-top: 1px solid var(--color-divider);
+  }
 }
 .contact__title {
   font-size: clamp(32px, 4.4vw, 58px);
@@ -962,21 +1136,40 @@ a {
   gap: 12px;
 }
 .contact__actions .btn {
-  padding: 12px 24px;
+  padding: 13px 28px;
+  font-size: 16px;
+}
+/* The secondary ways in: links in a row, under the one button. */
+.contact__others {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+  margin: 20px 0 0;
   font-size: 15px;
+  color: var(--color-muted);
 }
-/* The secondary actions: an outline in the text colour. The global `a:hover`
-   would otherwise turn their label terracotta and let them compete with the
-   primary button. */
-.contact__actions .btn-outline {
-  border-color: var(--color-divider);
+.contact__others a,
+.contact__link {
+  /* A 24px target at least, for a thumb. */
+  display: inline-block;
+  padding-block: 4px;
   color: var(--color-text);
-  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: var(--color-divider);
+  text-underline-offset: 3px;
 }
-.contact__actions .btn-outline:hover {
-  border-color: color-mix(in srgb, var(--color-text) 40%, transparent);
-  background: color-mix(in srgb, var(--color-text) 6%, transparent);
-  color: var(--color-text);
+.contact__others a:hover,
+.contact__link:hover {
+  color: var(--color-accent-text);
+  text-decoration-color: currentColor;
+}
+.contact__link {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
 }
 .contact__location {
   margin-top: 30px;
@@ -1266,9 +1459,6 @@ a {
   .problem__modes {
     grid-template-columns: minmax(0, 1fr);
   }
-  .position__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
   /* Below this width the nav always wraps to its own row. Measured: ~97px here,
      ~127px once the brand row wraps too (see the 480px block). A few pixels of
      headroom absorbs the reflow while the heading face is still loading. */
@@ -1299,21 +1489,16 @@ a {
 }
 
 @media (max-width: 640px) {
-  .about {
-    padding-block: 48px 20px;
-  }
   .contact {
-    padding-block: 32px 64px;
+    padding-block: 32px 16px;
   }
-  .achievement__summary {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 14px;
+  .reference__summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
     padding: 20px;
   }
-  .achievement__num {
-    width: 34px;
-    height: 34px;
-    font-size: 13px;
+  .reference__headline {
+    grid-row: 2;
   }
   .achievement__panel {
     padding: 0 20px 22px;
@@ -1321,9 +1506,6 @@ a {
   .achievement__facets {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
-  }
-  .about__grid {
-    gap: 32px;
   }
   .hero__portrait {
     --portrait-size: 150px;
@@ -1397,7 +1579,7 @@ a {
 
 .site-footer {
   border-top: 1px solid var(--color-divider);
-  margin-top: 96px;
+  margin-top: 64px;
   padding: 32px 0 40px;
 }
 

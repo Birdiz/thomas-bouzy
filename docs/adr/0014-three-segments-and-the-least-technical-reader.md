@@ -96,7 +96,6 @@ Hero → 01 Problem → **02 Offers** → 03 Achievements → 04 Position → 05
   [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md).
 - `meta.title` and the `<title>` lose the job title in the same rewrite. That was
   the only thing still holding them.
-- Nothing here is for sale before 14 April 2027, the date Thomas will register
-  the business, and not before. Until then the site is a showcase: not indexed, and its availability
+- Nothing here is for sale before the business is registered. Until then the site is a showcase: not indexed, and its availability
   line says "first engagements in preparation", which carries no date and so
   cannot expire. See [ADR 16](0016-the-legal-notice-and-a-number-meant-to-be-public.md).

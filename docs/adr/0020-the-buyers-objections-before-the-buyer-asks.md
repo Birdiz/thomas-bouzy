@@ -123,7 +123,7 @@ l'erreur", "Reconstituer en 40 secondes un annuaire fait à la main". The
 vocabulary stays in the card body, where `knowsAbout` finds it.
 
 **The availability line names a year:** "Je prépare mon calendrier 2027 —
-parlons-en dès maintenant". The year is the year of registration. ADR 11 removed
+parlons-en dès maintenant". ADR 11 removed
 dates so that nothing could rot. This one can, so the test compares it with the
 clock again, and the first build of 2028 fails until it is rewritten.
 

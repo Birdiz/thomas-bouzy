@@ -11,11 +11,12 @@ interface Props {
 
 const { t, locale } = Astro.props;
 
-/* Every Offer and the Partners page, from every page: the header only reaches
+/* Every Offer, the Partners and the public-sector pages, from every page: the header only reaches
    anchors on the home page, and an Offer page was otherwise a dead end. */
 const pages = [
   ...OFFER_IDS.map((id) => ({ ...linkTo(id, locale), name: t.offers[id].name })),
   { ...linkTo('partners', locale), name: t.nav.partners },
+  { ...linkTo('public-sector', locale), name: t.nav.publicSector },
 ];
 
 /**

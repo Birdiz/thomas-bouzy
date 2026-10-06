@@ -16,10 +16,12 @@ const TOKENS = {
   divider: '#2a3540',
   text: '#eef2f3',
   muted: '#93a5ae',
-  accent: '#c8785e',
-  'accent-text': '#d4876c',
-  'accent-500': '#d4876c',
-  'accent-400': '#dc9479',
+  accent: '#ac6d67',
+  'accent-text': '#c3827b',
+  'accent-500': '#c3827b',
+  'accent-400': '#d3918a',
+  'accent-300': '#dea8a2',
+  'accent-fill': '#c3827b',
   'on-accent': '#0e1418',
 };
 
@@ -69,7 +71,7 @@ if (process.argv.includes('--audit')) {
   for (const [name, bg] of grounds) row(`accent-text on ${name}`, ratio(T['accent-text'], bg));
 
   console.log('\n— primary button (ground-coloured label on accent fill) —');
-  for (const fill of ['accent', 'accent-500', 'accent-400']) {
+  for (const fill of ['accent-fill', 'accent-400', 'accent-300']) {
     row(`on-accent on ${fill} (rest/hover/active)`, ratio(T['on-accent'], T[fill]));
   }
 

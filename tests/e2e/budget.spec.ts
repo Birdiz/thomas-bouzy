@@ -31,9 +31,15 @@ import { expect, PATHS, test } from './fixtures.ts';
  * (Figtree 400 + JetBrains Mono + Spectral 500), still under the limit, which
  * did not move. The ridge is inline SVG, ~2 kB of document, no request.
  *
+ * Re-measured on 2026-10-05: Figtree 800 (latin, 11.1 kB) arrived for the one
+ * heavy line on the home page, the invitation to the Audit. The system's heavy
+ * sans was tried first and drew a different face on every OS. Fonts 55.4 →
+ * 66.8 kB on the home page; the limit moved 60 → 72 kB, the same headroom.
+ *
  * Re-measured on 2026-10-06, after Spectral left (docs/adr/0021): the headings
  * moved to Figtree 600, and one Figtree weight costs half of what the serif
- * did. Fonts 55.4 → 44.1 kB (Figtree 400/600 + JetBrains Mono).
+ * did. Fonts 66.8 → 55.5 kB on the home page (Figtree 400/600/800 + JetBrains
+ * Mono); the limit goes back 72 → 60 kB, since the page no longer needs it.
  *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —

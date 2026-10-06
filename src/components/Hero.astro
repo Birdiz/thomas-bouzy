@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { ResumeContent } from '../content/index.ts';
-import { SITE } from '../site.ts';
+import { CONTACT, SITE } from '../site.ts';
 import Ridge from './Ridge.astro';
 
 interface Props {
@@ -32,29 +32,25 @@ const portrait = Object.values(portraits)[0]?.default;
 
     <div class="hero__grid">
       <div class="hero__intro">
-        <p class="hero__availability">
-          <span class="hero__pulse" aria-hidden="true"></span>
-          {t.hero.availability}
-        </p>
-
-        {/* The name, then the promise, in one H1 (ADR 18). The reader arrives
-            warm from LinkedIn or a referral and already knows the name; what
-            they do not know yet is what it is for. */}
+        {/* The name, then the promise, in one H1. The name is for search
+            engines and screen readers only: the header already shows it, and
+            twice in the first screen is once too many. */}
         <h1 class="hero__name">
-          {SITE.author}
-          <span class="hero__promise">{t.hero.title}</span>
+          <span class="visually-hidden">{SITE.author} — </span>
+          <span class="hero__promise">
+            {t.hero.title.map((line) => <span class="hero__promise-line">{line} </span>)}
+          </span>
         </h1>
         <p class="hero__blurb">{t.hero.blurb}</p>
 
-        {/* One button, and it points at the Offers (ADR 14).
-            The job-title line, the "12 years" badge and the CV download all
-            left with chantier A: a title and a years count answer a hiring
-            question this page does not ask, and a CV button in the first
-            viewport offered the salaried route as an equal alternative to the
-            work itself. The booking link is not here either: it belongs to
-            Contact and to the Offer pages, once the reader knows what for. */}
+        {/* The call is the page's one primary action, from the first screen.
+            The Offers are the secondary way in, for the reader who wants to
+            look before talking. No job title, no years badge, no CV. */}
         <div class="hero__ctas">
-          <a class="btn btn-primary" href={`${home}#offers`}>{t.hero.ctaOffers}</a>
+          <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+            {t.hero.ctaBook}
+          </a>
+          <a class="btn btn-secondary" href={`${home}#offers`}>{t.hero.ctaOffers}</a>
         </div>
       </div>
 

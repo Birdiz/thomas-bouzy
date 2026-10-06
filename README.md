@@ -19,8 +19,8 @@ opposite of a CV, and deliberate:
 behind the running order. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
 [ADR 13](docs/adr/0013-the-site-wears-the-linkedin-cover.md); the type is one
-family, Figtree, at two weights
-([ADR 21](docs/adr/0021-one-family-two-weights.md)).
+family, Figtree
+([ADR 21](docs/adr/0021-one-family.md)).
 
 The site owns its own design. It began as an implementation of a Claude Design
 canvas, and the record of where it departed from it is in

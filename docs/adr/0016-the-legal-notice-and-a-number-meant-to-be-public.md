@@ -1,6 +1,6 @@
 # 16. The legal notice wins, so the number becomes one meant to be public
 
-- Status: accepted, takes effect at registration (planned for 14 April 2027);
+- Status: accepted, takes effect at registration;
   the indexing guard is in place since 2026-10-04
 - Date: 2026-10-03
 - Supersedes [ADR 5](0005-phone-number-is-not-in-the-html.md) from that date
@@ -9,7 +9,7 @@
 
 French law (LCEN, art. 6) requires a site published by a natural person acting
 professionally to show that person's name, home address and telephone number. A
-micro-entrepreneur is exactly that.
+freelancer working under their own name is exactly that.
 
 Two earlier decisions point the other way:
 
@@ -22,8 +22,7 @@ not notice the telephone. Filling in `LEGAL` as it stands would have published
 the personal mobile and the home commune in the footer of every page, which
 undoes both decisions in one commit.
 
-Neither can apply yet. Thomas will not register a business before 14 April 2027,
-so `LEGAL` stays empty and the site stays a showcase.
+Neither can apply until the business is registered, so `LEGAL` stays empty and the site stays a showcase.
 
 ## Decision
 

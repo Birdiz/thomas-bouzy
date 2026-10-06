@@ -105,23 +105,18 @@ describe('EN/FR parity', () => {
       '$.meta.title',
       '$.meta.description',
       '$.nav.work',
-      '$.nav.approach',
       '$.nav.about',
       '$.nav.contact',
-      '$.hero.availability',
-      '$.hero.title',
+      '$.hero.title[0]',
       '$.hero.blurb',
       '$.hero.ctaOffers',
       '$.offersSection.title',
       '$.problem.kicker',
       '$.problem.title',
-      '$.position.kicker',
-      '$.position.title',
-      '$.position.intro',
-      '$.position.costLabel',
       '$.work.kicker',
       '$.work.title',
       '$.work.intro',
+      '$.references.socios.headline',
       '$.work.labelPlain',
       '$.failureModes[0].quote',
       '$.failureModes[0].text',
@@ -179,40 +174,6 @@ describe('French typography', () => {
 });
 
 describe('content corrections applied against the design', () => {
-  it('states availability without a date that can rot', () => {
-    // Three versions of this line have gone stale in place: the design's "from
-    // May 2026", then "permanent roles from September 2026" — asserted to be
-    // in the future, and one day from not being, on a page whose own thesis is
-    // that what is not instrumented is not reliable.
-    //
-    // The banner now carries no date at all, which is why this test no longer
-    // compares one against the clock: a line with nothing to expire cannot be
-    // caught late. The permanent-role half went with it — it is stated once, in
-    // About, as the line that points a Recruiter at LinkedIn.
-    //
-    // "Available now" went too: it is not true before the business is
-    // registered, and nothing on the page could make it so (ADR 14).
-    //
-    // ADR 20 lets the line name one year, the year the business is registered:
-    // "first engagements in preparation" read as "a beginner" to a buyer. A
-    // year can rot, so the test compares it with the clock again, and fails
-    // the first build of the year after.
-    expect(en.hero.availability).toMatch(/2027 calendar/i);
-    expect(fr.hero.availability).toMatch(/calendrier 2027/i);
-
-    for (const line of [en.hero.availability, fr.hero.availability]) {
-      expect(line.trim().length, 'the availability line is blank').toBeGreaterThan(0);
-      for (const year of line.match(/\b(19|20)\d{2}\b/g) ?? []) {
-        expect(Number(year), `${line} names a year that has gone stale`).toBeGreaterThanOrEqual(
-          new Date().getFullYear(),
-        );
-      }
-      expect(line, `${line} still claims immediate availability`).not.toMatch(
-        /available now|disponible imm/i,
-      );
-    }
-  });
-
   it('names the salaried route once, and points it at LinkedIn', () => {
     // Chantier A took the chronology, the job title, the years badge and the
     // stack off the page and left them to the CV; the postscript to ADR 11
@@ -284,18 +245,6 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('promises the Client owns what is left behind (ADR 20)', () => {
-    // The orphan-app Client was left by the last provider. The principle that
-    // answers "and if you leave too?" is on the home page, with its price.
-    for (const content of [en, fr]) {
-      const principle = content.principles.find((p) =>
-        /belongs to you|vous appartient/i.test(p.title),
-      );
-      expect(principle, 'the ownership principle is on the page').toBeDefined();
-      expect(principle?.cost.trim().length ?? 0).toBeGreaterThan(0);
-    }
-  });
-
   it('claims no technology the page does not state', () => {
     // The Person schema's `knowsAbout` used to be derived from the Track
     // record's stack chips, so it could only ever name a technology a reader
@@ -325,29 +274,10 @@ describe('content corrections applied against the design', () => {
     }
   });
 
-  it('states the leadership scope as it actually was', () => {
-    // Both reference CVs carried "up to 6 developers, QA, PO" for months. It
-    // was two teams and six people — five developers and a QA — and the PO was
-    // never in scope. The inflated version is the one a reader would probe, so
-    // the corrected one is asserted rather than trusted to stay.
-    //
-    // It used to live in a Track record bullet. Chantier A removed that section,
-    // and this is one of the four facts that existed nowhere else on the page —
-    // it moved to the mentoring entry whose actual subject it is.
-    for (const content of [en, fr]) {
-      const everywhere = [...walkStrings(content)].map(([, text]) => text).join(' ');
-      expect(everywhere).toMatch(/five developers|cinq développeurs/);
-      expect(everywhere, 'the old inflated headcount is back').not.toMatch(
-        /6 (developers|développeurs)/,
-      );
-    }
-  });
-
   it('keeps the measurements that only the Track record used to carry', () => {
     // Chantier A deleted the Track record. Four of its facts appeared nowhere
     // else, and a measurement does not survive being replaced by a download —
-    // so each was moved into the achievement card or the principle whose subject it
-    // already was. This is the test that says so: it fails if a rewrite of any
+    // so each was moved into the achievement card whose subject it already was. This is the test that says so: it fails if a rewrite of any
     // of those hosts quietly drops what it inherited.
     const survivors: [string, RegExp, RegExp][] = [
       ['platform scale', /1\.5M\+ active users/, /1,5 million d'utilisateurs actifs/],

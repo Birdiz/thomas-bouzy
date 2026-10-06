@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { RESUME } from '../../src/content/index.ts';
-import { ACHIEVEMENT_IDS, OFFER_IDS } from '../../src/content/offers.ts';
+import { ACHIEVEMENT_IDS, OFFER_IDS, REFERENCES } from '../../src/content/offers.ts';
 import { fromPrice } from '../../src/content/prices.ts';
 import { formatEuros } from '../../src/lib/money.ts';
 import { homePath, pathOf } from '../../src/routes.ts';
@@ -20,16 +20,12 @@ test.describe('routing and locales', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
     // The name, then the promise, in the one H1 (ADR 18).
     await expect(page.locator('h1')).toContainText('Thomas Bouzy');
-    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title);
-    await expect(
-      page.getByRole('heading', { name: "Ce que j'ai déjà tenu en production" }),
-    ).toBeVisible();
+    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title.join(' '));
+    await expect(page.getByRole('heading', { name: RESUME.fr.work.title })).toBeVisible();
 
     await gotoHome(page, '/en/');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(
-      page.getByRole('heading', { name: 'What I have already kept running in production' }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: RESUME.en.work.title })).toBeVisible();
   });
 
   test('the language switch changes the URL rather than mutating the page', async ({ page }) => {
@@ -88,40 +84,49 @@ test.describe('routing and locales', () => {
   });
 });
 
-test.describe('achievements accordion', () => {
-  test('opens the first achievement and keeps only one open at a time', async ({ page }) => {
+test.describe('references accordion', () => {
+  test('opens one reference at a time, all closed at first', async ({ page }) => {
     await gotoHome(page, '/en/');
-    const achievements = page.locator('details.achievement');
-    await expect(achievements).toHaveCount(ACHIEVEMENT_IDS.length);
-    await expect(achievements.nth(0)).toHaveAttribute('open', '');
+    const references = page.locator('details.reference');
+    await expect(references).toHaveCount(REFERENCES.length);
+    for (const reference of await references.all()) {
+      await expect(reference).not.toHaveAttribute('open', '');
+    }
 
-    await achievements.nth(2).locator('summary').click();
-    await expect(achievements.nth(2)).toHaveAttribute('open', '');
-    await expect(achievements.nth(0)).not.toHaveAttribute('open', '');
+    await references.nth(1).locator('summary').click();
+    await expect(references.nth(1)).toHaveAttribute('open', '');
 
     // The last one too: `name` groups the whole list, not the first few.
-    const last = achievements.nth(ACHIEVEMENT_IDS.length - 1);
+    const last = references.nth(REFERENCES.length - 1);
     await last.locator('summary').click();
     await expect(last).toHaveAttribute('open', '');
-    await expect(achievements.nth(2)).not.toHaveAttribute('open', '');
+    await expect(references.nth(1)).not.toHaveAttribute('open', '');
   });
 
-  test('exposes each achievement as a heading with its panel content', async ({ page }) => {
+  test('opens on every achievement done for that reference', async ({ page }) => {
     await gotoHome(page, '/en/');
-    const first = page.locator('details.achievement').first();
-    await expect(
-      first.getByRole('heading', { name: RESUME.en.achievements[0]?.title ?? '∅' }),
-    ).toBeVisible();
-    // Two facets: "Context" repeated the plain line above it (ADR 18).
-    await expect(first.getByText('Context', { exact: true })).toHaveCount(0);
-    await expect(first.getByText('Approach', { exact: true })).toBeVisible();
-    await expect(first.getByText('Result', { exact: true })).toBeVisible();
+    for (const reference of REFERENCES) {
+      const row = page.locator(`details.reference[data-reference="${reference.id}"]`);
+      await expect(row.locator('.reference__title')).toHaveText(
+        RESUME.en.references[reference.id].name,
+      );
+      await expect(row.locator('article.reference__case')).toHaveCount(
+        reference.achievements.length,
+      );
+    }
+    // Every achievement is reachable from exactly one reference.
+    await expect(page.locator('article.reference__case')).toHaveCount(ACHIEVEMENT_IDS.length);
+
+    const socios = page.locator('details.reference[data-reference="socios"]');
+    await socios.locator('summary').click();
+    await expect(socios.getByText('Approach', { exact: true }).first()).toBeVisible();
+    await expect(socios.getByText('Result', { exact: true }).first()).toBeVisible();
   });
 
   test('is operable from the keyboard', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'WebKit needs full keyboard access enabled at OS level');
     await gotoHome(page, '/en/');
-    const second = page.locator('details.achievement').nth(1);
+    const second = page.locator('details.reference').nth(1);
     await second.locator('summary').focus();
     await page.keyboard.press('Enter');
     await expect(second).toHaveAttribute('open', '');
@@ -142,16 +147,20 @@ test.describe('the page is not a CV', () => {
     });
   }
 
-  test('offers one call to action in the hero, and it reaches the Offers', async ({ page }) => {
-    for (const [path, label] of [
-      ['/', 'Voir les offres'],
-      ['/en/', 'See the offers'],
+  test('leads the hero with the call, and offers the Offers second', async ({ page }) => {
+    for (const [path, book, offers] of [
+      ['/', 'Réserver un appel de 30 minutes', 'Voir les offres'],
+      ['/en/', 'Book a 30-minute call', 'See the offers'],
     ] as const) {
       await gotoHome(page, path);
       const ctas = page.locator('.hero a');
-      await expect(ctas).toHaveCount(1);
-      await expect(ctas.first()).toHaveText(label);
-      await ctas.first().click();
+      await expect(ctas).toHaveCount(2);
+      // The call first, and as the primary button: it is the page's one ask.
+      await expect(ctas.first()).toHaveText(book);
+      await expect(ctas.first()).toHaveAttribute('href', CONTACT.booking);
+      await expect(ctas.first()).toHaveClass(/btn-primary/);
+      await expect(ctas.nth(1)).toHaveText(offers);
+      await ctas.nth(1).click();
       await expect(page).toHaveURL(new RegExp(`${path}#offers$`));
       await expect(page.locator('#offers')).toBeInViewport();
     }
@@ -159,7 +168,7 @@ test.describe('the page is not a CV', () => {
 
   test('points the salaried route at LinkedIn, from About', async ({ page }) => {
     await gotoHome(page, '/');
-    const career = page.locator('#about .about__career a');
+    const career = page.locator('#contact #about .about__career a');
     await expect(career).toHaveCount(1);
     await expect(career).toHaveAttribute('href', /linkedin\.com\/in\//);
   });
@@ -208,7 +217,7 @@ test.describe('phone number is not harvestable', () => {
     // page without it (ADR 18). A link, never an embed.
     await expect(contact.getByRole('link').first()).toHaveAttribute('href', CONTACT.booking);
     await expect(page.locator('iframe')).toHaveCount(0);
-    await expect(contact.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
+    await expect(contact.getByRole('link', { name: 'LinkedIn', exact: true })).toBeVisible();
     await context.close();
   });
 
@@ -235,11 +244,11 @@ test.describe('navigation', () => {
     await gotoHome(page, '/en/');
     await page
       .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'Approach' })
+      .getByRole('link', { name: 'About' })
       .click();
-    await expect(page).toHaveURL(/#approach$/);
+    await expect(page).toHaveURL(/#about$/);
 
-    const box = await page.locator('#approach').boundingBox();
+    const box = await page.locator('#about').boundingBox();
     const headerHeight = (await page.locator('.site-header').boundingBox())?.height ?? 0;
     expect(box).not.toBeNull();
     // The heading must land below the sticky header, never behind it.
@@ -313,14 +322,25 @@ test.describe('motion preferences', () => {
   test.describe('with no stated preference', () => {
     test.use({ motion: 'no-preference' });
 
-    test('scrolls smoothly and runs the ambient animations', async ({ page }) => {
+    test('scrolls smoothly, and the Client sentences pass one at a time', async ({ page }) => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
 
-      const running = await page.evaluate(
-        () => document.querySelector('.hero__pulse')?.getAnimations().length ?? 0,
-      );
-      expect(running).toBeGreaterThan(0);
+      const problem = page.locator('#problem');
+      await expect(problem).toHaveClass(/is-carousel/);
+      await expect(problem.locator('.problem__mode.is-active')).toHaveCount(1);
+
+      // Each sentence has its own button, and the pause is a toggle.
+      const dots = problem.locator('.thoughts__dot');
+      await expect(dots).toHaveCount(RESUME.fr.failureModes.length);
+      await dots.nth(2).click();
+      await expect(problem.locator('.problem__mode').nth(2)).toHaveClass(/is-active/);
+      await expect(problem.locator('.problem__mode').nth(0)).toHaveJSProperty('inert', true);
+
+      const pause = problem.locator('.thoughts__pause');
+      await pause.click();
+      await expect(pause).toHaveAttribute('aria-pressed', 'true');
+      await expect(problem).toHaveClass(/is-paused/);
     });
   });
 
@@ -331,8 +351,15 @@ test.describe('motion preferences', () => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
 
+      // No carousel: every Client sentence stays on the page, as a list.
+      await expect(page.locator('#problem')).not.toHaveClass(/is-carousel/);
+      await expect(page.locator('.thoughts__controls')).toBeHidden();
+      for (const mode of await page.locator('.problem__mode').all()) {
+        await expect(mode).toBeVisible();
+      }
+
       const durations = await page.evaluate(() =>
-        [...document.querySelectorAll('.hero__pulse, .hero__blob, .contact__blob')].map(
+        [...document.querySelectorAll('.hero__blob, .contact__blob')].map(
           (el) => getComputedStyle(el).animationDuration,
         ),
       );
@@ -348,12 +375,12 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
 
-    test(`reads problem, offers, proof, position, person on ${home}`, async ({ page }) => {
+    test(`reads problem, offers, proof, contact on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const order = await page.$$eval('main > section[id]', (sections) =>
         sections.map((section) => section.id),
       );
-      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'approach', 'about', 'contact']);
+      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'contact']);
     });
 
     test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({
@@ -364,15 +391,17 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       const failureModes = RESUME[locale].failureModes;
       await expect(modes).toHaveCount(failureModes.length);
       for (const [i, mode] of failureModes.entries()) {
-        const link = modes.nth(i).getByRole('heading').getByRole('link');
+        // By selector, not by role: in the carousel, the sentences not on
+        // screen are hidden from the accessibility tree, as they should be.
+        const link = modes.nth(i).locator('h3 a');
         await expect(link).toContainText(mode.quote);
         await expect(link).toHaveAttribute(
           'href',
           pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
         );
       }
-      // Under the Failure modes, for the Client who cannot yet name theirs.
-      const audit = page.locator('#problem .problem__audit a');
+      // Right after the Failure modes, for the Client who cannot yet name theirs.
+      const audit = page.locator('.audit-call a');
       await expect(audit).toHaveAttribute('href', pathOf('audit', locale) ?? '∅');
       await expect(page.locator('.concepts')).toHaveCount(0);
     });

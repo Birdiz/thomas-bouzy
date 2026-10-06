@@ -59,17 +59,17 @@ const CARD = `<!doctype html><meta charset="utf-8"><style>
   }
   .stack { position: absolute; left: 560px; right: 72px; top: 0; bottom: 0;
     display: flex; flex-direction: column; justify-content: center; }
-  .rule { width: 64px; height: 3px; background: #c8785e; margin-bottom: 34px; }
+  .rule { width: 64px; height: 3px; background: #ac6d67; margin-bottom: 34px; }
   h1 { font-weight: 600; font-size: 84px; line-height: 1; letter-spacing: -0.02em; }
   .line { font-size: 30px; line-height: 1.35; color: #c9d3d8; margin-top: 28px; max-width: 24ch; }
   .foot { margin-top: 40px; font-family: 'JetBrains Mono', monospace; font-size: 17px;
-    letter-spacing: .16em; text-transform: uppercase; color: #d4876c; }
+    letter-spacing: .16em; text-transform: uppercase; color: #c3827b; }
 </style>
 ${RIDGE}
 <div class="stack">
   <div class="rule"></div>
   <h1>Thomas Bouzy</h1>
-  <p class="line">Je reprends, fiabilise et fais évoluer vos applications métier.</p>
+  <p class="line">Je reprends et fais évoluer vos applications métier.</p>
   <p class="foot">Freelance PHP/Symfony</p>
 </div>`;
 
