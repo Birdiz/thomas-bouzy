@@ -34,6 +34,8 @@ export const ACHIEVEMENT_IDS = [
   'enterprise-onboarding',
   'codebase-audit',
   'open-data-directories',
+  'staircase-calculator',
+  'village-website',
 ] as const;
 export type AchievementId = (typeof ACHIEVEMENT_IDS)[number];
 
@@ -50,6 +52,8 @@ export const REFERENCES = [
   { id: 'kiss-the-bride', achievements: ['enterprise-onboarding'] },
   { id: 'civic-tech', achievements: ['codebase-audit'] },
   { id: 'open-data', achievements: ['open-data-directories'] },
+  { id: 'quart-de-tour', achievements: ['staircase-calculator'] },
+  { id: 'grandrupt', achievements: ['village-website'] },
 ] as const satisfies readonly { id: string; achievements: readonly AchievementId[] }[];
 export type ReferenceId = (typeof REFERENCES)[number]['id'];
 
@@ -84,12 +88,13 @@ export const OFFERS: Record<OfferId, OfferFacts> = {
     segments: ['critical-systems', 'partners'],
     achievements: ['live-api-redesign', 'wallet-event-sourcing'],
   },
-  // Builds what does not exist yet, never what already runs (ADR 19). Opened
-  // ahead of its proof on purpose: the directory leads, because it is a tool
-  // delivered to a client that replaced work done by hand.
+  // Builds what does not exist yet, never what already runs (ADR 19). The
+  // directory leads, because it is a tool delivered to a client that replaced
+  // work done by hand; the staircase calculator follows, a product designed
+  // and put online.
   build: {
     segments: ['critical-systems', 'orphan-app', 'partners', 'public-sector'],
-    achievements: ['open-data-directories', 'on-chain-operations'],
+    achievements: ['open-data-directories', 'staircase-calculator'],
   },
   reinforcement: {
     segments: ['critical-systems', 'partners'],

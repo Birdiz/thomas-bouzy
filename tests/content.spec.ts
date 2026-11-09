@@ -24,7 +24,7 @@ import { LOCALES } from '../src/site.ts';
  * locales carry the same keys — a missing one is a compile error. These tests
  * cover the invariants types cannot express:
  *
- *   - array lengths matching at every depth (7 achievements EN, 7 FR)
+ *   - array lengths matching at every depth (9 achievements EN, 9 FR)
  *   - no empty or whitespace-only strings
  *   - the sections that must actually be translated, are
  *   - the content corrections we made against the design are still in place
@@ -207,17 +207,13 @@ describe('content corrections applied against the design', () => {
   });
 
   it('gives the location as a region, never narrower', () => {
-    // A commune of a few hundred people, beside a name and a job title, is a
-    // near-deducible home address. Thomas's call is to stop at the region and
-    // not publish the département either: a recruiter needs the timezone and
-    // the country, and neither tells them more.
+    // Thomas's call is to stop at the region and not publish the département:
+    // a recruiter needs the timezone and the country, and neither tells them
+    // more.
     //
-    // The two names are checked by hash, so that the repository, which is
-    // public, does not publish what the page withholds.
-    const WITHHELD = new Set([
-      'dc2e79e4da46ba0099b80a9474e6b8cd3b33d546eaa6ed44d2330a7aef92094c',
-      '813fda261f058093793ac9cf52f4f99613455fe90500724565653bf06c01dc76',
-    ]);
+    // The name is checked by hash, so that the repository, which is public,
+    // does not publish what the page withholds.
+    const WITHHELD = new Set(['813fda261f058093793ac9cf52f4f99613455fe90500724565653bf06c01dc76']);
     const hashOf = (word: string) => createHash('sha256').update(word).digest('hex');
     for (const content of [en, fr]) {
       expect(content.contact.locationLine).toMatch(/Grand Est, France/);
@@ -242,6 +238,8 @@ describe('content corrections applied against the design', () => {
         content.achievements.find((achievement) => achievement.id === id)?.org ?? '';
       expect(byline('open-data-directories')).toMatch(/for a client|pour un client/i);
       expect(byline('codebase-audit')).toMatch(/volunteer|bénévolat/i);
+      expect(byline('staircase-calculator')).toMatch(/personal product|produit personnel/i);
+      expect(byline('village-website')).toMatch(/volunteer|bénévolat/i);
     }
   });
 
@@ -280,7 +278,7 @@ describe('content corrections applied against the design', () => {
     // so each was moved into the achievement card whose subject it already was. This is the test that says so: it fails if a rewrite of any
     // of those hosts quietly drops what it inherited.
     const survivors: [string, RegExp, RegExp][] = [
-      ['platform scale', /1\.5M\+ active users/, /1,5 million d'utilisateurs actifs/],
+      ['platform scale', /1\.5 million users/, /1,5 million d'utilisateurs/],
       ['load peaks', /10,000–20,000 users/, /10 000 à 20 000 utilisateurs/],
       ['observability tooling', /OpenTelemetry and Datadog/, /OpenTelemetry et Datadog/],
       ['incident command', /through Rootly/, /via Rootly/],

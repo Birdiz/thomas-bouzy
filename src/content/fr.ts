@@ -80,7 +80,7 @@ export const fr = {
   work: {
     kicker: 'Références',
     title: "Là où j'ai déjà tenu la production",
-    intro: 'Industrie, fintech, SaaS, associatif.',
+    intro: 'Industrie, fintech, SaaS, associatif, collectivité.',
     labelPlain: 'En clair :',
     labelApproach: 'Approche',
     labelResult: 'Résultat',
@@ -95,8 +95,8 @@ export const fr = {
       plain:
         'Veiller sur le logiciel dont plusieurs usines dépendent chaque jour, des fournisseurs aux factures.',
       approach:
-        "Toute la chaîne : fournisseurs, production, stock, facturation, incidents. Des usines qui ne pouvaient s'en passer une journée : rien ne partait sans être vérifié.",
-      result: 'Resté en production tout du long, dans plusieurs usines ArcelorMittal en France.',
+        'Toute la chaîne, des fournisseurs aux incidents : rien ne partait sans être vérifié.',
+      result: 'Resté en production tout du long.',
     },
     {
       id: 'live-api-redesign',
@@ -106,9 +106,9 @@ export const fr = {
       plain:
         "Reconstruire les fondations d'un produit en service, sans une coupure pour ceux qui s'en servent.",
       approach:
-        "Un produit de trading lent et instable, refait par étapes : contrats d'API recentrés sur le métier, front jamais cassé. Huit sprints aux côtés de l'équipe front, en React et Next.js ; déploiement sur Kubernetes et ArgoCD à ma charge.",
+        'Un produit de trading lent et instable, refait par étapes en React et Next.js, front jamais cassé. Déploiement sur Kubernetes et ArgoCD à ma charge.',
       result:
-        'Erreurs 500 à zéro, page utilisable en 3 secondes au lieu de 17, déploiement de 15 à 4 minutes, données achetées de 9 000 € à 3 000 € par an. Mise en production sous astreinte, incidents pilotés via Rootly.',
+        'Erreurs 500 à zéro, page utilisable en 3 secondes au lieu de 17, déploiement de 15 à 4 minutes, données achetées de 9 000 € à 3 000 € par an. Incidents pilotés via Rootly.',
     },
     {
       id: 'wallet-event-sourcing',
@@ -118,9 +118,9 @@ export const fr = {
       plain:
         "Rendre chaque mouvement d'un portefeuille traçable, au lieu de ne connaître que le solde du jour.",
       approach:
-        "Des portefeuilles d'actifs réels, pour plus de 1,5 million d'utilisateurs actifs. Event Sourcing et outbox via SNS/SQS : chaque mouvement devient un fait stocké et rejouable.",
+        'Event Sourcing et outbox via SNS/SQS : chaque mouvement devient un fait stocké et rejouable.',
       result:
-        "Plus de 1 000 transactions par minute avec une piste d'audit complète, et des pics de 10 000 à 20 000 utilisateurs en quelques minutes, testés en charge. Des alertes avant la panne sur tous les services backend (OpenTelemetry et Datadog) : les bugs remontés sont passés d'une vingtaine à cinq par mois.",
+        "Plus de 1 000 transactions par minute, pics de 10 000 à 20 000 utilisateurs testés en charge. Alertes avant la panne (OpenTelemetry et Datadog) : d'une vingtaine de bugs remontés à cinq par mois.",
     },
     {
       id: 'on-chain-operations',
@@ -132,7 +132,7 @@ export const fr = {
       approach:
         "Des opérations DeFi sur Solana, depuis un microservice Node.js avec le SDK Meteora et Fireblocks pour la signature. Intégration de SDK et opération de transactions, pas d'écriture de smart contracts.",
       result:
-        'En production sur fonds réels. Signature idempotente et réconciliation avec la chaîne conçues dès le départ, puis ouvertes aux autres équipes en service partagé.',
+        'En production sur fonds réels, signature idempotente et réconciliation avec la chaîne.',
     },
     {
       id: 'enterprise-onboarding',
@@ -142,9 +142,8 @@ export const fr = {
       plain:
         "Chaque nouveau client demandait un paramétrage sur mesure ; c'est désormais l'affaire d'une journée.",
       approach:
-        "Un SaaS pour grands comptes, sur un monolithe Symfony 2.7 / AngularJS sans aucun test. Les tests d'abord, puis Symfony 4 avec API Platform et React, sans arrêt ; mise en route automatisée en Node.js et Jenkins.",
-      result:
-        'Un nouveau grand compte démarre en une journée. Classements diffusés en direct via Mercure. Quatre juniors encadrés deux ans.',
+        "Un monolithe Symfony 2.7 sans aucun test. Les tests d'abord, puis Symfony 4 avec API Platform et React, sans arrêt ; mise en route automatisée en Node.js et Jenkins.",
+      result: 'Classements diffusés en direct via Mercure. Quatre juniors encadrés deux ans.',
     },
     {
       id: 'codebase-audit',
@@ -154,9 +153,9 @@ export const fr = {
       plain:
         'Dire à une équipe ce qui, dans son code, peut lui coûter cher, puis corriger moi-même le plus critique.',
       approach:
-        "Trois applications bénévoles, dont une boutique qui encaisse, sans aucun test. En lecture seule d'abord : quatre rapports priorisés, dont 17 points de sécurité. Puis j'ai corrigé les critiques moi-même.",
+        'Trois applications sans aucun test, dont une boutique qui encaisse. Quatre rapports priorisés, dont 17 points de sécurité.',
       result:
-        'Le panier qui faisait confiance au navigateur est revalidé côté serveur. Paiements et authentification admin couverts par des tests, CodeQL dans le pipeline.',
+        'Le panier est revalidé côté serveur ; paiements et authentification admin testés, CodeQL dans le pipeline.',
     },
     {
       id: 'open-data-directories',
@@ -167,11 +166,40 @@ export const fr = {
         "Reconstituer en quelques secondes un annuaire qu'on établissait à la main, commune par commune.",
       approach:
         "Les données ouvertes, enrichies depuis les sites publics des collectivités, avec la provenance de chaque valeur. Local-first : un fichier SQLite sur la machine de l'utilisateur.",
-      result:
-        "Sur l'Ille-et-Vilaine, 31 273 associations de 332 communes en 40 secondes. Un pré-filtre mesuré ramène les pages à analyser de 40 % à 6,5 %.",
+      result: "Sur l'Ille-et-Vilaine, 31 273 associations de 332 communes en 40 secondes.",
       link: {
         href: 'https://github.com/Birdiz/annuaire-vie-associative/releases',
         label: 'Les versions publiées',
+      },
+    },
+    {
+      id: 'staircase-calculator',
+      title: 'Calculer un escalier en bois, du plan à la découpe',
+      org: 'Produit personnel',
+      period: '2026',
+      plain:
+        "Un menuisier répond à six questions et obtient plan, 3D, fiche d'atelier et fichiers pour sa machine.",
+      approach:
+        "Un moteur de calcul séparé de l'interface, en TypeScript. 3D en Three.js, export DXF.",
+      result: 'En ligne, en abonnement, utilisable sans réseau.',
+      link: {
+        href: 'https://quart-de-tour.fr',
+        label: 'Essayer Quart de tour',
+      },
+    },
+    {
+      id: 'village-website',
+      title: 'Donner à un village son site officiel',
+      org: 'Commune de Grandrupt, bénévolat',
+      period: '2026',
+      plain:
+        'Horaires, démarches et nouvelles au même endroit, et une mairie qui publie elle-même.',
+      approach: 'En trois langues, sur Next.js, avec un back-office Payload CMS à rôles.',
+      result:
+        "Remis à la commune, avec sa déclaration d'accessibilité publiée : partiellement conforme.",
+      link: {
+        href: 'https://village-de-grandrupt.fr',
+        label: 'Voir le site',
       },
     },
   ],
@@ -207,8 +235,19 @@ export const fr = {
       name: 'Annuaire associatif',
       sector: 'Open data · pour un client',
       period: '2026',
-      headline:
-        "31 273 associations recensées en 40 secondes, au lieu d'un relevé à la main, commune par commune.",
+      headline: "31 273 associations recensées en 40 secondes, au lieu d'un relevé à la main.",
+    },
+    'quart-de-tour': {
+      name: 'Quart de tour',
+      sector: 'Menuiserie · produit personnel',
+      period: '2026',
+      headline: 'Un escalier en bois calculé en ligne, du plan aux fichiers de découpe.',
+    },
+    grandrupt: {
+      name: 'Village de Grandrupt',
+      sector: 'Collectivité · bénévolat',
+      period: '2026',
+      headline: "Le site officiel d'un village, en trois langues.",
     },
   },
 
@@ -216,7 +255,7 @@ export const fr = {
     kicker: 'À propos',
     title: 'En bref',
     paragraphs: [
-      "Je suis fullstack, avec la profondeur côté backend et architecture : PHP et Symfony d'abord, Node.js et TypeScript, React côté front ; Python, pour l'instant en projets personnels. J'aime les sujets peu glamour : des transactions qui restent justes, des migrations que personne ne remarque. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
+      "Je suis fullstack, avec la profondeur côté backend et architecture : PHP et Symfony d'abord, Node.js et TypeScript, React côté front ; Python, pour l'instant en projets personnels. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
       "J'ai enseigné à l'université et mené des juniors jusqu'à l'autonomie. Je vis dans le Grand Est, à la campagne ; je travaille surtout à distance, et viens sur place si besoin.",
     ],
     careerLine: "En poste plutôt qu'en mission ?",
@@ -898,6 +937,10 @@ export const fr = {
         {
           title: 'Un annuaire associatif, tiré des sites publics',
           text: "31 273 associations d'Ille-et-Vilaine recensées en 40 secondes, depuis les données ouvertes et les sites des communes.",
+        },
+        {
+          title: 'Le site officiel de Grandrupt',
+          text: 'Un village, trois langues, des actualités publiées par la mairie elle-même. En bénévolat.',
         },
         {
           title: 'Civic tech, bénévolat',

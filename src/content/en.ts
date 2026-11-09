@@ -80,7 +80,7 @@ export const en = {
   work: {
     kicker: 'References',
     title: 'Where I have already kept production running',
-    intro: 'Industry, fintech, SaaS, the non-profit sector.',
+    intro: 'Industry, fintech, SaaS, the non-profit sector, local government.',
     labelPlain: 'In plain terms:',
     labelApproach: 'Approach',
     labelResult: 'Result',
@@ -94,9 +94,8 @@ export const en = {
       period: '2016 – 2017',
       plain:
         'Looking after the software several plants rely on every day, from suppliers to invoices.',
-      approach:
-        'The whole chain: suppliers, production, stock, invoicing, incidents. Plants that could not do without it for a day: nothing went out unchecked.',
-      result: 'In production throughout, at several ArcelorMittal plants in France.',
+      approach: 'The whole chain, from suppliers to incidents: nothing went out unchecked.',
+      result: 'In production throughout.',
     },
     {
       id: 'live-api-redesign',
@@ -106,9 +105,9 @@ export const en = {
       plain:
         'Rebuilding the foundations of a product while it runs, without a single outage for the people using it.',
       approach:
-        'A slow, unstable trading product, rebuilt in steps: API contracts refocused on the business, the frontend never broken. Eight sprints alongside the frontend team, in React and Next.js; deployment on Kubernetes and ArgoCD was mine to own.',
+        'A slow, unstable trading product, rebuilt in steps in React and Next.js, the frontend never broken. Deployment on Kubernetes and ArgoCD was mine to own.',
       result:
-        '500 errors down to zero, the page usable in 3 seconds instead of 17, deployment from 15 minutes to 4, purchased data from €9,000 to €3,000 a year. Shipped on call, incidents driven through Rootly.',
+        '500 errors down to zero, the page usable in 3 seconds instead of 17, deployment from 15 minutes to 4, purchased data from €9,000 to €3,000 a year. Incidents driven through Rootly.',
     },
     {
       id: 'wallet-event-sourcing',
@@ -118,9 +117,9 @@ export const en = {
       plain:
         "Making every movement in a wallet traceable, instead of only ever knowing today's balance.",
       approach:
-        'Wallets holding real assets, for 1.5M+ active users. Event Sourcing and an outbox over SNS/SQS: every movement becomes a stored, replayable fact.',
+        'Event Sourcing and an outbox over SNS/SQS: every movement becomes a stored, replayable fact.',
       result:
-        '1,000+ transactions a minute with a complete audit trail, and peaks of 10,000–20,000 users within minutes, load-tested. Alerts before failure on every backend service (OpenTelemetry and Datadog): reported bugs went from about twenty a month to five.',
+        '1,000+ transactions a minute, peaks of 10,000–20,000 users load-tested. Alerts before failure (OpenTelemetry and Datadog): reported bugs from about twenty a month to five.',
     },
     {
       id: 'on-chain-operations',
@@ -132,7 +131,7 @@ export const en = {
       approach:
         'DeFi operations on Solana, from a Node.js microservice with the Meteora SDK and Fireblocks for signing. SDK integration and transaction operation, no smart contract authoring.',
       result:
-        'In production on real funds. Idempotent signing and reconciliation against the chain designed in from the start, then opened to other teams as a shared service.',
+        'In production on real funds, with idempotent signing and reconciliation against the chain.',
     },
     {
       id: 'enterprise-onboarding',
@@ -141,9 +140,8 @@ export const en = {
       period: 'Jan 2018 – April 2022',
       plain: 'Every new client used to need a bespoke setup; it now takes a single day.',
       approach:
-        'A SaaS for large accounts, on a Symfony 2.7 / AngularJS monolith with no tests at all. Tests first, then Symfony 4 with API Platform and React, without stopping; onboarding automated with Node.js and Jenkins.',
-      result:
-        'A new enterprise account goes live in a day. Rankings delivered live through Mercure. Four juniors mentored over two years.',
+        'A Symfony 2.7 monolith with no tests at all. Tests first, then Symfony 4 with API Platform and React, without stopping; onboarding automated with Node.js and Jenkins.',
+      result: 'Rankings delivered live through Mercure. Four juniors mentored over two years.',
     },
     {
       id: 'codebase-audit',
@@ -153,9 +151,9 @@ export const en = {
       plain:
         'Telling a team what in their code could cost them dearly, then fixing the most critical parts myself.',
       approach:
-        'Three volunteer apps, one of them a shop taking payments, with no tests at all. Read-only first: four prioritised reports, including 17 security findings. Then I fixed the critical ones myself.',
+        'Three apps with no tests at all, one of them a shop taking payments. Four prioritised reports, including 17 security findings.',
       result:
-        'The cart that trusted the browser is now revalidated server-side. Payments and admin authentication covered by tests, CodeQL in the pipeline.',
+        'The cart is revalidated server-side; payments and admin authentication tested, CodeQL in the pipeline.',
     },
     {
       id: 'open-data-directories',
@@ -166,11 +164,40 @@ export const en = {
         'Rebuilding in seconds a directory that used to be compiled by hand, one town at a time.',
       approach:
         "Open data, enriched from the public sites of local authorities, with the provenance of every value. Local-first: one SQLite file on the user's machine.",
-      result:
-        'On Ille-et-Vilaine, 31,273 associations from 332 communes in 40 seconds. A measured pre-filter cut the pages to analyse from 40% to 6.5%.',
+      result: 'On Ille-et-Vilaine, 31,273 associations from 332 communes in 40 seconds.',
       link: {
         href: 'https://github.com/Birdiz/annuaire-vie-associative/releases',
         label: 'The published releases',
+      },
+    },
+    {
+      id: 'staircase-calculator',
+      title: 'Calculating a wooden staircase, from plan to cut',
+      org: 'Personal product',
+      period: '2026',
+      plain:
+        'A joiner answers six questions and gets the plan, 3D view, workshop sheet and machine files.',
+      approach:
+        'A calculation engine kept apart from the interface, in TypeScript. 3D in Three.js, DXF export.',
+      result: 'Online, by subscription, usable without a network.',
+      link: {
+        href: 'https://quart-de-tour.fr',
+        label: 'Try Quart de tour (in French)',
+      },
+    },
+    {
+      id: 'village-website',
+      title: 'Giving a village its official website',
+      org: 'Commune of Grandrupt, volunteer work',
+      period: '2026',
+      plain:
+        'Opening hours, procedures and news in one place, and a town hall that publishes for itself.',
+      approach: 'In three languages, on Next.js, with a role-based Payload CMS back office.',
+      result:
+        'Handed over to the commune, with its accessibility statement published: partially compliant.',
+      link: {
+        href: 'https://village-de-grandrupt.fr',
+        label: 'See the site',
       },
     },
   ],
@@ -206,7 +233,19 @@ export const en = {
       name: 'Association directory',
       sector: 'Open data · for a client',
       period: '2026',
-      headline: '31,273 associations listed in 40 seconds, instead of by hand, town by town.',
+      headline: '31,273 associations listed in 40 seconds, instead of by hand.',
+    },
+    'quart-de-tour': {
+      name: 'Quart de tour',
+      sector: 'Joinery · personal product',
+      period: '2026',
+      headline: 'A wooden staircase worked out online, from the plan to the cutting files.',
+    },
+    grandrupt: {
+      name: 'Village of Grandrupt',
+      sector: 'Local government · volunteer work',
+      period: '2026',
+      headline: "A village's official website, in three languages.",
     },
   },
 
@@ -214,7 +253,7 @@ export const en = {
     kicker: 'About',
     title: 'In short',
     paragraphs: [
-      'I am full-stack, with the depth on the backend and in architecture: PHP and Symfony first, Node.js and TypeScript, React on the front end; Python, so far in personal projects. I like the unglamorous parts: transactions that stay correct, migrations nobody notices. And I write my decisions down, so the team can carry on without me.',
+      'I am full-stack, with the depth on the backend and in architecture: PHP and Symfony first, Node.js and TypeScript, React on the front end; Python, so far in personal projects. And I write my decisions down, so the team can carry on without me.',
       'I have taught at university and brought juniors to autonomy. I live in the Grand Est countryside; I work mostly remotely, and come on site when needed.',
     ],
     careerLine: 'Hiring rather than contracting?',
