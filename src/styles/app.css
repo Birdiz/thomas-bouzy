@@ -1310,7 +1310,9 @@ a {
   border-radius: calc(var(--radius-lg) * 1.6);
   padding: clamp(38px, 5vw, 64px);
   position: relative;
-  overflow: hidden;
+  /* `clip`, not `hidden`: the blob overflows, so a `hidden` panel can scroll,
+     and a jump to #about inside it would scroll its top padding away. */
+  overflow: clip;
 }
 .contact__blob {
   position: absolute;

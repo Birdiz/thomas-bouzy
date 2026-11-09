@@ -291,6 +291,20 @@ test.describe('navigation', () => {
     expect(box?.y ?? 0).toBeGreaterThanOrEqual(headerHeight - 1);
   });
 
+  test('an anchor into the contact panel scrolls the page, not the panel', async ({ page }) => {
+    await gotoHome(page, '/en/');
+
+    // #about sits inside the panel: were the panel a scroll container, the jump
+    // would scroll it too and swallow its top padding. Instant, because the
+    // anchor's smooth scroll would leave the panel at 0 until it had run.
+    const panelScrollTop = await page.locator('#about').evaluate((about) => {
+      about.scrollIntoView({ behavior: 'instant', block: 'start' });
+      return about.closest('.contact__panel')?.scrollTop;
+    });
+
+    expect(panelScrollTop).toBe(0);
+  });
+
   test('has a skip link that reaches main', async ({ page }) => {
     await gotoHome(page, '/en/');
     const skip = page.getByRole('link', { name: 'Skip to content' });
