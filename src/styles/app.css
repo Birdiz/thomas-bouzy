@@ -1497,6 +1497,32 @@ a {
 .offer__section {
   padding-block: 34px;
 }
+
+/* — about page ———————————————————————————————————————————————————————————— */
+/* The name and the face side by side, then one column of prose at reading
+   width: the page is a voice, not a grid of cards. */
+.about-page__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+}
+.about-page__portrait {
+  --portrait-size: 220px;
+}
+.about-page__text p {
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 62ch;
+}
+@media (max-width: 640px) {
+  .about-page__head {
+    grid-template-columns: 1fr;
+  }
+  .about-page__portrait {
+    --portrait-size: 150px;
+  }
+}
 .offer__heading {
   margin-bottom: 22px;
 }

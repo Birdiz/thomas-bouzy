@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BookingSection from '../components/offer/BookingSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { RESUME } from '../content/index.ts';
+import { portrait } from '../lib/portrait.ts';
+import { pageGraph } from '../lib/structured-data.ts';
+import type { Route } from '../routes.ts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  route: Route;
+}
+
+const { route } = Astro.props;
+const { locale } = route;
+const t = RESUME[locale];
+const page = t.aboutPage;
+---
+
+{/* Who picks up the phone, at length (ADR 25). One column of prose, the face
+    beside the name, and the call at the end: the page exists to make the call
+    easier to book, not to be a CV. */}
+<BaseLayout
+  route={route}
+  title={page.meta.title}
+  description={page.meta.description}
+  ogType="profile"
+  structuredData={pageGraph(route)}
+>
+  <SiteHeader route={route} t={t} contactHref="#book" />
+  <main id="main" class="offer">
+    <header class="offer__head about-page__head container">
+      <div class="about-page__intro">
+        <Breadcrumb route={route} t={t} />
+        <h1 class="offer__name">{page.title}</h1>
+        <p class="offer__plain">{page.plain}</p>
+      </div>
+      {
+        portrait && (
+          <div class="hero__portrait about-page__portrait">
+            <Image
+              src={portrait}
+              alt={t.a11y.portraitAlt}
+              class="washed"
+              width={440}
+              height={440}
+              widths={[300, 440]}
+              sizes="(max-width: 640px) 150px, 220px"
+            />
+          </div>
+        )
+      }
+    </header>
+
+    <section class="offer__section about-page__text container" aria-label={page.kicker}>
+      {page.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </section>
+
+    <BookingSection labels={page.book} locale={locale} />
+  </main>
+  <SiteFooter t={t} locale={locale} />
+</BaseLayout>

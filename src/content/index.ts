@@ -17,10 +17,11 @@ export const RESUME: Record<Locale, ResumeContent> = { fr: withFrenchSpacing(fr)
  * and a page declared in one locale only is exempt from the other.
  */
 export function contentOfPage(locale: Locale, id: PageId): unknown {
-  // The Offer pages are their own pages; everything else in the module is the
-  // home page and the chrome every page shares.
-  const { offerPages, partnersPage, publicSectorPage, ...home } = RESUME[locale];
+  // The Offer pages and the other pages are their own; everything else in the
+  // module is the home page and the chrome every page shares.
+  const { offerPages, partnersPage, publicSectorPage, aboutPage, ...home } = RESUME[locale];
   if (id === 'home') return home;
+  if (id === 'about') return aboutPage;
   if (id === 'partners') return partnersPage;
   if (id === 'public-sector') return publicSectorPage;
   return offerPages[id];

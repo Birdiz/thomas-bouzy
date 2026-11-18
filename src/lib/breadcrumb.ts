@@ -20,6 +20,7 @@ export function breadcrumbOf(route: Route): Crumb[] {
   if (page.id === 'home') return [];
 
   const home = { name: t.nav.home, href: homePath(locale) };
+  if (page.id === 'about') return [home, { name: t.aboutPage.kicker, href: path }];
   if (page.id === 'partners' || page.id === 'public-sector') {
     const content = page.id === 'partners' ? t.partnersPage : t.publicSectorPage;
     if (!content) throw new Error(`${path}: no ${locale} content for the ${page.id} page`);

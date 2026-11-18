@@ -256,6 +256,7 @@ export const en = {
       'What I enjoy is the problem: understanding what your business needs and meeting it. The tech comes second. Some find me too direct: for you, that means advice with no sugar coating.',
       'My home ground is PHP and Symfony, then Node.js, TypeScript and React; Python, in personal projects. I have taught at university, and I live in the Grand Est countryside.',
     ],
+    more: 'Read more',
     careerLine: 'Hiring rather than contracting?',
     careerLink: 'My career is on LinkedIn.',
   },
@@ -799,6 +800,33 @@ export const en = {
             'My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
+    },
+  },
+
+  aboutPage: {
+    meta: {
+      title: 'About Thomas Bouzy, freelance developer in eastern France',
+      description:
+        'Who picks up when you call: a developer who likes racking his brains over your problem. Direct, keen to explain, based in the French countryside.',
+    },
+    kicker: 'About',
+    title: 'Who picks up',
+    plain: 'I do this job because I like racking my brains.',
+    paragraphs: [
+      "A stock count that never adds up, an app nobody dares touch any more: give me that and I won't let go.",
+      'So no, I am not "passionate about tech". Tech is my tool. What interests me is what your business needs, and how to put it in place without overengineering it.',
+      'For a long time I worked in teams chasing perfect code. I ended up tired of it. I would rather think about the need.',
+      'People say I am sometimes too direct. It is true. If something is off in your project, you will know. (I sugar-coat a little better than I used to, promise.)',
+      "I also like explaining. For many people, the internet is still a black box, and that's fine. I have taught at university and trained juniors. I still love lifting the lid.",
+      'I live in the countryside, in the Grand Est. I have worked remotely for eight years. And I am glad to come to you: nothing beats a day on site to understand how you work. The rest of the time, I tinker. Quart de tour, my software for joiners, was born that way.',
+    ],
+    book: {
+      kicker: 'First step',
+      title: 'A free 30-minute call.',
+      text: 'Now you know who picks up. I tell you plainly whether I can help.',
+      cta: 'Book a call',
+      orWrite: 'Would rather write?',
+      serviceArea: 'On site in {towns}; remotely everywhere else.',
     },
   },
 

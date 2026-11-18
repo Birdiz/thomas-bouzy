@@ -44,6 +44,9 @@ export function ogCard(route: Route): OgCard {
   }
 
   const foot = `${SITE.author} · ${SIGNATURE[locale]}`;
+  if (page.id === 'about') {
+    return { src, title: t.aboutPage.kicker, line: t.aboutPage.plain, foot, home: false };
+  }
   if (page.id === 'partners' || page.id === 'public-sector') {
     const content = page.id === 'partners' ? t.partnersPage : t.publicSectorPage;
     if (!content) throw new Error(`${path}: no ${locale} content for the ${page.id} page`);

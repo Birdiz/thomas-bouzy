@@ -255,8 +255,9 @@ export const fr = {
     title: 'Qui décroche',
     paragraphs: [
       "Ce qui me plaît, c'est le problème : comprendre ce dont ton métier a besoin et y répondre. La tech vient après. On me dit trop direct : pour toi, un avis sans enrobage.",
-      "Mon terrain, c'est PHP et Symfony, puis Node.js, TypeScript et React ; Python, en projets personnels. J'ai enseigné à la fac et je vis à la campagne, en Grand Est.",
+      "Mon terrain, c'est PHP et Symfony, puis Node.js, TypeScript et React ; Python, en projets personnels. Je vis à la campagne, en Grand Est.",
     ],
+    more: 'Lire la suite',
     careerLine: "En poste plutôt qu'en mission ?",
     careerLink: 'Mon parcours est sur LinkedIn.',
   },
@@ -994,6 +995,33 @@ export const fr = {
       text: 'Je te dis franchement si je suis la bonne personne. Réponse sous 48 h ouvrées.',
       cta: 'Réserver un appel',
       orWrite: 'Pour le CV, ou pour écrire :',
+      serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
+    },
+  },
+
+  aboutPage: {
+    meta: {
+      title: 'À propos : Thomas Bouzy, développeur freelance dans le Grand Est',
+      description:
+        'Qui décroche quand tu appelles : un développeur qui aime se creuser la tête sur ton problème. Direct, pédagogue, installé à la campagne dans le Grand Est.',
+    },
+    kicker: 'À propos',
+    title: 'Qui décroche',
+    plain: "Je fais ce métier parce que j'aime me creuser la tête.",
+    paragraphs: [
+      "Un stock qui ne tombe jamais juste, une appli que plus personne n'ose toucher : donne-moi ça et je ne lâche plus.",
+      "Alors non, je ne suis pas « passionné de tech ». La tech, c'est mon outil. Ce qui m'intéresse, c'est ce dont ton entreprise a besoin et comment on le met en place sans en faire une usine à gaz.",
+      "J'ai longtemps travaillé dans des équipes qui visaient le code parfait. J'ai fini par m'en lasser. Je préfère réfléchir au besoin.",
+      "On me dit parfois trop direct. C'est vrai. Si quelque chose cloche dans ton projet, tu le sauras. (J'enrobe un peu mieux qu'avant, promis.)",
+      "J'aime aussi expliquer. Pour beaucoup, Internet reste une boîte noire et c'est normal. J'ai enseigné à la fac et formé des juniors. J'aime toujours autant lever le voile.",
+      'Je vis à la campagne, dans le Grand Est. Je bosse à distance depuis huit ans. Et je viens volontiers chez toi : rien ne remplace une journée sur place pour comprendre comment tu travailles. Le reste du temps, je bricole. Quart de tour, mon logiciel pour les menuisiers, est né comme ça.',
+    ],
+    book: {
+      kicker: 'Premier pas',
+      title: 'Un appel de 30 minutes, gratuit.',
+      text: 'Tu sais maintenant qui décroche. Je te dis franchement si je peux aider.',
+      cta: 'Réserver un appel',
+      orWrite: 'Tu préfères écrire ?',
       serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
     },
   },
