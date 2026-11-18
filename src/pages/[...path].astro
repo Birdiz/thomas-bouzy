@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import AboutPage from '../layouts/AboutPage.astro';
 import OfferPage from '../layouts/OfferPage.astro';
 import PartnersPage from '../layouts/PartnersPage.astro';
 import PublicSectorPage from '../layouts/PublicSectorPage.astro';
@@ -29,6 +30,8 @@ const { id } = route.page;
 {
   id === 'home' ? (
     <ResumePage route={route} />
+  ) : id === 'about' ? (
+    <AboutPage route={route} />
   ) : id === 'partners' ? (
     <PartnersPage route={route} />
   ) : id === 'public-sector' ? (

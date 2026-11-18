@@ -274,6 +274,24 @@ export interface PublicSectorPage {
   book: OfferPageLabels['book'];
 }
 
+/**
+ * Who picks up the phone, in Thomas's voice and at length (ADR 25): the home
+ * page's About block is two paragraphs because the home page has no words left
+ * (ADR 18), and this page is where the rest goes.
+ */
+export interface AboutPage {
+  meta: {
+    title: string;
+    description: string;
+  };
+  kicker: string;
+  title: string;
+  /** The first sentence, set larger under the H1; also the Open Graph card's line. */
+  plain: string;
+  paragraphs: string[];
+  book: OfferPageLabels['book'];
+}
+
 export interface PartnersPage {
   meta: {
     title: string;
@@ -392,6 +410,8 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     paragraphs: string[];
+    /** The link under the paragraphs, to the About page and its longer version. */
+    more: string;
     /**
      * The salaried route, stated once and at the end, as one line whose last
      * words link to LinkedIn.
@@ -457,6 +477,7 @@ export interface ResumeContent {
   /** Exists only in the locales the registry declares the Partners page in. */
   partnersPage?: PartnersPage;
   publicSectorPage?: PublicSectorPage;
+  aboutPage: AboutPage;
 
   contact: {
     kicker: string;

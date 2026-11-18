@@ -41,8 +41,13 @@ const ref = (id: string) => ({ '@id': id });
  */
 export function pageGraph(route: Route, { legal = LEGAL, portrait }: GraphOptions = {}) {
   const provider = legal.isComplete ? BUSINESS_ID : PERSON_ID;
+  const { id } = route.page;
   const nodes =
-    route.page.id === 'home' ? homeNodes(route, portrait) : serviceNodes(route, provider);
+    id === 'home'
+      ? homeNodes(route, portrait)
+      : id === 'about'
+        ? aboutNodes(route)
+        : serviceNodes(route, provider);
   return {
     '@context': 'https://schema.org',
     '@graph': [website(provider), ...nodes, ...(legal.isComplete ? [business(legal)] : [])],
@@ -142,11 +147,55 @@ function business(legal: Publisher) {
   };
 }
 
+/**
+ * The About page sells nothing: it is an AboutPage whose subject is the Person,
+ * restated by reference so it resolves on the page that names it, and the
+ * trail to it.
+ */
+function aboutNodes(route: Route) {
+  const t = RESUME[route.locale];
+  const url = absoluteUrl(route.path);
+  return [
+    {
+      '@type': 'AboutPage',
+      '@id': url,
+      url,
+      name: t.aboutPage.meta.title,
+      description: t.aboutPage.meta.description,
+      inLanguage: LOCALE_TAG[route.locale],
+      isPartOf: ref(WEBSITE_ID),
+      breadcrumb: ref(`${url}#breadcrumb`),
+      mainEntity: ref(PERSON_ID),
+    },
+    breadcrumbList(route),
+    {
+      '@type': 'Person',
+      '@id': PERSON_ID,
+      name: SITE.author,
+      url: absoluteUrl(homePath(route.locale)),
+    },
+  ];
+}
+
+function breadcrumbList(route: Route) {
+  const url = absoluteUrl(route.path);
+  return {
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement: breadcrumbOf(route).map((crumb, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: crumb.name,
+      item: absoluteUrl(crumb.href),
+    })),
+  };
+}
+
 /** What a page other than the home page is called, and what it sells. */
 function describe(route: Route) {
   const { page, locale, path } = route;
   const t = RESUME[locale];
-  if (page.id === 'home') throw new Error('The home page sells no Service');
+  if (page.id === 'home' || page.id === 'about') throw new Error(`${path} sells no Service`);
   if (page.id === 'partners' || page.id === 'public-sector') {
     const content = page.id === 'partners' ? t.partnersPage : t.publicSectorPage;
     if (!content) throw new Error(`${path}: no ${locale} content for the ${page.id} page`);
@@ -187,16 +236,7 @@ function serviceNodes(route: Route, provider: string) {
       breadcrumb: ref(`${url}#breadcrumb`),
       mainEntity: ref(`${url}#service`),
     },
-    {
-      '@type': 'BreadcrumbList',
-      '@id': `${url}#breadcrumb`,
-      itemListElement: breadcrumbOf(route).map((crumb, i) => ({
-        '@type': 'ListItem',
-        position: i + 1,
-        name: crumb.name,
-        item: absoluteUrl(crumb.href),
-      })),
-    },
+    breadcrumbList(route),
     {
       '@type': 'Service',
       '@id': `${url}#service`,
@@ -226,7 +266,7 @@ function serviceNodes(route: Route, provider: string) {
   ];
 }
 
-type ServicePageId = Exclude<PageId, 'home'>;
+type ServicePageId = Exclude<PageId, 'home' | 'about'>;
 
 /**
  * Where each page's Service is bought in person, in the Service area, or from

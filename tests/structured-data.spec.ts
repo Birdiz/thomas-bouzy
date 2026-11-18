@@ -25,7 +25,8 @@ function nodeOf(route: Route, type: string, options?: Parameters<typeof pageGrap
 }
 
 const isOffer = (route: Route) => (OFFER_IDS as readonly string[]).includes(route.page.id);
-const SERVICE_ROUTES = ROUTES.filter((route) => route.page.id !== 'home');
+// The home page and the About page are about the person; every other page sells a Service.
+const SERVICE_ROUTES = ROUTES.filter((route) => !['home', 'about'].includes(route.page.id));
 
 const UNREGISTERED = { businessName: '', siret: '', isComplete: false };
 const REGISTERED = { businessName: 'Thomas Bouzy EI', siret: '00000000000000', isComplete: true };
@@ -141,6 +142,19 @@ describe('structured data', () => {
       const person = nodeOf(route, 'Person', { portrait: '/_astro/portrait.webp' });
       expect(person.image).toBe(`${SITE.origin}/_astro/portrait.webp`);
       expect(nodes(route).some((node) => node['@type'] === 'BreadcrumbList')).toBe(false);
+    }
+  });
+
+  it('describes the About page as a page about the person, walking Home › About', () => {
+    for (const route of ROUTES.filter((candidate) => candidate.page.id === 'about')) {
+      const t = RESUME[route.locale];
+      const about = nodeOf(route, 'AboutPage');
+      expect(about.mainEntity).toEqual({ '@id': `${SITE.origin}/#person` });
+      expect(nodeOf(route, 'Person')['@id']).toBe(`${SITE.origin}/#person`);
+      expect(nodes(route).some((node) => node['@type'] === 'Service')).toBe(false);
+      const items = nodeOf(route, 'BreadcrumbList').itemListElement as Node[];
+      expect(items.map((item) => item.name)).toEqual([t.nav.home, t.aboutPage.kicker]);
+      expect(about.breadcrumb).toEqual({ '@id': `${about['@id']}#breadcrumb` });
     }
   });
 
