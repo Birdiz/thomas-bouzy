@@ -205,6 +205,15 @@ test.describe('the page is not a CV', () => {
     await expect(career).toHaveCount(1);
     await expect(career).toHaveAttribute('href', /linkedin\.com\/in\//);
   });
+
+  for (const path of ['/a-propos/', '/en/about/']) {
+    test(`links Quart de tour to its site, from ${path}`, async ({ page }) => {
+      await page.goto(path);
+      const link = page.locator('.about-page__text').getByRole('link', { name: 'Quart de tour' });
+      await expect(link).toHaveCount(1);
+      await expect(link).toHaveAttribute('href', 'https://quart-de-tour.fr');
+    });
+  }
 });
 
 test.describe('phone number is not harvestable', () => {
