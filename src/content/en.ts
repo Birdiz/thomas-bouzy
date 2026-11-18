@@ -544,8 +544,13 @@ export const en = {
       estimator: {
         dimensions: {
           flows: {
-            label: 'Flows or services to make reliable',
+            label: 'Flows to make reliable',
             options: { few: '1 to 2', some: '3 to 5', many: '6 to 10' },
+            notes: {
+              few: 'A flow is the path a movement takes from end to end: from the order to the stock, from the payment to the balance.',
+              some: 'The flows of one line of business, for instance the order, the stock and the invoice.',
+              many: 'The money and goods flows of a whole system, often spread over several services.',
+            },
           },
         },
         amounts: { fee: 'Price' },

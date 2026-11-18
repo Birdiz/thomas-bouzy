@@ -643,8 +643,13 @@ export const fr = {
       estimator: {
         dimensions: {
           flows: {
-            label: 'Flux ou services à fiabiliser',
+            label: 'Flux à fiabiliser',
             options: { few: '1 à 2', some: '3 à 5', many: '6 à 10' },
+            notes: {
+              few: "Un flux, c'est le chemin d'un mouvement d'un bout à l'autre : de la commande au stock, du paiement au solde.",
+              some: "Les flux d'un même métier, par exemple la commande, le stock et la facture.",
+              many: "Les flux d'argent et de marchandise de tout un système, souvent répartis sur plusieurs services.",
+            },
           },
         },
         amounts: { fee: 'Prix' },
