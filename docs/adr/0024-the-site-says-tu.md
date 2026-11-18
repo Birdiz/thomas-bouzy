@@ -26,11 +26,16 @@ Two things were decided with him:
 Every French string addresses the reader as *tu*. English needs no choice; it
 carries the same voice.
 
-The About block beside the call is rewritten in the first person, starting from
-what Thomas is not ("not passionate about tech") and from what a Client gets
-from his main flaw (too direct, so advice without sugar coating). "Expertise"
-leaves the FAQ answers for "home ground"; the three honesty levels on the stack
-stay as they were.
+The About block beside the call is rewritten in the first person. It opens on
+what Thomas enjoys, the problem, and says the tech comes second; it never opens
+on a bare negation, which reads as a rebuff. It then says what a Client gets
+from his main flaw: too direct, so advice without sugar coating. "Expertise"
+leaves the FAQ answers for "home ground", and the remote-work answer becomes an
+invitation rather than a condition. The three honesty levels on the stack stay
+as they were.
+
+French copy puts no comma before *et*, an English habit, except in a genuinely
+complex enumeration.
 
 ## Consequences
 
