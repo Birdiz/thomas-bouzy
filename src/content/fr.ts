@@ -719,11 +719,11 @@ export const fr = {
           },
         },
         amounts: { plan: 'Diagnostic, phase 1 à prix fixe' },
-        duration: 'Corrections, à la journée',
+        duration: 'Durée des corrections',
       },
       rules: [
         'Une Tenue en charge commence toujours par un tir de charge qui reproduit le pic, avant toute modification.',
-        'Elle se vend en deux phases : le diagnostic à prix fixe, puis les corrections à {dayRate} HT la journée.',
+        'Elle se vend en deux phases : le diagnostic à prix fixe, puis les corrections à {dayRate} HT la journée. Tu décides de la seconde, diagnostic en main.',
       ],
       notTheRightChoice: [
         {
@@ -740,6 +740,11 @@ export const fr = {
           question: 'Ajouter des serveurs ne suffit-il pas ?',
           answer:
             "Rarement. Si le goulot est la base de données ou un service externe, dix serveurs l'attendent ensemble. Le tir de charge dit où il est.",
+        },
+        {
+          question: 'Pourquoi la supervision existante pèse-t-elle sur le prix ?',
+          answer:
+            "Sans métriques, il faut d'abord instrumenter le système pour voir ce qui cède. C'est du travail avant le premier chiffre et pour mesurer chaque correction.",
         },
         {
           question: 'Le tir de charge risque-t-il de faire tomber la production ?',
