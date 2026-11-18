@@ -474,7 +474,7 @@ export const en = {
       estimator: {
         dimensions: {
           gap: {
-            label: 'Version gap',
+            label: 'Symfony version gap',
             options: {
               one: 'One major version',
               two: 'Two major versions',

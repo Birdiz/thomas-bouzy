@@ -572,7 +572,7 @@ export const fr = {
       estimator: {
         dimensions: {
           gap: {
-            label: 'Écart de version',
+            label: 'Écart de version de Symfony',
             options: {
               one: 'Une version majeure',
               two: 'Deux versions majeures',
