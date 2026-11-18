@@ -818,7 +818,11 @@ export const en = {
       'For a long time I worked in teams chasing perfect code. I ended up tired of it. I would rather think about the need.',
       'People say I am sometimes too direct. It is true. If something is off in your project, you will know. (I sugar-coat a little better than I used to, promise.)',
       "I also like explaining. For many people, the internet is still a black box, and that's fine. I have taught at university and trained juniors. I still love lifting the lid.",
-      'I live in the countryside, in the Grand Est. I have worked remotely for eight years. And I am glad to come to you: nothing beats a day on site to understand how you work. The rest of the time, I tinker. Quart de tour, my software for joiners, was born that way.',
+      [
+        'I live in the countryside, in the Grand Est. I have worked remotely for eight years. And I am glad to come to you: nothing beats a day on site to understand how you work. The rest of the time, I tinker. ',
+        { href: 'https://quart-de-tour.fr', label: 'Quart de tour' },
+        ', my software for joiners, was born that way.',
+      ],
     ],
     book: {
       kicker: 'First step',

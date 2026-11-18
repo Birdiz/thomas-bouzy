@@ -1014,7 +1014,11 @@ export const fr = {
       "J'ai longtemps travaillé dans des équipes qui visaient le code parfait. J'ai fini par m'en lasser. Je préfère réfléchir au besoin.",
       "On me dit parfois trop direct. C'est vrai. Si quelque chose cloche dans ton projet, tu le sauras. (J'enrobe un peu mieux qu'avant, promis.)",
       "J'aime aussi expliquer. Pour beaucoup, Internet reste une boîte noire et c'est normal. J'ai enseigné à la fac et formé des juniors. J'aime toujours autant lever le voile.",
-      'Je vis à la campagne, dans le Grand Est. Je bosse à distance depuis huit ans. Et je viens volontiers chez toi : rien ne remplace une journée sur place pour comprendre comment tu travailles. Le reste du temps, je bricole. Quart de tour, mon logiciel pour les menuisiers, est né comme ça.',
+      [
+        'Je vis à la campagne, dans le Grand Est. Je bosse à distance depuis huit ans. Et je viens volontiers chez toi : rien ne remplace une journée sur place pour comprendre comment tu travailles. Le reste du temps, je bricole. ',
+        { href: 'https://quart-de-tour.fr', label: 'Quart de tour' },
+        ', mon logiciel pour les menuisiers, est né comme ça.',
+      ],
     ],
     book: {
       kicker: 'Premier pas',

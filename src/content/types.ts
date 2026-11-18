@@ -288,9 +288,15 @@ export interface AboutPage {
   title: string;
   /** The first sentence, set larger under the H1; also the Open Graph card's line. */
   plain: string;
-  paragraphs: string[];
+  paragraphs: Paragraph[];
   book: OfferPageLabels['book'];
 }
+
+/**
+ * A paragraph of prose: plain text, or text broken around the links it carries,
+ * so a name the reader may want to check (Quart de tour) leads to it.
+ */
+export type Paragraph = string | (string | { href: string; label: string })[];
 
 export interface PartnersPage {
   meta: {

@@ -56,7 +56,23 @@ const page = t.aboutPage;
     </header>
 
     <section class="offer__section about-page__text container" aria-label={page.kicker}>
-      {page.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      {
+        page.paragraphs.map((paragraph) => (
+          <p>
+            {typeof paragraph === 'string'
+              ? paragraph
+              : paragraph.map((part) =>
+                  typeof part === 'string' ? (
+                    part
+                  ) : (
+                    <a href={part.href} target="_blank" rel="noopener">
+                      {part.label}
+                    </a>
+                  ),
+                )}
+          </p>
+        ))
+      }
     </section>
 
     <BookingSection labels={page.book} locale={locale} />
