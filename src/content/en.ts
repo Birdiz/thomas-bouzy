@@ -251,10 +251,10 @@ export const en = {
 
   about: {
     kicker: 'About',
-    title: 'In short',
+    title: 'Who picks up',
     paragraphs: [
-      'I am full-stack, with the depth on the backend and in architecture: PHP and Symfony first, Node.js and TypeScript, React on the front end; Python, so far in personal projects. And I write my decisions down, so the team can carry on without me.',
-      'I have taught at university and brought juniors to autonomy. I live in the Grand Est countryside; I work mostly remotely, and come on site when needed.',
+      'What I enjoy is the problem: understanding what your business needs and meeting it. The tech comes second. Some find me too direct: for you, that means advice with no sugar coating.',
+      'My home ground is PHP and Symfony, then Node.js, TypeScript and React; Python, in personal projects. I have taught at university, and I live in the Grand Est countryside.',
     ],
     careerLine: 'Hiring rather than contracting?',
     careerLink: 'My career is on LinkedIn.',
@@ -438,7 +438,7 @@ export const en = {
         {
           question: 'Which technologies?',
           answer:
-            'An architecture and its risks read the same in any stack. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+            'An architecture and its risks read the same in any stack. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
@@ -568,7 +568,7 @@ export const en = {
         {
           question: 'Which technologies?',
           answer:
-            'Tracing a flow does not depend on the language. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+            'Tracing a flow does not depend on the language. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
@@ -644,7 +644,7 @@ export const en = {
         {
           question: 'Which technologies?',
           answer:
-            'A load test does not depend on the language. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+            'A load test does not depend on the language. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
@@ -720,7 +720,7 @@ export const en = {
         {
           question: 'Which technologies?',
           answer:
-            'We choose together what your team will be able to take over. My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+            'We choose together what your team will be able to take over. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
@@ -790,12 +790,13 @@ export const en = {
         },
         {
           question: 'Do you work remotely?',
-          answer: 'Yes, by default, with travel when the work needs a room.',
+          answer:
+            'Yes, by default, for eight years now. And I am glad to come to you: a day on site is often worth a week of messages.',
         },
         {
           question: 'Which technologies?',
           answer:
-            'My expertise is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+            'My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
@@ -804,7 +805,8 @@ export const en = {
   contact: {
     kicker: 'Contact',
     title: "Let's talk about your application.",
-    blurb: 'A free 30-minute call: I tell you plainly whether I can help.',
+    blurb:
+      'A free 30-minute call: I tell you plainly whether I can help. Worst case, you lose half an hour.',
     cta: 'Book a call',
     orReach: 'Or, if you prefer:',
     revealPhone: 'Show phone number',

@@ -9,7 +9,7 @@ export const fr = {
   meta: {
     title: 'Thomas Bouzy — Freelance fullstack, Nancy et Strasbourg',
     description:
-      "Fullstack, avec une expertise backend PHP/Symfony : je reprends et fais évoluer vos applications métier, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
+      "Fullstack, avec une expertise backend PHP/Symfony : je reprends et fais évoluer tes applications métier, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
   },
 
   a11y: {
@@ -32,7 +32,7 @@ export const fr = {
   },
 
   hero: {
-    title: ['Je reprends et fais évoluer', 'vos applications métier.'],
+    title: ['Je reprends et fais évoluer', 'tes applications métier.'],
     blurb: "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
     ctaBook: 'Réserver un appel gratuit',
     ctaOffers: 'Voir les offres',
@@ -40,28 +40,28 @@ export const fr = {
 
   problem: {
     audit: {
-      text: 'Vous hésitez ?',
-      cta: 'Commencez par un audit',
+      text: 'Tu hésites ?',
+      cta: 'Commence par un audit',
     },
     kicker: 'Le problème',
-    title: "Vous reconnaissez l'une de ces phrases ?",
+    title: "Tu reconnais l'une de ces phrases ?",
     pause: 'Pause',
     goTo: 'Phrase {n}',
   },
 
   failureModes: [
     {
-      quote: "« Celui qui a fait notre appli est parti, et plus personne n'ose y toucher. »",
-      text: "L'application orpheline. Personne ne la connaît plus, et chaque modification devient un pari.",
+      quote: "« Celui qui a fait notre appli est parti et plus personne n'ose y toucher. »",
+      text: "L'application orpheline. Personne ne la connaît plus et chaque modification devient un pari.",
       offer: 'takeover',
     },
     {
       quote: "« La montée de version, c'est toujours pour le trimestre prochain. »",
-      text: "La migration qui n'arrive jamais. Le système ne peut pas s'arrêter, alors on repousse, et la facture grossit.",
+      text: "La migration qui n'arrive jamais. Le système ne peut pas s'arrêter, alors on repousse et la facture grossit.",
       offer: 'migration',
     },
     {
-      quote: '« Le stock ne tombe jamais juste, et personne ne sait pourquoi. »',
+      quote: '« Le stock ne tombe jamais juste et personne ne sait pourquoi. »',
       text: "L'écart que personne ne sait expliquer. Le logiciel donne le chiffre du jour, jamais les mouvements qui y ont mené.",
       offer: 'reliability',
     },
@@ -72,7 +72,7 @@ export const fr = {
     },
     {
       quote: "« Le jour de l'opération commerciale, tout tombe. »",
-      text: 'Le pic qui fait tout tomber. Le système tient au quotidien, et lâche le jour où tout le monde arrive.',
+      text: 'Le pic qui fait tout tomber. Le système tient au quotidien et lâche le jour où tout le monde arrive.',
       offer: 'scaling',
     },
   ],
@@ -192,8 +192,7 @@ export const fr = {
       title: 'Donner à un village son site officiel',
       org: 'Commune de Grandrupt, bénévolat',
       period: '2026',
-      plain:
-        'Horaires, démarches et nouvelles au même endroit, et une mairie qui publie elle-même.',
+      plain: 'Horaires, démarches et nouvelles au même endroit et une mairie qui publie elle-même.',
       approach: 'En trois langues, sur Next.js, avec un back-office Payload CMS à rôles.',
       result:
         "Remis à la commune, avec sa déclaration d'accessibilité publiée : partiellement conforme.",
@@ -253,10 +252,10 @@ export const fr = {
 
   about: {
     kicker: 'À propos',
-    title: 'En bref',
+    title: 'Qui décroche',
     paragraphs: [
-      "Je suis fullstack, avec la profondeur côté backend et architecture : PHP et Symfony d'abord, Node.js et TypeScript, React côté front ; Python, pour l'instant en projets personnels. Et j'écris mes décisions, pour que l'équipe continue sans moi.",
-      "J'ai enseigné à l'université et mené des juniors jusqu'à l'autonomie. Je vis dans le Grand Est, à la campagne ; je travaille surtout à distance, et viens sur place si besoin.",
+      "Ce qui me plaît, c'est le problème : comprendre ce dont ton métier a besoin et y répondre. La tech vient après. On me dit trop direct : pour toi, un avis sans enrobage.",
+      "Mon terrain, c'est PHP et Symfony, puis Node.js, TypeScript et React ; Python, en projets personnels. J'ai enseigné à la fac et je vis à la campagne, en Grand Est.",
     ],
     careerLine: "En poste plutôt qu'en mission ?",
     careerLink: 'Mon parcours est sur LinkedIn.',
@@ -294,10 +293,10 @@ export const fr = {
 
   offersSection: {
     kicker: 'Les offres',
-    title: 'Une offre pour chaque moment de votre application, chacune avec son prix.',
+    title: 'Une offre pour chaque moment de ton application, chacune avec son prix.',
     stages: ['Créer', 'Fiabiliser et migrer, en parallèle', 'Tenir la charge'],
     alongside: 'À tout moment',
-    lifecycle: 'La vie de votre application',
+    lifecycle: 'La vie de ton application',
     from: {
       fee: 'à partir de',
       setup: 'à partir de',
@@ -307,7 +306,7 @@ export const fr = {
     followedBy: 'puis',
     start: 'Par où commencer',
     inFrench: '(en français)',
-    book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel gratuit' },
+    book: { text: "Tu sais déjà ce qu'il te faut ?", cta: 'Réserver un appel gratuit' },
     publicSector: 'Une collectivité ?',
     publicSectorLink: 'Voir la page dédiée',
     partners: 'Agence ou société de services ?',
@@ -318,7 +317,7 @@ export const fr = {
     audit: {
       name: 'Audit',
       plain:
-        'Un regard extérieur, rendu par écrit : ce qui peut vous coûter cher, et par quoi commencer.',
+        'Un regard extérieur, rendu par écrit : ce qui peut te coûter cher et par quoi commencer.',
     },
     takeover: {
       name: 'Reprise et maintenance',
@@ -337,23 +336,23 @@ export const fr = {
     scaling: {
       name: 'Tenue en charge',
       plain:
-        'Que votre système tienne le jour où tout le monde arrive, et se relève seul quand une pièce lâche.',
+        'Que ton système tienne le jour où tout le monde arrive et se relève seul quand une pièce lâche.',
     },
     build: {
       name: 'Création sur mesure',
       plain:
-        "Construire l'application qui vous manque, pensée dès le départ pour qu'un autre puisse la reprendre.",
+        "Construire l'application qui te manque, pensée dès le départ pour qu'un autre puisse la reprendre.",
     },
     reinforcement: {
       name: 'Renfort senior',
       plain:
-        'Un lead ou un architecte senior dans votre équipe, à temps partiel, facturé à la journée.',
+        'Un lead ou un architecte senior dans ton équipe, à temps partiel, facturé à la journée.',
     },
   },
 
   offerPage: {
-    sentences: 'Vous reconnaissez-vous ici ?',
-    delivered: 'Ce que vous recevez',
+    sentences: 'Tu te reconnais ici ?',
+    delivered: 'Ce que tu reçois',
     disclaimer: 'Ordre de grandeur, pas un devis.',
     tableCaption: 'Toutes les fourchettes, hors taxes',
     excludingVat: 'HT',
@@ -366,9 +365,9 @@ export const fr = {
     book: {
       kicker: 'Premier pas',
       title: 'Un appel de 30 minutes, gratuit.',
-      text: 'Je vous dis franchement si cette offre est la bonne, et sinon laquelle.',
+      text: 'Je te dis franchement si cette offre est la bonne et sinon laquelle.',
       cta: 'Réserver un appel',
-      orWrite: 'Vous préférez écrire ?',
+      orWrite: 'Tu préfères écrire ?',
       serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
     },
   },
@@ -380,7 +379,7 @@ export const fr = {
         description:
           "Audit d'application : rapport écrit, registre des risques, plan d'action priorisé. L'express, à prix fixe, est déduit de la mission qui suit.",
       },
-      heading: 'Audit technique de votre application',
+      heading: 'Audit technique de ton application',
       priceHeading: 'Combien coûte un audit de code ?',
       sentences: [
         '« On sent que quelque chose ne va pas, mais on ne sait pas par où commencer. »',
@@ -393,7 +392,7 @@ export const fr = {
         },
         {
           title: 'Un registre des risques',
-          text: 'Chaque risque, sa gravité, et le prix de le laisser en place.',
+          text: 'Chaque risque, sa gravité et le prix de le laisser en place.',
         },
         {
           title: "Un plan d'action, présenté à l'équipe",
@@ -402,7 +401,7 @@ export const fr = {
       ],
       variant: {
         title: 'Variante : la due diligence technique',
-        text: 'Avant un rachat ou une levée de fonds : ce que vaut le logiciel, et ce qui pourrait surprendre après signature.',
+        text: 'Avant un rachat ou une levée de fonds : ce que vaut le logiciel et ce qui pourrait surprendre après signature.',
       },
       estimator: {
         dimensions: {
@@ -423,15 +422,15 @@ export const fr = {
         duration: 'Durée',
       },
       rules: [
-        "Si vous confiez ensuite la mission qui en découle, {credit} du prix de l'audit en sont déduits.",
+        "Si tu me confies ensuite la mission qui en découle, {credit} du prix de l'audit en sont déduits.",
       ],
       notTheRightChoice: [
         {
-          text: "Votre application n'a plus personne pour s'en occuper : la {offer} commence par là.",
+          text: "Ton application n'a plus personne pour s'en occuper : la {offer} commence par là.",
           offer: 'takeover',
         },
         {
-          text: "Vous cherchez la validation d'une décision déjà prise : l'audit dira ce qu'il trouve.",
+          text: "Tu cherches la validation d'une décision déjà prise : l'audit dira ce qu'il trouve.",
         },
       ],
       faq: [
@@ -441,14 +440,14 @@ export const fr = {
             "Il le dira, avec ce que coûte de ne pas le faire. C'est rare : un système se reprend presque toujours par morceaux.",
         },
         {
-          question: "Pourquoi un prix fixe pour l'express, et une fourchette pour le complet ?",
+          question: "Pourquoi un prix fixe pour l'express et une fourchette pour le complet ?",
           answer:
-            "L'express est borné à moins de trois jours, sur l'application qui vous inquiète le plus. Le complet dépend de la taille réelle du système ; son devis est ferme avant de commencer.",
+            "L'express est borné à moins de trois jours, sur l'application qui t'inquiète le plus. Le complet dépend de la taille réelle du système ; son devis est ferme avant de commencer.",
         },
         {
           question: 'Sur quelles technologies ?',
           answer:
-            "Une architecture et ses risques se lisent dans toutes les stacks. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+            "Une architecture et ses risques se lisent dans toutes les stacks. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
         },
       ],
     },
@@ -456,9 +455,9 @@ export const fr = {
       meta: {
         title: "TMA : reprise et maintenance d'application métier",
         description:
-          "Votre prestataire est parti, plus personne n'ose toucher l'application ? Reprise, filet de tests, puis maintenance mensuelle sans engagement, à prix publié.",
+          "Ton prestataire est parti, plus personne n'ose toucher l'application ? Reprise, filet de tests, puis maintenance mensuelle sans engagement, à prix publié.",
       },
-      heading: 'Reprise et maintenance de votre application métier',
+      heading: 'Reprise et maintenance de ton application métier',
       priceHeading: "Combien coûte la maintenance d'une application ?",
       sentences: [
         '« On ne sait même plus qui a les accès au serveur. »',
@@ -479,7 +478,7 @@ export const fr = {
         },
         {
           title: 'La formule Veille ou Évolution',
-          text: "Chaque mois : sécurité, surveillance, incidents corrigés jusqu'à une demi-journée chacun. L'Évolution ajoute {evolutionDays} jours pour vos demandes.",
+          text: "Chaque mois : sécurité, surveillance, incidents corrigés jusqu'à une demi-journée chacun. L'Évolution ajoute {evolutionDays} jours pour tes demandes.",
         },
       ],
       estimator: {
@@ -499,7 +498,7 @@ export const fr = {
         },
         amounts: { setup: '01–03 · Mise en place, une fois', monthly: '04 · Formule mensuelle' },
         duration: 'Durée de la mise en place',
-        daysIncluded: 'Veille + {days} jours pour vos demandes',
+        daysIncluded: 'Veille + {days} jours pour tes demandes',
       },
       rules: [
         "Une Reprise commence toujours par un filet de tests : on ne modifie pas ce qu'on ne sait pas vérifier.",
@@ -507,11 +506,11 @@ export const fr = {
       ],
       notTheRightChoice: [
         {
-          text: "Vous envisagez un logiciel du marché : un {offer} vous dira d'abord si c'est le bon calcul.",
+          text: "Tu envisages un logiciel du marché : un {offer} te dira d'abord si c'est le bon calcul.",
           offer: 'audit',
         },
         {
-          text: 'Votre équipe technique est en place : le {offer} lui conviendra mieux.',
+          text: 'Ton équipe technique est en place : le {offer} lui conviendra mieux.',
           offer: 'reinforcement',
         },
       ],
@@ -519,16 +518,16 @@ export const fr = {
         {
           question: 'Est-ce de la TMA ? Pour quelles technologies ?',
           answer:
-            "Oui : une maintenance mensuelle d'applications web, même anciennes. PHP et Symfony sont mon expertise ; Node.js, TypeScript et React aussi. Python, pour l'instant en projets personnels. Pas de WinDev ni d'Access.",
+            "Oui : une maintenance mensuelle d'applications web, même anciennes. Mon terrain, c'est PHP et Symfony ; Node.js, TypeScript et React aussi. Python, pour l'instant en projets personnels. Pas de WinDev ni d'Access.",
         },
         {
           question: "Faut-il récupérer le code auprès de l'ancien prestataire ?",
           answer: "Oui, c'est la première chose à faire ; la carte dit ce qui manque.",
         },
         {
-          question: 'Et si vous partez à votre tour ?',
+          question: 'Et si tu pars à ton tour ?',
           answer:
-            "La carte, les accès, les tests et la documentation vous appartiennent : un autre développeur reprend là où je m'arrête.",
+            "La carte, les accès, les tests et la documentation t'appartiennent : un autre développeur reprend là où je m'arrête.",
         },
         {
           question: 'La formule est-elle avec engagement ?',
@@ -540,7 +539,7 @@ export const fr = {
       meta: {
         title: 'Migration Symfony et PHP sans interruption de service',
         description:
-          "Montée de version Symfony ou PHP sur un système qui ne peut pas s'arrêter : plan à prix fixe, puis exécution avec votre équipe.",
+          "Montée de version Symfony ou PHP sur un système qui ne peut pas s'arrêter : plan à prix fixe, puis exécution avec ton équipe.",
       },
       heading: 'Migration Symfony et PHP sans interruption',
       priceHeading: 'Combien coûte une migration Symfony ?',
@@ -550,15 +549,15 @@ export const fr = {
       delivered: [
         {
           title: 'Phase 1 : un plan chiffré',
-          text: 'Les étapes de votre montée de version PHP ou Symfony, leurs risques et leur retour arrière. Il vous appartient.',
+          text: "Les étapes de ta montée de version PHP ou Symfony, leurs risques et leur retour arrière. Il t'appartient.",
         },
         {
-          title: 'Phase 2 : la migration, avec votre équipe',
+          title: 'Phase 2 : la migration, avec ton équipe',
           text: "Étape par étape, tests manquants d'abord ; ancien et nouveau cohabitent le temps qu'il faut.",
         },
         {
           title: 'Une équipe qui saura refaire',
-          text: "L'ancien chemin retiré, et une équipe qui n'aura plus besoin de moi la prochaine fois.",
+          text: "L'ancien chemin retiré et une équipe qui n'aura plus besoin de moi la prochaine fois.",
         },
       ],
       estimator: {
@@ -577,17 +576,17 @@ export const fr = {
           },
         },
         amounts: { plan: 'Plan, phase 1 à prix fixe' },
-        duration: 'Exécution, avec votre équipe',
+        duration: 'Exécution, avec ton équipe',
       },
       rules: [
-        "La Migration se vend en deux phases : un plan à prix fixe, puis l'exécution à {dayRate} HT la journée. Vous décidez de la seconde plan en main.",
+        "La Migration se vend en deux phases : un plan à prix fixe, puis l'exécution à {dayRate} HT la journée. Tu décides de la seconde, plan en main.",
       ],
       notTheRightChoice: [
         {
           text: "Le système peut s'arrêter un week-end sans dommage : une migration classique coûtera moins cher.",
         },
         {
-          text: 'Vous voulez le remplacer plutôt que le faire évoluer : un {offer} éclairera ce choix.',
+          text: 'Tu veux le remplacer plutôt que le faire évoluer : un {offer} éclairera ce choix.',
           offer: 'audit',
         },
       ],
@@ -613,7 +612,7 @@ export const fr = {
       },
       heading: 'Fiabilisation : expliquer chaque écart au lieu de le deviner',
       priceHeading: "Combien coûte la fiabilisation d'une application ?",
-      sentences: ["« On a recrédité deux fois, et on ne l'a vu qu'à la réconciliation. »"],
+      sentences: ["« On a recrédité deux fois et on ne l'a vu qu'à la réconciliation. »"],
       delivered: [
         {
           title: 'Les flux qui comptent, choisis ensemble',
@@ -628,7 +627,7 @@ export const fr = {
           text: "Un message reçu deux fois n'est appliqué qu'une fois.",
         },
         {
-          title: 'Des alertes avant vos clients',
+          title: 'Des alertes avant tes clients',
           text: 'Et des équipes qui savent les lire quand je pars.',
         },
       ],
@@ -645,11 +644,11 @@ export const fr = {
       rules: [],
       notTheRightChoice: [
         {
-          text: "Vous ne savez pas encore où est le problème : un {offer} le situera d'abord.",
+          text: "Tu ne sais pas encore où est le problème : un {offer} le situera d'abord.",
           offer: 'audit',
         },
         {
-          text: "Vous cherchez seulement un outil de supervision à installer : ce n'est qu'un moyen.",
+          text: "Tu cherches seulement un outil de supervision à installer : ce n'est qu'un moyen.",
         },
       ],
       faq: [
@@ -660,13 +659,12 @@ export const fr = {
         },
         {
           question: "Faut-il changer d'outil de supervision ?",
-          answer:
-            "Rarement. On part de ce que vous avez : l'essentiel est de savoir quoi observer.",
+          answer: "Rarement. On part de ce que tu as : l'essentiel est de savoir quoi observer.",
         },
         {
           question: 'Sur quelles technologies ?',
           answer:
-            "Tracer un flux ne dépend pas du langage. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+            "Tracer un flux ne dépend pas du langage. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
         },
       ],
     },
@@ -674,22 +672,22 @@ export const fr = {
       meta: {
         title: "Montée en charge et haute disponibilité d'une application",
         description:
-          'Votre application ralentit ou tombe aux pics de trafic ? Tir de charge, goulot trouvé, corrections mesurées : diagnostic à prix fixe. Prix publics.',
+          'Ton application ralentit ou tombe aux pics de trafic ? Tir de charge, goulot trouvé, corrections mesurées : diagnostic à prix fixe. Prix publics.',
       },
-      heading: 'Montée en charge et haute disponibilité de votre application',
+      heading: 'Montée en charge et haute disponibilité de ton application',
       priceHeading: 'Combien coûte un diagnostic de montée en charge ?',
       sentences: [
         "« Ça rame dès qu'on a du monde. »",
-        "« On a doublé les serveurs, et ça n'a rien changé. »",
+        "« On a doublé les serveurs et ça n'a rien changé. »",
       ],
       delivered: [
         {
-          title: 'Phase 1 : un tir de charge qui reproduit votre pic',
+          title: 'Phase 1 : un tir de charge qui reproduit ton pic',
           text: "Avant de rien modifier : on part d'un chiffre, pas d'une impression.",
         },
         {
           title: 'Le goulot, trouvé et chiffré',
-          text: 'Base de données, cache, files de messages ou code : ce qui cède en premier, et ce que chaque correction rapporte.',
+          text: 'Base de données, cache, files de messages ou code : ce qui cède en premier et ce que chaque correction rapporte.',
         },
         {
           title: 'Phase 2 : les corrections, mesurées',
@@ -697,7 +695,7 @@ export const fr = {
         },
         {
           title: 'Un système qui tombe proprement',
-          text: "Contre-pression sur les files, disjoncteurs, mode dégradé : dans un système distribué, une pièce qui lâche n'emporte plus le reste. Le scénario de charge reste dans votre CI, avec un runbook d'incident.",
+          text: "Contre-pression sur les files, disjoncteurs, mode dégradé : dans un système distribué, une pièce qui lâche n'emporte plus le reste. Le scénario de charge reste dans ta CI, avec un runbook d'incident.",
         },
       ],
       estimator: {
@@ -724,7 +722,7 @@ export const fr = {
           offer: 'reliability',
         },
         {
-          text: "Vous ne savez pas encore où est le problème : un {offer} le situera d'abord.",
+          text: "Tu ne sais pas encore où est le problème : un {offer} le situera d'abord.",
           offer: 'audit',
         },
       ],
@@ -742,7 +740,7 @@ export const fr = {
         {
           question: 'Sur quelles technologies ?',
           answer:
-            "Un tir de charge ne dépend pas du langage. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+            "Un tir de charge ne dépend pas du langage. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
         },
       ],
     },
@@ -761,11 +759,11 @@ export const fr = {
       delivered: [
         {
           title: 'Phase 1 : le cadrage, à prix fixe',
-          text: "L'architecture, les décisions écrites, et un premier squelette qui tourne de bout en bout. Il vous appartient.",
+          text: "L'architecture, les décisions écrites et un premier squelette qui tourne de bout en bout. Il t'appartient.",
         },
         {
           title: 'Phase 2 : la construction, testée dès la première semaine',
-          text: 'Livrée par étapes que vous utilisez, pas en un bloc à la fin.',
+          text: 'Livrée par étapes que tu utilises, pas en un bloc à la fin.',
         },
         {
           title: 'Une passation, pas une dépendance',
@@ -792,15 +790,15 @@ export const fr = {
       },
       rules: [
         "Une Création sur mesure ne remplace jamais un système qui tourne : celui-là relève d'une Migration, ou d'abord d'un Audit.",
-        'Elle se vend en deux phases : le cadrage à prix fixe, puis la construction à {dayRate} HT la journée. Vous décidez de la seconde cadrage en main.',
+        'Elle se vend en deux phases : le cadrage à prix fixe, puis la construction à {dayRate} HT la journée. Tu décides de la seconde, cadrage en main.',
       ],
       notTheRightChoice: [
         {
-          text: 'Votre application existe déjà et tourne : la {offer} la fera évoluer sans la remplacer.',
+          text: 'Ton application existe déjà et tourne : la {offer} la fera évoluer sans la remplacer.',
           offer: 'migration',
         },
         {
-          text: "Un logiciel du marché fait déjà le travail : un {offer} vous dira si c'est le bon calcul.",
+          text: "Un logiciel du marché fait déjà le travail : un {offer} te dira si c'est le bon calcul.",
           offer: 'audit',
         },
       ],
@@ -813,12 +811,12 @@ export const fr = {
         {
           question: "Et une fois l'application livrée ?",
           answer:
-            'Votre équipe la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
+            'Ton équipe la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
         },
         {
           question: 'Sur quelles technologies ?',
           answer:
-            "On choisit ensemble ce que votre équipe saura reprendre. Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+            "On choisit ensemble ce que ton équipe saura reprendre. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
         },
       ],
     },
@@ -826,9 +824,9 @@ export const fr = {
       meta: {
         title: 'Tech lead / architecte fullstack freelance à temps partiel',
         description:
-          'Un tech lead ou architecte senior dans votre équipe, 1 à 4 jours par semaine : PHP/Symfony, Node.js/TypeScript, React. Taux journalier publié.',
+          'Un tech lead ou architecte senior dans ton équipe, 1 à 4 jours par semaine : PHP/Symfony, Node.js/TypeScript, React. Taux journalier publié.',
       },
-      heading: 'Renfort senior : un tech lead à temps partiel dans votre équipe',
+      heading: 'Renfort senior : un tech lead à temps partiel dans ton équipe',
       priceHeading: 'Combien coûte un tech lead à temps partiel ?',
       sentences: [
         "« On a besoin de quelqu'un de senior, mais pas à plein temps. »",
@@ -845,7 +843,7 @@ export const fr = {
         },
         {
           title: 'Du code livré',
-          text: 'Pas seulement des avis : je livre, et je me fais relire.',
+          text: 'Pas seulement des avis : je livre et je me fais relire.',
         },
         {
           title: 'Une sortie propre',
@@ -877,7 +875,7 @@ export const fr = {
           offer: 'migration',
         },
         {
-          text: "Vous n'avez pas d'équipe technique : la {offer} est faite pour ça.",
+          text: "Tu n'as pas d'équipe technique : la {offer} est faite pour ça.",
           offer: 'takeover',
         },
       ],
@@ -887,13 +885,14 @@ export const fr = {
           answer: "Un jour par semaine. En dessous, on ne suit plus le rythme de l'équipe.",
         },
         {
-          question: 'Travaillez-vous à distance ?',
-          answer: 'Oui, par défaut, avec des déplacements quand il faut une salle.',
+          question: 'Tu travailles à distance ?',
+          answer:
+            "Oui, par défaut, depuis huit ans. Et je viens volontiers chez toi : une journée sur place vaut souvent mieux qu'une semaine d'échanges.",
         },
         {
           question: 'Sur quelles technologies ?',
           answer:
-            "Mon expertise est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+            "Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
         },
       ],
     },
@@ -903,10 +902,10 @@ export const fr = {
     meta: {
       title: 'Développeur fullstack pour collectivités et établissements publics',
       description:
-        'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de vos applications métier. Réversibilité, accessibilité RGAA, prix publics.',
+        'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de tes applications métier. Réversibilité, accessibilité RGAA, prix publics.',
     },
     kicker: 'Collectivités',
-    title: 'Collectivités et établissements publics : vos applications métier, reprises et tenues',
+    title: 'Collectivités et établissements publics : tes applications métier, reprises et tenues',
     plain:
       "Le logiciel d'un service, le portail d'une régie, l'outil d'une structure subventionnée : je les reprends, les maintiens et les fais évoluer, avec ce qu'exige l'achat public.",
     points: [
@@ -916,7 +915,7 @@ export const fr = {
       },
       {
         title: 'La réversibilité, par écrit',
-        text: 'Code, accès, tests, documentation et décisions écrites vous appartiennent. Vos agents ou un autre prestataire reprennent derrière moi.',
+        text: "Code, accès, tests, documentation et décisions écrites t'appartiennent. Tes agents ou un autre prestataire reprennent derrière moi.",
       },
       {
         title: 'Accessibilité',
@@ -924,7 +923,7 @@ export const fr = {
       },
       {
         title: 'Hébergement et données',
-        text: "Hébergement en France ou dans l'Union européenne, chez l'hébergeur de votre choix. Aucune donnée ne part chez un service tiers sans votre accord.",
+        text: "Hébergement en France ou dans l'Union européenne, chez l'hébergeur de ton choix. Aucune donnée ne part chez un service tiers sans ton accord.",
       },
     ],
     proof: {
@@ -944,18 +943,18 @@ export const fr = {
         },
         {
           title: 'Civic tech, bénévolat',
-          text: "Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées. Et un CRM repris de A à Z à deux développeurs, en production : plus de 1 000 membres s'y connectent en SSO pour suivre leurs démarches.",
+          text: "Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées. Et un CRM repris en entier à deux développeurs, en production : plus de 1 000 membres s'y connectent en SSO pour suivre leurs démarches.",
         },
       ],
     },
-    offers: 'Ce que vous pouvez me confier',
+    offers: 'Ce que tu peux me confier',
     offerLink: "Voir l'offre",
     book: {
       kicker: 'Premier pas',
-      title: 'Un appel de 30 minutes sur votre application.',
-      text: "Je vous dis franchement si je peux aider, et sous quelle forme d'achat.",
+      title: 'Un appel de 30 minutes sur ton application.',
+      text: "Je te dis franchement si je peux aider et sous quelle forme d'achat.",
       cta: 'Réserver un appel',
-      orWrite: 'Vous préférez écrire ?',
+      orWrite: 'Tu préfères écrire ?',
       serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
     },
   },
@@ -963,36 +962,36 @@ export const fr = {
     meta: {
       title: 'Sous-traitance fullstack PHP/Symfony et Node.js en marque blanche',
       description:
-        'Agences web et ESN : un développeur fullstack senior en renfort sur vos missions, PHP/Symfony, Node.js ou React, en marque blanche, au taux journalier publié. CV sur demande.',
+        'Agences web et ESN : un développeur fullstack senior en renfort sur tes missions, PHP/Symfony, Node.js ou React, en marque blanche, au taux journalier publié. CV sur demande.',
     },
     kicker: 'Partenaires',
     title: 'Agences et sociétés de services : un renfort senior en marque blanche',
     plain:
-      'Un besoin senior chez votre client, pour quelques semaines ou quelques mois ? Je rejoins votre mission.',
+      'Un besoin senior chez ton client, pour quelques semaines ou quelques mois ? Je rejoins ta mission.',
     points: [
       {
         title: 'Marque blanche acceptée',
-        text: 'Sous votre nom, chez votre client. Vous gardez la relation.',
+        text: 'Sous ton nom, chez ton client. Tu gardes la relation.',
       },
       {
-        title: 'Vos conventions, pas les miennes',
-        text: 'Votre code, vos outils, vos rituels, dès le premier jour.',
+        title: 'Tes conventions, pas les miennes',
+        text: 'Ton code, tes outils, tes rituels, dès le premier jour.',
       },
       {
         title: 'CV sur demande',
-        text: 'Envoyé par e-mail, dans le format de votre dossier si besoin.',
+        text: 'Envoyé par e-mail, dans le format de ton dossier si besoin.',
       },
     ],
     dayRate: {
       label: 'Taux journalier :',
       note: 'le même que pour un client direct, {maxDays} jours par semaine au maximum.',
     },
-    offers: 'Ce que vous pouvez me confier',
+    offers: 'Ce que tu peux me confier',
     offerLink: "Voir l'offre",
     book: {
       kicker: 'Premier pas',
-      title: 'Un appel de 30 minutes sur votre client.',
-      text: 'Je vous dis franchement si je suis la bonne personne. Réponse sous 48 h ouvrées.',
+      title: 'Un appel de 30 minutes sur ton client.',
+      text: 'Je te dis franchement si je suis la bonne personne. Réponse sous 48 h ouvrées.',
       cta: 'Réserver un appel',
       orWrite: 'Pour le CV, ou pour écrire :',
       serviceArea: 'Sur place à {towns} ; à distance partout ailleurs.',
@@ -1001,10 +1000,11 @@ export const fr = {
 
   contact: {
     kicker: 'Contact',
-    title: 'Parlons de votre application.',
-    blurb: 'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider.',
+    title: 'Parlons de ton application.',
+    blurb:
+      'Un appel de 30 minutes, gratuit : je te dis franchement si je peux aider. Au pire, tu as perdu une demi-heure.',
     cta: 'Réserver un appel',
-    orReach: 'Ou, si vous préférez :',
+    orReach: 'Ou, si tu préfères :',
     revealPhone: 'Afficher le numéro',
     locationLine: 'Grand Est, France · Sur place à {towns} · À distance depuis 8 ans',
   },

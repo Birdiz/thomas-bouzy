@@ -18,3 +18,6 @@ blob-report/
 !.env.example
 .DS_Store
 *.log
+
+# private context: personal brief, kept off the public repo
+/.context
