@@ -520,7 +520,7 @@ export const en = {
         description:
           "A balance, a stock or an invoice that won't reconcile? Traceable flows, idempotent processing and observability to explain it. Public prices.",
       },
-      heading: 'Reliability: trace the flows, explain the gaps',
+      heading: 'Reliability for your application: traceable flows, explained gaps',
       priceHeading: 'How much does reliability work cost?',
       sentences: ['“We credited the same payout twice, and only saw it at reconciliation.”'],
       delivered: [
@@ -534,7 +534,7 @@ export const en = {
         },
         {
           title: 'Double execution, dealt with',
-          text: 'A message received twice is applied once.',
+          text: 'An operation received twice is applied once.',
         },
         {
           title: 'Alerts before your customers',
@@ -544,18 +544,30 @@ export const en = {
       estimator: {
         dimensions: {
           flows: {
-            label: 'Flows or services to make reliable',
+            label: 'Flows to make reliable',
             options: { few: '1 to 2', some: '3 to 5', many: '6 to 10' },
+            notes: {
+              few: 'A flow is the path a movement takes from end to end: from the order to the stock, from the payment to the balance.',
+              some: 'The flows of one line of business, for instance the order, the stock and the invoice.',
+              many: 'The money and goods flows of a whole system, often spread over several services.',
+            },
           },
         },
         amounts: { fee: 'Price' },
         duration: 'Duration',
       },
-      rules: [],
+      rules: [
+        'The price is fixed before the work starts, once we have chosen the flows together.',
+        'If an Audit located the problem, {credit} of its fee is deducted.',
+      ],
       notTheRightChoice: [
         {
           text: "You don't know yet where the problem is: an {offer} will locate it first.",
           offer: 'audit',
+        },
+        {
+          text: 'Your figures are right, but the system slows down or falls over at the peak: {offer} deals with that.',
+          offer: 'scaling',
         },
         {
           text: 'You only want a monitoring tool installed: that is only a means.',
@@ -565,7 +577,7 @@ export const en = {
         {
           question: 'What is a double execution, concretely?',
           answer:
-            'A transfer credited twice, a batch taken out of stock twice. It is prevented in the design.',
+            'A transfer credited twice, a batch taken out of stock twice. It can be fixed on a running system: each process learns to recognise what it has already done.',
         },
         {
           question: 'Do we have to change monitoring tools?',
