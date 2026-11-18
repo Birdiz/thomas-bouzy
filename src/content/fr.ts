@@ -548,7 +548,7 @@ export const fr = {
       meta: {
         title: 'Migration Symfony et PHP sans interruption de service',
         description:
-          "Montée de version Symfony ou PHP sur un système qui ne peut pas s'arrêter : plan à prix fixe, puis exécution avec ton équipe.",
+          "Montée de version Symfony ou PHP sur un système qui ne peut pas s'arrêter : plan à prix fixe, puis exécution avec ton équipe. Prix publics.",
       },
       heading: 'Migration Symfony et PHP sans interruption',
       priceHeading: 'Combien coûte une migration Symfony ?',
@@ -566,13 +566,13 @@ export const fr = {
         },
         {
           title: 'Une équipe qui saura refaire',
-          text: "L'ancien chemin retiré et une équipe qui n'aura plus besoin de moi la prochaine fois.",
+          text: "L'ancien code retiré et une équipe qui n'aura plus besoin de moi la prochaine fois.",
         },
       ],
       estimator: {
         dimensions: {
           gap: {
-            label: 'Écart de version',
+            label: 'Écart de version de Symfony',
             options: {
               one: 'Une version majeure',
               two: 'Deux versions majeures',
@@ -588,7 +588,8 @@ export const fr = {
         duration: 'Exécution, avec ton équipe',
       },
       rules: [
-        "La Migration se vend en deux phases : un plan à prix fixe, puis l'exécution à {dayRate} HT la journée. Tu décides de la seconde, plan en main.",
+        "La Migration se vend en deux phases : un plan à prix fixe, ferme avant de commencer, puis l'exécution à {dayRate} HT la journée. Tu décides de la seconde, plan en main.",
+        "Pendant l'exécution, je travaille jusqu'à {maxDays} jours par semaine avec ton équipe.",
       ],
       notTheRightChoice: [
         {

@@ -207,9 +207,10 @@ export const PRICES: Record<OfferId, PriceTable> = {
   },
 
   // The plan is the fixed-price first phase; execution is billed by the day
-  // alongside the Client's team, so what the sliders move is its duration —
-  // and test coverage moves it most, which is the point of having it as a
-  // slider at all.
+  // alongside the Client's team, so the sliders move the plan and the
+  // execution's duration. Test coverage moves both more than the version gap,
+  // as the page's FAQ says: without tests, every step is checked by hand.
+  // That is the point of having it as a slider at all.
   migration: {
     dimensions: [
       { id: 'gap', options: ['one', 'two', 'three-plus'] },
@@ -219,20 +220,20 @@ export const PRICES: Record<OfferId, PriceTable> = {
     duration: 'execution',
     combinations: [
       { options: ['one', 'good'], amounts: { plan: range(2000, 2500) }, weeks: range(2, 4) },
-      { options: ['one', 'partial'], amounts: { plan: range(2200, 2800) }, weeks: range(3, 6) },
-      { options: ['one', 'none'], amounts: { plan: range(2500, 3200) }, weeks: range(6, 10) },
-      { options: ['two', 'good'], amounts: { plan: range(2300, 2900) }, weeks: range(4, 6) },
+      { options: ['one', 'partial'], amounts: { plan: range(2300, 2900) }, weeks: range(4, 6) },
+      { options: ['one', 'none'], amounts: { plan: range(2700, 3300) }, weeks: range(6, 10) },
+      { options: ['two', 'good'], amounts: { plan: range(2200, 2800) }, weeks: range(3, 5) },
       { options: ['two', 'partial'], amounts: { plan: range(2600, 3300) }, weeks: range(6, 10) },
-      { options: ['two', 'none'], amounts: { plan: range(3000, 3600) }, weeks: range(10, 16) },
+      { options: ['two', 'none'], amounts: { plan: range(3000, 3700) }, weeks: range(10, 16) },
       {
         options: ['three-plus', 'good'],
-        amounts: { plan: range(2700, 3300) },
-        weeks: range(6, 10),
+        amounts: { plan: range(2500, 3200) },
+        weeks: range(5, 8),
       },
       {
         options: ['three-plus', 'partial'],
-        amounts: { plan: range(3000, 3700) },
-        weeks: range(10, 16),
+        amounts: { plan: range(3000, 3600) },
+        weeks: range(8, 12),
       },
       {
         options: ['three-plus', 'none'],

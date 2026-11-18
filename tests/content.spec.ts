@@ -667,6 +667,29 @@ describe('what each Offer page has to say (ADR 17)', () => {
       expect(combination.amounts.plan?.min).toBeGreaterThanOrEqual(2000);
       expect(combination.amounts.plan?.max).toBeLessThanOrEqual(4000);
     }
+    // The FAQ says test coverage weighs more than the version gap: from good
+    // coverage to none moves the plan and the execution more than from one
+    // major version to three or more, at either end of the other slider.
+    const figures = (gap: string, coverage: string) => {
+      const combination = combinationFor(PRICES.migration, [gap, coverage]);
+      return [
+        combination?.amounts.plan?.min ?? 0,
+        combination?.amounts.plan?.max ?? 0,
+        combination?.weeks?.min ?? 0,
+        combination?.weeks?.max ?? 0,
+      ];
+    };
+    const step = (from: number[], to: number[]) => to.map((value, i) => value - (from[i] ?? 0));
+    for (const [gap, coverage] of [
+      ['one', 'good'],
+      ['three-plus', 'none'],
+    ] as const) {
+      const byCoverage = step(figures(gap, 'good'), figures(gap, 'none'));
+      const byGap = step(figures('one', coverage), figures('three-plus', coverage));
+      for (const [i, moved] of byCoverage.entries()) {
+        expect(moved).toBeGreaterThan(byGap[i] ?? 0);
+      }
+    }
   });
 
   it('sells Scaling in two phases, load test first, priced by services and monitoring', () => {
