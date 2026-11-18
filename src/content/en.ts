@@ -468,7 +468,7 @@ export const en = {
         },
         {
           title: 'A team that can do it again',
-          text: "The old path removed, and a team that won't need me next time.",
+          text: "The old code removed, and a team that won't need me next time.",
         },
       ],
       estimator: {
@@ -490,7 +490,8 @@ export const en = {
         duration: 'Execution, with your team',
       },
       rules: [
-        'A Migration is sold in two phases: a fixed-price plan, then execution at {dayRate} excl. VAT a day. You decide on the second with the plan in hand.',
+        'A Migration is sold in two phases: a fixed-price plan, firm before work starts, then execution at {dayRate} excl. VAT a day. You decide on the second with the plan in hand.',
+        'During execution, I work up to {maxDays} days a week with your team.',
       ],
       notTheRightChoice: [
         {
