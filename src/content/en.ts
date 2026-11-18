@@ -620,11 +620,11 @@ export const en = {
           },
         },
         amounts: { plan: 'Diagnosis, phase 1 at a fixed price' },
-        duration: 'Fixes, by the day',
+        duration: 'Duration of the fixes',
       },
       rules: [
         'Scaling always starts with a load test that reproduces the peak, before any change.',
-        'It is sold in two phases: the fixed-price diagnosis, then the fixes at {dayRate} excl. VAT a day.',
+        'It is sold in two phases: the fixed-price diagnosis, then the fixes at {dayRate} excl. VAT a day. You decide on the second with the diagnosis in hand.',
       ],
       notTheRightChoice: [
         {
@@ -641,6 +641,11 @@ export const en = {
           question: "Isn't adding servers enough?",
           answer:
             'Rarely. If the bottleneck is the database or an external service, ten servers wait for it together. The load test says where it is.',
+        },
+        {
+          question: 'Why does existing monitoring weigh on the price?',
+          answer:
+            'Without metrics, the system has to be instrumented before we can see what gives way. That is work before the first number, and to measure each fix.',
         },
         {
           question: 'Could the load test bring production down?',
