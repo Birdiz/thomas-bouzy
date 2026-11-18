@@ -619,7 +619,7 @@ export const fr = {
         description:
           "Un stock, un solde ou une facturation qui ne tombe pas juste ? Traçabilité des flux et observabilité pour expliquer l'écart. Prix publics.",
       },
-      heading: 'Fiabilisation : expliquer chaque écart au lieu de le deviner',
+      heading: 'Fiabilisation de ton application : flux traçables et écarts expliqués',
       priceHeading: "Combien coûte la fiabilisation d'une application ?",
       sentences: ["« On a recrédité deux fois et on ne l'a vu qu'à la réconciliation. »"],
       delivered: [
@@ -633,7 +633,7 @@ export const fr = {
         },
         {
           title: 'La double exécution, traitée',
-          text: "Un message reçu deux fois n'est appliqué qu'une fois.",
+          text: "Une opération reçue deux fois n'est appliquée qu'une fois.",
         },
         {
           title: 'Des alertes avant tes clients',
@@ -650,11 +650,18 @@ export const fr = {
         amounts: { fee: 'Prix' },
         duration: 'Durée',
       },
-      rules: [],
+      rules: [
+        'Le prix est fixé avant de commencer, une fois les flux choisis ensemble.',
+        'Si un Audit a situé le problème, {credit} de son prix sont déduits.',
+      ],
       notTheRightChoice: [
         {
           text: "Tu ne sais pas encore où est le problème : un {offer} le situera d'abord.",
           offer: 'audit',
+        },
+        {
+          text: "Tes chiffres sont justes mais le système ralentit ou tombe au pic : la {offer} s'en occupe.",
+          offer: 'scaling',
         },
         {
           text: "Tu cherches seulement un outil de supervision à installer : ce n'est qu'un moyen.",
@@ -664,7 +671,7 @@ export const fr = {
         {
           question: "Qu'est-ce qu'une double exécution, concrètement ?",
           answer:
-            'Un virement recrédité, un lot déstocké deux fois. Elle se prévient dès la conception.',
+            "Un virement recrédité, un lot déstocké deux fois. Elle se corrige sur un système qui tourne : chaque traitement apprend à reconnaître ce qu'il a déjà fait.",
         },
         {
           question: "Faut-il changer d'outil de supervision ?",
