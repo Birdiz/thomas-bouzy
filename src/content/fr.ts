@@ -484,7 +484,7 @@ export const fr = {
         },
         {
           title: 'La formule Veille ou Évolution',
-          text: "Chaque mois : sécurité, surveillance, incidents corrigés jusqu'à une demi-journée chacun. L'Évolution ajoute {evolutionDays} jours pour tes demandes.",
+          text: "Chaque mois : sécurité, surveillance et jusqu'à une demi-journée d'incidents corrigés. L'Évolution ajoute {evolutionDays} jours pour tes demandes.",
         },
       ],
       estimator: {
@@ -508,7 +508,10 @@ export const fr = {
       },
       rules: [
         "Une Reprise commence toujours par un filet de tests : on ne modifie pas ce qu'on ne sait pas vérifier.",
-        "En Veille, il couvre les parcours critiques ; en Évolution, toute l'application, puisqu'elle va changer. C'est ce qui rend sa mise en place plus chère.",
+        "En Veille, le filet couvre les parcours critiques ; en Évolution, toute l'application, puisqu'elle va changer. C'est ce qui rend sa mise en place plus chère.",
+        "Passer de Veille à Évolution, c'est étendre le filet à toute l'application : je te le chiffre à la journée avant de commencer.",
+        "Au-delà de la demi-journée d'incidents ou des jours de l'Évolution, c'est {dayRate} HT la journée, après ton accord. Les jours non utilisés ne se reportent pas.",
+        'Si un Audit a précédé la Reprise, {credit} de son prix sont déduits de la mise en place.',
       ],
       notTheRightChoice: [
         {

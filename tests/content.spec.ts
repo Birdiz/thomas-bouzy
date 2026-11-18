@@ -631,6 +631,18 @@ describe('what each Offer page has to say (ADR 17)', () => {
     expect(OFFERS.takeover.achievements).toContain('industrial-erp');
   });
 
+  it("caps a Takeover month's incidents, prices what goes beyond, and credits the Audit", () => {
+    const takeover = pagesOf(fr).takeover;
+    // Half a day of incidents a month, not half a day each (ADR 18).
+    expect(takeover?.delivered[3]?.text).toMatch(/jusqu'à une demi-journée d'incidents/);
+    expect(takeover?.delivered[3]?.text).not.toMatch(/chacun/);
+    const rules = takeover?.rules.join(' ') ?? '';
+    expect(rules).toContain('{dayRate}');
+    expect(rules).toMatch(/ne se reportent pas/);
+    expect(rules).toMatch(/de Veille à Évolution/);
+    expect(rules).toContain('{credit}');
+  });
+
   it('shows what an Evolution month is made of: its Watch month, plus days at the day rate', () => {
     for (const size of ['small', 'medium', 'large']) {
       const watch = combinationFor(PRICES.takeover, [size, 'watch']);
