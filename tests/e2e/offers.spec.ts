@@ -101,6 +101,13 @@ for (const route of OFFER_ROUTES) {
             'aria-valuetext',
             labels.dimensions[dimension.id]?.options[option] ?? '',
           );
+          // A dimension that explains its options shows the chosen one's note
+          // under the slider, and describes the slider with it.
+          const note = labels.dimensions[dimension.id]?.notes?.[option];
+          if (note) {
+            const described = await slider.getAttribute('aria-describedby');
+            await expect(page.locator(`#${described}`)).toHaveText(note);
+          }
         }
 
         const combination = combinationFor(table, options);

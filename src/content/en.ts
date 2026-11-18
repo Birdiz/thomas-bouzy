@@ -397,6 +397,15 @@ export const en = {
       },
       estimator: {
         dimensions: {
+          depth: {
+            label: 'Depth',
+            options: { express: 'Express', full: 'Full' },
+            notes: {
+              express:
+                'Under three days, on the application that worries you most, whatever the size of the system.',
+              full: 'The whole system, priced on its real size. The quote is firm before anything starts.',
+            },
+          },
           size: {
             label: 'Size of the system',
             options: {
@@ -404,10 +413,6 @@ export const en = {
               medium: 'A few applications',
               large: 'A platform',
             },
-          },
-          depth: {
-            label: 'Depth',
-            options: { express: 'Express', full: 'Full' },
           },
         },
         amounts: { fee: 'Audit fee' },

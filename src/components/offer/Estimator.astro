@@ -27,6 +27,20 @@ function labelOf(dimension: string, option: string): string {
   return label;
 }
 
+/**
+ * What an option is, for the dimensions that say so (`notes`). It sits under
+ * the option in the table, as a detail line does under an amount, and the
+ * slider shows the chosen one beneath it.
+ */
+function noteOf(dimension: string, option: string): string | undefined {
+  const notes = labels.dimensions[dimension]?.notes;
+  if (!notes) return undefined;
+  const note = notes[option];
+  if (!note) throw new Error(`${offer}: no ${locale} note for ${dimension}=${option}`);
+  return note;
+}
+const hasNotes = (dimension: string) => Boolean(labels.dimensions[dimension]?.notes);
+
 /** What a monthly amount is made of, when it includes days at the day rate. */
 function daysIncluded(days: number | undefined): string | undefined {
   if (days === undefined) return undefined;
@@ -39,7 +53,10 @@ const rows = optionCombinations(table).map((options) => {
   if (!combination) throw new Error(`${offer}: no price for ${options.join(' × ')}`);
   return {
     key: options.join(' '),
-    options: options.map((option, i) => labelOf(table.dimensions[i]?.id ?? '', option)),
+    options: options.map((option, i) => {
+      const dimension = table.dimensions[i]?.id ?? '';
+      return { label: labelOf(dimension, option), note: noteOf(dimension, option) };
+    }),
     amounts: table.amounts.map((amount) => {
       const range = combination.amounts[amount];
       if (!range) throw new Error(`${offer}: ${options.join(' × ')} has no ${amount}`);
@@ -94,7 +111,11 @@ const resultLabels = [
               step="1"
               value="0"
               data-options={dimension.options.join(' ')}
+              aria-describedby={hasNotes(dimension.id) ? `${id}-${dimension.id}-note` : undefined}
             />
+            {hasNotes(dimension.id) && (
+              <p class="estimator__detail" id={`${id}-${dimension.id}-note`} data-note />
+            )}
           </div>
         ))
       }
@@ -136,7 +157,10 @@ const resultLabels = [
           rows.map((row) => (
             <tr data-options={row.key}>
               {row.options.map((option) => (
-                <td>{option}</td>
+                <td data-label={option.label}>
+                  {option.label}
+                  {option.note && <span class="estimator__detail">{option.note}</span>}
+                </td>
               ))}
               {row.amounts.map((amount) => (
                 <td class="estimator__amount">
@@ -168,10 +192,14 @@ const resultLabels = [
       if (!row) return;
       const cells = [...row.cells];
       sliders.forEach((slider, i) => {
-        const text = cells[i]?.textContent ?? '';
+        const cell = cells[i];
+        const text = cell?.dataset.label ?? '';
         slider.setAttribute('aria-valuetext', text);
         const choice = choices[i];
         if (choice) choice.textContent = text;
+        // The option's note, when its dimension has them, under the slider.
+        const note = slider.parentElement?.querySelector('[data-note]');
+        if (note) note.textContent = cell?.querySelector('.estimator__detail')?.textContent ?? '';
       });
       // A figure is a copy of its cell, detail line included. One that changes
       // comes up into place, so the reader sees which figure the slider moved.

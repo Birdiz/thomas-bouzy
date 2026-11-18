@@ -122,23 +122,26 @@ const express = range(AUDIT_EXPRESS_FEE, AUDIT_EXPRESS_FEE);
 export const PRICES: Record<OfferId, PriceTable> = {
   // Each price below is an effort in days at the day rate, rounded, except the
   // express Audit (a fixed fee) and the Watch plans (a market price).
+  // Depth comes first because it is what moves the price: the express Audit
+  // costs the same whatever the size, and a size slider placed first moved
+  // nothing at all on its default depth.
   audit: {
     dimensions: [
-      { id: 'size', options: ['small', 'medium', 'large'] },
       { id: 'depth', options: ['express', 'full'] },
+      { id: 'size', options: ['small', 'medium', 'large'] },
     ],
     amounts: ['fee'],
     duration: 'delivery',
     combinations: [
-      { options: ['small', 'express'], amounts: { fee: express }, weeks: range(1, 1) },
+      { options: ['express', 'small'], amounts: { fee: express }, weeks: range(1, 1) },
+      { options: ['express', 'medium'], amounts: { fee: express }, weeks: range(1, 1) },
+      { options: ['express', 'large'], amounts: { fee: express }, weeks: range(1, 1) },
       // 8–9 days.
-      { options: ['small', 'full'], amounts: { fee: range(4500, 5000) }, weeks: range(3, 3) },
-      { options: ['medium', 'express'], amounts: { fee: express }, weeks: range(1, 1) },
+      { options: ['full', 'small'], amounts: { fee: range(4500, 5000) }, weeks: range(3, 3) },
       // 10–11 days.
-      { options: ['medium', 'full'], amounts: { fee: range(5500, 6000) }, weeks: range(3, 4) },
-      { options: ['large', 'express'], amounts: { fee: express }, weeks: range(1, 1) },
+      { options: ['full', 'medium'], amounts: { fee: range(5500, 6000) }, weeks: range(3, 4) },
       // 14–16 days: in practice the Due diligence.
-      { options: ['large', 'full'], amounts: { fee: range(8000, 9000) }, weeks: range(4, 6) },
+      { options: ['full', 'large'], amounts: { fee: range(8000, 9000) }, weeks: range(4, 6) },
     ],
   },
 

@@ -1628,7 +1628,8 @@ a {
 .estimator__amount {
   white-space: nowrap;
 }
-/* What a monthly amount is made of, under it: in the table and in the figure. */
+/* What a monthly amount is made of, or what an option is, under it: in the
+   table, in the figure, under the slider. */
 .estimator__detail {
   display: block;
   margin-top: 4px;
