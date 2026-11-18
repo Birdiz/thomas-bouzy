@@ -205,6 +205,13 @@ test('Reinforcement shows the day rate the price table holds', async ({ page }) 
   ] as const) {
     await page.goto(path);
     await expect(page.locator('.offer__day-rate')).toContainText(formatEuros(DAY_RATE, locale));
+    // The monthly figure says how many days at that rate it stands for.
+    const days = RESUME[locale].offerPages.reinforcement?.estimator.daysIncluded ?? '∅';
+    const result = page.getByRole('status');
+    await expect(result).toContainText(days.replace('{days}', locale === 'fr' ? '4,3' : '4.3'));
+    await page.getByRole('slider').focus();
+    await page.keyboard.press('End');
+    await expect(result).toContainText(days.replace('{days}', locale === 'fr' ? '17,3' : '17.3'));
   }
 });
 

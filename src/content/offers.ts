@@ -96,8 +96,12 @@ export const OFFERS: Record<OfferId, OfferFacts> = {
     segments: ['critical-systems', 'orphan-app', 'partners', 'public-sector'],
     achievements: ['open-data-directories', 'staircase-calculator'],
   },
+  // Sells a lead and an architect inside a team. Kiss The Bride leads: four
+  // juniors mentored for two years there. The API redesign follows, the
+  // foundations of a running product rebuilt. On-chain operations prove
+  // reliability, and stay on that Offer's page.
   reinforcement: {
     segments: ['critical-systems', 'partners'],
-    achievements: ['on-chain-operations', 'enterprise-onboarding'],
+    achievements: ['enterprise-onboarding', 'live-api-redesign'],
   },
 };

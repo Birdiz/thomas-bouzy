@@ -840,7 +840,7 @@ export const fr = {
       ],
       delivered: [
         {
-          title: 'Deux semaines pour comprendre',
+          title: 'Les premiers jours pour comprendre',
           text: "Je lis le système et rencontre l'équipe avant de proposer.",
         },
         {
@@ -868,7 +868,8 @@ export const fr = {
             },
           },
         },
-        amounts: { monthly: 'Par mois' },
+        amounts: { monthly: 'Ton budget' },
+        daysIncluded: 'Environ {days} jours au taux journalier',
       },
       rules: ['{maxDays} jours par semaine au maximum, quel que soit le client.'],
       dayRate: {

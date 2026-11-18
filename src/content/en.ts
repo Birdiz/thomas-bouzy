@@ -744,7 +744,7 @@ export const en = {
       ],
       delivered: [
         {
-          title: 'Two weeks to understand',
+          title: 'The first days to understand',
           text: 'I read the system and meet the team before proposing anything.',
         },
         {
@@ -772,7 +772,8 @@ export const en = {
             },
           },
         },
-        amounts: { monthly: 'Per month' },
+        amounts: { monthly: 'Your budget' },
+        daysIncluded: 'About {days} days at the day rate',
       },
       rules: ['{maxDays} days a week at most, whoever the client.'],
       dayRate: {
