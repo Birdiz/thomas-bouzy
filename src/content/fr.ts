@@ -795,7 +795,7 @@ export const fr = {
           },
         },
         amounts: { plan: 'Cadrage, phase 1 à prix fixe' },
-        duration: 'Construction, à la journée',
+        duration: 'Durée de la construction, à la journée',
       },
       rules: [
         "Une Création sur mesure ne remplace jamais un système qui tourne : celui-là relève d'une Migration, ou d'abord d'un Audit.",
@@ -803,15 +803,19 @@ export const fr = {
       ],
       notTheRightChoice: [
         {
-          text: 'Ton application existe déjà et tourne : la {offer} la fera évoluer sans la remplacer.',
+          text: 'Ton application existe déjà et tourne : la {offer} la mettra à jour étape par étape, au lieu de la remplacer.',
           offer: 'migration',
         },
         {
-          text: "Un logiciel du marché fait déjà le travail : un {offer} te dira si c'est le bon calcul.",
-          offer: 'audit',
+          text: "Un logiciel du marché fait déjà le travail : prends-le. Si tu hésites, l'appel gratuit sert aussi à trancher.",
         },
       ],
       faq: [
+        {
+          question: 'Combien coûte la construction ?',
+          answer:
+            "Elle se facture à {dayRate} HT la journée, {maxDays} jours par semaine au plus. Multiplie les semaines de l'estimateur par {maxDays} jours : tu as le plafond. Le cadrage le précise avant que tu décides de la suite.",
+        },
         {
           question: 'Pourquoi le nombre de systèmes à relier pèse-t-il sur le prix ?',
           answer:
@@ -820,12 +824,12 @@ export const fr = {
         {
           question: "Et une fois l'application livrée ?",
           answer:
-            'Ton équipe la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
+            'Ton équipe ou une autre la reprend avec les tests et les décisions écrites, ou je la maintiens au mois, avec la Reprise et maintenance.',
         },
         {
           question: 'Sur quelles technologies ?',
           answer:
-            "On choisit ensemble ce que ton équipe saura reprendre. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
+            "On choisit ensemble ce qu'une équipe saura reprendre après moi. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
         },
       ],
     },

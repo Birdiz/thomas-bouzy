@@ -694,6 +694,15 @@ describe('what each Offer page has to say (ADR 17)', () => {
     expect(PRICES.build.amounts).toEqual(['plan']);
     expect(pagesOf(en).build?.rules.join(' ')).toMatch(/two phases/);
     expect(pagesOf(fr).build?.rules.join(' ')).toMatch(/deux phases/);
+    // The estimator prices phase 1 and gives phase 2 in weeks: the FAQ says
+    // what a week of build costs, so the weeks can be read in euros (ADR 20).
+    for (const content of [en, fr]) {
+      const answers = pagesOf(content)
+        .build?.faq.map((entry) => entry.answer)
+        .join(' ');
+      expect(answers).toContain('{dayRate}');
+      expect(answers).toContain('{maxDays}');
+    }
     // More systems to connect never costs less.
     for (const size of ['small', 'medium', 'large']) {
       const plans = ['none', 'few', 'many'].map(
