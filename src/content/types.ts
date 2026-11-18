@@ -144,8 +144,17 @@ export interface Titled {
  * dimension, option and amount the table declares has a label here.
  */
 export interface EstimatorLabels {
-  /** The slider's label, and a label for each of its options, by id. */
-  dimensions: Record<string, { label: string; options: Record<string, string> }>;
+  /**
+   * The slider's label, and a label for each of its options, by id. `notes`,
+   * when a dimension has them, says what each option is, one line per option:
+   * the estimator shows the chosen one under its slider. A label alone told
+   * the reader an express Audit costs 1,400 € and a full one 4,500 €, and not
+   * what the difference buys.
+   */
+  dimensions: Record<
+    string,
+    { label: string; options: Record<string, string>; notes?: Record<string, string> }
+  >;
   /** A label for each amount the Offer's table declares. */
   amounts: Partial<Record<AmountId, string>>;
   /** A label for the duration, when the Offer's table has one. */

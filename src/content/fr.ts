@@ -406,6 +406,15 @@ export const fr = {
       },
       estimator: {
         dimensions: {
+          depth: {
+            label: 'Profondeur',
+            options: { express: 'Express', full: 'Complet' },
+            notes: {
+              express:
+                "Moins de trois jours sur l'application qui t'inquiète le plus, quelle que soit la taille du système.",
+              full: 'Tout le système, au prix de sa taille réelle. Le devis est ferme avant de commencer.',
+            },
+          },
           size: {
             label: 'Taille du système',
             options: {
@@ -414,16 +423,12 @@ export const fr = {
               large: 'Une plateforme',
             },
           },
-          depth: {
-            label: 'Profondeur',
-            options: { express: 'Express', full: 'Complet' },
-          },
         },
         amounts: { fee: "Prix de l'audit" },
         duration: 'Durée',
       },
       rules: [
-        "Si tu me confies ensuite la mission qui en découle, {credit} du prix de l'audit en sont déduits.",
+        "Si tu me confies ensuite la mission qui en découle, je déduis de son prix {credit} payés pour l'audit.",
       ],
       notTheRightChoice: [
         {

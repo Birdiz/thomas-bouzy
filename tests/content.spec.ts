@@ -551,6 +551,14 @@ describe('Offers and the price table (ADR 17)', () => {
               labels?.options[option],
               `${locale}: ${offer} ${dimension.id}=${option} has no label`,
             ).toBeTruthy();
+            // Notes are all or nothing: a slider that explains two options of three
+            // leaves the reader guessing at the third.
+            if (labels?.notes) {
+              expect(
+                labels.notes[option],
+                `${locale}: ${offer} ${dimension.id}=${option} has no note`,
+              ).toBeTruthy();
+            }
           }
         }
         for (const amount of table.amounts) {
@@ -585,10 +593,19 @@ describe('Offers and the price table (ADR 17)', () => {
 
   it("states the Audit's commercial rule and its due diligence variant", () => {
     expect(en.offerPages.audit?.rules.join(' ')).toMatch(/deducted/);
-    expect(fr.offerPages.audit?.rules.join(' ')).toMatch(/déduit/);
+    expect(fr.offerPages.audit?.rules.join(' ')).toMatch(/dédui[st]/);
     // The credit is the express fee, read from the price table: uncapped, a
     // full Audit would wipe out a Takeover's set-up (ADR 18).
     expect(AUDIT_CREDIT).toBe(AUDIT_EXPRESS_FEE);
+    // Depth first, and explained: the express fee is the same whatever the
+    // size, so a size slider first moved nothing, and Express against Full
+    // said what each cost and not what each was.
+    expect(PRICES.audit.dimensions.map((d) => d.id)).toEqual(['depth', 'size']);
+    for (const content of [en, fr]) {
+      expect(
+        Object.keys(content.offerPages.audit?.estimator.dimensions.depth?.notes ?? {}),
+      ).toEqual(['express', 'full']);
+    }
     for (const content of [en, fr]) {
       expect(content.offerPages.audit?.rules.join(' ')).toContain('{credit}');
     }
