@@ -744,8 +744,15 @@ describe('what each Offer page has to say (ADR 17)', () => {
     const oneDay = combinationFor(PRICES.reinforcement, ['1'])?.amounts.monthly;
     // "about 2,400 a month at one day a week"
     expect(oneDay).toEqual({ min: 2400, max: 2400 });
+    // Each month says how many days it stands for, within the 50 € rounding.
+    for (const combination of PRICES.reinforcement.combinations) {
+      const days = combination.daysIncluded ?? 0;
+      expect(Math.abs((combination.amounts.monthly?.min ?? 0) - days * DAY_RATE)).toBeLessThan(50);
+    }
+    expect(combinationFor(PRICES.reinforcement, ['1'])?.daysIncluded).toBe(4.3);
     for (const content of [en, fr]) {
       expect(pagesOf(content).reinforcement?.dayRate).toBeDefined();
+      expect(pagesOf(content).reinforcement?.estimator.daysIncluded).toContain('{days}');
     }
   });
 

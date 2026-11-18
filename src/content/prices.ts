@@ -54,7 +54,8 @@ export interface Combination {
   /**
    * Days of work at the day rate that the monthly amount includes. The
    * estimator says so under it, so a plan that jumps from 400 € to 1,500 € a
-   * month shows where the difference goes.
+   * month shows where the difference goes. A Reinforcement month is nothing
+   * but those days, so its figure says how many it stands for.
    */
   daysIncluded?: number;
   weeks?: Range;
@@ -104,6 +105,11 @@ const WEEKS_PER_MONTH = 52 / 12;
 function monthlyAtDayRate(daysPerWeek: number): Range {
   const amount = Math.round((DAY_RATE * daysPerWeek * WEEKS_PER_MONTH) / 50) * 50;
   return { min: amount, max: amount };
+}
+
+/** The days a month of `daysPerWeek` stands for, to one decimal: 4.3 at one day a week. */
+function daysAMonth(daysPerWeek: number): number {
+  return Math.round(daysPerWeek * WEEKS_PER_MONTH * 10) / 10;
 }
 
 const range = (min: number, max: number): Range => ({ min, max });
@@ -313,6 +319,7 @@ export const PRICES: Record<OfferId, PriceTable> = {
     combinations: Array.from({ length: MAX_DAYS_PER_WEEK }, (_, i) => ({
       options: [String(i + 1)],
       amounts: { monthly: monthlyAtDayRate(i + 1) },
+      daysIncluded: daysAMonth(i + 1),
     })),
   },
 };
