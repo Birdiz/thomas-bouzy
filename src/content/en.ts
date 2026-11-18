@@ -714,7 +714,7 @@ export const en = {
           },
         },
         amounts: { plan: 'Framing, phase 1 at a fixed price' },
-        duration: 'Build, by the day',
+        duration: 'Build duration, by the day',
       },
       rules: [
         'A Custom build never replaces a running system: that is a Migration, or first an Audit.',
@@ -722,15 +722,19 @@ export const en = {
       ],
       notTheRightChoice: [
         {
-          text: 'Your application already exists and runs: a {offer} will evolve it without replacing it.',
+          text: 'Your application already exists and runs: a {offer} will bring it up to date step by step, instead of replacing it.',
           offer: 'migration',
         },
         {
-          text: 'An off-the-shelf product already does the job: an {offer} will tell you whether it is the right call.',
-          offer: 'audit',
+          text: 'An off-the-shelf product already does the job: take it. If you are unsure, the free call is there to settle that too.',
         },
       ],
       faq: [
+        {
+          question: 'How much does the build cost?',
+          answer:
+            "It is billed at {dayRate} excl. VAT a day, {maxDays} days a week at most. Multiply the estimator's weeks by {maxDays} days and you have the ceiling. The framing narrows it down before you decide on the rest.",
+        },
         {
           question: 'Why does the number of systems to connect weigh on the price?',
           answer:
@@ -739,12 +743,12 @@ export const en = {
         {
           question: 'And once the application is delivered?',
           answer:
-            'Your team takes it over with the tests and the written decisions, or I maintain it monthly, under a Takeover.',
+            'Your team or another one takes it over with the tests and the written decisions, or I maintain it monthly, under a Takeover.',
         },
         {
           question: 'Which technologies?',
           answer:
-            'We choose together what your team will be able to take over. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
+            'We choose together what a team will be able to take over after me. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
         },
       ],
     },
