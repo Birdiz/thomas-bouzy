@@ -1,6 +1,7 @@
 # 24. The site speaks in Thomas's voice, and says *tu*
 
-- Status: accepted, implemented 2026-11-13
+- Status: accepted, implemented 2026-11-13; *tu* superseded by
+  [ADR 26](0026-the-site-says-vous.md), 2026-11-19: French now says *vous*
 - Date: 2026-11-13
 
 ## Context

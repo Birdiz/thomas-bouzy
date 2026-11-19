@@ -158,6 +158,18 @@ describe('French typography', () => {
     expect(breakable).toEqual([]);
   });
 
+  it('says vous to the reader, never tu', () => {
+    // ADR 26 reversed ADR 24's tu. A rebase from the voice brief, which still
+    // says tu, is the likeliest way for it to come back. Imperatives
+    // ("réserve") slip past a pronoun check; the pronouns and possessives do not.
+    const TU =
+      /(?<![\p{L}'’-])(?:tu|toi|ton|ta|tes|te|t['’](?=\p{L}))(?![\p{L}'’])|-(?:toi|tu)(?!\p{L})/iu;
+    const tutoie = [...walkStrings(fr)]
+      .filter(([, text]) => TU.test(text))
+      .map(([path, text]) => `${path}: ${text}`);
+    expect(tutoie).toEqual([]);
+  });
+
   it('gives the French to the pages through RESUME only', () => {
     // A page that imported fr.ts itself would get the plain spaces back.
     const sources = readdirSync('src', { recursive: true, encoding: 'utf8' })
