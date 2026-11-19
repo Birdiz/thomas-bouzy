@@ -13,11 +13,14 @@ never types it, and each page's prose has a word ceiling
 Built with Astro, containerised, deployed to Railway. The vocabulary is in
 [CONTEXT.md](CONTEXT.md).
 
-The home page reads promise → problem → invitation to the Audit → offer → proof
-→ contact, with the person beside the call — which is the opposite of a CV, and
-deliberate:
+The home page reads job title and promise → the AI Workshops, the way in →
+problem → invitation to the Audit → offer → proof → contact, with the person
+beside the call — which is the opposite of a CV, and deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
-behind the running order. The palette is the LinkedIn cover's — dark slate, one
+behind the running order, and
+[ADR 27](docs/adr/0027-software-engineer-and-the-workshops-as-the-way-in.md)
+put the job title back and the Workshops first. The Workshops are French only
+and are never called a *formation*. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
 [ADR 13](docs/adr/0013-the-site-wears-the-linkedin-cover.md); the type is one
 family, Figtree
@@ -38,7 +41,9 @@ blockchain scope boundary, puts a date back in the availability line, or lets
 the structured data claim a technology the page never states.
 
 The page is not a CV, and the tests keep it from becoming one again: there is no
-chronology, no job title, no years badge, no stack chips and no CV download. The
+chronology, no years badge, no stack chips and no CV download. The one job
+title, « Ingénieur logiciel », is there because a business owner met in person
+must find it (ADR 27). The
 career is on LinkedIn, and the page points to it for the career exactly once,
 from About; elsewhere LinkedIn is only a way to get in touch, beside the email.
 A Partner gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its

@@ -1,6 +1,7 @@
 # 22. Full-stack, anchored in the backend
 
-- Status: accepted, implemented 2026-10-06
+- Status: accepted, implemented 2026-10-06; identity superseded by
+  [ADR 27](0027-software-engineer-and-the-workshops-as-the-way-in.md), 2026-11-19
 - Date: 2026-10-06
 - Amends [ADR 18](0018-one-day-rate-and-half-the-words.md) and
   [ADR 20](0020-the-buyers-objections-before-the-buyer-asks.md)

@@ -361,15 +361,14 @@ export interface ResumeContent {
   };
 
   /**
-   * No job title, no years badge, no CV button.
-   *
-   * All three were recruitment furniture on a page that sells engagements: a
-   * title answers "what post does he hold", a years count answers "is he senior
-   * enough to hire", and the CV button offered the salaried route as an equal
-   * alternative to the work itself, in the first viewport. The career is on
-   * LinkedIn, reached once from the About section — see `about.careerLine`.
+   * The job title, then the promise (ADR 27). Still no years badge and no CV
+   * button: those were recruitment furniture (ADR 11). The title is back
+   * because a business owner met in person must read on the first screen the
+   * title Thomas said to them.
    */
   hero: {
+    /** The job title, set small above the H1: "Ingénieur logiciel". */
+    role: string;
     /**
      * The promise, rendered in the H1 after the name, as two lines: the break
      * is part of the wording, so it is written here rather than left to the
@@ -383,14 +382,52 @@ export interface ResumeContent {
     blurb: string;
     /** The primary button: the 30-minute call. */
     ctaBook: string;
-    /** The secondary button, to the Offers section. */
-    ctaOffers: string;
+    /**
+     * The secondary button: to the Workshops section where the locale has one,
+     * to the Offers otherwise.
+     */
+    ctaSecondary: string;
+  };
+
+  /**
+   * The AI workshops for business owners, the way in (ADR 27). French only:
+   * the owners they are for are French and local. Never called a *formation*
+   * or a training course: in France that names a regulated framework the
+   * workshops do not use. No price, programme or date until they exist.
+   */
+  workshops?: {
+    /** The header's link to the section. */
+    nav: string;
+    kicker: string;
+    title: string;
+    plain: string;
+    /** The three levels, in the order a business owner takes them. */
+    levels: readonly [Titled, Titled, Titled];
+    /** Where the workshops stand: being designed, no date or price yet. */
+    status: string;
+    /** That Thomas also builds tools, and that a workshop may lead there. Said, never hidden. */
+    builder: string;
+    /** The primary button: the 30-minute call. */
+    cta: string;
+    /** For the owner who wants to hear when the first sessions open: an email. */
+    notify: {
+      text: string;
+      label: string;
+      /** The email's subject line. */
+      subject: string;
+    };
   };
 
   /** Opens the page on what breaks, before anything about who fixes it. */
   problem: {
     kicker: string;
+    /**
+     * What the hero used to promise, and still sells: the Takeover and the
+     * other Offers on a running application (ADR 27).
+     */
     title: string;
+    /** Under the title, leading into the Client sentences. */
+    lead: string;
     /**
      * Under the Failure modes, for the Client who cannot yet name theirs:
      * the Audit treats none of them, and is the way in for all.
@@ -513,6 +550,8 @@ export interface ResumeContent {
    * than content to translate.
    */
   footer: {
+    /** The job title, beside the name (ADR 27). */
+    role: string;
     legalHeading: string;
     hostedBy: string;
     siretLabel: string;

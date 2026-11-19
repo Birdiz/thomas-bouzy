@@ -60,6 +60,17 @@ function walkStrings(value: unknown, path = '$', out = new Map<string, string>()
   return out;
 }
 
+/**
+ * The home page's French-only sections, left out of the comparison: the
+ * Workshops are for French owners and exist in French only (ADR 27), as the
+ * Partners page does. Their own test below holds them to that.
+ */
+function withoutFrenchOnly(content: unknown): unknown {
+  if (!content || typeof content !== 'object' || !('workshops' in content)) return content;
+  const { workshops: _, ...rest } = content as Record<string, unknown>;
+  return rest;
+}
+
 describe('EN/FR parity', () => {
   // Parity follows the registry (src/routes.ts), not the whole module: French
   // is the site's language and English exists where it sells (ADR 15).
@@ -79,8 +90,8 @@ describe('EN/FR parity', () => {
 
     if (declared.length > 1) {
       it(`has the same structure and array lengths for ${page.id} in both locales`, () => {
-        expect(shapeOf(contentOfPage('fr', page.id))).toEqual(
-          shapeOf(contentOfPage('en', page.id)),
+        expect(shapeOf(withoutFrenchOnly(contentOfPage('fr', page.id)))).toEqual(
+          shapeOf(withoutFrenchOnly(contentOfPage('en', page.id))),
         );
       });
     }
@@ -109,7 +120,9 @@ describe('EN/FR parity', () => {
       '$.nav.contact',
       '$.hero.title[0]',
       '$.hero.blurb',
-      '$.hero.ctaOffers',
+      '$.hero.role',
+      '$.hero.ctaSecondary',
+      '$.problem.lead',
       '$.offersSection.title',
       '$.problem.kicker',
       '$.problem.title',
@@ -877,6 +890,36 @@ describe('what each Offer page has to say (ADR 17)', () => {
   });
 });
 
+describe('the AI workshops (ADR 27)', () => {
+  it('exist in French only, before any price, programme or date', () => {
+    expect(fr.workshops).toBeDefined();
+    expect((en as ResumeContent).workshops).toBeUndefined();
+    expect(fr.workshops.levels).toHaveLength(3);
+    for (const [path, text] of walkStrings(fr.workshops)) {
+      expect(text, `a price or a date at ${path}`).not.toMatch(/€|\d/);
+    }
+  });
+
+  it('say plainly that Thomas also builds the tools', () => {
+    // A workshop must never look like hidden prospecting.
+    expect(fr.workshops.builder).toMatch(/ingénieur logiciel/i);
+    expect(fr.workshops.builder).toMatch(/outils/);
+  });
+
+  it('are never called a formation or a training course, anywhere', () => {
+    // In France a *formation* is a regulated framework the workshops do not
+    // use. "Information" and "formé" are other words.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      for (const [path, text] of walkStrings(content)) {
+        expect(text, `${locale}:${path}`).not.toMatch(/\bformations?\b|\btraining\b/i);
+      }
+    }
+  });
+});
+
 describe('the Partners page (ADR 14)', () => {
   it('exists in French only', () => {
     expect(fr.partnersPage).toBeDefined();
@@ -931,12 +974,24 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
     }
   });
 
-  it('names no job title in the title or the description', () => {
-    // They were the SERP identity of a résumé (ADR 11 left them on purpose);
-    // a site that sells Offers is found by what it sells.
-    for (const content of [en, fr]) {
-      for (const text of [content.meta.title, content.meta.description]) {
-        expect(text).not.toMatch(/engineer|ingénieur|architect|developer|développeur/i);
+  it('names the one job title, and no other, wherever the site says who Thomas is', () => {
+    // ADR 27: the title a business owner hears in person is the one they read
+    // on the first screen, in the tab, under a shared link and in search. It
+    // replaced "fullstack", which ADR 22 had made the identity.
+    for (const [content, title] of [
+      [fr, 'Ingénieur logiciel'],
+      [en, 'Software engineer'],
+    ] as const) {
+      expect(content.hero.role).toBe(title);
+      expect(content.schema.jobTitle).toBe(title);
+      expect(content.footer.role).toBe(title);
+      expect(content.meta.title).toContain(title);
+      expect(content.meta.description.toLowerCase()).toContain(title.toLowerCase());
+      for (const [path, text] of walkStrings(content)) {
+        expect(text, `"fullstack" is back at ${path}`).not.toMatch(/full[\s-]?stack/i);
+        expect(text, `a former job title is back at ${path}`).not.toMatch(
+          /d[ée]veloppeur (fullstack|freelance)|freelance developer/i,
+        );
       }
     }
   });
@@ -995,7 +1050,9 @@ describe('a site short enough to be read (ADR 18)', () => {
   // nobody checks grows back, as ADR 6 says of bytes; this is the same rule
   // for words. Counted: what the page renders as prose, not its <head>, its
   // assistive-only strings, its structured data or its price labels.
-  const BUDGET: Record<string, number> = { home: 1200, partners: 220 };
+  // The home page's ceiling rose from 1,200 to 1,400 with the Workshops
+  // section, the way in, and the old promise moved into the problem (ADR 27).
+  const BUDGET: Record<string, number> = { home: 1400, partners: 220 };
   const OFFER_BUDGET = 400;
   const NOT_PROSE = /^\$\.(meta|a11y|schema|languages|footer|estimator|offerPage|offers)\b/;
 

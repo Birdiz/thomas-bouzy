@@ -3,7 +3,7 @@ import { ROUTES, type Route } from '../routes.ts';
 import { type Locale, SITE } from '../site.ts';
 
 /** What the home page's title says after the name; short enough to stay on one line after it. */
-const SIGNATURE: Record<Locale, string> = { fr: 'Freelance fullstack', en: 'Full-stack freelance' };
+const SIGNATURE: Record<Locale, string> = { fr: 'Ingénieur logiciel', en: 'Software engineer' };
 
 /**
  * The Open Graph card of each route: what LinkedIn shows under a shared link,

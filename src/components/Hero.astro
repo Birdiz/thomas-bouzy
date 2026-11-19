@@ -12,6 +12,9 @@ interface Props {
 }
 
 const { t, home } = Astro.props;
+/* The secondary button leads to the way in: the Workshops where this locale
+   has them, the Offers otherwise (ADR 27). */
+const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
 ---
 
 <section id="top" class="hero">
@@ -20,6 +23,9 @@ const { t, home } = Astro.props;
 
     <div class="hero__grid">
       <div class="hero__intro">
+        {/* The job title Thomas says when he introduces himself, above the
+            promise (ADR 27): a reader who met him finds it on the first screen. */}
+        <p class="kicker hero__role">{t.hero.role}</p>
         {/* The name, then the promise, in one H1. The name is for search
             engines and screen readers only: the header already shows it, and
             twice in the first screen is once too many. */}
@@ -33,12 +39,12 @@ const { t, home } = Astro.props;
 
         {/* The call is the page's one primary action, from the first screen.
             The Offers are the secondary way in, for the reader who wants to
-            look before talking. No job title, no years badge, no CV. */}
+            look before talking. No years badge, no CV. */}
         <div class="hero__ctas">
           <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
             {t.hero.ctaBook}
           </a>
-          <a class="btn btn-secondary" href={`${home}#offers`}>{t.hero.ctaOffers}</a>
+          <a class="btn btn-secondary" href={secondary}>{t.hero.ctaSecondary}</a>
         </div>
       </div>
 

@@ -7,9 +7,9 @@ import type { ResumeContent } from './types.ts';
  */
 export const fr = {
   meta: {
-    title: 'Thomas Bouzy — Freelance fullstack, Nancy et Strasbourg',
+    title: 'Thomas Bouzy — Ingénieur logiciel, Nancy et Strasbourg',
     description:
-      "Fullstack, avec une expertise backend PHP/Symfony : je reprends et fais évoluer vos applications métier, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg, à distance ailleurs. Prix publics.",
+      "Ingénieur logiciel, j'outille le métier des PME : des ateliers IA pour dirigeants, puis la reprise et l'évolution de vos applications métier, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg.",
   },
 
   a11y: {
@@ -32,10 +32,46 @@ export const fr = {
   },
 
   hero: {
-    title: ['Je reprends et fais évoluer', 'vos applications métier.'],
-    blurb: "Même celle que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
+    role: 'Ingénieur logiciel',
+    title: [
+      "J'outille le métier des PME,",
+      "en commençant par montrer aux dirigeants ce que l'IA y change.",
+    ],
+    blurb:
+      "D'abord des ateliers où vous appliquez l'IA à votre propre entreprise. Ensuite, si vous le voulez, les outils qui vont avec.",
     ctaBook: 'Réserver un appel gratuit',
-    ctaOffers: 'Voir les offres',
+    ctaSecondary: 'Voir les ateliers',
+  },
+
+  workshops: {
+    nav: 'Ateliers',
+    kicker: 'Ateliers IA pour dirigeants',
+    title: "Appliquez l'IA à votre propre entreprise.",
+    plain:
+      "Des ateliers pratiques, pas une conférence : c'est vous qui travaillez, sur votre entreprise.",
+    levels: [
+      {
+        title: 'Une matinée découverte',
+        text: "Voir, sur votre entreprise, ce que l'IA y change.",
+      },
+      {
+        title: "Un atelier d'une journée",
+        text: "L'appliquer vous-même et repartir avec quelque chose de concret.",
+      },
+      {
+        title: 'Un accompagnement',
+        text: 'Ensuite, sur votre cas réel.',
+      },
+    ],
+    status: 'Les ateliers sont en préparation : pas encore de date, de programme ni de prix.',
+    builder:
+      'Je suis aussi ingénieur logiciel : je construis des outils pour le métier des PME. Un atelier peut mener là, si vous le voulez. Il ne sert pas à vous le vendre.',
+    cta: 'Réserver un appel gratuit',
+    notify: {
+      text: 'Vous voulez être prévenu des premières sessions ?',
+      label: 'Écrivez-moi, je vous préviens.',
+      subject: 'Ateliers IA : me prévenir des premières sessions',
+    },
   },
 
   problem: {
@@ -43,8 +79,10 @@ export const fr = {
       text: 'Vous hésitez ?',
       cta: 'Commencez par un audit',
     },
-    kicker: 'Le problème',
-    title: "Vous reconnaissez l'une de ces phrases ?",
+    kicker: 'Votre logiciel existe déjà ?',
+    title:
+      "Je reprends et fais évoluer vos applications métier, même celle que plus personne n'ose toucher.",
+    lead: "Sans l'arrêter, sans tout réécrire. Vous reconnaissez l'une de ces phrases ?",
     pause: 'Pause',
     goTo: 'Phrase {n}',
   },
@@ -255,7 +293,7 @@ export const fr = {
     title: 'Qui décroche',
     paragraphs: [
       "Ce qui me plaît, c'est le problème : comprendre ce dont votre métier a besoin et y répondre. La tech vient après. On me dit trop direct : pour vous, un avis sans enrobage.",
-      "Mon terrain, c'est PHP et Symfony, puis Node.js, TypeScript et React ; Python, en projets personnels. Je vis à la campagne, en Grand Est.",
+      "Je suis ingénieur logiciel. Mon terrain, c'est PHP et Symfony, puis Node.js, TypeScript et React ; Python, en projets personnels. J'ai enseigné la programmation orientée objet à l'Université de Reims en 2016-2017. Je vis à la campagne, en Grand Est.",
     ],
     more: 'Lire la suite',
     careerLine: "En poste plutôt qu'en mission ?",
@@ -269,7 +307,7 @@ export const fr = {
   ],
 
   schema: {
-    jobTitle: 'Développeur fullstack freelance',
+    jobTitle: 'Ingénieur logiciel',
     knowsAbout: [
       'PHP',
       'Symfony',
@@ -854,7 +892,7 @@ export const fr = {
     },
     reinforcement: {
       meta: {
-        title: 'Tech lead / architecte fullstack freelance à temps partiel',
+        title: 'Tech lead / architecte à temps partiel, PHP/Symfony et Node.js',
         description:
           'Un tech lead ou architecte senior dans votre équipe, 1 à 4 jours par semaine : PHP/Symfony, Node.js/TypeScript, React. Taux journalier publié.',
       },
@@ -933,7 +971,7 @@ export const fr = {
 
   publicSectorPage: {
     meta: {
-      title: 'Développeur fullstack pour collectivités et établissements publics',
+      title: 'Ingénieur logiciel pour collectivités et établissements publics',
       description:
         'Collectivités, établissements publics, structures subventionnées : reprise, maintenance et évolution de vos applications métier. Réversibilité, accessibilité RGAA, prix publics.',
     },
@@ -993,9 +1031,9 @@ export const fr = {
   },
   partnersPage: {
     meta: {
-      title: 'Sous-traitance fullstack PHP/Symfony et Node.js en marque blanche',
+      title: 'Sous-traitance PHP/Symfony et Node.js en marque blanche',
       description:
-        'Agences web et ESN : un développeur fullstack senior en renfort sur vos missions, PHP/Symfony, Node.js ou React, en marque blanche, au taux journalier publié. CV sur demande.',
+        'Agences web et ESN : un ingénieur logiciel senior en renfort sur vos missions, PHP/Symfony, Node.js ou React, en marque blanche, au taux journalier publié. CV sur demande.',
     },
     kicker: 'Partenaires',
     title: 'Agences et sociétés de services : un renfort senior en marque blanche',
@@ -1033,19 +1071,19 @@ export const fr = {
 
   aboutPage: {
     meta: {
-      title: 'À propos : Thomas Bouzy, développeur freelance dans le Grand Est',
+      title: 'À propos : Thomas Bouzy, ingénieur logiciel dans le Grand Est',
       description:
-        'Qui décroche quand vous appelez : un développeur qui aime se creuser la tête sur votre problème. Direct, pédagogue, installé à la campagne dans le Grand Est.',
+        'Qui décroche quand vous appelez : un ingénieur logiciel qui aime se creuser la tête sur votre problème. Direct, pédagogue, installé à la campagne dans le Grand Est.',
     },
     kicker: 'À propos',
     title: 'Qui décroche',
-    plain: "Je fais ce métier parce que j'aime me creuser la tête.",
+    plain: "Ingénieur logiciel, avec le goût de comprendre l'exigence des autres.",
     paragraphs: [
       "Un stock qui ne tombe jamais juste, une appli que plus personne n'ose toucher : confiez-moi ça et je ne lâche plus.",
       "Alors non, je ne suis pas « passionné de tech ». La tech, c'est mon outil. Ce qui m'intéresse, c'est ce dont votre entreprise a besoin et comment on le met en place sans en faire une usine à gaz.",
       "J'ai longtemps travaillé dans des équipes qui visaient le code parfait. J'ai fini par m'en lasser. Je préfère réfléchir au besoin.",
       "On me dit parfois trop direct. C'est vrai. Si quelque chose cloche dans votre projet, vous le saurez. (J'enrobe un peu mieux qu'avant, promis.)",
-      "J'aime aussi expliquer. Pour beaucoup, Internet reste une boîte noire et c'est normal. J'ai enseigné à la fac et formé des juniors. J'aime toujours autant lever le voile.",
+      "J'aime aussi expliquer. Pour beaucoup, Internet reste une boîte noire et c'est normal. J'ai enseigné la programmation orientée objet à l'Université de Reims et formé des juniors. J'aime toujours autant lever le voile.",
       [
         'Je vis à la campagne, dans le Grand Est. Je bosse à distance depuis huit ans. Et je viens volontiers chez vous : rien ne remplace une journée sur place pour comprendre comment vous travaillez. Le reste du temps, je bricole. ',
         { href: 'https://quart-de-tour.fr', label: 'Quart de tour' },
@@ -1074,6 +1112,7 @@ export const fr = {
   },
 
   footer: {
+    role: 'Ingénieur logiciel',
     legalHeading: 'Mentions légales',
     hostedBy: 'Site hébergé par',
     siretLabel: 'SIRET',
