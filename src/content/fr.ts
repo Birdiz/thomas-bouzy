@@ -1077,7 +1077,7 @@ export const fr = {
     },
     kicker: 'À propos',
     title: 'Qui décroche',
-    plain: "Ingénieur logiciel, je fais ce métier parce que j'aime me creuser la tête.",
+    plain: "Ingénieur logiciel, avec le goût de comprendre l'exigence des autres.",
     paragraphs: [
       "Un stock qui ne tombe jamais juste, une appli que plus personne n'ose toucher : confiez-moi ça et je ne lâche plus.",
       "Alors non, je ne suis pas « passionné de tech ». La tech, c'est mon outil. Ce qui m'intéresse, c'est ce dont votre entreprise a besoin et comment on le met en place sans en faire une usine à gaz.",

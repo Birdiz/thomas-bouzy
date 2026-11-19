@@ -845,7 +845,7 @@ export const en = {
     },
     kicker: 'About',
     title: 'Who picks up',
-    plain: 'I am a software engineer, and I do this job because I like racking my brains.',
+    plain: 'A software engineer with a taste for understanding what others demand.',
     paragraphs: [
       "A stock count that never adds up, an app nobody dares touch any more: give me that and I won't let go.",
       'So no, I am not "passionate about tech". Tech is my tool. What interests me is what your business needs, and how to put it in place without overengineering it.',
