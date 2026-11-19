@@ -18,7 +18,7 @@ problem → invitation to the Audit → offer → proof → contact, with the pe
 beside the call — which is the opposite of a CV, and deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
 behind the running order, and
-[ADR 26](docs/adr/0026-software-engineer-and-the-workshops-as-the-way-in.md)
+[ADR 27](docs/adr/0027-software-engineer-and-the-workshops-as-the-way-in.md)
 put the job title back and the Workshops first. The Workshops are French only
 and are never called a *formation*. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
@@ -43,7 +43,7 @@ the structured data claim a technology the page never states.
 The page is not a CV, and the tests keep it from becoming one again: there is no
 chronology, no years badge, no stack chips and no CV download. The one job
 title, « Ingénieur logiciel », is there because a business owner met in person
-must find it (ADR 26). The
+must find it (ADR 27). The
 career is on LinkedIn, and the page points to it for the career exactly once,
 from About; elsewhere LinkedIn is only a way to get in touch, beside the email.
 A Partner gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its

@@ -1,4 +1,4 @@
-# 26. Software engineer, and the AI workshops as the way in
+# 27. Software engineer, and the AI workshops as the way in
 
 - Status: accepted, implemented 2026-11-19
 - Date: 2026-11-19
@@ -45,8 +45,9 @@ commençant par montrer aux dirigeants ce que l'IA y change. » In English: "I
 build tools for the core business of small and mid-sized companies, starting
 by showing their owners what AI changes in it." *PME* covers mid-sized
 companies too, and their *dirigeants* are usually their owners, so the English
-says both. The sentence is in the third person, so it does not conflict with
-*tu* ([ADR 24](0024-the-site-says-tu.md)).
+says both. The sentence is in the third person, so it reads the same whatever
+the address; the rest of the French says *vous*
+([ADR 26](0026-the-site-says-vous.md)).
 
 **The old promise moves into the problem section**, whose kicker, H2 and lead
 now say it: "Ton logiciel existe déjà ?", then « Je reprends et fais évoluer tes

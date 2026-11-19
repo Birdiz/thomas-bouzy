@@ -361,7 +361,7 @@ export interface ResumeContent {
   };
 
   /**
-   * The job title, then the promise (ADR 26). Still no years badge and no CV
+   * The job title, then the promise (ADR 27). Still no years badge and no CV
    * button: those were recruitment furniture (ADR 11). The title is back
    * because a business owner met in person must read on the first screen the
    * title Thomas said to them.
@@ -390,7 +390,7 @@ export interface ResumeContent {
   };
 
   /**
-   * The AI workshops for business owners, the way in (ADR 26). French only:
+   * The AI workshops for business owners, the way in (ADR 27). French only:
    * the owners they are for are French and local. Never called a *formation*
    * or a training course: in France that names a regulated framework the
    * workshops do not use. No price, programme or date until they exist.
@@ -423,7 +423,7 @@ export interface ResumeContent {
     kicker: string;
     /**
      * What the hero used to promise, and still sells: the Takeover and the
-     * other Offers on a running application (ADR 26).
+     * other Offers on a running application (ADR 27).
      */
     title: string;
     /** Under the title, leading into the Client sentences. */
@@ -550,7 +550,7 @@ export interface ResumeContent {
    * than content to translate.
    */
   footer: {
-    /** The job title, beside the name (ADR 26). */
+    /** The job title, beside the name (ADR 27). */
     role: string;
     legalHeading: string;
     hostedBy: string;

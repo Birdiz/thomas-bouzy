@@ -13,7 +13,7 @@ interface Props {
 
 const { t, home } = Astro.props;
 /* The secondary button leads to the way in: the Workshops where this locale
-   has them, the Offers otherwise (ADR 26). */
+   has them, the Offers otherwise (ADR 27). */
 const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
 ---
 
@@ -24,7 +24,7 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
     <div class="hero__grid">
       <div class="hero__intro">
         {/* The job title Thomas says when he introduces himself, above the
-            promise (ADR 26): a reader who met him finds it on the first screen. */}
+            promise (ADR 27): a reader who met him finds it on the first screen. */}
         <p class="kicker hero__role">{t.hero.role}</p>
         {/* The name, then the promise, in one H1. The name is for search
             engines and screen readers only: the header already shows it, and

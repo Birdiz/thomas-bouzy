@@ -62,7 +62,7 @@ function walkStrings(value: unknown, path = '$', out = new Map<string, string>()
 
 /**
  * The home page's French-only sections, left out of the comparison: the
- * Workshops are for French owners and exist in French only (ADR 26), as the
+ * Workshops are for French owners and exist in French only (ADR 27), as the
  * Partners page does. Their own test below holds them to that.
  */
 function withoutFrenchOnly(content: unknown): unknown {
@@ -169,6 +169,18 @@ describe('French typography', () => {
       .filter(([, text]) => / [?:;!»]|« /.test(text))
       .map(([path, text]) => `${path}: ${text}`);
     expect(breakable).toEqual([]);
+  });
+
+  it('says vous to the reader, never tu', () => {
+    // ADR 26 reversed ADR 24's tu. A rebase from the voice brief, which still
+    // says tu, is the likeliest way for it to come back. Imperatives
+    // ("réserve") slip past a pronoun check; the pronouns and possessives do not.
+    const TU =
+      /(?<![\p{L}'’-])(?:tu|toi|ton|ta|tes|te|t['’](?=\p{L}))(?![\p{L}'’])|-(?:toi|tu)(?!\p{L})/iu;
+    const tutoie = [...walkStrings(fr)]
+      .filter(([, text]) => TU.test(text))
+      .map(([path, text]) => `${path}: ${text}`);
+    expect(tutoie).toEqual([]);
   });
 
   it('gives the French to the pages through RESUME only', () => {
@@ -878,7 +890,7 @@ describe('what each Offer page has to say (ADR 17)', () => {
   });
 });
 
-describe('the AI workshops (ADR 26)', () => {
+describe('the AI workshops (ADR 27)', () => {
   it('exist in French only, before any price, programme or date', () => {
     expect(fr.workshops).toBeDefined();
     expect((en as ResumeContent).workshops).toBeUndefined();
@@ -963,7 +975,7 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
   });
 
   it('names the one job title, and no other, wherever the site says who Thomas is', () => {
-    // ADR 26: the title a business owner hears in person is the one they read
+    // ADR 27: the title a business owner hears in person is the one they read
     // on the first screen, in the tab, under a shared link and in search. It
     // replaced "fullstack", which ADR 22 had made the identity.
     for (const [content, title] of [
@@ -1039,7 +1051,7 @@ describe('a site short enough to be read (ADR 18)', () => {
   // for words. Counted: what the page renders as prose, not its <head>, its
   // assistive-only strings, its structured data or its price labels.
   // The home page's ceiling rose from 1,200 to 1,400 with the Workshops
-  // section, the way in, and the old promise moved into the problem (ADR 26).
+  // section, the way in, and the old promise moved into the problem (ADR 27).
   const BUDGET: Record<string, number> = { home: 1400, partners: 220 };
   const OFFER_BUDGET = 400;
   const NOT_PROSE = /^\$\.(meta|a11y|schema|languages|footer|estimator|offerPage|offers)\b/;

@@ -474,7 +474,7 @@ a {
 
 /* — workshops ————————————————————————————————————————————————————————————— */
 
-/* The way in (ADR 26). It borrows the hero's blurb and buttons and the Offer
+/* The way in (ADR 27). It borrows the hero's blurb and buttons and the Offer
    pages' numbered cards, in the order an owner takes the levels: the CSS budget
    (ADR 6) had 22 bytes left. */
 .workshops {
@@ -494,7 +494,7 @@ a {
 }
 /* Smaller than a section title: it carries the old hero's whole promise, a
    sentence rather than a question, and the lead under it spaces the section
-   (ADR 26). */
+   (ADR 27). */
 .problem__title {
   font-size: clamp(26px, 2.6vw, 34px);
   max-width: 20ch;

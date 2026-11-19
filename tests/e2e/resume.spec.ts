@@ -182,7 +182,7 @@ test.describe('the page is not a CV', () => {
 
   test('leads the hero with the call, and offers the way in second', async ({ page }) => {
     // The way in is the Workshops in French, the Offers in English, where there
-    // are no Workshops (ADR 26).
+    // are no Workshops (ADR 27).
     for (const [path, book, second, anchor] of [
       ['/', 'Réserver un appel gratuit', 'Voir les ateliers', 'workshops'],
       ['/en/', 'Book a free call', 'See the offers', 'offers'],
@@ -475,7 +475,7 @@ test.describe('motion preferences', () => {
   });
 });
 
-test.describe('the first screen says who Thomas is (ADR 26)', () => {
+test.describe('the first screen says who Thomas is (ADR 27)', () => {
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
     const t = RESUME[locale];
@@ -491,7 +491,7 @@ test.describe('the first screen says who Thomas is (ADR 26)', () => {
   }
 });
 
-test.describe('the AI workshops, the way in (ADR 26)', () => {
+test.describe('the AI workshops, the way in (ADR 27)', () => {
   test('offers the call first, then an email to hear when sessions open', async ({ page }) => {
     const w = RESUME.fr.workshops;
     if (!w) throw new Error('The French home page has no Workshops');
@@ -528,7 +528,7 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
         sections.map((section) => section.id),
       );
       // The Workshops are the way in, before the software Offers, and exist
-      // in French only (ADR 26).
+      // in French only (ADR 27).
       const workshops = locale === 'fr' ? ['workshops'] : [];
       expect(order).toEqual(['top', ...workshops, 'problem', 'offers', 'work', 'contact']);
     });

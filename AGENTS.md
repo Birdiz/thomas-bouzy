@@ -24,8 +24,9 @@ repo: where a ticket needs such a fact, write "see the owner".
 - **Copy, prices and pages**: [README.md](README.md) names the single sources and
   what the tests hold in place. Career facts come from the pitch master, which
   lives outside the repo ([ADR 9](docs/adr/0009-the-pitch-master-owns-the-copy.md)).
-- **Voice**: the copy speaks in Thomas's voice and says *tu* in French
-  ([ADR 24](docs/adr/0024-the-site-says-tu.md)). The brief that defines the voice
+- **Voice**: the copy speaks in Thomas's voice
+  ([ADR 24](docs/adr/0024-the-site-says-tu.md)) and says *vous* in French
+  ([ADR 26](docs/adr/0026-the-site-says-vous.md)). The brief that defines the voice
   holds personal material, so it lives in `.context/` at the root of the main
   checkout, ignored by git. A clone or worktree does not have it: see the owner.
 

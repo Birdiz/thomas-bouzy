@@ -115,7 +115,7 @@ A hands-on session where a business owner applies AI to their own company and
 leaves with something concrete, at three levels: a discovery morning, a one-day
 workshop, then support on the owner's real case. The way in for the owners of
 small and mid-sized companies, and it may lead to the software Thomas builds:
-the site says so. Not yet an Offer: it has no price, programme or date (ADR 26).
+the site says so. Not yet an Offer: it has no price, programme or date (ADR 27).
 _Avoid_: formation, training, course (in France a *formation* is a regulated
 framework the workshops do not use)
 
