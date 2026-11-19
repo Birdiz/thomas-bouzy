@@ -8,6 +8,7 @@ import ProblemSection from '../components/ProblemSection.astro';
 import ReferencesSection from '../components/ReferencesSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import WorkshopsSection from '../components/WorkshopsSection.astro';
 import { RESUME } from '../content/index.ts';
 import { portrait } from '../lib/portrait.ts';
 import { pageGraph } from '../lib/structured-data.ts';
@@ -36,7 +37,9 @@ const image = portrait && (await getImage({ src: portrait, width: 580, height: 5
   <SiteHeader route={route} t={t} />
   <main id="main">
     <Hero t={t} home={route.path} />
-    {/* Problem → invitation → offer → proof → contact, with the person. */}
+    {/* The Workshops, the way in (ADR 26), then problem → invitation →
+        offer → proof → contact, with the person. */}
+    <WorkshopsSection t={t} />
     <ProblemSection locale={locale} t={t} />
     <AuditCall locale={locale} t={t} />
     <OffersSection locale={locale} t={t} />

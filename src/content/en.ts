@@ -6,9 +6,9 @@ import type { ResumeContent } from './types.ts';
  */
 export const en = {
   meta: {
-    title: 'Thomas Bouzy — Freelance full-stack consultant',
+    title: 'Thomas Bouzy — Software engineer',
     description:
-      'Full-stack, with backend expertise in PHP/Symfony: I take over, stabilise and upgrade the business applications your company runs on, without downtime. Remote, or on site in eastern France. Public prices.',
+      'Software engineer: I build tools for the core business of small and mid-sized companies, and I take over, stabilise and upgrade the business applications they run on, without downtime. Remote, or on site in eastern France.',
   },
 
   a11y: {
@@ -31,11 +31,15 @@ export const en = {
   },
 
   hero: {
-    title: ['I take over your business software', 'and keep it moving.'],
+    role: 'Software engineer',
+    title: [
+      'I build tools for the core business of small and mid-sized companies,',
+      'starting by showing their owners what AI changes in it.',
+    ],
     blurb:
-      'Even the one nobody dares touch any more. Without stopping it, without rewriting everything.',
+      'Then the software itself: built, taken over, made reliable and kept up under load, each at a published price.',
     ctaBook: 'Book a free call',
-    ctaOffers: 'See the offers',
+    ctaSecondary: 'See the offers',
   },
 
   problem: {
@@ -43,8 +47,10 @@ export const en = {
       text: 'Not sure?',
       cta: 'Start with an audit',
     },
-    kicker: 'The problem',
-    title: 'Do any of these sound familiar?',
+    kicker: 'Already have the software?',
+    title:
+      'I take over your business software and keep it moving, even the one nobody dares touch any more.',
+    lead: 'Without stopping it, without rewriting everything. Do any of these sound familiar?',
     pause: 'Pause',
     goTo: 'Sentence {n}',
   },
@@ -254,7 +260,7 @@ export const en = {
     title: 'Who picks up',
     paragraphs: [
       'What I enjoy is the problem: understanding what your business needs and meeting it. The tech comes second. Some find me too direct: for you, that means advice with no sugar coating.',
-      'My home ground is PHP and Symfony, then Node.js, TypeScript and React; Python, in personal projects. I have taught at university, and I live in the Grand Est countryside.',
+      'I am a software engineer. My home ground is PHP and Symfony, then Node.js, TypeScript and React; Python, in personal projects. I taught object-oriented programming at the University of Reims in 2016–2017. I live in the Grand Est countryside.',
     ],
     more: 'Read more',
     careerLine: 'Hiring rather than contracting?',
@@ -268,7 +274,7 @@ export const en = {
   ],
 
   schema: {
-    jobTitle: 'Freelance full-stack developer',
+    jobTitle: 'Software engineer',
     knowsAbout: [
       'PHP',
       'Symfony',
@@ -754,7 +760,7 @@ export const en = {
     },
     reinforcement: {
       meta: {
-        title: 'Part-time full-stack tech lead / architect, freelance',
+        title: 'Part-time tech lead / architect, PHP/Symfony and Node.js',
         description:
           'A senior lead or architect inside your team, one to four days a week: PHP/Symfony, Node.js/TypeScript, React. Published day rate.',
       },
@@ -833,19 +839,19 @@ export const en = {
 
   aboutPage: {
     meta: {
-      title: 'About Thomas Bouzy, freelance developer in eastern France',
+      title: 'About Thomas Bouzy, software engineer in eastern France',
       description:
-        'Who picks up when you call: a developer who likes racking his brains over your problem. Direct, keen to explain, based in the French countryside.',
+        'Who picks up when you call: a software engineer who likes racking his brains over your problem. Direct, keen to explain, based in the French countryside.',
     },
     kicker: 'About',
     title: 'Who picks up',
-    plain: 'I do this job because I like racking my brains.',
+    plain: 'I am a software engineer, and I do this job because I like racking my brains.',
     paragraphs: [
       "A stock count that never adds up, an app nobody dares touch any more: give me that and I won't let go.",
       'So no, I am not "passionate about tech". Tech is my tool. What interests me is what your business needs, and how to put it in place without overengineering it.',
       'For a long time I worked in teams chasing perfect code. I ended up tired of it. I would rather think about the need.',
       'People say I am sometimes too direct. It is true. If something is off in your project, you will know. (I sugar-coat a little better than I used to, promise.)',
-      "I also like explaining. For many people, the internet is still a black box, and that's fine. I have taught at university and trained juniors. I still love lifting the lid.",
+      "I also like explaining. For many people, the internet is still a black box, and that's fine. I have taught object-oriented programming at the University of Reims and trained juniors. I still love lifting the lid.",
       [
         'I live in the countryside, in the Grand Est. I have worked remotely for eight years. And I am glad to come to you: nothing beats a day on site to understand how you work. The rest of the time, I tinker. ',
         { href: 'https://quart-de-tour.fr', label: 'Quart de tour' },
@@ -874,6 +880,7 @@ export const en = {
   },
 
   footer: {
+    role: 'Software engineer',
     legalHeading: 'Legal notice',
     hostedBy: 'Hosted by',
     siretLabel: 'SIRET',

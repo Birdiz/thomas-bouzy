@@ -1,0 +1,49 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { CONTACT } from '../site.ts';
+
+interface Props {
+  t: ResumeContent;
+}
+
+const { t } = Astro.props;
+const w = t.workshops;
+/* An email rather than a form: the site is static and sends nothing anywhere
+   (ADR 7). The subject says what the email is for, nothing about who sends it. */
+const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`;
+---
+
+{/* The way in (ADR 26): right after the promise, before the software Offers.
+    No price, programme or date, because none exists yet; and the section says
+    plainly that a workshop can lead to the tools, so it never reads as hidden
+    prospecting. French only, like the owners it is for. */}
+{
+  w && (
+    <section id="workshops" class="workshops container">
+      <p class="kicker">{w.kicker}</p>
+      <h2 class="section-title">{w.title}</h2>
+      <p class="hero__blurb">{w.plain}</p>
+
+      <ol class="offer__cards offer__delivered workshops__levels">
+        {w.levels.map((level) => (
+          <li class="offer__card">
+            <h3 class="offer__card-title">{level.title}</h3>
+            <p class="offer__card-text">{level.text}</p>
+          </li>
+        ))}
+      </ol>
+
+      <p class="offers__partners">{w.status}</p>
+      <p class="hero__blurb">{w.builder}</p>
+
+      <div class="hero__ctas">
+        <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+          {w.cta}
+        </a>
+        <span class="problem__mode-text">
+          {w.notify.text} <a href={notify}>{w.notify.label}</a>
+        </span>
+      </div>
+    </section>
+  )
+}

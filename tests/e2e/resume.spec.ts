@@ -180,10 +180,12 @@ test.describe('the page is not a CV', () => {
     });
   }
 
-  test('leads the hero with the call, and offers the Offers second', async ({ page }) => {
-    for (const [path, book, offers] of [
-      ['/', 'Réserver un appel gratuit', 'Voir les offres'],
-      ['/en/', 'Book a free call', 'See the offers'],
+  test('leads the hero with the call, and offers the way in second', async ({ page }) => {
+    // The way in is the Workshops in French, the Offers in English, where there
+    // are no Workshops (ADR 26).
+    for (const [path, book, second, anchor] of [
+      ['/', 'Réserver un appel gratuit', 'Voir les ateliers', 'workshops'],
+      ['/en/', 'Book a free call', 'See the offers', 'offers'],
     ] as const) {
       await gotoHome(page, path);
       const ctas = page.locator('.hero a');
@@ -192,10 +194,10 @@ test.describe('the page is not a CV', () => {
       await expect(ctas.first()).toHaveText(book);
       await expect(ctas.first()).toHaveAttribute('href', CONTACT.booking);
       await expect(ctas.first()).toHaveClass(/btn-primary/);
-      await expect(ctas.nth(1)).toHaveText(offers);
+      await expect(ctas.nth(1)).toHaveText(second);
       await ctas.nth(1).click();
-      await expect(page).toHaveURL(new RegExp(`${path}#offers$`));
-      await expect(page.locator('#offers')).toBeInViewport();
+      await expect(page).toHaveURL(new RegExp(`${path}#${anchor}$`));
+      await expect(page.locator(`#${anchor}`)).toBeInViewport();
     }
   });
 
@@ -473,16 +475,62 @@ test.describe('motion preferences', () => {
   });
 });
 
+test.describe('the first screen says who Thomas is (ADR 26)', () => {
+  for (const locale of ['fr', 'en'] as const) {
+    const home = homePath(locale);
+    const t = RESUME[locale];
+
+    test(`shows the job title above the promise on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const role = page.locator('.hero__role');
+      await expect(role).toHaveText(t.hero.role);
+      await expect(role).toBeInViewport();
+      await expect(page.locator('h1')).toBeInViewport();
+      await expect(page.locator('.site-footer__role')).toHaveText(t.footer.role);
+    });
+  }
+});
+
+test.describe('the AI workshops, the way in (ADR 26)', () => {
+  test('offers the call first, then an email to hear when sessions open', async ({ page }) => {
+    const w = RESUME.fr.workshops;
+    if (!w) throw new Error('The French home page has no Workshops');
+    await gotoHome(page, '/');
+    const section = page.locator('#workshops');
+    await expect(section.locator('h2')).toHaveText(w.title);
+    await expect(section.locator('.offer__card')).toHaveCount(3);
+    await expect(section).toContainText(w.builder);
+    const primary = section.locator('.btn-primary');
+    await expect(primary).toHaveCount(1);
+    await expect(primary).toHaveAttribute('href', CONTACT.booking);
+    await expect(section.getByRole('link', { name: w.notify.label })).toHaveAttribute(
+      'href',
+      `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`,
+    );
+    // The header reaches it from every French page.
+    await expect(page.locator(`.site-nav a[href="/#workshops"]`)).toHaveText(w.nav);
+  });
+
+  test('is absent from the English home page and its header', async ({ page }) => {
+    await gotoHome(page, '/en/');
+    await expect(page.locator('#workshops')).toHaveCount(0);
+    await expect(page.locator('.site-nav a[href$="#workshops"]')).toHaveCount(0);
+  });
+});
+
 test.describe('the home page sells the Offers (ADR 14)', () => {
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
 
-    test(`reads problem, offers, proof, contact on ${home}`, async ({ page }) => {
+    test(`reads workshops, problem, offers, proof, contact on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const order = await page.$$eval('main > section[id]', (sections) =>
         sections.map((section) => section.id),
       );
-      expect(order).toEqual(['top', 'problem', 'offers', 'work', 'contact']);
+      // The Workshops are the way in, before the software Offers, and exist
+      // in French only (ADR 26).
+      const workshops = locale === 'fr' ? ['workshops'] : [];
+      expect(order).toEqual(['top', ...workshops, 'problem', 'offers', 'work', 'contact']);
     });
 
     test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({
