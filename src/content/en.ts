@@ -32,12 +32,8 @@ export const en = {
 
   hero: {
     role: 'Software engineer',
-    title: [
-      'I build tools for the core business of small and mid-sized companies,',
-      'starting by showing their owners what AI changes in it.',
-    ],
-    blurb:
-      'Then the software itself: built, taken over, made reliable and kept up under load, each at a published price.',
+    title: 'I build tools for the core business of small and mid-sized companies',
+    blurb: 'Starting by showing their owners what AI changes in it.',
     ctaBook: 'Book a free call',
     ctaSecondary: 'See the offers',
   },

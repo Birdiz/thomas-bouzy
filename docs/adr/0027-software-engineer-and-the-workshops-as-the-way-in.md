@@ -40,14 +40,16 @@ This overrides:
 - ADR 22, which made "fullstack" the identity. Its three levels of technology
   naming stay; only the identity changes.
 
-**The hero is one sentence, word for word:** « J'outille le métier des PME, en
-commençant par montrer aux dirigeants ce que l'IA y change. » In English: "I
-build tools for the core business of small and mid-sized companies, starting
-by showing their owners what AI changes in it." *PME* covers mid-sized
-companies too, and their *dirigeants* are usually their owners, so the English
-says both. The sentence is in the third person, so it reads the same whatever
-the address; the rest of the French says *vous*
-([ADR 26](0026-the-site-says-vous.md)).
+**The hero is a title and a subtitle, word for word:** the H1 says « J'outille
+le métier des PME » and the line under it « En commençant par montrer aux
+dirigeants ce que l'IA y change. » In English: "I build tools for the core
+business of small and mid-sized companies", then "Starting by showing their
+owners what AI changes in it." They were first one sentence in the H1, which
+was far too long for a title; the subtitle replaced the paragraph that sat
+under it. *PME* covers mid-sized companies too, and their *dirigeants* are
+usually their owners, so the English says both. The words are in the third
+person, so they read the same whatever the address; the rest of the French
+says *vous* ([ADR 26](0026-the-site-says-vous.md)).
 
 **The old promise moves into the problem section**, whose kicker, H2 and lead
 now say it: "Ton logiciel existe déjà ?", then « Je reprends et fais évoluer tes
@@ -65,8 +67,9 @@ and before the software Offers.** They are the way in, so:
   The section says they are being designed. Its primary button is the free
   call, and an email lets an owner ask to hear when the first sessions open: the
   site is static and sends nothing anywhere ([ADR 7](0007-serving-the-site-ourselves-on-railway.md));
-- it says plainly that Thomas also builds tools and that a workshop can lead
-  there. A workshop must never look like hidden prospecting.
+- it does not add that Thomas also builds tools: the hero already says so on
+  the first screen, and a line saying a workshop is not there to sell them
+  read as a sales pitch. A workshop must never look like hidden prospecting.
 
 **They are never called a *formation*, nor a "training course".** In France a
 *formation* names a regulated framework the workshops do not use. They are

@@ -118,7 +118,7 @@ describe('EN/FR parity', () => {
       '$.nav.work',
       '$.nav.about',
       '$.nav.contact',
-      '$.hero.title[0]',
+      '$.hero.title',
       '$.hero.blurb',
       '$.hero.role',
       '$.hero.ctaSecondary',
@@ -898,12 +898,6 @@ describe('the AI workshops (ADR 27)', () => {
     for (const [path, text] of walkStrings(fr.workshops)) {
       expect(text, `a price or a date at ${path}`).not.toMatch(/€|\d/);
     }
-  });
-
-  it('say plainly that Thomas also builds the tools', () => {
-    // A workshop must never look like hidden prospecting.
-    expect(fr.workshops.builder).toMatch(/ingénieur logiciel/i);
-    expect(fr.workshops.builder).toMatch(/outils/);
   });
 
   it('are never called a formation or a training course, anywhere', () => {

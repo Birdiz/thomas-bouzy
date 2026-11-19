@@ -33,12 +33,8 @@ export const fr = {
 
   hero: {
     role: 'Ingénieur logiciel',
-    title: [
-      "J'outille le métier des PME,",
-      "en commençant par montrer aux dirigeants ce que l'IA y change.",
-    ],
-    blurb:
-      "D'abord des ateliers où vous appliquez l'IA à votre propre entreprise. Ensuite, si vous le voulez, les outils qui vont avec.",
+    title: "J'outille le métier des PME",
+    blurb: "En commençant par montrer aux dirigeants ce que l'IA y change.",
     ctaBook: 'Réserver un appel gratuit',
     ctaSecondary: 'Voir les ateliers',
   },
@@ -64,8 +60,6 @@ export const fr = {
       },
     ],
     status: 'Les ateliers sont en préparation : pas encore de date, de programme ni de prix.',
-    builder:
-      'Je suis aussi ingénieur logiciel : je construis des outils pour le métier des PME. Un atelier peut mener là, si vous le voulez. Il ne sert pas à vous le vendre.',
     cta: 'Réserver un appel gratuit',
     notify: {
       text: 'Vous voulez être prévenu des premières sessions ?',
