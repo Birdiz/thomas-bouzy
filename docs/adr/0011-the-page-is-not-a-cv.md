@@ -1,6 +1,6 @@
 # 11. The page is not a CV; the PDF is
 
-- Status: accepted; amended by [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and by its own postscript, 2026-10-03
+- Status: accepted; amended by [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and by its own postscript, 2026-10-03; job title restored by [ADR 26](0026-software-engineer-and-the-workshops-as-the-way-in.md), 2026-11-19
 - Date: 2026-08-31
 
 ## Context

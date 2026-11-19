@@ -110,6 +110,15 @@ Thomas as a part-time lead or architect inside the Client's team, billed by the 
 at most four days a week.
 _Avoid_: staff augmentation, fractional CTO, régie (as a term)
 
+**Workshop** (FR *Atelier IA*):
+A hands-on session where a business owner applies AI to their own company and
+leaves with something concrete, at three levels: a discovery morning, a one-day
+workshop, then support on the owner's real case. The way in for the owners of
+small and mid-sized companies, and it may lead to the software Thomas builds:
+the site says so. Not yet an Offer: it has no price, programme or date (ADR 26).
+_Avoid_: formation, training, course (in France a *formation* is a regulated
+framework the workshops do not use)
+
 **Day rate** (FR *Taux journalier*):
 The one price of a day of Thomas's work, the same for a Client and for a Partner.
 _Avoid_: TJM (as a term), partner rate
@@ -146,6 +155,8 @@ _Avoid_: value, belief, approach
 - An **Achievement** proves a capability; an **Offer** sells it.
 - An **Engagement** is an instance of one **Offer** for one **Client**.
 - Every **Segment** can buy the **Entry offer**; the other Offers are not all for every Segment.
+- A **Workshop** comes before the **Offers** for an owner with no software problem
+  to name yet; it may lead to a **Build** or another Offer, and never hides it.
 - An **Audit** credits a fixed amount, the express Audit's fee, against the
   **Engagement** that follows it.
 - A **Takeover** always begins with the test safety net, before any change.
