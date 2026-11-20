@@ -1,3 +1,4 @@
+import { CONTACT } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 /**
@@ -152,6 +153,60 @@ test('serves one URL per page, and 301s the other spellings', async ({ baseURL, 
   // The canonical spellings still answer directly.
   for (const path of PATHS) {
     expect((await request.get(path, { maxRedirects: 0 })).status()).toBe(200);
+  }
+});
+
+test('sends the addresses people guess to their section of the home page', async ({
+  baseURL,
+  page,
+  request,
+}) => {
+  // The audit found them answering 404 (ADR 29). None is a page: a page
+  // registered at one of them would be shadowed by the redirect.
+  const shortcuts: Record<string, string> = {
+    '/offres/': '/#offers',
+    '/tarifs/': '/#offers',
+    '/ateliers/': '/#workshops',
+    '/contact/': '/#contact',
+    '/en/offers/': '/en/#offers',
+  };
+
+  for (const [from, to] of Object.entries(shortcuts)) {
+    expect(PATHS, `${from} is a registered page`).not.toContain(from);
+    for (const spelling of [from, from.slice(0, -1)]) {
+      const response = await request.get(spelling, { maxRedirects: 0 });
+      expect(response.status(), `${spelling} was not redirected`).toBe(301);
+      expect(response.headers().location).toBe(to);
+      expect(response.headers()['cache-control']).toBe('no-store');
+    }
+
+    // And the section is there to land on.
+    await page.goto(from);
+    expect(page.url()).toBe(new URL(to, baseURL).href);
+    await expect(page.locator(new URL(to, baseURL).hash)).toHaveCount(1);
+  }
+
+  // The query string survives, before the fragment where it still means something.
+  const tagged = await request.get('/offres/?utm_source=card', { maxRedirects: 0 });
+  expect(tagged.headers().location).toBe('/?utm_source=card#offers');
+});
+
+test('counts the booking click on its way to cal.com, and nothing caches the hop', async ({
+  request,
+}) => {
+  // Every "book a call" button links to the hop (src/site.ts). A redirect kept
+  // by Cloudflare or the browser would answer the next click without the
+  // server, which would never count it (ADR 29).
+  expect(CONTACT.booking).toBe('/rdv/');
+  for (const response of [
+    await request.get(CONTACT.booking, { maxRedirects: 0 }),
+    await request.head(CONTACT.booking, { maxRedirects: 0 }),
+    // Nothing a visitor sends is passed on to cal.com.
+    await request.get(`${CONTACT.booking}?name=x`, { maxRedirects: 0 }),
+  ]) {
+    expect(response.status()).toBe(302);
+    expect(response.headers().location).toBe('https://cal.com/thomas-bouzy/30min');
+    expect(response.headers()['cache-control']).toBe('no-store');
   }
 });
 

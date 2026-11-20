@@ -8,6 +8,9 @@
  * ships: the same headers, the same compression, the same redirects, the same
  * 404.
  *
+ * It also counts visits, without a cookie: page views and clicks through to
+ * the booking page, one line in the log a day (ADR 29, scripts/visit-count.mjs).
+ *
  *   node scripts/serve-dist.mjs [--port 4322] [--host 0.0.0.0] [--root dist]
  *
  * PORT and HOST from the environment win over the flags, which is what Railway
@@ -19,8 +22,9 @@ import { createHash } from 'node:crypto';
 import { createReadStream, readFileSync } from 'node:fs';
 import { readdir, stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
-import { extname, join, normalize, resolve, sep } from 'node:path';
+import { extname, join, normalize, relative, resolve, sep } from 'node:path';
 import { createBrotliCompress, createGzip, constants as zlib } from 'node:zlib';
+import { createVisitCount, isBot, referringPath } from './visit-count.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name, fallback) => {
@@ -53,10 +57,43 @@ const INDEXABLE = /^(1|true|yes)$/i.test((process.env.SITE_INDEXABLE ?? '').trim
 const DOMAIN = process.env.SITE_DOMAIN?.trim() || 'thomasbouzy.dev';
 const RAILWAY_HOSTNAME = /\.up\.railway\.app$/i;
 
+/** The name a request was sent to, without its port. */
+const hostnameOf = (req) => (req.headers.host ?? '').replace(/:\d+$/, '').toLowerCase();
+
 function redirectToDomain(req) {
-  const hostname = (req.headers.host ?? '').replace(/:\d+$/, '').toLowerCase();
+  const hostname = hostnameOf(req);
   return RAILWAY_HOSTNAME.test(hostname) && hostname !== DOMAIN.toLowerCase();
 }
+
+/**
+ * The booking page, behind a hop of our own (ADR 29). CONTACT.booking in
+ * src/site.ts sends every "book a call" button here; the server counts the
+ * click and answers with a redirect to cal.com. A 302 with no-store, so that
+ * neither Cloudflare nor the browser answers the next click without us. Its
+ * query string is dropped: nothing a visitor sends is passed on to cal.com.
+ */
+const BOOKING_PATH = '/rdv/';
+const BOOKING_URL = 'https://cal.com/thomas-bouzy/30min';
+
+/**
+ * Addresses people type, or trim a URL down to, that have no page of their own:
+ * each goes to the section of the home page that answers it (ADR 29). None of
+ * them is in src/routes.ts; a page registered at one of these paths would be
+ * shadowed, which the e2e suite catches, since it expects a 200 from every page.
+ *
+ * A 301 like every other redirect here, and with no-store like them: no browser
+ * keeps it, so the day the Workshops get a page of their own (ADR 27), removing
+ * the line is all it takes.
+ */
+const SHORTCUTS = new Map([
+  ['/offres/', '/#offers'],
+  // The prices are on the offer cards.
+  ['/tarifs/', '/#offers'],
+  ['/ateliers/', '/#workshops'],
+  ['/contact/', '/#contact'],
+  // The parent of the English offer pages: the same dead end as /offres/.
+  ['/en/offers/', '/en/#offers'],
+]);
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -105,6 +142,71 @@ async function collectInlineHashes(dir) {
 }
 
 const inlineHashes = await collectInlineHashes(root);
+
+/**
+ * Every page, spelled as its URL: one per directory index in the build. A view
+ * is counted for these and nothing else — not 404.html, not an asset.
+ */
+async function collectPages(dir) {
+  const pages = new Set();
+  for (const entry of await readdir(dir, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile() || entry.name !== 'index.html') continue;
+    const folder = relative(dir, entry.parentPath ?? entry.path);
+    pages.add(folder === '' ? '/' : `/${folder.split(sep).join('/')}/`);
+  }
+  return pages;
+}
+
+const PAGES = await collectPages(root);
+
+const visits = createVisitCount();
+
+/**
+ * Whether a request is one the visit count looks at: a GET that reached the
+ * server under the site's own name. Not localhost, not the e2e suite, not
+ * Railway's healthcheck, which comes in under its own name; not HEAD, which
+ * link checkers and monitors send; and not a prefetch, which is the browser's
+ * guess at a page nobody has opened yet.
+ */
+function countable(req) {
+  if (req.method !== 'GET' || hostnameOf(req) !== DOMAIN.toLowerCase()) return false;
+  const purpose = `${req.headers['sec-purpose'] ?? ''} ${req.headers.purpose ?? ''}`;
+  return !/prefetch/i.test(purpose);
+}
+
+/** Where a click through to the booking page came from. */
+function bookingSource(req) {
+  const path = referringPath(req.headers.referer, req.headers.host);
+  if (path !== null) return PAGES.has(path) ? path : '(other)';
+  // Typed, scanned from a QR code, opened from an app, or a browser that
+  // withholds the Referer: "direct". Another site's address is not kept.
+  return req.headers.referer ? '(external)' : '(direct)';
+}
+
+function countBooking(req) {
+  if (!countable(req)) return;
+  if (isBot(req.headers['user-agent'])) visits.bot();
+  else visits.booking(bookingSource(req));
+}
+
+/**
+ * A page view, or a page asked for that does not exist. A revalidation that
+ * ends in a 304 is a view too: the visitor is looking at the page.
+ */
+function countRequest(req, pathname, hit) {
+  if (!countable(req)) return;
+  const page = hit !== null && PAGES.has(pathname);
+  // A navigation asks for HTML; a missing favicon or image does not.
+  const deadEnd = hit === null && /text\/html/.test(req.headers.accept ?? '');
+  if (!page && !deadEnd) return;
+  if (isBot(req.headers['user-agent'])) {
+    visits.bot();
+  } else if (page) {
+    visits.view(pathname, referringPath(req.headers.referer, req.headers.host) === null);
+  } else {
+    visits.notFound(pathname);
+  }
+}
 
 const CSP = [
   "default-src 'none'",
@@ -305,6 +407,25 @@ async function handle(req, res) {
   }
 
   const canonical = canonicalise(decoded);
+
+  // The booking hop and the shortcuts come before the spelling redirect below,
+  // so `/offres`, `//offres/` or `/fr/offres/` reach the section in one hop.
+  const slashed = canonical.endsWith('/') ? canonical : `${canonical}/`;
+  if (slashed === BOOKING_PATH) {
+    countBooking(req);
+    send(res, 302, { location: BOOKING_URL, 'cache-control': 'no-store' }, '');
+    return;
+  }
+  const shortcut = SHORTCUTS.get(slashed);
+  if (shortcut) {
+    // The query string goes before the fragment, or the browser reads it as
+    // part of the fragment.
+    const hash = shortcut.indexOf('#');
+    const target = `${shortcut.slice(0, hash)}${search}${shortcut.slice(hash)}`;
+    send(res, 301, { location: target, 'cache-control': 'no-store' }, '');
+    return;
+  }
+
   const location = encodeURI(canonical);
   if (location !== rawPath) {
     // Never redirect somewhere that would redirect again. `location` is what the
@@ -332,6 +453,8 @@ async function handle(req, res) {
     );
     return;
   }
+
+  countRequest(req, canonical, hit);
 
   const file = hit ?? (await resolveFile('/404.html'));
   if (!file) {
@@ -428,18 +551,41 @@ process.on('unhandledRejection', (reason) => {
   console.error('Unhandled rejection (serving continues):', reason);
 });
 // An uncaught exception is a different animal: the process may be mid-anything.
-// Log it and let Railway restart us.
+// Log it, with the day's visits so far, and let Railway restart us.
 process.on('uncaughtException', (error) => {
   console.error('Uncaught exception, exiting:', error);
+  try {
+    visits.flush();
+  } catch {
+    // The exit matters more than the count.
+  }
   process.exit(1);
 });
 
+// A day closes at midnight even when nobody visits around it.
+setInterval(() => visits.tick(), 60_000).unref();
+
+// Railway stops a deployment with SIGTERM. The day so far is written first, or
+// every deploy would lose it; then the server stops taking requests and lets
+// the ones in flight finish, for a moment.
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.once(signal, () => {
+    visits.flush();
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 2_000).unref();
+  });
+}
+
 server.listen(port, host, () => {
-  console.log(`Serving ${root} on http://${host}:${port}`);
+  // The port actually bound: PORT=0 asks the system for a free one.
+  console.log(`Serving ${root} on http://${host}:${server.address().port}`);
   console.log(
     `CSP pinned to ${inlineHashes.scripts.length} inline script and ${inlineHashes.styles.length} inline style hash(es).`,
   );
   console.log(
     INDEXABLE ? 'Indexable: crawlers are welcome.' : 'Not indexable: X-Robots-Tag noindex.',
+  );
+  console.log(
+    `Counting visits to ${DOMAIN}: one "visits" line a day at midnight Paris time, and one on shutdown.`,
   );
 });
