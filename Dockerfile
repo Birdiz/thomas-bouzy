@@ -54,7 +54,10 @@ RUN addgroup --system --gid 1001 web \
   && adduser --system --uid 1001 --ingroup web web
 
 COPY --from=builder --chown=web:web /app/dist ./dist
+# The server and the one module it imports (tests/visit-count.spec.ts checks
+# that every local import is copied here).
 COPY --from=builder --chown=web:web /app/scripts/serve-dist.mjs ./scripts/serve-dist.mjs
+COPY --from=builder --chown=web:web /app/scripts/visit-count.mjs ./scripts/visit-count.mjs
 
 USER web
 EXPOSE 8080

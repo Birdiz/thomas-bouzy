@@ -64,11 +64,13 @@ export const CONTACT = {
   phoneDisplay: { fr: '06 32 13 45 47', en: '+33 6 32 13 45 47' },
   linkedin: 'https://www.linkedin.com/in/thomas-bouzy',
   /**
-   * The 30-minute booking page. Always a plain outbound link, never an embed:
-   * an embed would need a third-party frame and script in a CSP that is
+   * The 30-minute booking page, through a hop of our own: the server counts
+   * the click, then redirects to cal.com/thomas-bouzy/30min (ADR 29, see
+   * BOOKING_URL in scripts/serve-dist.mjs). Always a plain link, never an
+   * embed: an embed would need a third-party frame and script in a CSP that is
    * hash-only, and would make a request leave the origin on load (ADR 17).
    */
-  booking: 'https://cal.com/thomas-bouzy/30min',
+  booking: '/rdv/',
   /* Same handle as the contact address, which is the point: `birdiz` reads as
      a pseudonym on its own, and as an identity once the profile it belongs to
      is one click away. */

@@ -1,4 +1,5 @@
 import { ROUTES } from '../../src/routes.ts';
+import { CONTACT } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 /** Where the two CV PDFs used to be served, before they left the site. */
@@ -40,6 +41,9 @@ for (const path of PATHS) {
 
     const broken: string[] = [];
     for (const url of urls) {
+      // The booking link is a hop to cal.com (ADR 29): following it would put a
+      // third party inside the suite. serving.spec.ts asserts where it leads.
+      if (url === CONTACT.booking) continue;
       // A bare fragment is the current document.
       const target = url.startsWith('#') ? path : url;
       const response = await request.get(target);
