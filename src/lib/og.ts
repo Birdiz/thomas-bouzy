@@ -37,7 +37,7 @@ export function ogCard(route: Route): OgCard {
     return {
       src,
       title: SITE.author,
-      line: t.hero.title.join(' '),
+      line: t.hero.title,
       foot: SIGNATURE[locale],
       home: true,
     };

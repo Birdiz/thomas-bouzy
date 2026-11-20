@@ -401,17 +401,13 @@ a {
 .hero__name {
   margin: 0 0 22px;
 }
-/* The promise, inside the H1 under the name, at display size. Two lines,
-   each of which may wrap again on a narrow screen. */
+/* The promise, inside the H1 under the name, at display size. */
 .hero__promise {
   display: block;
   font-size: clamp(34px, 4.4vw, 58px);
   line-height: 1.02;
   letter-spacing: -0.02em;
   color: var(--color-text);
-}
-.hero__promise-line {
-  display: block;
   text-wrap: pretty;
 }
 

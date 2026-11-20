@@ -370,13 +370,13 @@ export interface ResumeContent {
     /** The job title, set small above the H1: "Ingénieur logiciel". */
     role: string;
     /**
-     * The promise, rendered in the H1 after the name, as two lines: the break
-     * is part of the wording, so it is written here rather than left to the
-     * browser. Held to the plain-line rule, like the blurb.
+     * The promise, rendered in the H1 after the name: short, because it is a
+     * title (ADR 27). Held to the plain-line rule, like the blurb.
      */
-    title: readonly [string, string];
+    title: string;
     /**
-     * Written for the least technical reader (ADR 14), so it is held to the
+     * The subtitle under the H1, which finishes the promise (ADR 27). Written
+     * for the least technical reader (ADR 14), so it is held to the
      * plain-line rule: no `schema.knowsAbout` term, and short.
      */
     blurb: string;
@@ -405,8 +405,6 @@ export interface ResumeContent {
     levels: readonly [Titled, Titled, Titled];
     /** Where the workshops stand: being designed, no date or price yet. */
     status: string;
-    /** That Thomas also builds tools, and that a workshop may lead there. Said, never hidden. */
-    builder: string;
     /** The primary button: the 30-minute call. */
     cta: string;
     /** For the owner who wants to hear when the first sessions open: an email. */

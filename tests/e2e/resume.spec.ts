@@ -53,7 +53,7 @@ test.describe('routing and locales', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
     // The name, then the promise, in the one H1 (ADR 18).
     await expect(page.locator('h1')).toContainText('Thomas Bouzy');
-    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title.join(' '));
+    await expect(page.locator('h1')).toContainText(RESUME.fr.hero.title);
     await expect(page.getByRole('heading', { name: RESUME.fr.work.title })).toBeVisible();
 
     await gotoHome(page, '/en/');
@@ -499,7 +499,6 @@ test.describe('the AI workshops, the way in (ADR 27)', () => {
     const section = page.locator('#workshops');
     await expect(section.locator('h2')).toHaveText(w.title);
     await expect(section.locator('.offer__card')).toHaveCount(3);
-    await expect(section).toContainText(w.builder);
     const primary = section.locator('.btn-primary');
     await expect(primary).toHaveCount(1);
     await expect(primary).toHaveAttribute('href', CONTACT.booking);

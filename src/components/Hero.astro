@@ -31,9 +31,7 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
             twice in the first screen is once too many. */}
         <h1 class="hero__name">
           <span class="visually-hidden">{SITE.author} — </span>
-          <span class="hero__promise">
-            {t.hero.title.map((line) => <span class="hero__promise-line">{line} </span>)}
-          </span>
+          <span class="hero__promise">{t.hero.title}</span>
         </h1>
         <p class="hero__blurb">{t.hero.blurb}</p>
 
