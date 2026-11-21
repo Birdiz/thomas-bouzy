@@ -1,4 +1,6 @@
 ---
+import SiteHeader from '../components/SiteHeader.astro';
+import { RESUME } from '../content/index.ts';
 import { homePath } from '../routes.ts';
 import { SITE } from '../site.ts';
 import '../styles/fonts.css';
@@ -7,8 +9,12 @@ import '../styles/app.css';
 
 // A 404 has no locale — the URL that produced it told us nothing. So it says
 // its piece twice, briefly, and offers the way back in both languages; French
-// first, as at the root of the site (ADR 15).
+// first, as at the root of the site (ADR 15). It wears the French header, menu
+// and booking button included, and offers four ways back in rather than a
+// dead end (ADR 28).
 const title = 'Page introuvable · Page not found';
+const t = RESUME.fr;
+const home = homePath('fr');
 ---
 
 <!doctype html>
@@ -35,6 +41,8 @@ const title = 'Page introuvable · Page not found';
     />
   </head>
   <body>
+    <a class="skip-link" href="#main">{t.a11y.skipToContent}</a>
+    <SiteHeader t={t} />
     <main id="main" class="notfound container">
       <p class="kicker">404</p>
       <h1 class="notfound__title">Rien ici</h1>
@@ -45,7 +53,9 @@ const title = 'Page introuvable · Page not found';
         This address does not point at a page. It may have moved, or never existed.
       </p>
       <div class="notfound__actions">
-        <a class="btn btn-primary" href={homePath('fr')}>Revenir à l'accueil</a>
+        <a class="btn btn-primary" href={home}>Revenir à l'accueil</a>
+        <a class="btn btn-secondary" href={`${home}#workshops`}>Voir les ateliers</a>
+        <a class="btn btn-secondary" href={`${home}#offers`}>Voir les offres et les prix</a>
         <a class="btn btn-secondary" href={homePath('en')} lang="en">Back to the home page</a>
       </div>
     </main>

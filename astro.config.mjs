@@ -1,13 +1,14 @@
 // @ts-check
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
+import { lastmodOf, readManifest } from './scripts/lastmod.mjs';
 import { alternatesOf, routeAt } from './src/routes.ts';
 import { LOCALE_TAG, SITE } from './src/site.ts';
 
-// Stamped once per build. The pages change together, because they are one
-// build of one content contract, so a single build date is honest — and a
-// <lastmod> is the cheapest crawl signal there is.
-const buildDate = new Date();
+// The day each page's text last changed, as scripts/lastmod.json records it
+// (ADR 28). The hour of the build said "now" for every page on every deploy,
+// which is how a crawler learns to ignore the date.
+const lastmods = readManifest();
 
 /** The registry route behind a sitemap URL. */
 const routeOf = (url) => routeAt(new URL(url).pathname);
@@ -40,7 +41,10 @@ export default defineConfig({
               lang: LOCALE_TAG[alternate.locale],
             }))
           : [];
-        return { ...item, links, lastmod: buildDate };
+        // The pages are written by the time the sitemap is: a page whose text
+        // no longer matches its record goes out undated, never misdated.
+        const lastmod = route && lastmodOf(route.path, lastmods);
+        return { ...item, links, ...(lastmod && { lastmod: new Date(lastmod) }) };
       },
     }),
   ],

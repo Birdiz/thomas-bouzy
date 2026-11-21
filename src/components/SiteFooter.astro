@@ -1,7 +1,7 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
 import { OFFER_IDS } from '../content/offers.ts';
-import { linkTo } from '../routes.ts';
+import { homePath, linkTo, type PageLink } from '../routes.ts';
 import { CONTACT, LEGAL, LOCALE_TAG, type Locale, SITE } from '../site.ts';
 
 interface Props {
@@ -11,12 +11,15 @@ interface Props {
 
 const { t, locale } = Astro.props;
 
-/* Every Offer, the Partners and the public-sector pages, from every page: the header only reaches
-   anchors on the home page, and an Offer page was otherwise a dead end. */
-const pages = [
+/* Every page from every page: the Workshops where this locale has them, every
+   Offer, the Partners and public-sector pages, and About (ADR 28). The header
+   reaches the home page's sections, and an Offer page was otherwise a dead end. */
+const pages: (PageLink & { name: string })[] = [
+  ...(t.workshops ? [{ href: `${homePath(locale)}#workshops`, name: t.workshops.nav }] : []),
   ...OFFER_IDS.map((id) => ({ ...linkTo(id, locale), name: t.offers[id].name })),
   { ...linkTo('partners', locale), name: t.nav.partners },
   { ...linkTo('public-sector', locale), name: t.nav.publicSector },
+  { ...linkTo('about', locale), name: t.nav.about },
 ];
 
 /**
@@ -38,7 +41,7 @@ const legal = LEGAL.isComplete ? LEGAL : null;
       <span class="site-footer__region">{SITE.region}</span>
     </div>
 
-    <nav class="site-footer__links" aria-label={t.nav.offers}>
+    <nav class="site-footer__links" aria-label={t.footer.pages}>
       {
         pages.map((page) => (
           <a href={page.href} hreflang={page.hreflang && LOCALE_TAG[page.hreflang]}>

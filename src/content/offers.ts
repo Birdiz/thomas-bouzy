@@ -41,14 +41,14 @@ export type AchievementId = (typeof ACHIEVEMENT_IDS)[number];
 
 /**
  * The home page's References: one row per client or context, each opening on
- * the Achievements done there. Socios is one Reference with three of them.
+ * the Achievements done there. Socios is one Reference with two of them. The
+ * on-chain operations are proof for a technical buyer, and stay on the
+ * Reliability page that cites them: on the home page, a business owner read
+ * DeFi on Solana where he looked for a reason to call (ADR 28).
  */
 export const REFERENCES = [
   { id: 'arcelormittal', achievements: ['industrial-erp'] },
-  {
-    id: 'socios',
-    achievements: ['live-api-redesign', 'wallet-event-sourcing', 'on-chain-operations'],
-  },
+  { id: 'socios', achievements: ['live-api-redesign', 'wallet-event-sourcing'] },
   { id: 'kiss-the-bride', achievements: ['enterprise-onboarding'] },
   { id: 'civic-tech', achievements: ['codebase-audit'] },
   { id: 'open-data', achievements: ['open-data-directories'] },

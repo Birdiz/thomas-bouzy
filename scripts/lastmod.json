@@ -1,0 +1,78 @@
+{
+  "/": {
+    "date": "2026-11-21",
+    "hash": "185d855ab89b320e65af0730f4b3a5714cf2a7bd9ae7a11d7b1bb1c040e54206"
+  },
+  "/en/": {
+    "date": "2026-11-21",
+    "hash": "9f34ac0992834a1f1890b9fd904cb1fb0d6fd716d0a77cc81cef33434861af56"
+  },
+  "/a-propos/": {
+    "date": "2026-11-21",
+    "hash": "dbff343e6a0234979128110532b648db3cbd436ee60adc4585f9c92900a034d4"
+  },
+  "/en/about/": {
+    "date": "2026-11-21",
+    "hash": "1272da3dc647b29e04a0a39af5ecbedbe3ac2b8d8f57ced6b97be16fc4ce31a9"
+  },
+  "/offres/audit/": {
+    "date": "2026-11-21",
+    "hash": "a389771282f95f5c7fc1bf06cb81309108c93f6dd64f60429c78df03cf38ac0c"
+  },
+  "/en/offers/audit/": {
+    "date": "2026-11-21",
+    "hash": "2a7e4c30ccea7521e09c7982891e35d5fc359e8f25e01e973548061a930e1cda"
+  },
+  "/offres/reprise-et-maintenance/": {
+    "date": "2026-11-21",
+    "hash": "fa2415c66f02162dcf45aafe274dab9f2b980ca850ada82b17cc412f395ba3fa"
+  },
+  "/offres/migration/": {
+    "date": "2026-11-21",
+    "hash": "5558679e3fbc5f1b487a3afab6a015ccea5f2f22975e1f33e8da68730ad07e38"
+  },
+  "/en/offers/migration/": {
+    "date": "2026-11-21",
+    "hash": "c2b2d1f0e81db12246303e318ac8901a72ad31da321d28679bc2041932bfb94b"
+  },
+  "/offres/fiabilisation/": {
+    "date": "2026-11-21",
+    "hash": "4093fb31c0e452acbed072a573345ca7d48547b99d9ca67cecf6d0d7d1e75d95"
+  },
+  "/en/offers/reliability/": {
+    "date": "2026-11-21",
+    "hash": "d669e94e0926d91348bec5969df9134d2291c2b86fa32a0c4d84f3b35bf9edc0"
+  },
+  "/offres/tenue-en-charge/": {
+    "date": "2026-11-21",
+    "hash": "43beb7edf37dc2661bedf682a332ced921706fecf3bda911f6c15d53aad23f3e"
+  },
+  "/en/offers/scaling/": {
+    "date": "2026-11-21",
+    "hash": "c74206cb78aced30b4cbd4921a0378c5a7da9ee7393584c40e9c885df3c5d96b"
+  },
+  "/offres/creation-sur-mesure/": {
+    "date": "2026-11-21",
+    "hash": "632a0fecc6b8b55747d4fa7bc2e5e7bc876524a4c948d253565f5e9e065a143f"
+  },
+  "/en/offers/build/": {
+    "date": "2026-11-21",
+    "hash": "f08616f74c22dee79026d4130d21b80ab72c4b08d43f203e97813ccd8fd9529c"
+  },
+  "/offres/renfort-senior/": {
+    "date": "2026-11-21",
+    "hash": "a1d3676a1f01f71e292542c736e623399525887da1b9e6f8685119bd966d883b"
+  },
+  "/en/offers/reinforcement/": {
+    "date": "2026-11-21",
+    "hash": "9fb3e2698227163fa8906eb10b877ae028ac0b3bdbfd850f2bf1baf93d12979a"
+  },
+  "/partenaires/": {
+    "date": "2026-11-19",
+    "hash": "ddfcbcffd4ddfc1623fe716de6c0fd81e5abbb945d4f9fa14aade40625d3288f"
+  },
+  "/collectivites/": {
+    "date": "2026-11-19",
+    "hash": "38fc8ac45491cfe7e9b4ae5f4d407f939d59d70cbe536a8f52af35f93dfdbcf9"
+  }
+}

@@ -121,8 +121,11 @@ describe('EN/FR parity', () => {
       '$.hero.title',
       '$.hero.blurb',
       '$.hero.role',
+      '$.hero.region',
       '$.hero.ctaSecondary',
+      '$.hero.proof',
       '$.problem.lead',
+      '$.problem.question',
       '$.offersSection.title',
       '$.problem.kicker',
       '$.problem.title',
@@ -132,13 +135,11 @@ describe('EN/FR parity', () => {
       '$.references.socios.headline',
       '$.work.labelPlain',
       '$.failureModes[0].quote',
-      '$.failureModes[0].text',
       '$.achievements[0].plain',
       '$.offerPages.audit.heading',
       '$.offerPages.audit.priceHeading',
       '$.about.title',
       '$.about.paragraphs[0]',
-      '$.about.careerLine',
       '$.about.careerLink',
       '$.contact.title',
       '$.contact.blurb',
@@ -199,17 +200,25 @@ describe('French typography', () => {
 });
 
 describe('content corrections applied against the design', () => {
-  it('names the salaried route once, and points it at LinkedIn', () => {
+  it('points to the career on LinkedIn, and asks no reader whether they are hiring', () => {
     // Chantier A took the chronology, the job title, the years badge and the
     // stack off the page and left them to the CV; the postscript to ADR 11
-    // took the CV off the site too. That only holds if a Recruiter is still
-    // told where the career is — otherwise the removal is a dead end rather
-    // than a move.
+    // took the CV off the site too. That only holds if a reader is still told
+    // where the career is — otherwise the removal is a dead end rather than a
+    // move.
     for (const content of [en, fr]) {
       expect(content.about.careerLink).toMatch(/LinkedIn/);
       // Never from the hero again: the download used to sit in the first
       // viewport as an equal alternative to the work itself.
       expect(Object.values(content.hero).join(' ')).not.toMatch(/CV|PDF|LinkedIn/);
+      // ADR 28: "En poste plutôt qu'en mission ?" read, to a business owner
+      // buying continuity, as Thomas looking for a job.
+      expect('careerLine' in content.about).toBe(false);
+      for (const [path, text] of walkStrings(content)) {
+        expect(text, `a question to a recruiter at ${path}`).not.toMatch(
+          /plutôt qu'en mission|rather than contracting/i,
+        );
+      }
     }
   });
 
@@ -225,23 +234,27 @@ describe('content corrections applied against the design', () => {
   });
 
   it('reports the remote track record as 8 years, counting from 2018', () => {
-    expect(en.contact.locationLine).toMatch(/8\+? years/);
-    expect(fr.contact.locationLine).toMatch(/8 ans/);
-    expect(en.contact.locationLine).not.toMatch(/6\+? years/);
-    expect(fr.contact.locationLine).not.toMatch(/6 ans/);
+    // On the About page since the contact line became a promise to come
+    // (ADR 28); the Reinforcement's FAQ says it too.
+    const about = (content: ResumeContent) => JSON.stringify(content.aboutPage.paragraphs);
+    expect(about(en)).toMatch(/for eight years/);
+    expect(about(fr)).toMatch(/depuis huit ans/);
+    expect(about(en)).not.toMatch(/six years/);
+    expect(about(fr)).not.toMatch(/six ans/);
   });
 
   it('gives the location as a region, never narrower', () => {
     // Thomas's call is to stop at the region and not publish the département:
     // a recruiter needs the timezone and the country, and neither tells them
-    // more.
+    // more. The first screen names the region (ADR 28).
     //
     // The name is checked by hash, so that the repository, which is public,
     // does not publish what the page withholds.
     const WITHHELD = new Set(['813fda261f058093793ac9cf52f4f99613455fe90500724565653bf06c01dc76']);
     const hashOf = (word: string) => createHash('sha256').update(word).digest('hex');
+    expect(fr.hero.region).toBe('Grand Est');
+    expect(en.hero.region).toMatch(/France/);
     for (const content of [en, fr]) {
-      expect(content.contact.locationLine).toMatch(/Grand Est, France/);
       const everywhere = [...walkStrings(content)].map(([, text]) => text).join(' ');
       const words = everywhere.toLowerCase().match(/\p{L}+/gu) ?? [];
       expect(words.filter((word) => WITHHELD.has(hashOf(word)))).toEqual([]);
@@ -266,6 +279,24 @@ describe('content corrections applied against the design', () => {
       expect(byline('staircase-calculator')).toMatch(/personal product|produit personnel/i);
       expect(byline('village-website')).toMatch(/volunteer|bénévolat/i);
     }
+  });
+
+  it('says under every Reference in what capacity the work was done', () => {
+    // ADR 28 (D7): the salaried posts went unlabelled beside a labelled
+    // volunteer project, so a post could be read as a client. Each one now
+    // says what it was, as Thomas confirmed it.
+    for (const content of [en, fr]) {
+      for (const [id, reference] of Object.entries(content.references)) {
+        expect(reference.nature.trim(), `${id} says nothing of its nature`).not.toBe('');
+      }
+    }
+    expect(fr.references.socios.nature).toBe('En poste');
+    expect(fr.references.arcelormittal.nature).toMatch(/^En poste chez Quadra Informatique$/);
+    expect(fr.references['kiss-the-bride'].nature).toBe("En mission d'indépendant");
+    expect(fr.references['civic-tech'].nature).toBe('Bénévolat');
+    expect(fr.references.grandrupt.nature).toBe('Bénévolat');
+    expect(fr.references['open-data'].nature).toBe('Pour un client');
+    expect(fr.references['quart-de-tour'].nature).toBe('Produit personnel');
   });
 
   it('claims no technology the page does not state', () => {
@@ -385,27 +416,18 @@ describe('Chantier C — the mirror', () => {
     }
   });
 
-  it('keeps the failure mode names the headings used to carry', () => {
-    // The mirror replaced four labels that named a thing. The names are worth
-    // keeping — they are the vocabulary the rest of the page argues in — so
-    // each one now opens the diagnosis it used to title. This test is what
-    // stops the rewrite from having quietly cost them.
-    //
-    // ADR 14 rewrote the four for the least technical reader: the orphan app
-    // arrived, and "double execution" moved to the Reliability page, where the
-    // Critical-systems reader looks for it (asserted with that page).
-    const names: [RegExp, RegExp][] = [
-      [/^The orphan application\./, /^L'application orpheline\./],
-      [/^The migration that never happens\./, /^La migration qui n'arrive jamais\./],
-      [/^The discrepancy nobody can explain\./, /^L'écart que personne ne sait expliquer\./],
-      [/^Defects found by users\./, /^Les défauts trouvés par les utilisateurs\./],
-      // ADR 19: the load, which keeps a system up where Reliability keeps it correct.
-      [/^The peak that brings everything down\./, /^Le pic qui fait tout tomber\./],
-    ];
-    names.forEach(([enPattern, frPattern], i) => {
-      expect(en.failureModes[i]?.text, `EN mode ${i} lost its name`).toMatch(enPattern);
-      expect(fr.failureModes[i]?.text, `FR mode ${i} lost its name`).toMatch(frPattern);
-    });
+  it('lets each Client sentence stand alone, with the Offer that treats it', () => {
+    // ADR 28: the diagnosis under each sentence, and the name it opened on,
+    // left the home page with the carousel that hid them from most readers.
+    // The sentence and its link are the whole device; the names stay in the
+    // glossary (CONTEXT.md). The one technical word left among them went too.
+    for (const content of [en, fr]) {
+      for (const mode of content.failureModes) {
+        expect(Object.keys(mode).sort(), mode.quote).toEqual(['offer', 'quote']);
+      }
+    }
+    expect(fr.failureModes.map((mode) => mode.quote).join(' ')).not.toMatch(/montée de version/);
+    expect(fr.problem.question).toMatch(/\?$/);
   });
 
   it('opens every achievement card in plain language, naming no technology', () => {
@@ -890,13 +912,35 @@ describe('what each Offer page has to say (ADR 17)', () => {
   });
 });
 
-describe('the AI workshops (ADR 27)', () => {
-  it('exist in French only, before any price, programme or date', () => {
+describe('the AI workshops (ADR 27, ADR 28)', () => {
+  it('exist in French only, with their format and never a price or a date', () => {
     expect(fr.workshops).toBeDefined();
     expect((en as ResumeContent).workshops).toBeUndefined();
     expect(fr.workshops.levels).toHaveLength(3);
+    // The group's size is written in words, so a digit still means a price or
+    // a date, and neither is published before the business is registered.
     for (const [path, text] of walkStrings(fr.workshops)) {
       expect(text, `a price or a date at ${path}`).not.toMatch(/€|\d/);
+    }
+  });
+
+  it('say what an owner takes away and what happens to their data, and announce nothing free', () => {
+    const w = fr.workshops;
+    // The four facts Thomas confirmed (ADR 28): a small group, a day at the
+    // owner's premises with a written note, the rule on data, and his own use.
+    expect(w.levels[0].text).toMatch(/six à huit/);
+    expect(w.levels[1].text).toMatch(/écrit/);
+    expect(w.data).toMatch(/anonymisés/);
+    expect(w.data).toMatch(/sans votre accord/);
+    expect(w.practice).toMatch(/chaque jour/);
+    // "Accompagnement" is one of the words the voice never uses; the third
+    // level is a follow-up.
+    expect(w.levels[2].title).toBe('Un suivi');
+    for (const [path, text] of walkStrings(w)) {
+      expect(text, `${path}`).not.toMatch(/accompagn/i);
+      // The call is free; a free session is never announced (D2, D3): that is
+      // a question for a lawyer, not for the site.
+      if (path !== '$.cta') expect(text, `${path}`).not.toMatch(/gratuit/i);
     }
   });
 
@@ -955,6 +999,37 @@ describe('the Partners page (ADR 14)', () => {
 });
 
 describe('the home page, written for the least technical reader (ADR 14)', () => {
+  it('proves the hero with facts kept whole, and says team work was team work (ADR 28)', () => {
+    // A first draft of this line merged two Achievements into one claim; the
+    // ERP and the traceable money were team work, and claiming either alone
+    // would be the same mistake.
+    expect(fr.hero.proof).toMatch(/dans l'équipe/);
+    expect(en.hero.proof).toMatch(/on the team/);
+    for (const content of [en, fr]) {
+      expect(content.hero.proof).not.toMatch(/\d+ ans|\d+ years/);
+      expect(content.hero.proof.length, 'the proof is a line, not a paragraph').toBeLessThan(260);
+    }
+  });
+
+  it('promises a workshop only where there are workshops (ADR 28)', () => {
+    expect(fr.hero.blurb).toMatch(/atelier/);
+    expect(en.hero.blurb).not.toMatch(/\bAI\b|workshop/i);
+  });
+
+  it('keeps the words the voice never uses off the home and About pages', () => {
+    // From the brief that defines the voice (ADR 24). "Sur mesure" is the
+    // Build's name, and nothing else.
+    const NEVER = /passionn|\bexperts?\b|\bsolutions?\b|accompagn|innovant|de A à Z|360°|synergie/i;
+    for (const id of ['home', 'about'] as const) {
+      for (const [path, text] of walkStrings(contentOfPage('fr', id))) {
+        expect(text, `${id} ${path}`).not.toMatch(NEVER);
+        expect(text.replaceAll('Création sur mesure', ''), `${id} ${path}`).not.toMatch(
+          /sur mesure/i,
+        );
+      }
+    }
+  });
+
   it('holds the hero to the plain-line rule', () => {
     for (const [locale, content] of [
       ['en', en],

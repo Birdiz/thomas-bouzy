@@ -230,6 +230,7 @@ a {
   backdrop-filter: blur(14px);
   background: color-mix(in srgb, var(--color-bg) 86%, transparent);
   border-bottom: 1px solid var(--color-divider);
+  transition: transform var(--dur-base) var(--ease-out);
 }
 
 .site-header__inner {
@@ -420,6 +421,12 @@ a {
   text-wrap: pretty;
 }
 
+/* The title, then where (ADR 28): wraps rather than squeezes on a phone. */
+.hero__kicker {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
 .hero__ctas {
   display: flex;
   flex-wrap: wrap;
@@ -429,6 +436,17 @@ a {
 .hero__ctas .btn {
   padding: 11px 22px;
   font-size: 15px;
+}
+
+/* The proof under the buttons (ADR 28): quieter than the subtitle, at a
+   reading measure, so the buttons stay the first thing the eye lands on. */
+.hero__proof {
+  margin: 26px 0 0;
+  max-width: 60ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
 }
 
 .hero__portrait {
@@ -479,6 +497,31 @@ a {
 .workshops > p {
   margin-top: 22px;
 }
+/* Under the levels: what happens to the owner's data, set like a note, then
+   why an engineer runs them, in his voice and a size up (ADR 28). */
+.workshops__data {
+  max-width: 64ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+.workshops__practice {
+  max-width: 46ch;
+  padding-left: 18px;
+  border-left: 2px solid var(--color-divider);
+  font-size: clamp(19px, 2vw, 23px);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.workshops__next {
+  margin-top: 28px;
+}
+.workshops__notify {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-muted);
+}
 
 /* — problem ——————————————————————————————————————————————————————————————— */
 
@@ -487,6 +530,16 @@ a {
    and a CV — see docs/adr/0010. */
 .problem {
   padding-block: 78px 64px;
+}
+/* Wide: the promise on the left, the sentences answering its question on the
+   right, so the section uses the whole measure instead of its left half. */
+@media (min-width: 1024px) {
+  .problem {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    column-gap: 72px;
+    align-items: start;
+  }
 }
 /* Smaller than a section title: it carries the old hero's whole promise, a
    sentence rather than a question, and the lead under it spaces the section
@@ -497,10 +550,15 @@ a {
   margin-bottom: 14px;
   text-wrap: balance;
 }
+/* The question the sentences answer, right above them: read under it, they
+   are questions to the reader, not testimonials (ADR 28). */
+.problem__question {
+  margin: 0 0 10px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
 .problem__modes {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: 56px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -510,7 +568,7 @@ a {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 18px;
-  padding: 20px 0;
+  padding: 18px 0;
   border-bottom: 1px solid var(--color-divider);
 }
 .problem__mode-num {
@@ -525,9 +583,9 @@ a {
    it is someone speaking, and a sentence in the heading weight reads shouted. */
 .problem__mode-quote {
   font-weight: 400;
-  font-size: 19px;
-  line-height: 1.35;
-  margin: 0 0 6px;
+  font-size: clamp(19px, 1.9vw, 23px);
+  line-height: 1.3;
+  margin: 0;
   text-wrap: balance;
 }
 /* The whole quote is the link: it is the largest target in the row, and the
@@ -544,152 +602,44 @@ a {
 }
 .problem__mode-offer {
   display: block;
-  margin-top: 4px;
+  margin-top: 6px;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--color-accent-text);
 }
-.problem__mode-text {
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--color-muted);
-  margin: 0;
-  text-wrap: pretty;
-}
 
-/* The carousel: one sentence at a time, stacked in one cell so the section
-   keeps the height of the longest and never jumps. A sentence arrives from
-   below and leaves upwards, slightly blurred, the way a thought passes. */
-/* Wide: the question on the left, the sentence answering it on the right,
-   so the section uses the whole measure instead of its left half. */
-@media (min-width: 1024px) {
-  .problem.is-carousel {
-    display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-    column-gap: 72px;
-    align-items: start;
+/* Each sentence comes in once, as it scrolls into view: it rises 48px into
+   place in under half a second, those arriving together one after the other,
+   and nothing loops (ADR 28, amending ADR 23's "nothing fades in on scroll").
+   The script in ProblemSection.astro arms the list, then lets each sentence in
+   with its rank in the batch; without it, or under reduced motion, the list is
+   simply there. */
+@media (prefers-reduced-motion: no-preference) {
+  .problem__modes.is-armed .problem__mode:not(.is-in) {
+    opacity: 0;
+  }
+  .problem__mode.is-in {
+    animation: mode-in 0.45s var(--ease-out) calc(var(--rank, 0) * 0.12s) both;
+  }
+  .problem__mode[data-rank="1"] {
+    --rank: 1;
+  }
+  .problem__mode[data-rank="2"] {
+    --rank: 2;
+  }
+  .problem__mode[data-rank="3"] {
+    --rank: 3;
+  }
+  .problem__mode[data-rank="4"] {
+    --rank: 4;
   }
 }
-.is-carousel .problem__modes {
-  grid-template-columns: minmax(0, 1fr);
-  border: 0;
-}
-.is-carousel .problem__mode {
-  grid-area: 1 / 1;
-  grid-template-columns: minmax(0, 1fr);
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-16px);
-  filter: blur(3px);
-  transition:
-    opacity 0.4s ease,
-    transform 0.5s ease-out,
-    filter 0.4s ease,
-    visibility 0s linear 0.5s;
-}
-.is-carousel .problem__mode.is-active ~ .problem__mode {
-  transform: translateY(16px);
-}
-.is-carousel .problem__mode.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  filter: none;
-  transition-delay: 0.1s, 0.1s, 0.1s, 0s;
-}
-.is-carousel .problem__mode-num,
-.is-carousel .problem__mode-text {
-  display: none;
-}
-.is-carousel .problem__mode-quote {
-  font-size: clamp(25px, 3.3vw, 42px);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
-  max-width: 22ch;
-}
-.is-carousel .problem__mode-offer {
-  margin-top: 16px;
-  font-size: 16px;
-}
-
-.thoughts__controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 22px;
-}
-.thoughts__pause {
-  flex: none;
-  margin-right: 10px;
-  padding: 4px 12px;
-  border: 1px solid var(--color-divider);
-  border-radius: 999px;
-  background: none;
-  color: var(--color-muted);
-  font: 12px / 1.6 var(--font-mono);
-  cursor: pointer;
-}
-.thoughts__pause:hover {
-  color: var(--color-text);
-  border-color: var(--color-muted);
-}
-.thoughts__pause[aria-pressed="true"] {
-  border-color: var(--color-accent);
-  color: var(--color-accent-text);
-}
-/* The bars share the row, as wide as they can be, each a 44px-tall target
-   around a 4px track. */
-.thoughts__dot {
-  flex: 1 1 0;
-  min-width: 32px;
-  max-width: 96px;
-  display: grid;
-  align-items: center;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-.thoughts__dot span {
-  display: block;
-  height: 4px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--color-text) 16%, transparent);
-  overflow: hidden;
-}
-.thoughts__dot span::after {
-  content: "";
-  display: block;
-  height: 100%;
-  width: 0;
-  background: var(--color-accent);
-}
-/* The sentences already passed stay full, a shade quieter. */
-.thoughts__dot:has(~ .thoughts__dot[aria-current]) span::after {
-  width: 100%;
-  opacity: 0.55;
-}
-.thoughts__dot[aria-current] span::after {
-  animation: thought 5s linear forwards;
-}
-.thoughts__dot:hover span {
-  background: color-mix(in srgb, var(--color-text) 32%, transparent);
-}
-@keyframes thought {
-  to {
-    width: 100%;
+@keyframes mode-in {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
   }
-}
-/* Paused while read, while off screen, or on request. */
-.is-carousel:has(.problem__modes:hover) .thoughts__dot span::after,
-.is-carousel:has(:focus-visible) .thoughts__dot span::after,
-.is-offscreen .thoughts__dot span::after,
-.is-paused .thoughts__dot span::after {
-  animation-play-state: paused;
 }
 
 /* — audit call ———————————————————————————————————————————————————————————— */
@@ -1177,6 +1127,12 @@ a {
   line-height: 1.15;
   letter-spacing: -0.015em;
 }
+/* In what capacity, right under the name, in ink: it answers the first
+   question a reader has about a reference (ADR 28). */
+.reference__nature {
+  font-size: 14px;
+  line-height: 1.4;
+}
 .reference__meta {
   display: flex;
   flex-wrap: wrap;
@@ -1194,7 +1150,8 @@ a {
   text-wrap: pretty;
 }
 .reference__chevron,
-.offer__question summary::after {
+.offer__question summary::after,
+.achievement__approach summary::after {
   display: inline-grid;
   place-items: center;
   width: 38px;
@@ -1209,12 +1166,14 @@ a {
     background var(--dur-fast) var(--ease-out);
 }
 .reference__summary:hover .reference__chevron,
-.offer__question summary:hover::after {
+.offer__question summary:hover::after,
+.achievement__approach summary:hover::after {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
 .reference[open] .reference__chevron,
-.offer__question[open] summary::after {
+.offer__question[open] summary::after,
+.achievement__approach[open] summary::after {
   transform: rotate(180deg);
 }
 
@@ -1232,7 +1191,8 @@ a {
     interpolate-size: allow-keywords;
   }
   .reference::details-content,
-  .offer__question::details-content {
+  .offer__question::details-content,
+  .achievement__approach::details-content {
     block-size: 0;
     overflow: clip;
     transition:
@@ -1240,7 +1200,8 @@ a {
       content-visibility var(--dur-base) allow-discrete;
   }
   .reference[open]::details-content,
-  .offer__question[open]::details-content {
+  .offer__question[open]::details-content,
+  .achievement__approach[open]::details-content {
     block-size: auto;
   }
 }
@@ -1278,11 +1239,6 @@ a {
   margin-right: 10px;
   white-space: nowrap;
 }
-.achievement__facets {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 26px;
-}
 .achievement__link {
   margin: 22px 0 0;
   font-size: 15px;
@@ -1300,6 +1256,42 @@ a {
   margin: 0;
   opacity: 0.9;
   text-wrap: pretty;
+}
+/* The Approach, folded under the result, for the technical reader (ADR 28). */
+.achievement__approach {
+  margin-top: 20px;
+  border-top: 1px solid var(--color-divider);
+}
+.achievement__approach summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.achievement__approach summary::-webkit-details-marker {
+  display: none;
+}
+.achievement__approach summary::after {
+  content: "↓" / "";
+  flex: none;
+  scale: 0.7;
+}
+.achievement__approach .achievement__facet-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.achievement__approach-for {
+  margin-right: auto;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+.achievement__approach .achievement__facet-text {
+  margin-bottom: 6px;
 }
 
 /* — contact —————————————————————————————————————————————————————————————— */
@@ -1357,7 +1349,7 @@ a {
   margin: 0 0 14px;
   text-wrap: pretty;
 }
-/* The salaried route, once and at the end, set apart by a rule. */
+/* The career on LinkedIn, once and at the end, set apart by a rule. */
 .contact__about .about__career {
   margin: 22px 0 0;
   padding-top: 18px;
@@ -1776,12 +1768,14 @@ a {
 /* — responsive ——————————————————————————————————————————————————————————— */
 
 @media (max-width: 1023px) {
+  /* The ridge is no taller than the space under the text: the proof line
+     under the buttons would otherwise sit on its crest (ADR 28). */
   .hero__inner {
-    padding-block: 48px 110px;
+    padding-block: 48px 150px;
   }
   .ridge {
     width: 100%;
-    height: 200px;
+    height: 150px;
   }
   .hero__grid {
     grid-template-columns: minmax(0, 1fr);
@@ -1799,35 +1793,60 @@ a {
   .estimator__live {
     grid-template-columns: minmax(0, 1fr);
   }
-  .problem__modes {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* Below this width the nav always wraps to its own row. Measured: ~97px here,
-     ~127px once the brand row wraps too (see the 480px block). A few pixels of
-     headroom absorbs the reflow while the heading face is still loading. */
+  /* Two lines below this width, whatever the phone (ADR 28): the name, the
+     other language and the booking button, then the whole menu. It took three
+     lines and 127px at 360px. A few pixels of headroom over the measured
+     height absorb the reflow while the heading face is still loading. */
   :root {
-    --header-h: 102px;
+    --header-h: 96px;
   }
   .site-header__inner {
-    flex-wrap: wrap;
-    gap: 12px;
-    padding-bottom: 6px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "brand lang book"
+      "nav nav nav";
+    align-items: center;
+    gap: 6px 10px;
+    padding-bottom: 4px;
   }
+  .site-header__brand {
+    grid-area: brand;
+  }
+  /* Its two children take their own places on the first line. */
   .site-header__actions {
-    order: 2;
+    display: contents;
+  }
+  .site-header__actions .btn {
+    grid-area: book;
+  }
+  .lang-switch {
+    grid-area: lang;
+    justify-self: end;
+  }
+  /* The language the reader is already in needs no link of its own here: the
+     other one is the way out. */
+  .lang-switch a[aria-current="true"] {
+    display: none;
   }
   .site-nav {
-    order: 3;
-    width: 100%;
-    gap: 18px;
+    grid-area: nav;
+    gap: 16px;
     overflow-x: auto;
     scrollbar-width: none;
-    padding-bottom: 8px;
-    /* Fade the right edge so the overflow reads as scrollable. */
-    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+    padding-block: 6px 8px;
+    /* Fade the right edge so an overflow, on the narrowest phones, reads as
+       scrollable. */
+    mask-image: linear-gradient(to right, #000 calc(100% - 12px), transparent);
   }
   .site-nav::-webkit-scrollbar {
     display: none;
+  }
+  /* Out of the way while the reader goes down the page, back as soon as they
+     go up, or tab into it (ADR 28). The script in SiteHeader.astro says which
+     way the page is going. */
+  .site-header.is-hidden:not(:focus-within) {
+    transform: translateY(-100%);
   }
 }
 
@@ -1846,10 +1865,6 @@ a {
   .achievement__panel {
     padding: 0 20px 22px;
   }
-  .achievement__facets {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
-  }
   .hero__portrait {
     --portrait-size: 150px;
   }
@@ -1861,34 +1876,39 @@ a {
 }
 
 @media (max-width: 480px) {
-  :root {
-    --header-h: 132px;
-  }
-  .site-header__inner {
-    gap: 10px;
-  }
   .site-header__brand {
     font-size: 16px;
-    gap: 8px;
+    gap: 6px;
   }
   .site-header__dot {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
   .lang-switch a {
     padding: 6px 10px;
     font-size: 12px;
   }
   .site-header__actions .btn-primary {
-    padding: 8px 14px;
+    padding: 8px 12px;
     font-size: 13px;
+  }
+}
+
+/* Under 360px the first line has no room for the language: it closes the
+   menu's line instead, which scrolls. */
+@media (max-width: 359px) {
+  .site-header__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand book"
+      "nav lang";
   }
 }
 
 /* — 404 ——————————————————————————————————————————————————————————————————— */
 
 .notfound {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--header-h));
   display: flex;
   flex-direction: column;
   justify-content: center;

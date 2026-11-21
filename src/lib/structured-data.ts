@@ -117,6 +117,8 @@ function person(locale: Locale, portrait: string | undefined) {
        appears verbatim in a string the page renders, so the schema can only ever
        claim a technology a reader can find. Same reason `worksFor` is absent. */
     knowsAbout: t.schema.knowsAbout,
+    /* He studied there, and later taught there, which the page says (the
+       audit of 2026-11-19 asked which; confirmed by Thomas, ADR 28). */
     alumniOf: {
       '@type': 'CollegeOrUniversity',
       name: 'Université de Reims Champagne-Ardenne',

@@ -24,8 +24,13 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
     <div class="hero__grid">
       <div class="hero__intro">
         {/* The job title Thomas says when he introduces himself, above the
-            promise (ADR 27): a reader who met him finds it on the first screen. */}
-        <p class="kicker hero__role">{t.hero.role}</p>
+            promise (ADR 27), and where he works (ADR 28): a reader who met
+            him finds both on the first screen. */}
+        <p class="kicker hero__kicker">
+          <span class="hero__role">{t.hero.role}</span>
+          <span aria-hidden="true">·</span>
+          <span>{t.hero.region}</span>
+        </p>
         {/* The name, then the promise, in one H1. The name is for search
             engines and screen readers only: the header already shows it, and
             twice in the first screen is once too many. */}
@@ -44,6 +49,10 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
           </a>
           <a class="btn btn-secondary" href={secondary}>{t.hero.ctaSecondary}</a>
         </div>
+
+        {/* The proof under the buttons, where most of the reading happens
+            (ADR 28): the facts were four screens down, in the References. */}
+        <p class="hero__proof">{t.hero.proof}</p>
       </div>
 
       <div class="hero__portrait">

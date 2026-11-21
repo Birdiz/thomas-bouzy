@@ -1,23 +1,32 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { alternatesOf, homePath, type Route } from '../routes.ts';
-import { LOCALE_ENDONYM, LOCALE_LABEL, LOCALE_TAG, SITE } from '../site.ts';
+import { alternatesOf, homePath, linkTo, type Route } from '../routes.ts';
+import {
+  CONTACT,
+  DEFAULT_LOCALE,
+  LOCALE_ENDONYM,
+  LOCALE_LABEL,
+  LOCALE_TAG,
+  LOCALES,
+  SITE,
+} from '../site.ts';
 
 interface Props {
-  route: Route;
   t: ResumeContent;
-  /** Where the header's call to action goes. The home page's contact section by default. */
-  contactHref?: string;
+  /** The page it heads. The 404 has none: it is in the default locale, with no switch. */
+  route?: Route;
 }
 
-const { route, t, contactHref } = Astro.props;
-const { locale } = route;
+const { route, t } = Astro.props;
+const locale = route?.locale ?? DEFAULT_LOCALE;
 const home = homePath(locale);
 
-/* The same page in each locale it exists in. A page in one locale has no
-   switch at all: a link to the other language's home page would drop the
-   reader somewhere they did not ask to go. */
-const versions = alternatesOf(route.page);
+/* The same page in each locale it exists in. */
+const versions = route ? alternatesOf(route.page) : [];
+/* A page in one locale has nothing to switch to, and a reader who came from
+   the other language had no way back to it (ADR 28): the link goes to that
+   language's home page, and its name says so. */
+const elsewhere = versions.length === 0 ? LOCALES.filter((other) => other !== locale) : [];
 ---
 
 <header class="site-header">
@@ -28,11 +37,17 @@ const versions = alternatesOf(route.page);
     </a>
 
     <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
-      {/* Spelled from the home page, so they work from every page. */}
+      {/* The sections spelled from the home page, so they work from every
+          page; About goes to its own page (ADR 28). */}
       {t.workshops && <a href={`${home}#workshops`}>{t.workshops.nav}</a>}
       <a href={`${home}#offers`}>{t.nav.offers}</a>
       <a href={`${home}#work`}>{t.nav.work}</a>
-      <a href={`${home}#about`}>{t.nav.about}</a>
+      <a
+        href={linkTo('about', locale).href}
+        aria-current={route?.page.id === 'about' ? 'page' : undefined}
+      >
+        {t.nav.about}
+      </a>
     </nav>
 
     <div class="site-header__actions">
@@ -53,7 +68,45 @@ const versions = alternatesOf(route.page);
           </nav>
         )
       }
-      <a class="btn btn-primary" href={contactHref ?? `${home}#contact`}>{t.nav.contact}</a>
+      {
+        elsewhere.length > 0 && (
+          <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
+            {elsewhere.map((other) => (
+              <a
+                href={homePath(other)}
+                hreflang={LOCALE_TAG[other]}
+                lang={LOCALE_TAG[other]}
+                aria-label={t.a11y.otherHome}
+              >
+                {LOCALE_LABEL[other]}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+      {/* The booking page itself, one click from every page (ADR 28). */}
+      <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+        {t.nav.contact}
+      </a>
     </div>
   </div>
 </header>
+
+<script>
+  // Which way the page is going, for the header to step aside on a phone (the
+  // CSS decides where that applies): hidden going down, back going up.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header) {
+    let last = scrollY;
+    addEventListener(
+      'scroll',
+      () => {
+        const y = scrollY;
+        if (Math.abs(y - last) < 6) return;
+        header.classList.toggle('is-hidden', y > last && y > header.offsetHeight);
+        last = y;
+      },
+      { passive: true },
+    );
+  }
+</script>

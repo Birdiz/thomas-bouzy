@@ -1,6 +1,8 @@
 # 27. Software engineer, and the AI workshops as the way in
 
-- Status: accepted, implemented 2026-11-19
+- Status: accepted, implemented 2026-11-19; the hero's subtitle, the
+  Workshops' format and the teaching line amended by
+  [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
 - Date: 2026-11-19
 - Amends [ADR 11](0011-the-page-is-not-a-cv.md),
   [ADR 14](0014-three-segments-and-the-least-technical-reader.md),

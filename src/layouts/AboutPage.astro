@@ -8,6 +8,7 @@ import { RESUME } from '../content/index.ts';
 import { portrait } from '../lib/portrait.ts';
 import { pageGraph } from '../lib/structured-data.ts';
 import type { Route } from '../routes.ts';
+import { CONTACT } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -30,7 +31,7 @@ const page = t.aboutPage;
   ogType="profile"
   structuredData={pageGraph(route)}
 >
-  <SiteHeader route={route} t={t} contactHref="#book" />
+  <SiteHeader route={route} t={t} />
   <main id="main" class="offer">
     <header class="offer__head about-page__head container">
       <div class="about-page__intro">
@@ -73,6 +74,11 @@ const page = t.aboutPage;
           </p>
         ))
       }
+      {/* The career, for whoever wants it, on the profile that carries it
+          (ADR 28): this page had no way to it. */}
+      <p class="about-page__career">
+        <a href={CONTACT.linkedin} target="_blank" rel="noopener">{t.about.careerLink}</a>
+      </p>
     </section>
 
     <BookingSection labels={page.book} locale={locale} />
