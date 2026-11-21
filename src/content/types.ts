@@ -38,9 +38,14 @@ export interface Achievement {
   /**
    * Two facets, not three. A third, "Context", repeated the plain line above
    * it, and two read better than three on a phone (ADR 18).
+   *
+   * Both are left out while Thomas has not supplied them, never written ahead
+   * of him: such an Achievement is cited on an Offer page, which shows the
+   * title and the plain line, and is never one of a Reference's, which shows
+   * both facets (`tests/content.spec.ts` holds that, ADR 30).
    */
-  approach: string;
-  result: string;
+  approach?: string;
+  result?: string;
   /**
    * Where the work can be seen for oneself, when it is public: the releases of
    * a personal project, say. A proof a reader can check beats one they must take
@@ -131,9 +136,16 @@ export interface OfferSummary {
   /**
    * One sentence saying what the Offer does for the Client, before any word
    * that has to be learned. Held to the same rule as `Achievement.plain`: no
-   * `schema.knowsAbout` term (ADR 12, extended by ADR 14).
+   * `schema.knowsAbout` term (ADR 12, extended by ADR 14). It may name a
+   * price token, `{maxDays}` say, which RESUME fills in (ADR 30).
    */
   plain: string;
+  /**
+   * The name of the fixed-price first phase, for an Offer sold in two
+   * (ADR 19): its price line says « cadrage dès 1 650 € HT », where « première
+   * étape à partir de » hid that the step was one of two (ADR 30).
+   */
+  phase?: string;
 }
 
 /** A titled item: one deliverable, or one point. */
@@ -157,12 +169,28 @@ export interface EstimatorLabels {
    */
   dimensions: Record<
     string,
-    { label: string; options: Record<string, string>; notes?: Record<string, string> }
+    {
+      label: string;
+      options: Record<string, string>;
+      notes?: Record<string, string>;
+      /**
+       * One line under a criterion the reader may not know how to answer,
+       * whatever the option: what it measures, and which option to take when
+       * unsure (ADR 30).
+       */
+      help?: string;
+    }
   >;
   /** A label for each amount the Offer's table declares. */
   amounts: Partial<Record<AmountId, string>>;
   /** A label for the duration, when the Offer's table has one. */
   duration?: string;
+  /**
+   * The whole budget, when the Offer's table declares one (`total` in
+   * prices.ts), and what it is made of: a price token such as `{maxDays}` is
+   * filled in (ADR 30).
+   */
+  total?: { label: string; note: string };
   /**
    * What a monthly amount is made of, when its combination includes days at
    * the day rate. `{days}` is replaced by that number of days.
@@ -226,6 +254,13 @@ export interface OfferPage {
     note: string;
   };
   notTheRightChoice: Redirect[];
+  /**
+   * What a cited Achievement proves for this Offer, when its plain line says
+   * something else: the large accounts' onboarding proves nothing a Migration
+   * sells, its upgrade without tests does (ADR 30). One Achievement per line,
+   * never two merged into one.
+   */
+  proof?: Partial<Record<AchievementId, string>>;
   faq: { question: string; answer: string }[];
 }
 
@@ -244,6 +279,12 @@ export interface OfferPageLabels {
   notTheRightChoice: string;
   achievements: string;
   faq: string;
+  /**
+   * Beside a small portrait in the booking block: who answers the call, by
+   * name (ADR 30). The About block's « Qui décroche » read, to three owners
+   * in three, as "who drops out" (ADR 28).
+   */
+  who: string;
   book: {
     kicker: string;
     title: string;
@@ -336,6 +377,12 @@ export interface PartnersPage {
   offers: string;
   /** Where each Offer card links: "See the offer". */
   offerLink: string;
+  /**
+   * For a Referrer, who buys nothing: an accountant or an integrator whose
+   * client has software in trouble (ADR 30). They are not Partners, and are
+   * told so by being addressed apart.
+   */
+  referrers: string;
   book: OfferPageLabels['book'];
 }
 
@@ -519,17 +566,25 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     /**
-     * The Offers as the life of an application: three stages in order, the
-     * second holding two Offers side by side, then the Offers that run
-     * alongside all three. See `JOURNEY` in OffersSection.astro.
+     * The situations the Offers are grouped by, in the order of `SITUATIONS`
+     * in offers.ts (ADR 30): each a heading the reader answers for themselves.
+     * The second carries the sentence of the owner it is for, a Client
+     * sentence of the Build's.
      */
-    stages: readonly [string, string, string];
-    alongside: string;
-    /** Accessible name of the three stages, read as one list. */
-    lifecycle: string;
+    situations: readonly [
+      { title: string },
+      { title: string; sentence: string },
+      { title: string },
+    ];
     /**
-     * Before each amount's lowest price, the headline first. A Migration's
-     * headline is its plan, not the whole Migration, and the card says so.
+     * At the foot of every card, with its arrow: the whole card is the link,
+     * and a reader on a phone had nothing to tell them so (ADR 30).
+     */
+    more: string;
+    /**
+     * Before each amount's lowest price, the headline first. A plan follows
+     * the name of the Offer's first phase (`OfferSummary.phase`): « cadrage
+     * dès », « plan dès », « diagnostic dès » (ADR 30).
      */
     from: Record<AmountId, string>;
     /** Between the headline and the amount that follows it: "2 000 €, then 350 € / month". */

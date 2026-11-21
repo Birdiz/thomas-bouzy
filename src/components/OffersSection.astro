@@ -1,6 +1,6 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { ENTRY_OFFER, type OfferId } from '../content/offers.ts';
+import { ENTRY_OFFER, type OfferId, SITUATIONS } from '../content/offers.ts';
 import { fromLine } from '../lib/offer-price.ts';
 import { linkTo } from '../routes.ts';
 import { CONTACT, LOCALE_TAG, type Locale } from '../site.ts';
@@ -11,18 +11,6 @@ interface Props {
 }
 
 const { locale, t } = Astro.props;
-
-/**
- * The Offers laid out as the life of an application, not as a catalogue: it
- * is built, then made reliable and migrated side by side, then made to hold
- * the load. Three Offers run alongside the whole of it, at any stage.
- */
-const JOURNEY: readonly (readonly OfferId[])[] = [
-  ['build'],
-  ['reliability', 'migration'],
-  ['scaling'],
-];
-const ALONGSIDE: readonly OfferId[] = ['audit', 'takeover', 'reinforcement'];
 
 /**
  * One card per Offer: its plain line, its lowest prices from the price table,
@@ -38,11 +26,21 @@ const card = (id: OfferId) => ({
   entry: id === ENTRY_OFFER,
 });
 
-const stages = JOURNEY.map((ids, i) => ({
-  label: t.offersSection.stages[i],
-  cards: ids.map(card),
-}));
-const alongside = ALONGSIDE.map(card);
+/**
+ * The Offers grouped by a situation the reader recognises, not laid out as
+ * the life of an application (ADR 30): three business owners in three did not
+ * read that timeline, and answer "is it my software, a missing tool, or my
+ * team?" at once. The technical team's Offers come last, with the Partners.
+ */
+const situations = SITUATIONS.map((ids, i) => {
+  const situation = t.offersSection.situations[i];
+  return {
+    title: situation?.title,
+    sentence: situation && 'sentence' in situation ? situation.sentence : undefined,
+    cards: ids.map(card),
+    team: i === SITUATIONS.length - 1,
+  };
+});
 
 const partners = linkTo('partners', locale);
 const publicSector = linkTo('public-sector', locale);
@@ -52,59 +50,46 @@ const publicSector = linkTo('public-sector', locale);
   <p class="kicker">{t.offersSection.kicker}</p>
   <h2 class="section-title offers__title">{t.offersSection.title}</h2>
 
-  {/* The Offers that run alongside every stage come first: the Audit, the
-      way in for everyone, is the first card read, as the band above says. */}
-  <div class="journey__alongside">
-    <p class="journey__label">
-      {t.offersSection.alongside}
-    </p>
-    <ul class="journey__cards">
-      {
-        alongside.map((c) => (
-          <li class="offers__card" data-offer={c.id}>
-            {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
-            {/* The name is the link, and it covers the card: identical "See
-                the offer" anchors told a search engine nothing. */}
-            <h3 class="offers__name">
-              <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
-                {c.name}
-              </a>
-            </h3>
-            <p class="offers__plain">{c.plain}</p>
-            <p class="offers__from">{c.from}</p>
-            {c.hreflang && <span class="offers__link">{t.offersSection.inFrench}</span>}
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-
-  <ol class="journey" aria-label={t.offersSection.lifecycle}>
-    {
-      stages.map((stage, i) => (
-        <li class="journey__stage" data-stage={i + 1}>
-          <span class="journey__step" aria-hidden="true">
-            {String(i + 1).padStart(2, '0')}
-          </span>
-          <p class="journey__label">{stage.label}</p>
-          <ul class="journey__cards">
-            {stage.cards.map((c) => (
-              <li class="offers__card" data-offer={c.id}>
-                <h3 class="offers__name">
-                  <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
-                    {c.name}
-                  </a>
-                </h3>
-                <p class="offers__plain">{c.plain}</p>
-                <p class="offers__from">{c.from}</p>
-                {c.hreflang && <span class="offers__link">{t.offersSection.inFrench}</span>}
-              </li>
-            ))}
-          </ul>
-        </li>
-      ))
-    }
-  </ol>
+  {
+    situations.map((situation) => (
+      <div class:list={['situation', { 'situation--sentence': situation.sentence }]}>
+        <h3 class="situation__title">{situation.title}</h3>
+        {/* The owner a missing tool is for says it first, in their words. */}
+        {situation.sentence && <p class="situation__sentence">{situation.sentence}</p>}
+        <ul class="situation__cards">
+          {situation.cards.map((c) => (
+            <li class="offers__card" data-offer={c.id}>
+              {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
+              {/* The name is the link, and it covers the card: identical "See
+                  the offer" anchors told a search engine nothing. The line at
+                  the foot says it to the eye, its arrow drawn at rest: on a
+                  phone, nothing said the card could be opened (ADR 30). */}
+              <h4 class="offers__name">
+                <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
+                  {c.name}
+                </a>
+              </h4>
+              <p class="offers__plain">{c.plain}</p>
+              <p class="offers__from">{c.from}</p>
+              <p class="offers__more">
+                <span aria-hidden="true">{t.offersSection.more}</span>
+                {c.hreflang && ` ${t.offersSection.inFrench}`}
+                <span class="offers__arrow" aria-hidden="true">→</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+        {situation.team && (
+          <p class="offers__partners">
+            {t.offersSection.partners}{' '}
+            <a href={partners.href} hreflang={partners.hreflang && LOCALE_TAG[partners.hreflang]}>
+              {t.offersSection.partnersLink}
+            </a>
+          </p>
+        )}
+      </div>
+    ))
+  }
 
   <p class="offers__book">
     <span>{t.offersSection.book.text}</span>
@@ -114,11 +99,6 @@ const publicSector = linkTo('public-sector', locale);
   </p>
 
   <p class="offers__partners">
-    {t.offersSection.partners}{' '}
-    <a href={partners.href} hreflang={partners.hreflang && LOCALE_TAG[partners.hreflang]}>
-      {t.offersSection.partnersLink}
-    </a>
-    <br />
     {t.offersSection.publicSector}{' '}
     <a
       href={publicSector.href}
@@ -128,24 +108,3 @@ const publicSector = linkTo('public-sector', locale);
     </a>
   </p>
 </section>
-
-<script>
-  // Where the browser cannot tie the journey's track to scroll (Firefox), it is
-  // held back, then drawn once on a clock when the panel is well into view.
-  const journey = document.querySelector('.journey');
-  if (
-    journey &&
-    !CSS.supports('animation-timeline: view()') &&
-    matchMedia('(prefers-reduced-motion: no-preference)').matches
-  ) {
-    journey.classList.add('is-waiting');
-    new IntersectionObserver(
-      ([entry], observer) => {
-        if (!entry?.isIntersecting) return;
-        journey.classList.replace('is-waiting', 'is-drawn');
-        observer.disconnect();
-      },
-      { rootMargin: '0px 0px -30% 0px' },
-    ).observe(journey);
-  }
-</script>

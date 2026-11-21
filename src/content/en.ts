@@ -100,7 +100,7 @@ export const en = {
     },
     {
       id: 'live-api-redesign',
-      title: 'Rebuilding a live API without users noticing',
+      title: 'Rebuilding a live product without its users noticing',
       org: 'Socios.com (Chiliz)',
       period: 'May 2022 – April 2026',
       plain:
@@ -135,6 +135,14 @@ export const en = {
         'In production on real funds, with idempotent signing and reconciliation against the chain.',
     },
     {
+      id: 'acquired-app-migration',
+      title: "Bringing an acquired application into the company's ecosystem",
+      org: 'Socios.com (Chiliz)',
+      period: 'May 2022 – April 2026',
+      plain:
+        'Taking over an application written by others, and migrating it onto the systems of the company that bought it.',
+    },
+    {
       id: 'enterprise-onboarding',
       title: 'Onboarding a new enterprise account in a day',
       org: 'Kiss The Bride',
@@ -147,7 +155,7 @@ export const en = {
     {
       id: 'codebase-audit',
       title: "Auditing a codebase I didn't write",
-      org: 'Civic tech, volunteer',
+      org: 'Civic projects, volunteer',
       period: '2026',
       plain:
         'Telling a team what in their code could cost them dearly, then fixing the most critical parts myself.',
@@ -300,11 +308,14 @@ export const en = {
 
   offersSection: {
     kicker: 'Offers',
-    title: 'An offer for every stage of your application, each with its price.',
-    stages: ['Build', 'Make reliable and migrate, side by side', 'Hold the load'],
-    alongside: 'At any stage',
-    lifecycle: 'The life of your application',
-    from: { fee: 'from', setup: 'from', plan: 'first step from', monthly: 'from' },
+    title: 'One offer per situation, each with its price.',
+    situations: [
+      { title: 'Your software is giving you trouble' },
+      { title: 'You are missing a tool', sentence: '“Our whole business runs on a spreadsheet.”' },
+      { title: 'Do you have a technical team?' },
+    ],
+    more: 'See the offer and its price',
+    from: { fee: 'from', setup: 'from', plan: 'from', monthly: 'from' },
     followedBy: 'then',
     start: 'Where to start',
     inFrench: '(in French)',
@@ -318,34 +329,36 @@ export const en = {
   offers: {
     audit: {
       name: 'Audit',
-      plain: 'An outside look, written down: what could cost you dearly, and where to start.',
+      plain:
+        'A written opinion, with no rewrite to sell: what could cost you dearly, and where to start.',
     },
     takeover: {
       name: 'Takeover and maintenance',
       plain:
-        'Taking over the application nobody dares touch any more, without breaking anything, then keeping it alive every month.',
+        'I take over your application without breaking anything, then maintain it month by month, with no commitment.',
     },
     migration: {
       name: 'Migration without downtime',
-      plain: 'Moving a running system to a new version without stopping it, one step at a time.',
+      plain: 'I upgrade your software in steps, without stopping it, before the bill grows.',
+      phase: 'plan',
     },
     reliability: {
       name: 'Reliability',
-      plain: 'Being able to explain a stock gap, a balance or a bug, instead of guessing.',
+      plain: 'You know where a stock gap comes from, and you see a bug before your customers do.',
     },
     scaling: {
       name: 'Scaling',
-      plain:
-        'Keeping your system standing on the day everyone shows up, and back on its feet when a part fails.',
+      plain: 'I reproduce your peak before the big day, then fix whatever gives way first.',
+      phase: 'diagnosis',
     },
     build: {
       name: 'Custom build',
-      plain:
-        'Building the application you are missing, designed from day one so that someone else can take it over.',
+      plain: 'I build the tool you are missing, designed so that you do not depend on me.',
+      phase: 'framing',
     },
     reinforcement: {
       name: 'Senior reinforcement',
-      plain: 'A senior lead or architect inside your team, part time, billed by the day.',
+      plain: 'I join your team 1 to {maxDays} days a week, to settle decisions and ship.',
     },
   },
 
@@ -361,6 +374,7 @@ export const en = {
     notTheRightChoice: 'Not the right choice if…',
     achievements: 'What proves it',
     faq: 'Frequently asked questions',
+    who: "I'm the one who picks up: Thomas Bouzy, software engineer in eastern France.",
     book: {
       kicker: 'First step',
       title: 'A free 30-minute call.',
@@ -491,24 +505,34 @@ export const en = {
           coverage: {
             label: 'Existing test coverage',
             options: { good: 'Good', partial: 'Partial', none: 'None' },
+            help: 'The share of the software checked by automated tests. Not sure? Choose “None”: that is the high estimate.',
           },
         },
         amounts: { plan: 'Plan, phase 1 at a fixed price' },
         duration: 'Execution, with your team',
+        total: {
+          label: 'Total budget, at most',
+          note: 'The plan, then execution at {maxDays} days a week.',
+        },
       },
       rules: [
-        'A Migration is sold in two phases: a fixed-price plan, firm before work starts, then execution at {dayRate} excl. VAT a day. You decide on the second with the plan in hand.',
+        'A Migration is sold in two phases: a fixed-price plan, firm before work starts, then execution at {dayRate} excl. VAT a day. You decide on the second with the plan and a written ceiling in hand.',
         'During execution, I work up to {maxDays} days a week with your team.',
       ],
       notTheRightChoice: [
         {
-          text: 'The system can stop for a weekend without harm: a conventional migration will cost less.',
+          text: 'Your application can stop for a weekend without harm: its upgrade fits into {offer}, for less.',
+          offer: 'takeover',
         },
         {
           text: 'You want to replace it rather than evolve it: an {offer} will inform that choice.',
           offer: 'audit',
         },
       ],
+      proof: {
+        'enterprise-onboarding':
+          'Software with no tests at all, upgraded two major versions without ever stopping it: tests first.',
+      },
       faq: [
         {
           question: 'Why does test coverage weigh so much on the price of a Symfony upgrade?',
@@ -528,21 +552,21 @@ export const en = {
         description:
           "A balance, a stock or an invoice that won't reconcile? Traceable flows, idempotent processing and observability to explain it. Public prices.",
       },
-      heading: 'Reliability for your application: traceable flows, explained gaps',
+      heading: 'Knowing where each gap comes from, instead of guessing',
       priceHeading: 'How much does reliability work cost?',
-      sentences: ['“We credited the same payout twice, and only saw it at reconciliation.”'],
+      sentences: ['“We billed the same customer twice, and nobody noticed.”'],
       delivered: [
         {
           title: 'The flows that matter, chosen together',
           text: 'The ones where a discrepancy costs: stock, invoicing, payments.',
         },
         {
-          title: 'Traceable flows',
-          text: 'Every movement kept as a dated fact: the history replays.',
+          title: 'Every movement kept and dated',
+          text: 'For each gap, you find the operation that caused it.',
         },
         {
-          title: 'Double execution, dealt with',
-          text: 'An operation received twice is applied once.',
+          title: 'No more duplicates',
+          text: 'An order or a payment received twice is recorded once.',
         },
         {
           title: 'Alerts before your customers',
@@ -625,7 +649,7 @@ export const en = {
         },
         {
           title: 'A system that fails gracefully',
-          text: 'Backpressure on queues, circuit breakers, a degraded mode: in a distributed system, one part failing no longer takes the rest down. The load scenario stays in your CI, with an incident runbook.',
+          text: 'If one part fails, the rest keeps running, in a reduced mode. You keep the load test and the steps to follow in an incident.',
         },
       ],
       estimator: {
@@ -637,14 +661,19 @@ export const en = {
           observability: {
             label: 'Existing monitoring',
             options: { good: 'Good', partial: 'Partial', none: 'None' },
+            help: 'What you already measure of the running software: errors, slowness, alerts. Not sure? Choose “None”: that is the high estimate.',
           },
         },
         amounts: { plan: 'Diagnosis, phase 1 at a fixed price' },
         duration: 'Duration of the fixes',
+        total: {
+          label: 'Total budget, at most',
+          note: 'The diagnosis, then the fixes at {maxDays} days a week.',
+        },
       },
       rules: [
         'Scaling always starts with a load test that reproduces the peak, before any change.',
-        'It is sold in two phases: the fixed-price diagnosis, then the fixes at {dayRate} excl. VAT a day. You decide on the second with the diagnosis in hand.',
+        'It is sold in two phases: the fixed-price diagnosis, then the fixes at {dayRate} excl. VAT a day. You decide on the second with the diagnosis and a written ceiling in hand.',
       ],
       notTheRightChoice: [
         {
@@ -656,6 +685,10 @@ export const en = {
           offer: 'audit',
         },
       ],
+      proof: {
+        'wallet-event-sourcing':
+          'More than 1,000 transactions a minute, peaks of 10,000 to 20,000 users load-tested.',
+      },
       faq: [
         {
           question: "Isn't adding servers enough?",
@@ -673,6 +706,11 @@ export const en = {
             'It runs on a faithful copy, or on production in steps, outside peak hours, with a stop ready.',
         },
         {
+          question: 'And technically?',
+          answer:
+            'Backpressure on queues, circuit breakers, a degraded mode: in a distributed system, one part failing no longer takes the rest down. The load scenario stays in your CI, with an incident runbook.',
+        },
+        {
           question: 'Which technologies?',
           answer:
             'A load test does not depend on the language. My home ground is PHP and Symfony; I also work in Node.js, TypeScript and React. Python, so far in personal projects.',
@@ -685,8 +723,8 @@ export const en = {
         description:
           'A custom business application, front end and back end, built to be taken over: a fixed-price framing, then development by the day. Public prices.',
       },
-      heading: 'Custom application development',
-      priceHeading: 'How much does a custom application cost?',
+      heading: 'Custom build: the business tool you are missing',
+      priceHeading: 'How much does a new business tool cost?',
       sentences: [
         '“Our whole business runs on a spreadsheet everyone edits at the same time.”',
         '“We have the idea for the service, not the team to build it.”',
@@ -711,7 +749,7 @@ export const en = {
             label: 'What needs building',
             options: {
               small: 'An internal tool',
-              medium: 'A business application',
+              medium: 'Business software',
               large: 'A critical service',
             },
           },
@@ -722,10 +760,14 @@ export const en = {
         },
         amounts: { plan: 'Framing, phase 1 at a fixed price' },
         duration: 'Build duration, by the day',
+        total: {
+          label: 'Total budget, at most',
+          note: 'The framing, then the build at {maxDays} days a week.',
+        },
       },
       rules: [
         'A Custom build never replaces a running system: that is a Migration, or first an Audit.',
-        'It is sold in two phases: the fixed-price framing, then the build at {dayRate} excl. VAT a day. You decide on the second with the framing in hand.',
+        'It is sold in two phases: the fixed-price framing, then the build at {dayRate} excl. VAT a day. You decide on the second with the framing and a written ceiling in hand.',
       ],
       notTheRightChoice: [
         {
@@ -740,7 +782,11 @@ export const en = {
         {
           question: 'How much does the build cost?',
           answer:
-            "It is billed at {dayRate} excl. VAT a day, {maxDays} days a week at most. Multiply the estimator's weeks by {maxDays} days and you have the ceiling. The framing narrows it down before you decide on the rest.",
+            "It is billed at {dayRate} excl. VAT a day, {maxDays} days a week at most: the estimator's total budget is therefore a ceiling. The framing narrows it down in writing before you decide on the rest.",
+        },
+        {
+          question: "Our ERP comes from a vendor and we don't have its code. Is that a problem?",
+          answer: 'No. I work around it: its exports, links to your other tools, automation.',
         },
         {
           question: 'Why does the number of systems to connect weigh on the price?',
@@ -819,6 +865,10 @@ export const en = {
           offer: 'takeover',
         },
       ],
+      proof: {
+        'enterprise-onboarding':
+          'Four junior developers mentored over two years, on software for large accounts.',
+      },
       faq: [
         {
           question: 'What is the minimum?',

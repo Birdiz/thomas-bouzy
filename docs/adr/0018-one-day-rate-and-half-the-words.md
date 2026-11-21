@@ -2,7 +2,9 @@
 
 - Status: accepted, implemented 2026-10-05; amended by
   [ADR 20](0020-the-buyers-objections-before-the-buyer-asks.md), 2026-10-05, and by
-  [ADR 22](0022-full-stack-anchored-in-the-backend.md), 2026-10-06
+  [ADR 22](0022-full-stack-anchored-in-the-backend.md), 2026-10-06; the Offer
+  page's section titles, its call under the price and the Takeover's rules, by
+  [ADR 30](0030-offers-by-situation-and-the-whole-budget.md), 2026-11-21
 - Date: 2026-10-05
 - Amends [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and
   [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md)

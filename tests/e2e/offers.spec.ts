@@ -1,6 +1,15 @@
 import { RESUME } from '../../src/content/index.ts';
 import { OFFER_IDS, type OfferId } from '../../src/content/offers.ts';
-import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../../src/content/prices.ts';
+import {
+  type Combination,
+  combinationFor,
+  DAY_RATE,
+  defaultOption,
+  optionCombinations,
+  PRICES,
+  type PriceTable,
+  totalOf,
+} from '../../src/content/prices.ts';
 import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
 import { homePath, linkTo, ROUTES } from '../../src/routes.ts';
 import { CONTACT, LOCALES } from '../../src/site.ts';
@@ -15,6 +24,33 @@ import { expect, test } from './fixtures.ts';
 const OFFER_ROUTES = ROUTES.filter((route) =>
   (OFFER_IDS as readonly string[]).includes(route.page.id),
 );
+
+/** What a combination prices, as the estimator prints it: its amounts, its weeks, its total. */
+function figuresOf(table: PriceTable, combination: Combination | undefined): string {
+  if (!combination) return '';
+  const total = totalOf(table, combination);
+  return JSON.stringify([combination.amounts, combination.weeks, total]);
+}
+
+/**
+ * Whether a dimension's slider moves any figure, the others set to `options`:
+ * the size of an express Audit does not, and its slider is out of the way
+ * (ADR 30).
+ */
+function moves(table: PriceTable, i: number, options: readonly string[]): boolean {
+  const dimension = table.dimensions[i];
+  if (!dimension) throw new Error(`no dimension ${i}`);
+  const prices = dimension.options.map((option) =>
+    figuresOf(
+      table,
+      combinationFor(
+        table,
+        options.map((value, j) => (j === i ? option : value)),
+      ),
+    ),
+  );
+  return new Set(prices).size > 1;
+}
 
 for (const route of OFFER_ROUTES) {
   const offer = route.page.id as OfferId;
@@ -63,6 +99,9 @@ for (const route of OFFER_ROUTES) {
           if (!range) throw new Error(`${offer} ${options.join(' ')} has no ${amount}`);
           await expect(row).toContainText(formatEuroRange(range, route.locale));
         }
+        // The whole budget, where the headline is only its start (ADR 30).
+        const total = combination && totalOf(table, combination);
+        if (total) await expect(row).toContainText(formatEuroRange(total, route.locale));
       }
 
       await expect(page.locator('.estimator__disclaimer')).toHaveText(t.offerPage.disclaimer);
@@ -82,16 +121,43 @@ for (const route of OFFER_ROUTES) {
       await expect(result).toHaveCount(1);
 
       const sliders = table.dimensions.map((dimension) =>
-        page.getByRole('slider', { name: labels.dimensions[dimension.id]?.label ?? dimension.id }),
+        page.locator(`#estimator-${offer}-${dimension.id}`),
       );
-      for (const slider of sliders) await expect(slider).toHaveCount(1);
+      // Each opens on its default: the median case for a criterion the reader
+      // may not know, the first option otherwise (ADR 30).
+      const opening = table.dimensions.map(defaultOption);
+      for (const [i, dimension] of table.dimensions.entries()) {
+        const slider = sliders[i];
+        if (!slider) throw new Error('missing slider');
+        const label = labels.dimensions[dimension.id]?.label ?? dimension.id;
+        if (moves(table, i, opening)) {
+          await expect(page.getByRole('slider', { name: label })).toHaveCount(1);
+          await expect(slider).toHaveAttribute(
+            'aria-valuetext',
+            labels.dimensions[dimension.id]?.options[opening[i] ?? ''] ?? '',
+          );
+        } else {
+          await expect(slider).toBeHidden();
+        }
+        // A criterion that explains itself does so under its slider.
+        const help = labels.dimensions[dimension.id]?.help;
+        if (help) {
+          const described = (await slider.getAttribute('aria-describedby')) ?? '';
+          await expect(page.locator(`#${described.split(' ')[0]}`)).toHaveText(help);
+        }
+      }
 
-      // Every combination, reached from the keyboard alone.
+      // Every combination, reached from the keyboard alone. A slider that
+      // moves nothing, given the others, is out of the way and left alone.
       for (const options of optionCombinations(table)) {
         for (const [i, dimension] of table.dimensions.entries()) {
           const slider = sliders[i];
           if (!slider) throw new Error('missing slider');
           const option = options[i] ?? '';
+          if (!moves(table, i, options)) {
+            await expect(slider, `${options.join(' × ')}: ${dimension.id}`).toBeHidden();
+            continue;
+          }
           await slider.focus();
           await page.keyboard.press('Home');
           for (let step = 0; step < dimension.options.indexOf(option); step++) {
@@ -105,8 +171,8 @@ for (const route of OFFER_ROUTES) {
           // under the slider, and describes the slider with it.
           const note = labels.dimensions[dimension.id]?.notes?.[option];
           if (note) {
-            const described = await slider.getAttribute('aria-describedby');
-            await expect(page.locator(`#${described}`)).toHaveText(note);
+            const described = (await slider.getAttribute('aria-describedby')) ?? '';
+            await expect(page.locator(`#${described.split(' ').at(-1)}`)).toHaveText(note);
           }
         }
 
@@ -116,6 +182,12 @@ for (const route of OFFER_ROUTES) {
           if (!range) throw new Error(`${offer} ${options.join(' ')} has no ${amount}`);
           await expect(result, options.join(' × ')).toContainText(
             formatEuroRange(range, route.locale),
+          );
+        }
+        const total = combination && totalOf(table, combination);
+        if (total) {
+          await expect(result, options.join(' × ')).toContainText(
+            formatEuroRange(total, route.locale),
           );
         }
       }
@@ -140,6 +212,32 @@ for (const route of OFFER_ROUTES) {
       const book = page.locator('#book').getByRole('link', { name: t.offerPage.book.cta });
       await expect(book).toHaveAttribute('href', CONTACT.booking);
       await expect(page.locator('iframe')).toHaveCount(0);
+    });
+
+    test('offers the call right under the price, and says who answers it (ADR 30)', async ({
+      page,
+    }) => {
+      await page.goto(route.path);
+      // It was three screens below the price on a desktop, five on a phone.
+      const price = page.locator('section[aria-labelledby="offer-price"]');
+      await expect(price.getByRole('link', { name: t.offerPage.book.cta })).toHaveAttribute(
+        'href',
+        CONTACT.booking,
+      );
+      // A name and a face beside the last button; the name says who, so the
+      // face is not read out twice.
+      const who = page.locator('#book .contact__who');
+      await expect(who).toHaveText(t.offerPage.who);
+      await expect(who.locator('img')).toHaveAttribute('alt', '');
+    });
+
+    test('titles its sections to be read, not scanned (ADR 30)', async ({ page }) => {
+      await page.goto(route.path);
+      // They were 12px grey capitals, smaller than the text under them.
+      for (const heading of await page.locator('main h2.offer__heading').all()) {
+        await expect(heading).toHaveCSS('font-size', '24px');
+        await expect(heading).toHaveCSS('text-transform', 'none');
+      }
     });
   });
 }
@@ -240,6 +338,8 @@ test('the Partners page offers white label, the day rate and a CV on request onl
   }
   // The same rate a Client pays (ADR 18).
   await expect(page.locator('.offer__day-rate')).toContainText(formatEuros(DAY_RATE, 'fr'));
+  // A Referrer buys nothing, and is addressed apart (ADR 30).
+  await expect(page.locator('.offer__referrers')).toHaveText(partners?.referrers ?? '∅');
   // Each Offer a Partner can bring Thomas into, linked to its page.
   await expect(page.locator('.offer__card-link')).not.toHaveCount(0);
   for (const href of await page

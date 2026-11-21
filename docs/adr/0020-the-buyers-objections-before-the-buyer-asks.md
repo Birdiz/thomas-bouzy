@@ -2,7 +2,9 @@
 
 - Status: accepted, implemented 2026-10-05; amended by
   [ADR 22](0022-full-stack-anchored-in-the-backend.md), 2026-10-06; the
-  sitemap's `lastmod`, left open, settled by [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
+  sitemap's `lastmod`, left open, settled by [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21;
+  a two-phase card names its step, and the whole budget sits under the
+  estimator, by [ADR 30](0030-offers-by-situation-and-the-whole-budget.md), 2026-11-21
 - Date: 2026-10-05
 - Amends [ADR 9](0009-the-pitch-master-owns-the-copy.md),
   [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and

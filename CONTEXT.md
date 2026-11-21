@@ -26,7 +26,8 @@ _Avoid_: reseller, subcontractor, ESN (as a term)
 
 **Referrer** (FR *Prescripteur*):
 Someone who sees a Client's problem first and recommends Thomas, without buying
-anything: an accountant, an ERP integrator, a former colleague.
+anything: an accountant, an ERP integrator, a former colleague. The Partners page
+speaks to them in a line of their own, apart from the Partners (ADR 30).
 _Avoid_: partner (a Partner buys), ambassador, affiliate
 
 **Segment** (FR *Segment*):
@@ -131,6 +132,13 @@ _Avoid_: TJM (as a term), partner rate
 One Offer sold to one Client: the instance, not the catalogue entry.
 _Avoid_: contract, gig, prestation; *engagement* in French
 
+**Situation** (FR *Situation*):
+One of the three questions the home page groups the Offers by, in the reader's
+words: their software gives them trouble; a tool is missing; they have a
+technical team. Every Offer is in one, and the technical team's sell to no
+orphan application (ADR 30).
+_Avoid_: stage, lifecycle, persona
+
 ## What the page argues with
 
 **Failure mode** (FR *Mode de défaillance*):
@@ -186,7 +194,8 @@ _Avoid_: value, belief, approach
 - The local buyer of a **Build**, an owner whose process lives on a shared
   spreadsheet, is not quite the **Orphan-app segment**: nothing is orphaned yet.
   They are served under that Segment for now; a fourth Segment waits on real
-  conversations (ADR 19).
+  conversations (ADR 19). The home page gives them a Situation of their own,
+  « Il vous manque un outil » (ADR 30).
 - The glossary governs the site's voice. Metadata and an FAQ question may quote the
   words a reader types instead, as a Client sentence quotes the words a Client says:
   "TMA" in one Takeover question, "sous-traitance" and "ESN" in the Partners page's

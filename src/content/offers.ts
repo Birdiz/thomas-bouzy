@@ -22,6 +22,20 @@ export type OfferId = (typeof OFFER_IDS)[number];
 /** The Entry offer: the small, fixed-price Offer every Segment can buy first. */
 export const ENTRY_OFFER: OfferId = 'audit';
 
+/**
+ * The home page's Offers, grouped by a situation the reader can recognise
+ * (ADR 30): their software gives them trouble; a tool is missing; they have a
+ * technical team. A business owner answers that question; none of three read
+ * the life of an application the Offers used to be laid out as. Every Offer is
+ * in one situation, the Entry offer first, and the technical team's Offers,
+ * which sell to no orphan application, come last.
+ */
+export const SITUATIONS = [
+  ['audit', 'takeover', 'reliability'],
+  ['build'],
+  ['migration', 'scaling', 'reinforcement'],
+] as const satisfies readonly (readonly OfferId[])[];
+
 /** Populations of Clients who buy for the same reason (ADR 14). */
 export type SegmentId = 'critical-systems' | 'orphan-app' | 'partners' | 'public-sector';
 
@@ -31,6 +45,7 @@ export const ACHIEVEMENT_IDS = [
   'live-api-redesign',
   'wallet-event-sourcing',
   'on-chain-operations',
+  'acquired-app-migration',
   'enterprise-onboarding',
   'codebase-audit',
   'open-data-directories',
@@ -64,14 +79,19 @@ export interface OfferFacts {
 }
 
 export const OFFERS: Record<OfferId, OfferFacts> = {
-  // The Entry offer: every Segment can buy it first.
+  // The Entry offer: every Segment can buy it first. Proven by the one audit
+  // of someone else's code: the API redesign proved nothing an audit sells
+  // (ADR 30).
   audit: {
     segments: ['critical-systems', 'orphan-app', 'partners', 'public-sector'],
-    achievements: ['codebase-audit', 'live-api-redesign'],
+    achievements: ['codebase-audit'],
   },
+  // An application another company wrote, taken over and moved into a new
+  // home, is what a Takeover sells; the plants and the large accounts show it
+  // kept running.
   takeover: {
     segments: ['orphan-app', 'partners', 'public-sector'],
-    achievements: ['industrial-erp', 'enterprise-onboarding'],
+    achievements: ['industrial-erp', 'enterprise-onboarding', 'acquired-app-migration'],
   },
   migration: {
     segments: ['critical-systems', 'partners', 'public-sector'],

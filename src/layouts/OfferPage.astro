@@ -12,7 +12,7 @@ import { fromLine } from '../lib/offer-price.ts';
 import { fillPrices } from '../lib/price-tokens.ts';
 import { pageGraph } from '../lib/structured-data.ts';
 import { linkTo, type Route } from '../routes.ts';
-import { LOCALE_TAG } from '../site.ts';
+import { CONTACT, LOCALE_TAG } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -35,10 +35,13 @@ const sentences = [
   ...page.sentences,
 ];
 
+/* Each Achievement says what it proves for this Offer: its own plain line, or
+   the line this page gives it, when the plain line proves something else
+   (ADR 30). */
 const achievements = OFFERS[offer].achievements.map((id) => {
   const achievement = t.achievements.find((candidate) => candidate.id === id);
   if (!achievement) throw new Error(`${offer} cites ${id}, which is not an Achievement`);
-  return achievement;
+  return { ...achievement, proof: page.proof?.[id] ?? achievement.plain };
 });
 
 /* "Not the right choice when" names another Offer as a link to it: the
@@ -53,7 +56,8 @@ const redirects = page.notTheRightChoice.map(({ text, offer: other }) => {
   };
 });
 
-/** Sections are numbered in the order ADR 18 gives them, as on the home page. */
+/** Sections are numbered in the order ADR 18 gives them, as on the home page.
+    Their titles are read, not scanned: 24px, in normal case (ADR 30). */
 const num = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -82,7 +86,7 @@ const num = (n: number) => String(n).padStart(2, '0');
 
     {/* 2. The Client sentences it answers, in the Client's words. */}
     <section class="offer__section container" aria-labelledby="offer-sentences">
-      <h2 class="kicker offer__heading" id="offer-sentences">
+      <h2 class="offer__heading" id="offer-sentences">
         <span class="kicker__num" aria-hidden="true">{num(1)}</span>{labels.sentences}
       </h2>
       <ul class="offer__sentences">
@@ -93,7 +97,7 @@ const num = (n: number) => String(n).padStart(2, '0');
     {/* 3. What is delivered, in the order it is delivered: the steps used to
         be a section of their own, and repeated this one (ADR 18). */}
     <section class="offer__section container" aria-labelledby="offer-delivered">
-      <h2 class="kicker offer__heading" id="offer-delivered">
+      <h2 class="offer__heading" id="offer-delivered">
         <span class="kicker__num" aria-hidden="true">{num(2)}</span>{labels.delivered}
       </h2>
       <ol class="offer__cards offer__delivered">
@@ -118,7 +122,7 @@ const num = (n: number) => String(n).padStart(2, '0');
 
     {/* 4. The price, and the commercial rules this page governs. */}
     <section class="offer__section container" aria-labelledby="offer-price">
-      <h2 class="kicker offer__heading" id="offer-price">
+      <h2 class="offer__heading" id="offer-price">
         <span class="kicker__num" aria-hidden="true">{num(3)}</span>{page.priceHeading}
       </h2>
       <Estimator offer={offer} locale={locale} labels={page.estimator} shared={labels} />
@@ -139,11 +143,18 @@ const num = (n: number) => String(n).padStart(2, '0');
           </ul>
         )
       }
+      {/* The call, right under the price: it was three screens further down
+          on a desktop, and five on a phone (ADR 30). */}
+      <p class="offer__book">
+        <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+          {labels.book.cta}
+        </a>
+      </p>
     </section>
 
     {/* 5. When it is not the right choice, and what is: the Offer's own price. */}
     <section class="offer__section container" aria-labelledby="offer-fit">
-      <h2 class="kicker offer__heading" id="offer-fit">
+      <h2 class="offer__heading" id="offer-fit">
         <span class="kicker__num" aria-hidden="true">{num(4)}</span>{labels.notTheRightChoice}
       </h2>
       <ul class="offer__fit-list">
@@ -170,7 +181,7 @@ const num = (n: number) => String(n).padStart(2, '0');
 
     {/* 6. The Achievements that prove it. */}
     <section class="offer__section container" aria-labelledby="offer-achievements">
-      <h2 class="kicker offer__heading" id="offer-achievements">
+      <h2 class="offer__heading" id="offer-achievements">
         <span class="kicker__num" aria-hidden="true">{num(5)}</span>{labels.achievements}
       </h2>
       <ul class="offer__cards">
@@ -181,7 +192,7 @@ const num = (n: number) => String(n).padStart(2, '0');
               <p class="offer__card-meta">
                 {achievement.org} · {achievement.period}
               </p>
-              <p class="offer__card-text">{achievement.plain}</p>
+              <p class="offer__card-text">{achievement.proof}</p>
             </li>
           ))
         }
@@ -190,7 +201,7 @@ const num = (n: number) => String(n).padStart(2, '0');
 
     {/* 7. A short FAQ. */}
     <section class="offer__section container" aria-labelledby="offer-faq">
-      <h2 class="kicker offer__heading" id="offer-faq">
+      <h2 class="offer__heading" id="offer-faq">
         <span class="kicker__num" aria-hidden="true">{num(6)}</span>{labels.faq}
       </h2>
       <div class="offer__faq">
@@ -205,8 +216,8 @@ const num = (n: number) => String(n).padStart(2, '0');
       </div>
     </section>
 
-    {/* 8. The booking link. */}
-    <BookingSection labels={labels.book} locale={locale} />
+    {/* 8. The booking link, and who answers it. */}
+    <BookingSection labels={labels.book} locale={locale} who={labels.who} />
   </main>
   <SiteFooter t={t} locale={locale} />
 </BaseLayout>

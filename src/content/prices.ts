@@ -4,9 +4,10 @@ import type { OfferId } from './offers.ts';
  * Every price the site publishes, in one typed table (ADR 17).
  *
  * The static table on each Offer page, the estimator that turns it into
- * sliders, the "from" price on the home page's Offer cards and the day rate on
- * the Partners page all read from here, so none of them can disagree with
- * another, and changing a price is one edit.
+ * sliders, the whole budget it adds up (`totalOf`), the "from" price on the
+ * home page's Offer cards and the day rate on the Partners page all read from
+ * here, so none of them can disagree with another, and changing a price is one
+ * edit.
  *
  * Amounts are euros excluding VAT. Nothing here has a locale: both languages
  * show the same numbers by construction, and each locale module supplies only
@@ -44,7 +45,25 @@ export type DurationId = 'delivery' | 'setup' | 'execution';
 export interface Dimension {
   id: string;
   options: readonly string[];
+  /**
+   * The option the slider opens on, when it is not the first. A criterion the
+   * reader may not know how to answer, test coverage say, opens on its median
+   * case: on the first, the cheapest, the estimator promised the lowest price
+   * to whoever did not know (ADR 30).
+   */
+  default?: string;
 }
+
+/**
+ * The whole of what an Offer costs, when its headline amount is only the
+ * start of it (ADR 30):
+ *
+ * - `phases`: the fixed-price first phase, then the weeks of the second at the
+ *   day rate, `MAX_DAYS_PER_WEEK` days a week at most: the ceiling the Build's
+ *   FAQ taught the reader to work out alone;
+ * - `firstYear`: the set-up, then twelve months of the plan.
+ */
+export type TotalId = 'phases' | 'firstYear';
 
 /** The ranges for one choice of option on every dimension. */
 export interface Combination {
@@ -67,6 +86,8 @@ export interface PriceTable {
   amounts: readonly AmountId[];
   /** Present when every combination carries a duration. */
   duration?: DurationId;
+  /** Present when the headline amount is not the whole budget: see `totalOf`. */
+  total?: TotalId;
   combinations: readonly Combination[];
 }
 
@@ -153,6 +174,7 @@ export const PRICES: Record<OfferId, PriceTable> = {
 
   // A Watch set-up puts a smoke-test net on the critical paths; an Evolution
   // set-up puts the full net under the application, because it will change.
+  // The first year, set-up and twelve months, is the figure an owner budgets.
   takeover: {
     dimensions: [
       { id: 'size', options: ['small', 'medium', 'large'] },
@@ -160,6 +182,7 @@ export const PRICES: Record<OfferId, PriceTable> = {
     ],
     amounts: ['setup', 'monthly'],
     duration: 'setup',
+    total: 'firstYear',
     combinations: [
       {
         options: ['small', 'watch'],
@@ -210,14 +233,16 @@ export const PRICES: Record<OfferId, PriceTable> = {
   // alongside the Client's team, so the sliders move the plan and the
   // execution's duration. Test coverage moves both more than the version gap,
   // as the page's FAQ says: without tests, every step is checked by hand.
-  // That is the point of having it as a slider at all.
+  // That is the point of having it as a slider at all. It opens on partial
+  // coverage, the median case, rather than on the cheapest (ADR 30).
   migration: {
     dimensions: [
       { id: 'gap', options: ['one', 'two', 'three-plus'] },
-      { id: 'coverage', options: ['good', 'partial', 'none'] },
+      { id: 'coverage', options: ['good', 'partial', 'none'], default: 'partial' },
     ],
     amounts: ['plan'],
     duration: 'execution',
+    total: 'phases',
     combinations: [
       { options: ['one', 'good'], amounts: { plan: range(2000, 2500) }, weeks: range(2, 4) },
       { options: ['one', 'partial'], amounts: { plan: range(2300, 2900) }, weeks: range(4, 6) },
@@ -258,14 +283,16 @@ export const PRICES: Record<OfferId, PriceTable> = {
   // Shaped like the Migration: the load diagnosis is the fixed-price first
   // phase, and the corrections are billed by the day, so the sliders move the
   // diagnosis and the duration. Observability is the teaching slider: without
-  // metrics, finding the bottleneck costs more (ADR 19).
+  // metrics, finding the bottleneck costs more (ADR 19). Like the Migration's
+  // coverage, it opens on the median case (ADR 30).
   scaling: {
     dimensions: [
       { id: 'services', options: ['one', 'some', 'many'] },
-      { id: 'observability', options: ['good', 'partial', 'none'] },
+      { id: 'observability', options: ['good', 'partial', 'none'], default: 'partial' },
     ],
     amounts: ['plan'],
     duration: 'execution',
+    total: 'phases',
     combinations: [
       // 4–5, 5–6 and 6–7 days.
       { options: ['one', 'good'], amounts: { plan: range(2200, 2750) }, weeks: range(2, 4) },
@@ -293,6 +320,7 @@ export const PRICES: Record<OfferId, PriceTable> = {
     ],
     amounts: ['plan'],
     duration: 'execution',
+    total: 'phases',
     combinations: [
       // 3–4, 4–5 and 5–6 days.
       { options: ['small', 'none'], amounts: { plan: range(1650, 2200) }, weeks: range(3, 5) },
@@ -332,6 +360,34 @@ export function optionCombinations(table: PriceTable): string[][] {
       combinations.flatMap((prefix) => dimension.options.map((option) => [...prefix, option])),
     [[]],
   );
+}
+
+/** Months of the plan in the first year of a Takeover. */
+const MONTHS_A_YEAR = 12;
+
+/**
+ * The whole budget of one combination, when its table declares one: the
+ * figure a reader would otherwise work out alone, or not at all (ADR 30). A
+ * two-phase Offer's first phase covered 12 to 33 % of it.
+ */
+export function totalOf(table: PriceTable, combination: Combination): Range | undefined {
+  if (table.total === 'phases') {
+    const [plan, weeks] = [combination.amounts.plan, combination.weeks];
+    if (!plan || !weeks) throw new Error('A two-phase total needs a plan and its weeks');
+    const week = MAX_DAYS_PER_WEEK * DAY_RATE;
+    return range(plan.min + weeks.min * week, plan.max + weeks.max * week);
+  }
+  if (table.total === 'firstYear') {
+    const { setup, monthly } = combination.amounts;
+    if (!setup || !monthly) throw new Error('A first year needs a set-up and a monthly plan');
+    return range(setup.min + MONTHS_A_YEAR * monthly.min, setup.max + MONTHS_A_YEAR * monthly.max);
+  }
+  return undefined;
+}
+
+/** The option a dimension's slider opens on: its declared default, or its first. */
+export function defaultOption(dimension: Dimension): string {
+  return dimension.default ?? dimension.options[0] ?? '';
 }
 
 /** The combination a choice of options selects, if the table has it. */

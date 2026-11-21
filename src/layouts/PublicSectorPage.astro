@@ -54,7 +54,7 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('public-sec
     </section>
 
     <section class="offer__section container" aria-labelledby="public-proof">
-      <h2 class="kicker offer__heading" id="public-proof">{page.proof.heading}</h2>
+      <h2 class="offer__heading" id="public-proof">{page.proof.heading}</h2>
       <ul class="offer__cards">
         {
           page.proof.items.map((item) => (
@@ -68,7 +68,7 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('public-sec
     </section>
 
     <section class="offer__section container" aria-labelledby="public-offers">
-      <h2 class="kicker offer__heading" id="public-offers">{page.offers}</h2>
+      <h2 class="offer__heading" id="public-offers">{page.offers}</h2>
       <ul class="offer__cards">
         {
           offers.map((offer) => (
@@ -84,7 +84,7 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('public-sec
       </ul>
     </section>
 
-    <BookingSection labels={page.book} locale={locale} />
+    <BookingSection labels={page.book} locale={locale} who={t.offerPage.who} />
   </main>
   <SiteFooter t={t} locale={locale} />
 </BaseLayout>

@@ -1,13 +1,20 @@
 ---
+import { Image } from 'astro:assets';
 import type { OfferPageLabels } from '../../content/types.ts';
+import { portrait } from '../../lib/portrait.ts';
 import { CONTACT, type Locale, serviceAreaTowns } from '../../site.ts';
 
 interface Props {
   labels: OfferPageLabels['book'];
   locale: Locale;
+  /**
+   * Who answers the call, beside a small portrait (ADR 30). Left out on the
+   * About page, which opens on the portrait and has just said who picks up.
+   */
+  who?: string;
 }
 
-const { labels, locale } = Astro.props;
+const { labels, locale, who } = Astro.props;
 ---
 
 {/* The last section of every Offer page: the first step, which costs the
@@ -20,6 +27,25 @@ const { labels, locale } = Astro.props;
       <p class="kicker">{labels.kicker}</p>
       <h2 class="contact__title">{labels.title}</h2>
       <p class="contact__blurb">{labels.text}</p>
+
+      {
+        who && (
+          <p class="contact__who">
+            {portrait && (
+              <Image
+                src={portrait}
+                alt=""
+                class="washed"
+                width={128}
+                height={128}
+                widths={[64, 128]}
+                sizes="64px"
+              />
+            )}
+            <span>{who}</span>
+          </p>
+        )
+      }
 
       <div class="contact__actions">
         <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">

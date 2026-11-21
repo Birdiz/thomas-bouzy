@@ -703,250 +703,84 @@ a {
 
 /* — offers ————————————————————————————————————————————————————————————————— */
 
-/* The Offers in two shapes. Those that run alongside every stage are cards,
-   the Audit first. The life of the application is one framed panel, not a
-   second row of cards: a track with three stops at even intervals, a label
-   under each, and the stage's Offers as plain entries. Each Offer ends on a
-   price: the plain line says what it is, the "from" says whether it is in
-   reach. */
+/* The Offers grouped by situation (ADR 30): a question the reader answers for
+   themselves, then the cards that answer it. Each card ends on a price — the
+   plain line says what the Offer is, the "from" whether it is in reach — then
+   on the line that says the whole card opens. */
 .offers {
   padding-block: 40px 64px;
 }
 .offers__title {
   max-width: 24ch;
-  margin-bottom: 36px;
+  margin-bottom: 8px;
 }
-
-.journey,
-.journey__cards {
+.situation {
+  margin-top: 40px;
+}
+.situation__title {
+  font-size: clamp(21px, 2.2vw, 26px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 18px;
+}
+.situation__cards {
+  display: grid;
+  gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-/* When an Offer applies, set like the section kicker: a step under the
-   Offers' names, so the stage reads as a heading over them, not as one. */
-.journey__label {
-  margin: 0 0 18px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.5;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.journey__alongside {
-  margin-bottom: 48px;
-}
-.journey__cards {
-  display: grid;
-  gap: 14px;
-}
-
-/* The panel: one frame round the three stages. */
-.journey {
-  --pad: 28px;
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-md);
-}
-.journey__stage {
-  position: relative;
-}
-/* The step number in a ring, the stops on the track. */
-.journey__step {
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1.5px solid var(--color-accent);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-accent-text);
-  background: var(--color-bg);
-}
-.journey__stage .journey__label {
+/* The owner a missing tool is for, in their words, beside the one card that
+   answers them. */
+.situation__sentence {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 2.6vw, 30px);
+  line-height: 1.25;
   text-wrap: balance;
 }
-/* Inside the panel an Offer is an entry, not a card: no ground of its own,
-   a hairline between two Offers of the same stage. */
-.journey .journey__cards {
-  gap: 0;
-}
-.journey .offers__card {
-  padding: 0;
-  background: none;
-  border-radius: 0;
-}
-.journey .offers__card + .offers__card {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--color-divider);
-}
-
-/* Wide: three equal columns. Subgrid lines up the stops, the labels and the
-   entries; the track runs from each stop to the next, so every segment has
-   the same length, and fades out after the last: the application lives on. */
 @media (min-width: 861px) {
-  .journey {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: auto auto 1fr;
-    padding-block: var(--pad);
-  }
-  .journey__stage {
-    grid-row: span 3;
-    display: grid;
-    grid-template-rows: subgrid;
-    row-gap: 0;
-    padding-inline: var(--pad);
-  }
-  .journey__step {
-    margin-bottom: 16px;
-  }
-  .journey__stage::before {
-    content: "";
-    position: absolute;
-    top: 15px;
-    left: calc(var(--pad) + 30px + 10px);
-    right: calc(var(--pad) * -1 + 10px);
-    height: 2px;
-    background: var(--color-accent);
-  }
-  .journey__stage:last-child::before {
-    right: 0;
-    background: linear-gradient(to right, var(--color-accent), transparent);
-  }
-  .journey .journey__cards {
-    align-content: start;
-  }
-
-  .journey__alongside .journey__cards {
+  .situation__cards,
+  .situation--sentence {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-}
-
-/* Narrow: the track runs down the left, a stop at the head of each stage. */
-@media (max-width: 860px) {
-  .journey {
+  .situation--sentence {
     display: grid;
-    gap: 32px;
-    padding: 24px 22px;
+    column-gap: 14px;
+    align-items: center;
   }
-  .journey__stage {
-    display: grid;
-    grid-template-columns: 30px minmax(0, 1fr);
-    column-gap: 16px;
-    align-items: start;
+  .situation--sentence .situation__title {
+    grid-column: 1 / -1;
   }
-  .journey__step {
-    grid-row: span 2;
+  .situation--sentence .situation__sentence {
+    grid-column: span 2;
+    margin: 0;
+    padding-right: 24px;
   }
-  .journey__label {
-    align-self: center;
-  }
-  .journey__stage .journey__label {
-    margin: 4px 0 14px;
-  }
-  .journey__stage .journey__cards {
-    grid-column: 2;
-  }
-  .journey__stage:not(:last-child)::before {
-    content: "";
-    position: absolute;
-    left: 14px;
-    top: 40px;
-    bottom: -22px;
-    width: 2px;
-    background: var(--color-accent);
-  }
-}
-
-/* The track draws itself as the panel scrolls into view, one stage after the
-   other, and each stop lights up as the line reaches it: the life of the
-   application read in order (docs/adr/0023). Tied to scroll where the browser
-   can, so it stops when the reader stops. Elsewhere (Firefox) the script in
-   OffersSection.astro holds the track back with `is-waiting`, then draws it
-   once, on a clock, with `is-drawn`. Under reduced motion, or with no script,
-   the track is simply drawn, as before. */
-@media (prefers-reduced-motion: no-preference) {
-  .journey__stage:nth-child(2) {
-    --i: 1;
-  }
-  .journey__stage:nth-child(3) {
-    --i: 2;
-  }
-  .journey__stage::before {
-    transform-origin: 0 0;
-  }
-  @supports (animation-timeline: view()) {
-    .journey {
-      view-timeline: --journey block;
-    }
-    /* Longhands only: given all of them, the minifier folds them into an
-       `animation` shorthand carrying the timeline, which browsers reject. */
-    .journey__stage::before,
-    .journey__step {
-      animation-name: journey-draw;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: --journey;
-      animation-range: cover calc(12% + var(--i, 0) * 13%) cover calc(25% + var(--i, 0) * 13%);
-    }
-    .journey__step {
-      animation-name: journey-stop;
-      animation-range: cover calc(10% + var(--i, 0) * 13%) cover calc(13% + var(--i, 0) * 13%);
-    }
-  }
-  .journey.is-waiting .journey__stage::before {
-    scale: var(--track, 0 1);
-  }
-  .journey.is-waiting .journey__step {
-    border-color: var(--color-divider);
-  }
-  .journey.is-drawn .journey__stage::before {
-    animation: journey-draw 0.6s var(--ease-out) calc(var(--i, 0) * 0.5s) both;
-  }
-  .journey.is-drawn .journey__step {
-    animation: journey-stop 0.3s calc(var(--i, 0) * 0.5s) both;
-  }
-}
-/* Wide, the track runs right; narrow, it runs down. */
-@keyframes journey-draw {
-  from {
-    scale: var(--track, 0 1);
-  }
-}
-@media (max-width: 860px) {
-  .journey__stage::before {
-    --track: 1 0;
-  }
-}
-/* A stop starts as a dim ring and lights up, filled, when the line reaches it.
-   Its number stays legible all the way: 6.01:1 at both ends. */
-@keyframes journey-stop {
-  from {
-    border-color: var(--color-divider);
-  }
-  to {
-    border-color: var(--color-accent-fill);
-    background: var(--color-accent-fill);
-    color: var(--color-on-accent);
+  .situation--sentence .situation__cards {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 .offers__card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 24px 26px;
   border-radius: var(--radius-md);
   background: var(--color-surface);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
 }
 .offers__name {
   font-size: 21px;
   line-height: 1.2;
   letter-spacing: -0.015em;
   margin: 0;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 .offers__plain {
   font-size: 15px;
@@ -956,13 +790,25 @@ a {
   flex: 1;
   text-wrap: pretty;
 }
-/* A price in a sentence is read, not scanned: the sans, with figures that
-   keep their width. The mono is kept for labels and ordinals. */
+/* A price in a sentence is read, not scanned: the sans, in ink, at body size
+   or above, with figures that keep their width. It was 14px and grey, smaller
+   than the line above it (ADR 30). */
 .offers__from {
   font-variant-numeric: tabular-nums;
   margin: 6px 0 0;
-  font-size: 14px;
-  color: var(--color-muted);
+  font-size: 17px;
+}
+/* What the whole card does when touched, said to the eye: the arrow is drawn
+   at rest, and steps forward under the pointer. */
+.offers__more {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-accent-text);
+}
+.offers__arrow {
+  display: inline-block;
+  margin-left: 0.3em;
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 /* The Entry offer's badge: the one card that says "start here". */
 .offers__badge {
@@ -973,16 +819,6 @@ a {
   text-transform: uppercase;
   color: var(--color-accent-text);
   margin: 0;
-}
-.offers__card {
-  position: relative;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out),
-    transform var(--dur-base) var(--ease-out);
-}
-.offers__name {
-  transition: color var(--dur-fast) var(--ease-out);
 }
 .offers__name a {
   color: inherit;
@@ -999,47 +835,26 @@ a {
   text-underline-offset: 3px;
 }
 /* The whole card is the link, so the whole card answers: it lifts, its ground
-   lightens a step, and an arrow comes in after the name, as on the invitation
-   to the Audit. The arrow is drawn from the start, only transparent, so the
-   name never rewraps under the pointer; its alt text is empty, so it is not
-   read out. */
-.offers__name::after {
-  content: "→" / "";
-  display: inline-block;
-  margin-left: 0.3em;
-  color: var(--color-accent-text);
-  opacity: 0;
-  transform: translateX(-6px);
-  transition:
-    opacity var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
-}
+   darkens a step, an accent edge comes in, and the arrow steps forward. */
 .offers__card:is(:hover, :has(a:focus-visible)) {
   transform: translateY(-4px);
-}
-.offers__card:is(:hover, :has(a:focus-visible)) .offers__name {
-  color: var(--color-accent-text);
-}
-.offers__card:is(:hover, :has(a:focus-visible)) .offers__name::after {
-  opacity: 1;
-  transform: none;
-}
-.journey__alongside .offers__card:is(:hover, :has(a:focus-visible)) {
   background: var(--color-sunken);
   box-shadow:
     0 0 0 1px var(--color-accent),
     var(--shadow-lg);
 }
-.offers__link {
-  font-size: 15px;
+.offers__card:is(:hover, :has(a:focus-visible)) .offers__name {
   color: var(--color-accent-text);
+}
+.offers__card:is(:hover, :has(a:focus-visible)) .offers__arrow {
+  transform: translateX(6px);
 }
 .offers__book {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 20px;
-  margin: 36px 0 0;
+  margin: 48px 0 0;
   padding: 22px 26px;
   border-radius: var(--radius-md);
   background: var(--color-sunken);
@@ -1051,7 +866,7 @@ a {
   font-family: var(--font-body);
 }
 .offers__partners {
-  margin: 26px 0 0;
+  margin: 22px 0 0;
   font-size: 15.5px;
   color: var(--color-muted);
 }
@@ -1383,6 +1198,24 @@ a {
   flex-wrap: wrap;
   gap: 12px;
 }
+/* Who answers, beside his face: the Offer pages had a name nowhere near the
+   button (ADR 30). */
+.contact__who {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 52ch;
+  margin: -12px 0 28px;
+  font-size: 15.5px;
+  text-wrap: pretty;
+}
+.contact__who img {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  object-fit: cover;
+}
 .contact__actions .btn {
   padding: 13px 28px;
   font-size: 16px;
@@ -1428,10 +1261,10 @@ a {
 /* — offer pages ————————————————————————————————————————————————————————————
 
    One page per Offer, in ADR 17's order. Same grammar as the home page —
-   numbered mono eyebrows, Figtree headings, surface cards — so a reader who
-   arrives from a link lands on the same site, not on a landing page. The
-   section headings are the eyebrows themselves: one level of h2 per section,
-   no second display title competing with the Offer's name. */
+   numbered sections, Figtree headings, surface cards — so a reader who
+   arrives from a link lands on the same site, not on a landing page. One
+   level of h2 per section, read rather than scanned: they were 12px grey
+   capitals, smaller than the text under them (ADR 30). */
 
 .offer__head {
   padding-block: 64px 36px;
@@ -1522,7 +1355,21 @@ a {
   }
 }
 .offer__heading {
-  margin-bottom: 22px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 22px;
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+/* The section's number keeps the eyebrow's mono and its accent. */
+.offer__heading .kicker__num {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.14em;
 }
 
 .offer__sentences {
@@ -1714,6 +1561,23 @@ a {
   font-size: 15.5px;
   line-height: 1.6;
   max-width: 64ch;
+}
+
+.offer__book {
+  margin: 24px 0 0;
+}
+/* A Referrer is not a Partner: their line stands apart, on the sunken ground
+   the home page gives its call to book. */
+.offer__referrers {
+  max-width: 64ch;
+  margin: 0;
+  padding: 22px 26px;
+  border-radius: var(--radius-md);
+  background: var(--color-sunken);
+  font-family: var(--font-heading);
+  font-size: clamp(19px, 2vw, 22px);
+  line-height: 1.35;
+  text-wrap: pretty;
 }
 
 .offer__fit-list {

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { RESUME } from '../../src/content/index.ts';
-import { ACHIEVEMENT_IDS, OFFER_IDS, REFERENCES } from '../../src/content/offers.ts';
+import { ACHIEVEMENT_IDS, OFFER_IDS, REFERENCES, SITUATIONS } from '../../src/content/offers.ts';
 import { fromPrice } from '../../src/content/prices.ts';
 import { formatEuros } from '../../src/lib/money.ts';
 import { homePath, pathOf } from '../../src/routes.ts';
@@ -156,11 +156,15 @@ test.describe('references accordion', () => {
     }
     // Every achievement on the home page is reachable from exactly one
     // reference; the on-chain operations stay on the Reliability page, for
-    // the technical buyer they prove something to (ADR 28).
+    // the technical buyer they prove something to (ADR 28), and the acquired
+    // application on the Takeover's, until Thomas describes it in full (ADR 30).
     const shown: string[] = REFERENCES.flatMap((reference) => [...reference.achievements]);
+    const offerPagesOnly = ['on-chain-operations', 'acquired-app-migration'];
     await expect(page.locator('article.reference__case')).toHaveCount(new Set(shown).size);
-    await expect(page.locator('[data-achievement="on-chain-operations"]')).toHaveCount(0);
-    expect(ACHIEVEMENT_IDS.filter((id) => !shown.includes(id))).toEqual(['on-chain-operations']);
+    for (const id of offerPagesOnly) {
+      await expect(page.locator(`[data-achievement="${id}"]`)).toHaveCount(0);
+    }
+    expect(ACHIEVEMENT_IDS.filter((id) => !shown.includes(id))).toEqual(offerPagesOnly);
 
     // The plain line and the result in sight, the approach folded for the
     // technical teams (ADR 28).
@@ -537,7 +541,9 @@ test.describe('motion preferences', () => {
       await expect(page.locator('html')).not.toHaveClass(/page-in/);
     });
 
-    test('raises the ridge once, and draws the journey as it scrolls', async ({ page }) => {
+    // The journey's track went with the journey (ADR 30): the Offers are
+    // grouped by situation, and their cards answer the pointer.
+    test('raises the ridge once', async ({ page }) => {
       await gotoHome(page, '/');
       const motion = await page.evaluate(() => ({
         ridge: [...document.querySelectorAll('.ridge path')].map(
@@ -545,13 +551,10 @@ test.describe('motion preferences', () => {
         ),
         ridgeLoops: getComputedStyle(document.querySelector('.ridge path') as Element)
           .animationIterationCount,
-        scrollDriven: CSS.supports('animation-timeline: view()'),
-        stop: getComputedStyle(document.querySelector('.journey__step') as Element).animationName,
       }));
       expect(motion.ridge.length).toBeGreaterThan(0);
       for (const name of motion.ridge) expect(name).toBe('ridge-rise');
       expect(motion.ridgeLoops).toBe('1');
-      expect(motion.stop).toBe(motion.scrollDriven ? 'journey-stop' : 'none');
     });
   });
 
@@ -714,6 +717,36 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       );
 
       await expect(page.locator(`#offers a[href="${pathOf('partners', 'fr')}"]`)).toHaveCount(1);
+    });
+
+    test(`groups the Offers by the reader's situation on ${home} (ADR 30)`, async ({ page }) => {
+      await gotoHome(page, home);
+      const t = RESUME[locale].offersSection;
+      const situations = page.locator('#offers .situation');
+      await expect(situations).toHaveCount(SITUATIONS.length);
+      for (const [i, ids] of SITUATIONS.entries()) {
+        const situation = situations.nth(i);
+        await expect(situation.locator('h3')).toHaveText(t.situations[i]?.title ?? '∅');
+        expect(
+          await situation
+            .locator('.offers__card')
+            .evaluateAll((cards) => cards.map((card) => card.getAttribute('data-offer'))),
+        ).toEqual([...ids]);
+      }
+      // A missing tool opens on its owner's words; the technical team's
+      // situation ends on the Partners, who bring Thomas to a team.
+      const [, missing] = t.situations;
+      await expect(situations.nth(1).locator('.situation__sentence')).toHaveText(missing.sentence);
+      await expect(situations.last().locator(`a[href="${pathOf('partners', 'fr')}"]`)).toHaveCount(
+        1,
+      );
+      // Every card says it opens, with its arrow drawn at rest, and is still
+      // one link: its name.
+      for (const card of await page.locator('#offers .offers__card').all()) {
+        await expect(card.locator('.offers__more')).toContainText(t.more);
+        await expect(card.locator('.offers__arrow')).toHaveCSS('opacity', '1');
+        await expect(card.getByRole('link')).toHaveCount(1);
+      }
     });
   }
 });
