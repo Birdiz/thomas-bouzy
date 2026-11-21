@@ -73,6 +73,9 @@
   --space-4: 17.6px;
   --space-6: 26.4px;
   --space-8: 35.2px;
+  /* Between two sections of the home page, half on each side, so a section
+     ends where the next begins rather than where its own groups do (ADR 31). */
+  --space-section: clamp(72px, 8vw, 112px);
 
   --radius-sm: 8px;
   --radius-md: 16px;

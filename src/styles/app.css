@@ -492,7 +492,7 @@ a {
    as a track an owner walks in order, not as three cards of equal weight
    (ADR 31). */
 .workshops {
-  padding-block: 72px 24px;
+  padding-block: calc(var(--space-section) / 2);
 }
 .workshops > p {
   margin-top: 22px;
@@ -574,7 +574,7 @@ a {
    the left and the Offers on the right, as the sentences and the promise used
    to be. */
 .offers {
-  padding-block: 88px 64px;
+  padding-block: calc(var(--space-section) / 2);
 }
 .offers__title {
   max-width: 24ch;
@@ -589,9 +589,28 @@ a {
   color: var(--color-muted);
 }
 .situation {
-  margin-top: 56px;
-  padding-top: 28px;
+  margin-top: 40px;
+  padding-top: 24px;
   border-top: 1px solid var(--color-divider);
+}
+/* On a wide screen the Offers are always open, and nothing says they fold. */
+@media (min-width: 861px) {
+  .situation {
+    margin-top: 56px;
+    padding-top: 28px;
+  }
+  .situation__toggle {
+    display: none;
+  }
+}
+/* On a phone, the toggle in front of a situation's Offers, drawn like the
+   References' fold, with its count. */
+.situation__toggle {
+  cursor: pointer;
+  width: fit-content;
+  padding: 6px 0 14px;
+  font-size: 15.5px;
+  color: var(--color-accent-text);
 }
 @media (min-width: 1024px) {
   .situation {
@@ -810,7 +829,7 @@ a {
 /* — work / achievements —————————————————————————————————————————————————————— */
 
 .work {
-  padding-block: 34px 60px;
+  padding-block: calc(var(--space-section) / 2);
 }
 .work__intro {
   max-width: 58ch;
@@ -1062,7 +1081,7 @@ a {
 /* — contact —————————————————————————————————————————————————————————————— */
 
 .contact {
-  padding-block: 40px 24px;
+  padding-block: calc(var(--space-section) / 2) 24px;
 }
 /* Was a dark block on a light page. On a dark page it is the one raised panel:
    a step up in ground, a hairline edge, and the cover's terracotta glow low in
@@ -1666,7 +1685,18 @@ a {
 
 @media (max-width: 640px) {
   .contact {
-    padding-block: 32px 16px;
+    padding-bottom: 16px;
+  }
+  .contact__panel {
+    padding: 28px 22px;
+  }
+  /* The ridge and the room under the proof shrink together, so the proof
+     still never sits on the crest (ADR 28). */
+  .hero__inner {
+    padding-bottom: 104px;
+  }
+  .ridge {
+    height: 104px;
   }
   .reference__summary {
     grid-template-columns: minmax(0, 1fr) auto;

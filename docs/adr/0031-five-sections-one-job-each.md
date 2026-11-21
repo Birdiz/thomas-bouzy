@@ -77,9 +77,24 @@ the Workshops' place and format until the review ADR 28 set for them.
 - ADR 12's "a fixed list under a question" holds, split across three
   situations; ADR 14's Audit "under the sentences" is now its card at the head
   of the first situation.
-- The phone is still long. What is left is layout, not content: room between
-  sections, the situations folded on a phone, a lighter hero and header. It
-  waits on a separate change.
+- The phone was still long after the cut, and what was left was layout,
+  not content. A second change, the same day, took it from 8.7 screens to
+  7.6; the desktop gained a little air, 5.3 to 5.4:
+  - **One space between sections**, `--space-section` (72 to 112px), half
+    on each side of every home section, so a section ends where the next
+    begins rather than where its own groups do. Inside a section, groups
+    keep 24 to 56px.
+  - **The Offers fold on a phone.** Each situation's Offers sit in a
+    `<details>`, open in the markup so a reader without the script sees them
+    all. Under 861px a script folds all but the first situation's, behind
+    a toggle that says « Offres et prix » and how many. The Client
+    sentences are never folded: they stay in sight, each already a way to
+    its Offer, and the first situation keeps the Entry offer's card open.
+    On a wider screen every situation is open and the toggle is not drawn.
+  - **A lower ridge on a phone**, with the room under the hero's proof
+    shrinking with it (ADR 28), and a tighter Contact panel.
+  The sticky header was left alone: on a phone it already slides away as
+  the reader goes down the page (ADR 28).
 - The visit count (ADR 29) counts pages, not buttons, and started on
   2026-11-20: it cannot tell whether this cost anything. The check is
   qualitative: technical and Partner calls must keep coming, and a first-click

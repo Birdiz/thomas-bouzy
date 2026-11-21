@@ -92,31 +92,40 @@ const publicSector = linkTo('public-sector', locale);
             ))}
           </ul>
         </div>
-        <ul class="situation__cards">
-          {situation.cards.map((c) => (
-            <li class:list={['offers__card', { 'offers__card--entry': c.entry }]} data-offer={c.id}>
-              {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
-              {/* The name is the link, and it covers the card: identical "See
-                  the offer" anchors told a search engine nothing. The line at
-                  the foot says it to the eye, its arrow drawn at rest: on a
-                  phone, nothing said the card could be opened (ADR 30). */}
-              <h4 class="offers__name">
-                <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
-                  {c.name}
-                </a>
-              </h4>
-              <p class="offers__plain">{c.plain}</p>
-              <div class="offers__foot">
-                <p class="offers__from">{c.from}</p>
-                <p class="offers__more">
-                  <span aria-hidden="true">{t.offersSection.more}</span>
-                  {c.hreflang && ` ${t.offersSection.inFrench}`}
-                  <span class="offers__arrow" aria-hidden="true">→</span>
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {/* Open in the markup, so a reader without the script sees every Offer.
+            On a phone the script folds all but the first situation's: the
+            reader's own sentences stay in sight, each already a way to its
+            Offer, and the rows wait one tap away (ADR 31). */}
+        <details class="situation__offers" open>
+          <summary class="situation__toggle">
+            {t.nav.offers} ({situation.cards.length})
+          </summary>
+          <ul class="situation__cards">
+            {situation.cards.map((c) => (
+              <li class:list={['offers__card', { 'offers__card--entry': c.entry }]} data-offer={c.id}>
+                {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
+                {/* The name is the link, and it covers the card: identical "See
+                    the offer" anchors told a search engine nothing. The line at
+                    the foot says it to the eye, its arrow drawn at rest: on a
+                    phone, nothing said the card could be opened (ADR 30). */}
+                <h4 class="offers__name">
+                  <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
+                    {c.name}
+                  </a>
+                </h4>
+                <p class="offers__plain">{c.plain}</p>
+                <div class="offers__foot">
+                  <p class="offers__from">{c.from}</p>
+                  <p class="offers__more">
+                    <span aria-hidden="true">{t.offersSection.more}</span>
+                    {c.hreflang && ` ${t.offersSection.inFrench}`}
+                    <span class="offers__arrow" aria-hidden="true">→</span>
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </details>
         {/* The Partners, who bring Thomas to a team, under the technical
             team's Offers (ADR 30). */}
         {situation.team && (
@@ -167,4 +176,14 @@ const publicSector = linkTo('public-sector', locale);
       for (const item of list.children) observer.observe(item);
     }
   }
+
+  // On a phone, every situation's Offers but the first fold behind their
+  // toggle; on a wider screen they are all open, and the toggle is not drawn.
+  const phone = matchMedia('(max-width: 860px)');
+  const fold = () =>
+    document.querySelectorAll<HTMLDetailsElement>('.situation__offers').forEach((d, i) => {
+      d.open = !phone.matches || i === 0;
+    });
+  fold();
+  phone.addEventListener('change', fold);
 </script>

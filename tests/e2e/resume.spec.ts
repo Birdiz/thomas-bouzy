@@ -47,6 +47,18 @@ async function controlTransitions(page: Page): Promise<number[]> {
   );
 }
 
+/**
+ * Opens every situation's Offers: on a phone all but the first fold (ADR 31),
+ * and a folded row's link is out of the accessibility tree.
+ */
+async function openOffers(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    for (const d of document.querySelectorAll<HTMLDetailsElement>('.situation__offers')) {
+      d.open = true;
+    }
+  });
+}
+
 test.describe('routing and locales', () => {
   test('serves French at / and English at /en/', async ({ page }) => {
     await gotoHome(page, '/');
@@ -715,6 +727,7 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
 
     test(`shows every Offer with a price from the table on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
+      await openOffers(page);
       const cards = page.locator('#offers .offers__card');
       await expect(cards).toHaveCount(OFFER_IDS.length);
 
@@ -738,6 +751,7 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
 
     test(`groups the Offers by the reader's situation on ${home} (ADR 30)`, async ({ page }) => {
       await gotoHome(page, home);
+      await openOffers(page);
       const t = RESUME[locale].offersSection;
       const situations = page.locator('#offers .situation');
       await expect(situations).toHaveCount(SITUATIONS.length);
@@ -770,4 +784,39 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       }
     });
   }
+});
+
+test.describe('the Offers fold on a phone (ADR 31)', () => {
+  test('keeps every Offer open on a wide screen, with no toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoHome(page, '/');
+    const folds = page.locator('#offers details.situation__offers');
+    await expect(folds).toHaveCount(SITUATIONS.length);
+    for (const fold of await folds.all()) {
+      await expect(fold).toHaveAttribute('open', '');
+      await expect(fold.locator('summary')).toBeHidden();
+    }
+  });
+
+  test('folds all but the first situation on a phone, sentences in sight', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoHome(page, '/');
+    const folds = page.locator('#offers details.situation__offers');
+    await expect(folds.first()).toHaveAttribute('open', '');
+    for (const fold of (await folds.all()).slice(1)) {
+      await expect(fold).not.toHaveAttribute('open', '');
+    }
+    // The reader's own sentences are never folded: each is already a way in.
+    for (const sentence of await page.locator('#offers .situation__sentence a').all()) {
+      await expect(sentence).toBeAttached();
+      expect(await sentence.evaluate((el) => el.checkVisibility())).toBe(true);
+    }
+    // The toggle names what it opens and how many, and opens it.
+    const last = folds.last();
+    const ids = SITUATIONS[SITUATIONS.length - 1] ?? [];
+    await expect(last.locator('summary')).toHaveText(`${RESUME.fr.nav.offers} (${ids.length})`);
+    await last.locator('summary').click();
+    await expect(last).toHaveAttribute('open', '');
+    await expect(last.locator('.offers__card').first()).toBeVisible();
+  });
 });
