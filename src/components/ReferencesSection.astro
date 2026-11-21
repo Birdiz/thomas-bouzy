@@ -38,6 +38,9 @@ const references = REFERENCES.map((reference) => ({
           <summary class="reference__summary">
             <h3 class="reference__heading">
               <span class="reference__title">{reference.name}</span>
+              {/* In what capacity, first: a post, an engagement, a volunteer
+                  project or a product of his own (ADR 28). */}
+              <span class="reference__nature">{reference.nature}</span>
               <span class="reference__meta">
                 <span>{reference.sector}</span>
                 <span aria-hidden="true">·</span>
@@ -60,16 +63,20 @@ const references = REFERENCES.map((reference) => ({
                   <span class="achievement__plain-label">{t.work.labelPlain}</span>{' '}
                   {achievement.plain}
                 </p>
-                <div class="achievement__facets">
-                  <div class="achievement__facet">
-                    <p class="kicker achievement__facet-label">{t.work.labelApproach}</p>
-                    <p class="achievement__facet-text">{achievement.approach}</p>
-                  </div>
-                  <div class="achievement__facet">
-                    <p class="kicker achievement__facet-label">{t.work.labelResult}</p>
-                    <p class="achievement__facet-text">{achievement.result}</p>
-                  </div>
+                <div class="achievement__facet">
+                  <p class="kicker achievement__facet-label">{t.work.labelResult}</p>
+                  <p class="achievement__facet-text">{achievement.result}</p>
                 </div>
+                {/* The how, folded and labelled for whom it is (ADR 28): a
+                    business owner reads what the work was and what it gave,
+                    a technical team opens the stack. */}
+                <details class="achievement__approach">
+                  <summary>
+                    <span class="achievement__facet-label">{t.work.labelApproach}</span>
+                    <span class="achievement__approach-for">{t.work.approachFor}</span>
+                  </summary>
+                  <p class="achievement__facet-text">{achievement.approach}</p>
+                </details>
                 {achievement.link && (
                   <p class="achievement__link">
                     <a href={achievement.link.href} target="_blank" rel="noopener">

@@ -3,7 +3,7 @@ import { OFFER_IDS, type OfferId } from '../../src/content/offers.ts';
 import { combinationFor, DAY_RATE, optionCombinations, PRICES } from '../../src/content/prices.ts';
 import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
 import { homePath, linkTo, ROUTES } from '../../src/routes.ts';
-import { CONTACT } from '../../src/site.ts';
+import { CONTACT, LOCALES } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
 /**
@@ -157,10 +157,24 @@ test.describe('languages on every page but the home page', () => {
     const versions = ROUTES.filter((other) => other.page.id === route.page.id);
 
     if (versions.length === 1) {
-      test(`${route.path} exists in one locale: no alternate, no switch`, async ({ page }) => {
+      test(`${route.path} exists in one locale: no alternate, and a way to the other home page`, async ({
+        page,
+      }) => {
         await page.goto(route.path);
         await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
-        await expect(page.locator('.lang-switch')).toHaveCount(0);
+        // Nothing to switch to, but a reader who came from the other language
+        // gets back to it, and the link says it leads to a home page (ADR 28).
+        const others = LOCALES.filter((locale) => locale !== route.locale);
+        const links = page.locator('.lang-switch a');
+        await expect(links).toHaveCount(others.length);
+        for (const [i, other] of others.entries()) {
+          await expect(links.nth(i)).toHaveAttribute('href', homePath(other));
+          await expect(links.nth(i)).toHaveAttribute(
+            'aria-label',
+            RESUME[route.locale].a11y.otherHome,
+          );
+          await expect(links.nth(i)).not.toHaveAttribute('aria-current', /.*/);
+        }
       });
     } else {
       test(`${route.path} switches to itself in the other language`, async ({ page }) => {

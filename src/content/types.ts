@@ -53,22 +53,19 @@ export interface Achievement {
 }
 
 /**
- * One way the interesting kind of system goes wrong — stated twice.
+ * One way the interesting kind of system goes wrong, in the words a Client
+ * would say it.
  *
  * The section's job is recognition, not taxonomy: a reader who finds his own
  * sentence here qualifies himself, and no summary of a failure mode does that
- * as well as the sentence he has already said out loud. So the client's words
- * lead and the diagnosis follows, rather than the reverse — which is how these
- * four read until Chantier C, well written but addressed to a peer.
- *
- * The names the headings used to carry ("Double execution", "A balance nobody
- * can explain") are not lost: each now opens the diagnosis it titled.
+ * as well as the sentence he has already said out loud. The diagnosis that
+ * used to follow each sentence, and the name it opened on, left the home page
+ * with the carousel that hid them (ADR 28): the sentence and its link are the
+ * whole device. The names stay in the glossary (CONTEXT.md).
  */
 export interface FailureMode {
   /** The sentence a client says, in their words, quote marks included. */
   quote: string;
-  /** What it actually is, in mine. Opens by naming the failure mode. */
-  text: string;
   /**
    * The one Offer that treats it (CONTEXT.md: *treated by*). The quote links
    * to that Offer's page, and the page opens on the quote — which is what
@@ -83,6 +80,13 @@ export interface FailureMode {
  */
 export interface Reference {
   name: string;
+  /**
+   * In what capacity Thomas did the work: on staff, as an independent, as a
+   * volunteer, for a client, as his own product (ADR 28). Read right under the
+   * name, before the sector: a reader must not take a salaried post for a
+   * client, nor a volunteer project for a paid one.
+   */
+  nature: string;
   sector: string;
   period: string;
   headline: string;
@@ -293,7 +297,13 @@ export interface AboutPage {
     title: string;
     description: string;
   };
+  /** The page's name in the breadcrumb, the menu's word for it. */
   kicker: string;
+  /**
+   * The H1: the name and the job title, where it said "Who picks up" (ADR 28).
+   * A reader who searches for Thomas, or lands here from a link, learns who he
+   * is before how he sounds.
+   */
   title: string;
   /** The first sentence, set larger under the H1; also the Open Graph card's line. */
   plain: string;
@@ -345,18 +355,28 @@ export interface ResumeContent {
     /** Names the trail from the home page to the page the reader is on. */
     breadcrumb: string;
     portraitAlt: string;
+    /**
+     * The name of the link to the other language's home page, on a page that
+     * exists in this language only (ADR 28). Written in that other language,
+     * like the page it leads to: it says where the link goes, so that nobody
+     * expects this page translated.
+     */
+    otherHome: string;
   };
 
   nav: {
     /** The home page, first in the breadcrumb of every other page. */
     home: string;
+    /** The home page's Offers, prices included: the menu and the breadcrumb say so. */
     offers: string;
     /** The Partners page, in the footer's list of pages. */
     partners: string;
     /** The public-sector page, likewise. */
     publicSector: string;
     work: string;
+    /** The About page, from the menu and the footer (ADR 28). */
     about: string;
+    /** The header's button: the booking page itself, one click away (ADR 28). */
     contact: string;
   };
 
@@ -370,14 +390,20 @@ export interface ResumeContent {
     /** The job title, set small above the H1: "Ingénieur logiciel". */
     role: string;
     /**
+     * Where he works, beside the title (ADR 28): the first screen did not say
+     * it. A field of its own, so the title stays the one job title.
+     */
+    region: string;
+    /**
      * The promise, rendered in the H1 after the name: short, because it is a
      * title (ADR 27). Held to the plain-line rule, like the blurb.
      */
     title: string;
     /**
-     * The subtitle under the H1, which finishes the promise (ADR 27). Written
-     * for the least technical reader (ADR 14), so it is held to the
-     * plain-line rule: no `schema.knowsAbout` term, and short.
+     * The subtitle under the H1 (ADR 27, amended by ADR 28): the Workshop in
+     * French, where there are Workshops; no promise of one in English. Written
+     * for the least technical reader (ADR 14), so it is held to the plain-line
+     * rule: no `schema.knowsAbout` term, and short.
      */
     blurb: string;
     /** The primary button: the 30-minute call. */
@@ -387,13 +413,20 @@ export interface ResumeContent {
      * to the Offers otherwise.
      */
     ctaSecondary: string;
+    /**
+     * Under the buttons, the proof a reader would otherwise find four screens
+     * down (ADR 28). Facts already on the page, each kept whole: work done in a
+     * team says so, and two Achievements are never merged into one claim.
+     */
+    proof: string;
   };
 
   /**
    * The AI workshops for business owners, the way in (ADR 27). French only:
    * the owners they are for are French and local. Never called a *formation*
    * or a training course: in France that names a regulated framework the
-   * workshops do not use. No price, programme or date until they exist.
+   * workshops do not use. Their format is published, their dates and price are
+   * not, and nothing free is announced (ADR 28).
    */
   workshops?: {
     /** The header's link to the section. */
@@ -403,7 +436,11 @@ export interface ResumeContent {
     plain: string;
     /** The three levels, in the order a business owner takes them. */
     levels: readonly [Titled, Titled, Titled];
-    /** Where the workshops stand: being designed, no date or price yet. */
+    /** What happens to the owner's data, in a group and at their premises. */
+    data: string;
+    /** Why an engineer runs them: he uses AI every day, and knows where it errs. */
+    practice: string;
+    /** Where the workshops stand: what will be announced, never a date or a price. */
     status: string;
     /** The primary button: the 30-minute call. */
     cta: string;
@@ -424,8 +461,14 @@ export interface ResumeContent {
      * other Offers on a running application (ADR 27).
      */
     title: string;
-    /** Under the title, leading into the Client sentences. */
+    /** Under the title. */
     lead: string;
+    /**
+     * Right above the Client sentences, which it turns into questions rather
+     * than testimonials: read in a carousel, they were taken for invented
+     * quotes (ADR 28).
+     */
+    question: string;
     /**
      * Under the Failure modes, for the Client who cannot yet name theirs:
      * the Audit treats none of them, and is the way in for all.
@@ -434,13 +477,6 @@ export interface ResumeContent {
       text: string;
       cta: string;
     };
-    /**
-     * The sentences pass one at a time, like a train of thought. Labels for
-     * the controls: the pause toggle, and each sentence's own button, where
-     * `{n}` is its number.
-     */
-    pause: string;
-    goTo: string;
   };
   failureModes: FailureMode[];
 
@@ -451,6 +487,11 @@ export interface ResumeContent {
     /** Lead-in for `Achievement.plain`. Carries its own colon: French spaces it. */
     labelPlain: string;
     labelApproach: string;
+    /**
+     * Who the folded Approach is for (ADR 28): a business owner reads the plain
+     * line and the result, a technical team opens the rest.
+     */
+    approachFor: string;
     labelResult: string;
   };
   achievements: Achievement[];
@@ -463,16 +504,11 @@ export interface ResumeContent {
     /** The link under the paragraphs, to the About page and its longer version. */
     more: string;
     /**
-     * The salaried route, stated once and at the end, as one line whose last
-     * words link to LinkedIn.
-     *
-     * A chronology, job titles and a stack are what someone hiring for a post
-     * reads. They used to be in a CV download here; the PDF left the site
-     * (ADR 11, postscript) and LinkedIn carries them. Saying so keeps that door
-     * open without letting it compete with the work.
+     * The link to LinkedIn, which carries the career: the chronology, the job
+     * titles and the stack the page leaves out (ADR 11). It used to follow a
+     * question to the reader hiring for a post, and the question went: read by
+     * a business owner, it said Thomas was looking for a job (ADR 28).
      */
-    careerLine: string;
-    /** The link text, to the LinkedIn profile. */
     careerLink: string;
   };
   languages: LanguageSkill[];
@@ -550,6 +586,8 @@ export interface ResumeContent {
   footer: {
     /** The job title, beside the name (ADR 27). */
     role: string;
+    /** Accessible name of the list of the site's pages. */
+    pages: string;
     legalHeading: string;
     hostedBy: string;
     siretLabel: string;

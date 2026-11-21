@@ -1,6 +1,7 @@
 # 1. Astro, built to static files
 
-- Status: accepted; readers revised in the postscript, 2026-10-03
+- Status: accepted; readers revised in the postscript, 2026-10-03; the
+  recruiters' line removed by [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
 - Date: 2026-08-28
 
 ## Context

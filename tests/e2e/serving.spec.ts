@@ -1,3 +1,4 @@
+import { CONTACT } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 /**
@@ -96,6 +97,17 @@ test('serves a real 404 page, with a 404 status', async ({ page, request }) => {
 
   await page.goto('/definitely-not-a-page');
   await expect(page.getByRole('heading', { name: 'Rien ici' })).toBeVisible();
+  // Not a dead end (ADR 28): the site's header, menu and booking button, then
+  // four ways back in.
+  await expect(page.locator('.site-header .site-nav a')).not.toHaveCount(0);
+  await expect(page.locator('.site-header .btn-primary')).toHaveAttribute('href', CONTACT.booking);
+  const ways = page.locator('main a');
+  expect(await ways.evaluateAll((links) => links.map((l) => l.getAttribute('href')))).toEqual([
+    '/',
+    '/#workshops',
+    '/#offers',
+    '/en/',
+  ]);
   await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
 });
 

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { ROUTES } from '../../src/routes.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
@@ -105,6 +106,26 @@ test('the sitemap lists every page in each locale it exists in, and nothing else
     const alternates = [...(entry ?? '').matchAll(/hreflang="([^"]+)"/g)].map((m) => m[1]);
     const expected = Object.keys(route.page.paths).length > 1 ? Object.keys(route.page.paths) : [];
     expect([...alternates].sort(), `${route.path} alternates`).toEqual([...expected].sort());
+  }
+});
+
+test('dates each page by the day its text last changed, not by the build', async ({ request }) => {
+  // ADR 28: the hour of the build stamped every page with "now" on every
+  // deploy. Each date comes from scripts/lastmod.json, and the sitemap leaves
+  // out the date of a page whose text no longer matches its record.
+  const body = await (await request.get('/sitemap-0.xml')).text();
+  const recorded: Record<string, { date: string }> = JSON.parse(
+    readFileSync('scripts/lastmod.json', 'utf8'),
+  );
+  for (const route of ROUTES) {
+    const entry =
+      body.match(new RegExp(`<url><loc>https://[^/<]+${route.path}</loc>.*?</url>`))?.[0] ?? '';
+    const lastmod = entry.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1];
+    expect(
+      lastmod,
+      `${route.path} has no <lastmod>: its text changed since scripts/lastmod.json was written. Run npm run build && npm run lastmod.`,
+    ).toBeDefined();
+    expect(lastmod?.slice(0, 10), route.path).toBe(recorded[route.path]?.date);
   }
 });
 

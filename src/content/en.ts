@@ -18,24 +18,28 @@ export const en = {
     breadcrumb: 'Breadcrumb',
     mainNavigation: 'Main',
     portraitAlt: 'Portrait of Thomas Bouzy',
+    otherHome: 'Accueil en français',
   },
 
   nav: {
     home: 'Home',
-    offers: 'Offers',
+    offers: 'Offers and prices',
     partners: 'Partners',
     publicSector: 'Public sector',
     work: 'References',
     about: 'About',
-    contact: 'Get in touch',
+    contact: 'Book a call',
   },
 
   hero: {
     role: 'Software engineer',
+    region: 'Eastern France',
     title: 'I build tools for the core business of small and mid-sized companies',
-    blurb: 'Starting by showing their owners what AI changes in it.',
+    blurb: 'Starting with the software you already run, without stopping it.',
     ctaBook: 'Book a free call',
     ctaSecondary: 'See the offers',
+    proof:
+      'I was on the team that kept the ERP of several ArcelorMittal plants running, then on the one that made the money of 1.5 million users traceable. I taught programming at the University of Reims.',
   },
 
   problem: {
@@ -46,45 +50,40 @@ export const en = {
     kicker: 'Already have the software?',
     title:
       'I take over your business software and keep it moving, even the one nobody dares touch any more.',
-    lead: 'Without stopping it, without rewriting everything. Do any of these sound familiar?',
-    pause: 'Pause',
-    goTo: 'Sentence {n}',
+    lead: 'Without stopping it, without rewriting everything.',
+    question: 'Do any of these sound familiar?',
   },
 
   failureModes: [
     {
       quote: '“The person who built our app has left, and nobody dares touch it any more.”',
-      text: 'The orphan application. Nobody knows it any more, and every change becomes a bet.',
       offer: 'takeover',
     },
     {
-      quote: '“The version upgrade is always for next quarter.”',
-      text: 'The migration that never happens. The system cannot stop, so the work keeps slipping, and the bill keeps growing.',
+      quote: '“The upgrade is always for next quarter.”',
       offer: 'migration',
     },
     {
       quote: '“The stock never adds up, and nobody knows why.”',
-      text: "The discrepancy nobody can explain. The software gives today's figure, never the movements that led to it.",
       offer: 'reliability',
     },
     {
       quote: '“Our customers are the ones who find the bugs.”',
-      text: 'Defects found by users. The bug was visible hours earlier; nothing flagged it.',
       offer: 'reliability',
     },
     {
       quote: '“The day of the big campaign, everything goes down.”',
-      text: 'The peak that brings everything down. The system holds every day, and gives way the day everyone shows up.',
       offer: 'scaling',
     },
   ],
 
   work: {
     kicker: 'References',
-    title: 'Where I have already kept production running',
-    intro: 'Industry, fintech, SaaS, the non-profit sector, local government.',
+    title: 'Software that could not stop',
+    intro: 'Industry, finance, large accounts, non-profits, a village.',
     labelPlain: 'In plain terms:',
     labelApproach: 'Approach',
+    approachFor: 'for technical teams',
     labelResult: 'Result',
   },
 
@@ -140,7 +139,7 @@ export const en = {
       title: 'Onboarding a new enterprise account in a day',
       org: 'Kiss The Bride',
       period: 'Jan 2018 – April 2022',
-      plain: 'Every new client used to need a bespoke setup; it now takes a single day.',
+      plain: 'Every new client used to need setting up by hand; it now takes a single day.',
       approach:
         'A Symfony 2.7 monolith with no tests at all. Tests first, then Symfony 4 with API Platform and React, without stopping; onboarding automated with Node.js and Jenkins.',
       result: 'Rankings delivered live through Mercure. Four juniors mentored over two years.',
@@ -207,45 +206,52 @@ export const en = {
   references: {
     arcelormittal: {
       name: 'ArcelorMittal',
-      sector: 'Industry · through Quadra Informatique',
+      nature: 'Employee at Quadra Informatique',
+      sector: 'Industry',
       period: '2016 – 2017',
-      headline: 'The ERP of several plants, kept running, from suppliers to invoices.',
+      headline: 'The ERP of several plants, kept in service, from suppliers to invoices.',
     },
     socios: {
       name: 'Socios.com (Chiliz)',
-      sector: 'Fintech · 1.5 million users',
+      nature: 'Employee',
+      sector: 'Finance · 1.5 million users',
       period: '2022 – 2026',
       headline:
-        'An API rebuilt without an outage, every money movement traced, reported bugs cut by four.',
+        'A product rebuilt without an outage, every money movement traced, reported bugs cut by four.',
     },
     'kiss-the-bride': {
       name: 'Kiss The Bride',
-      sector: 'SaaS for large accounts',
+      nature: 'Freelance engagement',
+      sector: 'Online software for large accounts',
       period: '2018 – 2022',
       headline:
-        'A new enterprise account live in a day, on a monolith taken over without ever stopping it.',
+        'A new enterprise account live in a day, on software taken over without ever stopping it.',
     },
     'civic-tech': {
-      name: 'Civic tech',
-      sector: 'Volunteer',
+      name: 'Civic projects',
+      nature: 'Volunteer',
+      sector: 'Non-profits',
       period: '2026',
       headline: 'Three applications audited, 17 security findings, the critical ones fixed.',
     },
     'open-data': {
       name: 'Association directory',
-      sector: 'Open data · for a client',
+      nature: 'For a client',
+      sector: 'Public data',
       period: '2026',
       headline: '31,273 associations listed in 40 seconds, instead of by hand.',
     },
     'quart-de-tour': {
       name: 'Quart de tour',
-      sector: 'Joinery · personal product',
+      nature: 'Personal product',
+      sector: 'Joinery',
       period: '2026',
       headline: 'A wooden staircase worked out online, from the plan to the cutting files.',
     },
     grandrupt: {
       name: 'Village of Grandrupt',
-      sector: 'Local government · volunteer work',
+      nature: 'Volunteer work',
+      sector: 'Local government',
       period: '2026',
       headline: "A village's official website, in three languages.",
     },
@@ -255,12 +261,11 @@ export const en = {
     kicker: 'About',
     title: 'Who picks up',
     paragraphs: [
-      'What I enjoy is the problem: understanding what your business needs and meeting it. The tech comes second. Some find me too direct: for you, that means advice with no sugar coating.',
-      'I am a software engineer. My home ground is PHP and Symfony, then Node.js, TypeScript and React; Python, in personal projects. I taught object-oriented programming at the University of Reims in 2016–2017. I live in the Grand Est countryside.',
+      'When you call, I am the one who picks up. For about twelve years, I have built and maintained software that companies depend on every day.',
+      'What I enjoy is the problem: understanding what your business needs and meeting it. The tech comes second. Some find me too direct: for you, that means advice with no sugar coating. I live in the Grand Est countryside.',
     ],
     more: 'Read more',
-    careerLine: 'Hiring rather than contracting?',
-    careerLink: 'My career is on LinkedIn.',
+    careerLink: 'My full career is on LinkedIn.',
   },
 
   languages: [
@@ -840,14 +845,14 @@ export const en = {
         'Who picks up when you call: a software engineer who likes racking his brains over your problem. Direct, keen to explain, based in the French countryside.',
     },
     kicker: 'About',
-    title: 'Who picks up',
-    plain: 'A software engineer with a taste for understanding what others demand.',
+    title: 'Thomas Bouzy, software engineer in eastern France',
+    plain: 'With a taste for understanding what others demand.',
     paragraphs: [
       "A stock count that never adds up, an app nobody dares touch any more: give me that and I won't let go.",
-      'So no, I am not "passionate about tech". Tech is my tool. What interests me is what your business needs, and how to put it in place without overengineering it.',
-      'For a long time I worked in teams chasing perfect code. I ended up tired of it. I would rather think about the need.',
+      'I have spent my career on software that could not stop: the ERP of several ArcelorMittal plants, software for large accounts taken over without ever stopping it, an application with 1.5 million users where every money movement had to stay traceable.',
+      'Tech is my tool. What interests me is what your business needs, and how to put it in place without overengineering it.',
       'People say I am sometimes too direct. It is true. If something is off in your project, you will know. (I sugar-coat a little better than I used to, promise.)',
-      "I also like explaining. For many people, the internet is still a black box, and that's fine. I have taught object-oriented programming at the University of Reims and trained juniors. I still love lifting the lid.",
+      'I also like explaining. For many people, software is still a black box. I have taught programming at the University of Reims and trained junior developers. I still love lifting the lid.',
       [
         'I live in the countryside, in the Grand Est. I have worked remotely for eight years. And I am glad to come to you: nothing beats a day on site to understand how you work. The rest of the time, I tinker. ',
         { href: 'https://quart-de-tour.fr', label: 'Quart de tour' },
@@ -866,17 +871,18 @@ export const en = {
 
   contact: {
     kicker: 'Contact',
-    title: "Let's talk about your application.",
+    title: "Let's talk about your business.",
     blurb:
       'A free 30-minute call: I tell you plainly whether I can help. Worst case, you lose half an hour.',
     cta: 'Book a call',
     orReach: 'Or, if you prefer:',
     revealPhone: 'Show phone number',
-    locationLine: 'Grand Est, France · On site in {towns} · Remote for 8+ years',
+    locationLine: 'I come to you in {towns}. Elsewhere, we work remotely.',
   },
 
   footer: {
     role: 'Software engineer',
+    pages: 'Site pages',
     legalHeading: 'Legal notice',
     hostedBy: 'Hosted by',
     siretLabel: 'SIRET',

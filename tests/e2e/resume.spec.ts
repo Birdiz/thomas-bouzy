@@ -74,14 +74,17 @@ test.describe('routing and locales', () => {
 
   test('marks the active locale and cross-links both with hreflang', async ({ page }) => {
     await gotoHome(page, '/en/');
-    await expect(page.getByRole('link', { name: 'English' })).toHaveAttribute(
+    // By the markup rather than by role: on a phone the active locale's link
+    // is not shown, since it leads to the page the reader is on (ADR 28).
+    await expect(page.locator('.lang-switch a[hreflang="en"]')).toHaveAttribute(
       'aria-current',
       'true',
     );
-    await expect(page.getByRole('link', { name: 'Français' })).not.toHaveAttribute(
+    await expect(page.locator('.lang-switch a[hreflang="fr"]')).not.toHaveAttribute(
       'aria-current',
       'true',
     );
+    await expect(page.getByRole('link', { name: 'Français' })).toBeVisible();
 
     for (const hreflang of ['en', 'fr', 'x-default']) {
       await expect(page.locator(`link[rel="alternate"][hreflang="${hreflang}"]`)).toHaveCount(1);
@@ -126,12 +129,12 @@ test.describe('references accordion', () => {
       await expect(reference).not.toHaveAttribute('open', '');
     }
 
-    await references.nth(1).locator('summary').click();
+    await references.nth(1).locator('.reference__summary').click();
     await expect(references.nth(1)).toHaveAttribute('open', '');
 
     // The last one too: `name` groups the whole list, not the first few.
     const last = references.nth(REFERENCES.length - 1);
-    await last.locator('summary').click();
+    await last.locator('.reference__summary').click();
     await expect(last).toHaveAttribute('open', '');
     await expect(references.nth(1)).not.toHaveAttribute('open', '');
   });
@@ -143,24 +146,42 @@ test.describe('references accordion', () => {
       await expect(row.locator('.reference__title')).toHaveText(
         RESUME.en.references[reference.id].name,
       );
+      // In what capacity, right under the name (ADR 28).
+      await expect(row.locator('.reference__nature')).toHaveText(
+        RESUME.en.references[reference.id].nature,
+      );
       await expect(row.locator('article.reference__case')).toHaveCount(
         reference.achievements.length,
       );
     }
-    // Every achievement is reachable from exactly one reference.
-    await expect(page.locator('article.reference__case')).toHaveCount(ACHIEVEMENT_IDS.length);
+    // Every achievement on the home page is reachable from exactly one
+    // reference; the on-chain operations stay on the Reliability page, for
+    // the technical buyer they prove something to (ADR 28).
+    const shown: string[] = REFERENCES.flatMap((reference) => [...reference.achievements]);
+    await expect(page.locator('article.reference__case')).toHaveCount(new Set(shown).size);
+    await expect(page.locator('[data-achievement="on-chain-operations"]')).toHaveCount(0);
+    expect(ACHIEVEMENT_IDS.filter((id) => !shown.includes(id))).toEqual(['on-chain-operations']);
 
+    // The plain line and the result in sight, the approach folded for the
+    // technical teams (ADR 28).
     const socios = page.locator('details.reference[data-reference="socios"]');
-    await socios.locator('summary').click();
-    await expect(socios.getByText('Approach', { exact: true }).first()).toBeVisible();
+    await socios.locator('.reference__summary').click();
     await expect(socios.getByText('Result', { exact: true }).first()).toBeVisible();
+    await expect(socios.getByText('Approach', { exact: true }).first()).toBeVisible();
+    const approach = socios.locator('details.achievement__approach').first();
+    await expect(approach).not.toHaveAttribute('open', '');
+    await expect(approach.locator('summary')).toContainText(RESUME.en.work.approachFor);
+    await approach.locator('summary').click();
+    await expect(approach).toHaveAttribute('open', '');
+    // Opening the approach leaves the reference open: it is a disclosure of its own.
+    await expect(socios).toHaveAttribute('open', '');
   });
 
   test('is operable from the keyboard', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'WebKit needs full keyboard access enabled at OS level');
     await gotoHome(page, '/en/');
     const second = page.locator('details.reference').nth(1);
-    await second.locator('summary').focus();
+    await second.locator('.reference__summary').focus();
     await page.keyboard.press('Enter');
     await expect(second).toHaveAttribute('open', '');
   });
@@ -201,11 +222,15 @@ test.describe('the page is not a CV', () => {
     }
   });
 
-  test('points the salaried route at LinkedIn, from About', async ({ page }) => {
+  test('points to the career on LinkedIn, from About, without asking who is hiring', async ({
+    page,
+  }) => {
     await gotoHome(page, '/');
-    const career = page.locator('#contact #about .about__career a');
-    await expect(career).toHaveCount(1);
-    await expect(career).toHaveAttribute('href', /linkedin\.com\/in\//);
+    const career = page.locator('#contact #about .about__career');
+    await expect(career.locator('a')).toHaveCount(1);
+    await expect(career.locator('a')).toHaveAttribute('href', /linkedin\.com\/in\//);
+    // The link and nothing else: the question to a recruiter went (ADR 28).
+    await expect(career).toHaveText(RESUME.fr.about.careerLink);
   });
 
   for (const path of ['/a-propos/', '/en/about/']) {
@@ -291,15 +316,44 @@ test.describe('navigation', () => {
     await gotoHome(page, '/en/');
     await page
       .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'About' })
+      .getByRole('link', { name: 'References' })
       .click();
-    await expect(page).toHaveURL(/#about$/);
+    await expect(page).toHaveURL(/#work$/);
 
-    const box = await page.locator('#about').boundingBox();
+    const box = await page.locator('#work').boundingBox();
     const headerHeight = (await page.locator('.site-header').boundingBox())?.height ?? 0;
     expect(box).not.toBeNull();
     // The heading must land below the sticky header, never behind it.
     expect(box?.y ?? 0).toBeGreaterThanOrEqual(headerHeight - 1);
+  });
+
+  test('takes About to its own page, from the menu of every page (ADR 28)', async ({ page }) => {
+    for (const [from, about, locale] of [
+      ['/', '/a-propos/', 'fr'],
+      ['/offres/reprise-et-maintenance/', '/a-propos/', 'fr'],
+      ['/en/', '/en/about/', 'en'],
+    ] as const) {
+      await page.goto(from);
+      const menu = page.getByRole('navigation', { name: RESUME[locale].a11y.mainNavigation });
+      await menu.getByRole('link', { name: RESUME[locale].nav.about }).click();
+      await expect(page).toHaveURL(new RegExp(`${about}$`));
+      // The page names Thomas and his job, and the menu says where the reader is.
+      await expect(page.locator('h1')).toHaveText(RESUME[locale].aboutPage.title);
+      await expect(menu.getByRole('link', { name: RESUME[locale].nav.about })).toHaveAttribute(
+        'aria-current',
+        'page',
+      );
+    }
+  });
+
+  test('books the call from the header in one click, on every page (ADR 28)', async ({ page }) => {
+    for (const path of PATHS) {
+      await page.goto(path);
+      const locale = path.startsWith('/en/') ? 'en' : 'fr';
+      const book = page.locator('.site-header .btn-primary');
+      await expect(book, path).toHaveText(RESUME[locale].nav.contact);
+      await expect(book, path).toHaveAttribute('href', CONTACT.booking);
+    }
   });
 
   test('an anchor into the contact panel scrolls the page, not the panel', async ({ page }) => {
@@ -352,11 +406,46 @@ test.describe('layout integrity', () => {
     }
   });
 
-  test('keeps the header sticky while scrolling', async ({ page }) => {
+  test('keeps the header in reach, and on a phone out of the way going down', async ({
+    page,
+    isMobile,
+  }) => {
     await gotoHome(page, '/');
+    const header = page.locator('.site-header');
+    const edges = () =>
+      header.evaluate((el) => {
+        const { top, bottom } = el.getBoundingClientRect();
+        return { top: Math.round(top), bottom: Math.round(bottom) };
+      });
+
+    // Going down: sticky on a desktop, gone on a phone, where it is a sixth
+    // of the screen (ADR 28).
     await page.evaluate(() => window.scrollTo({ top: 1200, behavior: 'instant' }));
-    const top = await page.locator('.site-header').evaluate((el) => el.getBoundingClientRect().top);
-    expect(Math.round(top)).toBe(0);
+    if (isMobile) {
+      await expect(header).toHaveClass(/is-hidden/);
+      await expect.poll(async () => (await edges()).bottom).toBeLessThanOrEqual(0);
+    } else {
+      expect((await edges()).top).toBe(0);
+    }
+
+    // Going up brings it back, sticky, everywhere.
+    await page.evaluate(() => window.scrollTo({ top: 900, behavior: 'instant' }));
+    await expect(header).not.toHaveClass(/is-hidden/);
+    await expect.poll(async () => (await edges()).top).toBe(0);
+  });
+
+  test('fits the phone header on two lines, the whole menu in sight', async ({ page }) => {
+    // It took three lines, 127px, at 360px (ADR 28).
+    await page.setViewportSize({ width: 360, height: 740 });
+    for (const path of ['/', '/en/', '/partenaires/']) {
+      await gotoHome(page, path);
+      const header = await page.locator('.site-header').boundingBox();
+      expect(header?.height ?? 0, path).toBeLessThanOrEqual(96);
+      const nav = page.locator('.site-nav');
+      expect(await nav.evaluate((el) => el.scrollWidth - el.clientWidth), path).toBeLessThanOrEqual(
+        0,
+      );
+    }
   });
 
   test('exposes exactly one h1 and no skipped heading levels', async ({ page }) => {
@@ -383,25 +472,56 @@ test.describe('motion preferences', () => {
   test.describe('with no stated preference', () => {
     test.use({ motion: 'no-preference' });
 
-    test('scrolls smoothly, and the Client sentences pass one at a time', async ({ page }) => {
+    test('scrolls smoothly, and brings each Client sentence in once, as it comes into view', async ({
+      page,
+    }) => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
 
-      const problem = page.locator('#problem');
-      await expect(problem).toHaveClass(/is-carousel/);
-      await expect(problem.locator('.problem__mode.is-active')).toHaveCount(1);
+      // Every sentence is on the page at once: no carousel, no controls (ADR 28).
+      const list = page.locator('#problem .problem__modes');
+      const modes = list.locator('.problem__mode');
+      await expect(modes).toHaveCount(RESUME.fr.failureModes.length);
+      await expect(page.locator('.thoughts__controls')).toHaveCount(0);
+      await expect(list).toHaveClass(/is-armed/);
 
-      // Each sentence has its own button, and the pause is a toggle.
-      const dots = problem.locator('.thoughts__dot');
-      await expect(dots).toHaveCount(RESUME.fr.failureModes.length);
-      await dots.nth(2).click();
-      await expect(problem.locator('.problem__mode').nth(2)).toHaveClass(/is-active/);
-      await expect(problem.locator('.problem__mode').nth(0)).toHaveJSProperty('inert', true);
+      for (const mode of await modes.all()) {
+        await mode.scrollIntoViewIfNeeded();
+        await expect(mode).toHaveClass(/is-in/);
+        // A real move, under half a second and over 300 ms, and only once.
+        const motion = await mode.evaluate((el) => {
+          const style = getComputedStyle(el);
+          return {
+            name: style.animationName,
+            duration: Number.parseFloat(style.animationDuration),
+            count: style.animationIterationCount,
+          };
+        });
+        expect(motion.name).toBe('mode-in');
+        expect(motion.duration).toBeGreaterThanOrEqual(0.3);
+        expect(motion.duration).toBeLessThanOrEqual(0.5);
+        expect(motion.count).toBe('1');
+      }
 
-      const pause = problem.locator('.thoughts__pause');
-      await pause.click();
-      await expect(pause).toHaveAttribute('aria-pressed', 'true');
-      await expect(problem).toHaveClass(/is-paused/);
+      // And each ends in place, fully drawn.
+      await page.waitForFunction(() =>
+        document
+          .getAnimations()
+          .every(
+            (a) => (a as CSSAnimation).animationName !== 'mode-in' || a.playState === 'finished',
+          ),
+      );
+      for (const mode of await modes.all()) {
+        await expect(mode).toHaveCSS('opacity', '1');
+        // The filled animation leaves the identity, which an engine may spell
+        // as a matrix rather than `none`.
+        expect(
+          await mode.evaluate((el) => {
+            const { transform } = getComputedStyle(el);
+            return transform === 'none' || new DOMMatrixReadOnly(transform).isIdentity;
+          }),
+        ).toBe(true);
+      }
     });
 
     test('answers the pointer, and cross-fades from one page to the next', async ({ page }) => {
@@ -442,11 +562,11 @@ test.describe('motion preferences', () => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
 
-      // No carousel: every Client sentence stays on the page, as a list.
-      await expect(page.locator('#problem')).not.toHaveClass(/is-carousel/);
-      await expect(page.locator('.thoughts__controls')).toBeHidden();
+      // Nothing held back: every Client sentence is simply on the page.
+      await expect(page.locator('#problem .problem__modes')).not.toHaveClass(/is-armed/);
       for (const mode of await page.locator('.problem__mode').all()) {
         await expect(mode).toBeVisible();
+        await expect(mode).toHaveCSS('opacity', '1');
       }
 
       const durations = await controlTransitions(page);
@@ -485,8 +605,18 @@ test.describe('the first screen says who Thomas is (ADR 27)', () => {
       const role = page.locator('.hero__role');
       await expect(role).toHaveText(t.hero.role);
       await expect(role).toBeInViewport();
+      // Where he works, beside the title (ADR 28).
+      await expect(page.locator('.hero__kicker')).toContainText(t.hero.region);
       await expect(page.locator('h1')).toBeInViewport();
       await expect(page.locator('.site-footer__role')).toHaveText(t.footer.role);
+    });
+
+    test(`proves the hero under its buttons on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      // Under the buttons, and no link of its own: the call stays the ask.
+      const proof = page.locator('.hero__ctas + .hero__proof');
+      await expect(proof).toHaveText(t.hero.proof);
+      await expect(proof.locator('a')).toHaveCount(0);
     });
   }
 });
@@ -506,6 +636,14 @@ test.describe('the AI workshops, the way in (ADR 27)', () => {
       'href',
       `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`,
     );
+    // The call and the email, and no way into the software Offers: a workshop
+    // must never read as hidden prospecting (ADR 28).
+    expect(
+      await section.locator('a').evaluateAll((links) => links.map((l) => l.getAttribute('href'))),
+    ).toEqual([
+      CONTACT.booking,
+      `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`,
+    ]);
     // The header reaches it from every French page.
     await expect(page.locator(`.site-nav a[href="/#workshops"]`)).toHaveText(w.nav);
   });
@@ -540,9 +678,9 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       const failureModes = RESUME[locale].failureModes;
       await expect(modes).toHaveCount(failureModes.length);
       for (const [i, mode] of failureModes.entries()) {
-        // By selector, not by role: in the carousel, the sentences not on
-        // screen are hidden from the accessibility tree, as they should be.
-        const link = modes.nth(i).locator('h3 a');
+        // Every sentence is a link the reader can reach at once (ADR 28): the
+        // carousel used to hide all but one from the accessibility tree.
+        const link = modes.nth(i).getByRole('link');
         await expect(link).toContainText(mode.quote);
         await expect(link).toHaveAttribute(
           'href',

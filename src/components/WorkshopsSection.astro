@@ -14,9 +14,10 @@ const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.noti
 ---
 
 {/* The way in (ADR 27): right after the promise, before the software Offers.
-    No price, programme or date, because none exists yet; and the section says
-    plainly that a workshop can lead to the tools, so it never reads as hidden
-    prospecting. French only, like the owners it is for. */}
+    The format is published, with what happens to the owner's data and why an
+    engineer runs them; the dates and the price are not, and nothing free is
+    announced (ADR 28). No link to the software Offers: a workshop must never
+    read as hidden prospecting. French only, like the owners it is for. */}
 {
   w && (
     <section id="workshops" class="workshops container">
@@ -33,15 +34,16 @@ const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.noti
         ))}
       </ol>
 
-      <p class="offers__partners">{w.status}</p>
+      <p class="workshops__data">{w.data}</p>
+      <p class="workshops__practice">{w.practice}</p>
 
-      <div class="hero__ctas">
+      <div class="hero__ctas workshops__next">
         <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
           {w.cta}
         </a>
-        <span class="problem__mode-text">
-          {w.notify.text} <a href={notify}>{w.notify.label}</a>
-        </span>
+        <p class="workshops__notify">
+          {w.status} {w.notify.text} <a href={notify}>{w.notify.label}</a>
+        </p>
       </div>
     </section>
   )

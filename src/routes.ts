@@ -13,7 +13,8 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from './site.ts';
  *
  * A page that exists in one locale only says so by listing one path. It then
  * gets no alternate and no language switch, rather than a link to a page that
- * does not exist.
+ * does not exist: its header links to the other language's home page instead,
+ * and says so (ADR 28).
  */
 export type PageId = 'home' | 'about' | OfferId | 'partners' | 'public-sector';
 

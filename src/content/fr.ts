@@ -19,24 +19,28 @@ export const fr = {
     breadcrumb: "Fil d'Ariane",
     mainNavigation: 'Principale',
     portraitAlt: 'Portrait de Thomas Bouzy',
+    otherHome: 'Home page in English',
   },
 
   nav: {
     home: 'Accueil',
-    offers: 'Offres',
+    offers: 'Offres et prix',
     partners: 'Partenaires',
     publicSector: 'Collectivités',
     work: 'Références',
     about: 'À propos',
-    contact: 'Me contacter',
+    contact: 'Réserver un appel',
   },
 
   hero: {
     role: 'Ingénieur logiciel',
+    region: 'Grand Est',
     title: "J'outille le métier des PME",
-    blurb: "En commençant par montrer aux dirigeants ce que l'IA y change.",
+    blurb: "Je commence par un atelier : vous voyez ce que l'IA change chez vous.",
     ctaBook: 'Réserver un appel gratuit',
     ctaSecondary: 'Voir les ateliers',
+    proof:
+      "J'étais dans l'équipe qui a maintenu l'ERP de plusieurs usines ArcelorMittal, puis dans celle qui a rendu traçable l'argent de 1,5 million d'utilisateurs. J'ai enseigné la programmation à l'Université de Reims.",
   },
 
   workshops: {
@@ -48,22 +52,25 @@ export const fr = {
     levels: [
       {
         title: 'Une matinée découverte',
-        text: "Voir, sur votre entreprise, ce que l'IA y change.",
+        text: "En petit groupe de six à huit dirigeants, sur des cas comme les vôtres : vous repérez ce que l'IA peut alléger.",
       },
       {
         title: "Un atelier d'une journée",
-        text: "L'appliquer vous-même et repartir avec quelque chose de concret.",
+        text: "Chez vous, sur vos dossiers. Vous repartez avec un écrit : ce que l'IA peut faire et ce qu'elle ne doit pas toucher.",
       },
       {
-        title: 'Un accompagnement',
+        title: 'Un suivi',
         text: 'Ensuite, sur votre cas réel.',
       },
     ],
-    status: 'Les ateliers sont en préparation : pas encore de date, de programme ni de prix.',
+    data: 'Vos données : en groupe, on travaille sur des cas types anonymisés ; chez vous, sur vos outils et vos comptes. Rien ne sort sans votre accord.',
+    practice:
+      "Je me sers de l'IA chaque jour pour construire des logiciels : je sais où elle se trompe.",
+    status: 'Les dates et le prix seront annoncés ici.',
     cta: 'Réserver un appel gratuit',
     notify: {
-      text: 'Vous voulez être prévenu des premières sessions ?',
-      label: 'Écrivez-moi, je vous préviens.',
+      text: 'Être prévenu des premières sessions ?',
+      label: 'Écrivez-moi.',
       subject: 'Ateliers IA : me prévenir des premières sessions',
     },
   },
@@ -76,45 +83,40 @@ export const fr = {
     kicker: 'Votre logiciel existe déjà ?',
     title:
       "Je reprends et fais évoluer vos applications métier, même celle que plus personne n'ose toucher.",
-    lead: "Sans l'arrêter, sans tout réécrire. Vous reconnaissez l'une de ces phrases ?",
-    pause: 'Pause',
-    goTo: 'Phrase {n}',
+    lead: "Sans l'arrêter, sans tout réécrire.",
+    question: "Vous reconnaissez l'une de ces phrases ?",
   },
 
   failureModes: [
     {
       quote: "« Celui qui a fait notre appli est parti et plus personne n'ose y toucher. »",
-      text: "L'application orpheline. Personne ne la connaît plus et chaque modification devient un pari.",
       offer: 'takeover',
     },
     {
-      quote: "« La montée de version, c'est toujours pour le trimestre prochain. »",
-      text: "La migration qui n'arrive jamais. Le système ne peut pas s'arrêter, alors on repousse et la facture grossit.",
+      quote: "« La mise à jour, c'est toujours pour le trimestre prochain. »",
       offer: 'migration',
     },
     {
       quote: '« Le stock ne tombe jamais juste et personne ne sait pourquoi. »',
-      text: "L'écart que personne ne sait expliquer. Le logiciel donne le chiffre du jour, jamais les mouvements qui y ont mené.",
       offer: 'reliability',
     },
     {
       quote: '« Ce sont nos clients qui trouvent les bugs. »',
-      text: 'Les défauts trouvés par les utilisateurs. Le bug était visible des heures plus tôt ; rien ne le signalait.',
       offer: 'reliability',
     },
     {
       quote: "« Le jour de l'opération commerciale, tout tombe. »",
-      text: 'Le pic qui fait tout tomber. Le système tient au quotidien et lâche le jour où tout le monde arrive.',
       offer: 'scaling',
     },
   ],
 
   work: {
     kicker: 'Références',
-    title: "Là où j'ai déjà tenu la production",
-    intro: 'Industrie, fintech, SaaS, associatif, collectivité.',
+    title: "Des logiciels qui ne pouvaient pas s'arrêter",
+    intro: 'Industrie, finance, grands comptes, associations, une commune.',
     labelPlain: 'En clair :',
     labelApproach: 'Approche',
+    approachFor: 'pour les équipes techniques',
     labelResult: 'Résultat',
   },
 
@@ -172,7 +174,7 @@ export const fr = {
       org: 'Kiss The Bride',
       period: 'Janv. 2018 – Avril 2022',
       plain:
-        "Chaque nouveau client demandait un paramétrage sur mesure ; c'est désormais l'affaire d'une journée.",
+        "Chaque nouveau client demandait un paramétrage à la main ; c'est désormais l'affaire d'une journée.",
       approach:
         "Un monolithe Symfony 2.7 sans aucun test. Les tests d'abord, puis Symfony 4 avec API Platform et React, sans arrêt ; mise en route automatisée en Node.js et Jenkins.",
       result: 'Classements diffusés en direct via Mercure. Quatre juniors encadrés deux ans.',
@@ -238,45 +240,52 @@ export const fr = {
   references: {
     arcelormittal: {
       name: 'ArcelorMittal',
-      sector: 'Industrie · via Quadra Informatique',
+      nature: 'En poste chez Quadra Informatique',
+      sector: 'Industrie',
       period: '2016 – 2017',
-      headline: "L'ERP de plusieurs usines, tenu en production, des fournisseurs aux factures.",
+      headline: "L'ERP de plusieurs usines, maintenu en service, des fournisseurs aux factures.",
     },
     socios: {
       name: 'Socios.com (Chiliz)',
-      sector: "Fintech · 1,5 million d'utilisateurs",
+      nature: 'En poste',
+      sector: "Finance · 1,5 million d'utilisateurs",
       period: '2022 – 2026',
       headline:
-        "Une API refaite sans coupure, chaque mouvement d'argent tracé, les bugs remontés divisés par quatre.",
+        "Un produit refait sans coupure, chaque mouvement d'argent tracé, les bugs remontés divisés par quatre.",
     },
     'kiss-the-bride': {
       name: 'Kiss The Bride',
-      sector: 'SaaS pour grands comptes',
+      nature: "En mission d'indépendant",
+      sector: 'Logiciel en ligne pour grands comptes',
       period: '2018 – 2022',
       headline:
-        "Un nouveau grand compte en une journée, sur un monolithe repris sans jamais l'arrêter.",
+        "Un nouveau grand compte en une journée, sur un logiciel repris sans jamais l'arrêter.",
     },
     'civic-tech': {
-      name: 'Civic tech',
-      sector: 'Bénévolat',
+      name: 'Projets citoyens',
+      nature: 'Bénévolat',
+      sector: 'Associations',
       period: '2026',
       headline: 'Trois applications auditées, 17 failles trouvées, les plus graves corrigées.',
     },
     'open-data': {
       name: 'Annuaire associatif',
-      sector: 'Open data · pour un client',
+      nature: 'Pour un client',
+      sector: 'Données publiques',
       period: '2026',
       headline: "31 273 associations recensées en 40 secondes, au lieu d'un relevé à la main.",
     },
     'quart-de-tour': {
       name: 'Quart de tour',
-      sector: 'Menuiserie · produit personnel',
+      nature: 'Produit personnel',
+      sector: 'Menuiserie',
       period: '2026',
       headline: 'Un escalier en bois calculé en ligne, du plan aux fichiers de découpe.',
     },
     grandrupt: {
       name: 'Village de Grandrupt',
-      sector: 'Collectivité · bénévolat',
+      nature: 'Bénévolat',
+      sector: 'Collectivité',
       period: '2026',
       headline: "Le site officiel d'un village, en trois langues.",
     },
@@ -286,12 +295,11 @@ export const fr = {
     kicker: 'À propos',
     title: 'Qui décroche',
     paragraphs: [
-      "Ce qui me plaît, c'est le problème : comprendre ce dont votre métier a besoin et y répondre. La tech vient après. On me dit trop direct : pour vous, un avis sans enrobage.",
-      "Je suis ingénieur logiciel. Mon terrain, c'est PHP et Symfony, puis Node.js, TypeScript et React ; Python, en projets personnels. J'ai enseigné la programmation orientée objet à l'Université de Reims en 2016-2017. Je vis à la campagne, en Grand Est.",
+      "Quand vous appelez, c'est moi qui décroche. Depuis une douzaine d'années, je construis et je maintiens des logiciels dont des entreprises dépendent chaque jour.",
+      "Ce qui me plaît, c'est le problème : comprendre ce dont votre métier a besoin et y répondre. La tech vient après. On me dit trop direct : pour vous, un avis sans enrobage. Je vis à la campagne, en Grand Est.",
     ],
     more: 'Lire la suite',
-    careerLine: "En poste plutôt qu'en mission ?",
-    careerLink: 'Mon parcours est sur LinkedIn.',
+    careerLink: 'Mon parcours complet est sur LinkedIn.',
   },
 
   languages: [
@@ -1070,16 +1078,16 @@ export const fr = {
         'Qui décroche quand vous appelez : un ingénieur logiciel qui aime se creuser la tête sur votre problème. Direct, pédagogue, installé à la campagne dans le Grand Est.',
     },
     kicker: 'À propos',
-    title: 'Qui décroche',
-    plain: "Ingénieur logiciel, avec le goût de comprendre l'exigence des autres.",
+    title: 'Thomas Bouzy, ingénieur logiciel dans le Grand Est',
+    plain: "Avec le goût de comprendre l'exigence des autres.",
     paragraphs: [
       "Un stock qui ne tombe jamais juste, une appli que plus personne n'ose toucher : confiez-moi ça et je ne lâche plus.",
-      "Alors non, je ne suis pas « passionné de tech ». La tech, c'est mon outil. Ce qui m'intéresse, c'est ce dont votre entreprise a besoin et comment on le met en place sans en faire une usine à gaz.",
-      "J'ai longtemps travaillé dans des équipes qui visaient le code parfait. J'ai fini par m'en lasser. Je préfère réfléchir au besoin.",
+      "J'ai passé ma carrière sur des logiciels qui ne pouvaient pas s'arrêter : l'ERP de plusieurs usines ArcelorMittal, un logiciel pour grands comptes repris sans jamais l'arrêter, une application de 1,5 million d'utilisateurs dont chaque mouvement d'argent devait rester traçable.",
+      "La tech, c'est mon outil. Ce qui m'intéresse, c'est ce dont votre entreprise a besoin et comment on le met en place sans en faire une usine à gaz.",
       "On me dit parfois trop direct. C'est vrai. Si quelque chose cloche dans votre projet, vous le saurez. (J'enrobe un peu mieux qu'avant, promis.)",
-      "J'aime aussi expliquer. Pour beaucoup, Internet reste une boîte noire et c'est normal. J'ai enseigné la programmation orientée objet à l'Université de Reims et formé des juniors. J'aime toujours autant lever le voile.",
+      "J'aime aussi expliquer. Pour beaucoup, le logiciel reste une boîte noire. J'ai enseigné la programmation à l'Université de Reims et formé des développeurs débutants. J'aime toujours autant lever le voile.",
       [
-        'Je vis à la campagne, dans le Grand Est. Je bosse à distance depuis huit ans. Et je viens volontiers chez vous : rien ne remplace une journée sur place pour comprendre comment vous travaillez. Le reste du temps, je bricole. ',
+        'Je vis à la campagne, dans le Grand Est. Je travaille à distance depuis huit ans. Et je viens volontiers chez vous : rien ne remplace une journée sur place pour comprendre comment vous travaillez. Le reste du temps, je bricole. ',
         { href: 'https://quart-de-tour.fr', label: 'Quart de tour' },
         ', mon logiciel pour les menuisiers, est né comme ça.',
       ],
@@ -1096,17 +1104,18 @@ export const fr = {
 
   contact: {
     kicker: 'Contact',
-    title: 'Parlons de votre application.',
+    title: 'Parlons de votre entreprise.',
     blurb:
       'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider. Au pire, vous avez perdu une demi-heure.',
     cta: 'Réserver un appel',
     orReach: 'Ou, si vous préférez :',
     revealPhone: 'Afficher le numéro',
-    locationLine: 'Grand Est, France · Sur place à {towns} · À distance depuis 8 ans',
+    locationLine: 'Je viens chez vous à {towns}. Ailleurs, on avance à distance.',
   },
 
   footer: {
     role: 'Ingénieur logiciel',
+    pages: 'Pages du site',
     legalHeading: 'Mentions légales',
     hostedBy: 'Site hébergé par',
     siretLabel: 'SIRET',

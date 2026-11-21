@@ -13,14 +13,17 @@ never types it, and each page's prose has a word ceiling
 Built with Astro, containerised, deployed to Railway. The vocabulary is in
 [CONTEXT.md](CONTEXT.md).
 
-The home page reads job title and promise → the AI Workshops, the way in →
+The home page reads job title, promise and proof → the AI Workshops, the way in →
 problem → invitation to the Audit → offer → proof → contact, with the person
 beside the call — which is the opposite of a CV, and deliberate:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
-behind the running order, and
+behind the running order,
 [ADR 27](docs/adr/0027-software-engineer-and-the-workshops-as-the-way-in.md)
-put the job title back and the Workshops first. The Workshops are French only
-and are never called a *formation*. The palette is the LinkedIn cover's — dark slate, one
+put the job title back and the Workshops first, and
+[ADR 28](docs/adr/0028-proof-on-the-first-screen-and-the-workshops-format.md)
+moved the proof under the hero's buttons. The Workshops are French only, are
+never called a *formation*, and publish their format but never a date or a
+price. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
 [ADR 13](docs/adr/0013-the-site-wears-the-linkedin-cover.md); the type is one
 family, Figtree
@@ -43,16 +46,17 @@ the structured data claim a technology the page never states.
 The page is not a CV, and the tests keep it from becoming one again: there is no
 chronology, no years badge, no stack chips and no CV download. The one job
 title, « Ingénieur logiciel », is there because a business owner met in person
-must find it (ADR 27). The
-career is on LinkedIn, and the page points to it for the career exactly once,
-from About; elsewhere LinkedIn is only a way to get in touch, beside the email.
-A Partner gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its
-postscript.
+must find it (ADR 27), and the years are said once, in a sentence (ADR 28). The
+career is on LinkedIn: the home page's About block and the About page each
+point to it once, and no line asks the reader whether they are hiring;
+elsewhere LinkedIn is only a way to get in touch, beside the email. A Partner
+gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and its
+postscript, as amended by ADR 28.
 
-It also speaks in the reader's words rather than in its own: the four failure
-modes it opens on are quoted client sentences, each linking to the Offer that
-treats it, and the hero, every Offer and every Achievement lead with a plain
-line that names no technology. All of it is asserted —
+It also speaks in the reader's words rather than in its own: the five Client
+sentences it opens on are a fixed list under a question, each linking to the
+Offer that treats it, and the hero, every Offer and every Achievement lead with
+a plain line that names no technology. All of it is asserted —
 [ADR 12](docs/adr/0012-the-clients-sentence-first.md),
 [ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md).
 
@@ -116,6 +120,7 @@ npm run verify         # everything CI runs, in the same order
 | `npm run assets:check` | Missing files, a missing or stale Open Graph card, portrait format and size, `SITE_DOMAIN` on a deployment build, no indexing without a legal notice |
 | `npm run fonts` / `fonts:check` | Copy the woff2 faces out of `@fontsource` / verify they match |
 | `npm run og` | Redraw each route's Open Graph card into `public/og/`, and the touch icon |
+| `npm run lastmod` | After a build, date today every page whose text changed, for the sitemap's `<lastmod>` (`scripts/lastmod.json`) |
 | `docker build --build-arg SITE_DOMAIN=… -t cv .` | Build the deployment image locally |
 | `npm run contrast` | Print WCAG ratios for the site palette (ADR 13) |
 
@@ -138,7 +143,7 @@ src/
   lib/                    price formatting · JSON-LD
   layouts/                BaseLayout (<head>) · ResumePage (home) · OfferPage · PartnersPage
   pages/[...path].astro   one route per registry entry and locale
-scripts/                  fonts · og image · asset checks · contrast · static server
+scripts/                  fonts · og image · asset checks · contrast · static server · sitemap dates
 tests/
   content.spec.ts         the content contract: parity, references, prices (vitest)
   asset-check.spec.ts     the asset check's verdict on indexing (vitest)
@@ -153,10 +158,13 @@ tests/
   references one existing Offer, every cited Achievement exists, each Concept is
   on exactly one Offer, every option combination has a price range with its
   minimum at most its maximum, and the day rate is 600–750 € excl. VAT.
-- **Behaviour** — the home page's running order and its one hero button, one
+- **Behaviour** — the home page's running order and its hero buttons, one
   Achievement open at a time, no track record and no CV link, the language
   switch changing the URL and never pointing at a page that does not exist,
-  anchors clearing the sticky header.
+  anchors clearing the sticky header. The header books the call in one click
+  from every page, its About goes to the About page, and on a phone it fits two
+  lines and steps aside going down; the 404 offers four ways back in; the
+  Client sentences come in once, as they scroll into view (ADR 28).
 - **Offers** — each Offer page's ranges match the price table, with and without
   JavaScript; every slider is labelled and keyboard-operable, and the result is
   announced; the booking link is a plain outbound link.
@@ -166,7 +174,8 @@ tests/
   disclosure open, on desktop and mobile viewports; one `h1` and no skipped
   heading levels.
 - **Integrity** — every link and asset a page references resolves; no request
-  leaves the origin; the sitemap lists exactly the registered pages.
+  leaves the origin; the sitemap lists exactly the registered pages, each dated
+  by the day its text last changed (`scripts/lastmod.json`, ADR 28).
 - **Budget** — document, CSS, JS, font bytes and request count, with the
   numbers in [ADR 6](docs/adr/0006-budget-tests-instead-of-lighthouse-ci.md).
 - **Copy invariants** — the pitch master's own rules, asserted rather than

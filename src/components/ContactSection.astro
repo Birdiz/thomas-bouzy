@@ -36,7 +36,8 @@ const { locale, t } = Astro.props;
       </p>
 
       {/* The Service area, so that the home page names the towns a local
-          Client searches with, and not only the Offer pages (ADR 20). */}
+          Client searches with, and not only the Offer pages (ADR 20), said as
+          a promise to come rather than as an address (ADR 28). */}
       <p class="contact__location">
         {t.contact.locationLine.replace('{towns}', serviceAreaTowns(locale))}
       </p>
@@ -54,10 +55,10 @@ const { locale, t } = Astro.props;
           {t.about.more} <span aria-hidden="true">→</span>
         </a>
       </p>
-      {/* The salaried route, named once and at the end, and pointed at
-          LinkedIn, which carries the career. */}
+      {/* The career, at the end, on LinkedIn, which carries it. No question
+          to a reader hiring for a post any more: a business owner read it as
+          Thomas looking for a job (ADR 28). */}
       <p class="about__career">
-        {t.about.careerLine}{' '}
         <a href={CONTACT.linkedin} target="_blank" rel="noopener">{t.about.careerLink}</a>
       </p>
     </div>

@@ -1,7 +1,7 @@
 # Thomas Bouzy — freelance site
 
 A bilingual showcase that sells Thomas's interventions to the people who could
-commission them, and leaves the salaried route to one line pointing at LinkedIn.
+commission them, and leaves the career to LinkedIn, one link from About.
 Each term is given in English and French: the site speaks both.
 
 ## Readers
@@ -11,8 +11,9 @@ A person or organisation who could buy an Offer, whether or not they ever have.
 _Avoid_: buyer, prospect, customer
 
 **Recruiter** (FR *Recruteur*):
-A person reading for a salaried post. The page addresses them once, with a line
-pointing to LinkedIn.
+A person reading for a salaried post. The page no longer addresses them: a line
+asking whether the reader was hiring read, to a Client, as Thomas looking for a
+job (ADR 28). The career is on LinkedIn, one link from About, for any Reader.
 _Avoid_: hiring manager, employer
 
 **Reader** (FR *Lecteur*):
@@ -111,13 +112,16 @@ at most four days a week.
 _Avoid_: staff augmentation, fractional CTO, régie (as a term)
 
 **Workshop** (FR *Atelier IA*):
-A hands-on session where a business owner applies AI to their own company and
-leaves with something concrete, at three levels: a discovery morning, a one-day
-workshop, then support on the owner's real case. The way in for the owners of
-small and mid-sized companies, and it may lead to the software Thomas builds:
-the site says so. Not yet an Offer: it has no price, programme or date (ADR 27).
+A hands-on session where a business owner applies AI to their own company, at
+three levels: a discovery morning in a small group, on anonymised cases like
+theirs; a one-day workshop at the owner's premises, on their own files, that
+ends in a written note of what AI can do for them and what it must not touch;
+then a **follow-up** (FR *suivi*) on the owner's real case. The way in for the
+owners of small and mid-sized companies, and it may lead to the software Thomas
+builds: the hero says so, the Workshops never link to it. Its format is
+published; it is not yet an Offer: it has no price or date (ADR 27, ADR 28).
 _Avoid_: formation, training, course (in France a *formation* is a regulated
-framework the workshops do not use)
+framework the workshops do not use); *accompagnement* for the third level
 
 **Day rate** (FR *Taux journalier*):
 The one price of a day of Thomas's work, the same for a Client and for a Partner.
@@ -131,12 +135,14 @@ _Avoid_: contract, gig, prestation; *engagement* in French
 
 **Failure mode** (FR *Mode de défaillance*):
 One way a system of the interesting kind goes wrong, named in Thomas's words.
+The names are this glossary's vocabulary: the home page shows only each one's
+Client sentence (ADR 28).
 _Avoid_: trigger, pain point, problem
 
 **Client sentence** (FR *Phrase client*):
 How a Client would say a Failure mode out loud, in quotes. Written by Thomas, not
-heard from a real Client: the page offers it for the reader to recognise, and never
-attributes it to anyone.
+heard from a real Client: the page offers it for the reader to recognise, under a
+question, and never attributes it to anyone.
 _Avoid_: quote, label, testimonial
 
 **Achievement** (FR *Réalisation*):

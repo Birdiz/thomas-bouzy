@@ -36,7 +36,7 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
   ogType="website"
   structuredData={pageGraph(route)}
 >
-  <SiteHeader route={route} t={t} contactHref="#book" />
+  <SiteHeader route={route} t={t} />
   <main id="main" class="offer">
     <header class="offer__head container">
       <Breadcrumb route={route} t={t} />

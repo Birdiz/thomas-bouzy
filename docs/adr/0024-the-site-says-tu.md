@@ -1,7 +1,9 @@
 # 24. The site speaks in Thomas's voice, and says *tu*
 
 - Status: accepted, implemented 2026-11-13; *tu* superseded by
-  [ADR 26](0026-the-site-says-vous.md), 2026-11-19: French now says *vous*
+  [ADR 26](0026-the-site-says-vous.md), 2026-11-19: French now says *vous*;
+  testimonials from Clients and participants allowed, with consent, by
+  [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
 - Date: 2026-11-13
 
 ## Context

@@ -1,6 +1,8 @@
 # 12. The client's sentence first, and a plain line on every card
 
-- Status: accepted; amended by [ADR 14](0014-three-segments-and-the-least-technical-reader.md), 2026-10-03
+- Status: accepted; amended by [ADR 14](0014-three-segments-and-the-least-technical-reader.md), 2026-10-03;
+  the diagnoses under the Client sentences, and the names they opened on, taken
+  off the home page by [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
 - Date: 2026-08-31
 
 ## Context

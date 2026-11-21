@@ -1,7 +1,9 @@
 # 25. An About page for the voice
 
 - Status: accepted, implemented 2026-11-18; teaching line amended by
-  [ADR 27](0027-software-engineer-and-the-workshops-as-the-way-in.md), 2026-11-19
+  [ADR 27](0027-software-engineer-and-the-workshops-as-the-way-in.md), 2026-11-19;
+  the header's link, the H1 and the salaried line amended by
+  [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
 - Date: 2026-11-18
 - Follows [ADR 24](0024-the-site-says-tu.md)
 
