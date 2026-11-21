@@ -845,6 +845,18 @@ describe('what each Offer page has to say (ADR 17)', () => {
       expect(pagesOf(fr)[offer]?.rules.join(' '), offer).toMatch(/plafond écrit/);
       expect(pagesOf(en)[offer]?.rules.join(' '), offer).toMatch(/written ceiling/);
     }
+    // « Au plus » belongs to the days the total is computed on, not to the
+    // total's name (ADR 30, postscript): the label states no limit, the note does.
+    for (const offer of ['migration', 'scaling', 'build'] as const) {
+      const total = {
+        fr: pagesOf(fr)[offer]?.estimator.total,
+        en: pagesOf(en)[offer]?.estimator.total,
+      };
+      expect(total.fr?.label, offer).not.toMatch(/au plus/);
+      expect(total.fr?.note, offer).toMatch(/\{maxDays\} jours par semaine au plus\.$/);
+      expect(total.en?.label, offer).not.toMatch(/at most/);
+      expect(total.en?.note, offer).toMatch(/\{maxDays\} days a week at most\.$/);
+    }
   });
 
   it('opens a technical criterion on its median case, and says how to answer it', () => {
@@ -1210,8 +1222,8 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
   it('keeps the words the voice never uses off every French page', () => {
     // From the brief that defines the voice (ADR 24). "Sur mesure" is the
     // Build's name, and nothing else. The Offer pages, the Partners and the
-    // public sector joined home and About once La Cartonnerie lost its
-    // « accompagné » (ADR 30).
+    // public sector joined home and About when « accompagné » was found on the
+    // public-sector page (ADR 30).
     const NEVER = /passionn|\bexperts?\b|\bsolutions?\b|accompagn|innovant|de A à Z|360°|synergie/i;
     for (const { id } of PAGES.filter((page) => page.paths.fr)) {
       for (const [path, text] of walkStrings(contentOfPage('fr', id))) {

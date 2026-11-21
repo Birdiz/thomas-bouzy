@@ -1,6 +1,8 @@
 # 30. Offers by situation, the whole budget, and Offer pages an owner reads
 
-- Status: accepted, implemented 2026-11-21
+- Status: accepted, implemented 2026-11-21; Reliability's H1, the estimators'
+  « Budget total, au plus » and La Cartonnerie amended by its own postscript,
+  2026-11-21
 - Date: 2026-11-21
 - Amends [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md),
   [ADR 18](0018-one-day-rate-and-half-the-words.md),
@@ -196,3 +198,39 @@ Reference (ADR 28), and the API redesign's title says what it was to a reader:
   period, approach and result. E-invoicing gets no FAQ: Thomas ruled it out.
 - Reliability's H1 and its plain line both say « d'où vient » now, one above the
   other: one of them is Thomas's to tune.
+
+## Postscript, 2026-11-21 — two wordings and a Reference, settled
+
+Reviewing this ADR's change left Thomas two wordings and one Reference to rule
+on. On 2026-11-21 he ruled:
+
+- **Reliability's H1 stops repeating its line.** The H1 and the plain line under
+  it both said « d'où vient » (last bullet of Consequences). He kept the line,
+  which the home page's card reads too (`offers.reliability.plain`: « Vous savez
+  d'où vient un écart de stock… »), and changed the H1: « Savoir d'où vient
+  chaque écart, au lieu de le deviner » became « Expliquer chaque écart, au lieu
+  de le deviner ». The page's description already used the verb (« pour expliquer
+  l'écart »). The English lead says "where … comes from" as well, so the English
+  H1 drops it too: "Explaining each gap, instead of guessing it".
+- **« Au plus » belongs to the days, not to the total.** Under the Migration's,
+  Scaling's and the Build's estimators, the total read « Budget total, au plus »,
+  a ceiling on a sum without saying what it was a ceiling of. It now reads
+  « Budget total » ("Total budget"), and the note beside it says where the limit
+  is: « Le plan, puis l'exécution à {maxDays} jours par semaine au plus. », and
+  likewise « Le diagnostic, puis les corrections… » and « Le cadrage, puis la
+  construction… ». No figure moves: `totalOf` still adds the second phase's weeks
+  at `MAX_DAYS_PER_WEEK` days a week at most. Only the place that says so moved,
+  from the figure's name to the days it counts. The Build's FAQ already put it
+  that way (« jours par semaine au plus : le budget total de l'estimateur est
+  donc un plafond »).
+- **La Cartonnerie leaves the public-sector page.** Thomas judged it not
+  relevant. Its item goes with its text, and the page's proof keeps three: the
+  associations' directory, Grandrupt's site and the civic projects. Its year and
+  nature, left open above and in ADR 28, are not needed any more. The test of the
+  words the voice never uses keeps reading every French page: La Cartonnerie's
+  « accompagné » is what widened it, and the rule outlives the item.
+
+Two things he confirmed stay as they are: the Socios.com Achievement
+`acquired-app-migration` (the application the company bought and he migrated),
+and the Takeover's FAQ « Pas de WinDev ni d'Access. », since he does not replace
+those tools.

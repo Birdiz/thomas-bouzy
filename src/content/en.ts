@@ -511,8 +511,8 @@ export const en = {
         amounts: { plan: 'Plan, phase 1 at a fixed price' },
         duration: 'Execution, with your team',
         total: {
-          label: 'Total budget, at most',
-          note: 'The plan, then execution at {maxDays} days a week.',
+          label: 'Total budget',
+          note: 'The plan, then execution at {maxDays} days a week at most.',
         },
       },
       rules: [
@@ -552,7 +552,7 @@ export const en = {
         description:
           "A balance, a stock or an invoice that won't reconcile? Traceable flows, idempotent processing and observability to explain it. Public prices.",
       },
-      heading: 'Knowing where each gap comes from, instead of guessing',
+      heading: 'Explaining each gap, instead of guessing it',
       priceHeading: 'How much does reliability work cost?',
       sentences: ['“We billed the same customer twice, and nobody noticed.”'],
       delivered: [
@@ -667,8 +667,8 @@ export const en = {
         amounts: { plan: 'Diagnosis, phase 1 at a fixed price' },
         duration: 'Duration of the fixes',
         total: {
-          label: 'Total budget, at most',
-          note: 'The diagnosis, then the fixes at {maxDays} days a week.',
+          label: 'Total budget',
+          note: 'The diagnosis, then the fixes at {maxDays} days a week at most.',
         },
       },
       rules: [
@@ -761,8 +761,8 @@ export const en = {
         amounts: { plan: 'Framing, phase 1 at a fixed price' },
         duration: 'Build duration, by the day',
         total: {
-          label: 'Total budget, at most',
-          note: 'The framing, then the build at {maxDays} days a week.',
+          label: 'Total budget',
+          note: 'The framing, then the build at {maxDays} days a week at most.',
         },
       },
       rules: [

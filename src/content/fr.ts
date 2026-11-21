@@ -657,8 +657,8 @@ export const fr = {
         amounts: { plan: 'Plan, phase 1 à prix fixe' },
         duration: 'Exécution, avec votre équipe',
         total: {
-          label: 'Budget total, au plus',
-          note: "Le plan, puis l'exécution à {maxDays} jours par semaine.",
+          label: 'Budget total',
+          note: "Le plan, puis l'exécution à {maxDays} jours par semaine au plus.",
         },
       },
       rules: [
@@ -699,7 +699,7 @@ export const fr = {
         description:
           "Un stock, un solde ou une facturation qui ne tombe pas juste ? Traçabilité des flux et observabilité pour expliquer l'écart. Prix publics.",
       },
-      heading: "Savoir d'où vient chaque écart, au lieu de le deviner",
+      heading: 'Expliquer chaque écart, au lieu de le deviner',
       priceHeading: "Combien coûte la fiabilisation d'une application ?",
       sentences: ["« On a facturé deux fois le même client et personne ne l'a vu. »"],
       delivered: [
@@ -815,8 +815,8 @@ export const fr = {
         amounts: { plan: 'Diagnostic, phase 1 à prix fixe' },
         duration: 'Durée des corrections',
         total: {
-          label: 'Budget total, au plus',
-          note: 'Le diagnostic, puis les corrections à {maxDays} jours par semaine.',
+          label: 'Budget total',
+          note: 'Le diagnostic, puis les corrections à {maxDays} jours par semaine au plus.',
         },
       },
       rules: [
@@ -909,8 +909,8 @@ export const fr = {
         amounts: { plan: 'Cadrage, phase 1 à prix fixe' },
         duration: 'Durée de la construction, à la journée',
         total: {
-          label: 'Budget total, au plus',
-          note: 'Le cadrage, puis la construction à {maxDays} jours par semaine.',
+          label: 'Budget total',
+          note: 'Le cadrage, puis la construction à {maxDays} jours par semaine au plus.',
         },
       },
       rules: [
@@ -1068,10 +1068,6 @@ export const fr = {
     proof: {
       heading: 'Déjà au service du public',
       items: [
-        {
-          title: 'La Cartonnerie, à Reims',
-          text: "Pour cette scène de musiques actuelles (SMAC), j'étais aux côtés du responsable artistique face au prestataire. J'ai cadré les premières étapes de l'application, qui suit les musiciens de l'album à la scène. J'ai traduit ses besoins pour les développeurs.",
-        },
         {
           title: 'Un annuaire associatif, tiré des sites publics',
           text: "31 273 associations d'Ille-et-Vilaine recensées en 40 secondes, depuis les données ouvertes et les sites des communes.",
