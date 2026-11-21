@@ -2,7 +2,9 @@
 
 - Status: accepted, implemented 2026-11-19; the hero's subtitle, the
   Workshops' format and the teaching line amended by
-  [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
+  [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21;
+  the problem title's « applications métier » amended by its own postscript,
+  2026-11-21
 - Date: 2026-11-19
 - Amends [ADR 11](0011-the-page-is-not-a-cv.md),
   [ADR 14](0014-three-segments-and-the-least-technical-reader.md),
@@ -104,3 +106,23 @@ and the old promise's move ([ADR 18](0018-one-day-rate-and-half-the-words.md)).
   local buyer (ADR 19) and issue #51.
 - When the Workshops get a price, a programme or a date, they become an Offer:
   a registry entry, a row in the price table and a page, under the same tests.
+
+## Postscript, 2026-11-21 — « logiciels métier », not « applications métier »
+
+The problem section's H2 kept Thomas's own sentence, « Je reprends et fais
+évoluer vos applications métier, même celle que plus personne n'ose toucher. »,
+and [ADR 30](0030-offers-by-situation-and-the-whole-budget.md) put the wording
+to him rather than changing it. The marketing audit of 2026-11-19 (its §7.5) had
+found that business owners say « notre logiciel », never « application », and the
+Takeover and Build pages now say « logiciel métier ». On 2026-11-21 he chose to
+follow them:
+
+- the H2 reads « Je reprends et fais évoluer vos logiciels métier, même celui
+  que plus personne n'ose toucher. », « celle » becoming « celui » to agree with
+  « logiciel »;
+- the home page's description for search engines follows, in French, and the
+  English one with it: "the business software they run on". The English H2
+  already said "business software";
+- nothing else moves: the Offers' meta titles, the Takeover estimator's « Une
+  application métier » and the public-sector page keep « application(s)
+  métier », for the reasons ADR 30 gives.

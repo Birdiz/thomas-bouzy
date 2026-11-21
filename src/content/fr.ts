@@ -9,7 +9,7 @@ export const fr = {
   meta: {
     title: 'Thomas Bouzy — Ingénieur logiciel, Nancy et Strasbourg',
     description:
-      "Ingénieur logiciel, j'outille le métier des PME : des ateliers IA pour dirigeants, puis la reprise et l'évolution de vos applications métier, même celle que plus personne n'ose toucher. Sur place de Nancy à Strasbourg.",
+      "Ingénieur logiciel, j'outille le métier des PME : des ateliers IA pour dirigeants, puis la reprise et l'évolution de vos logiciels métier, même celui que plus personne n'ose toucher. Sur place de Nancy à Strasbourg.",
   },
 
   a11y: {
@@ -82,7 +82,7 @@ export const fr = {
     },
     kicker: 'Votre logiciel existe déjà ?',
     title:
-      "Je reprends et fais évoluer vos applications métier, même celle que plus personne n'ose toucher.",
+      "Je reprends et fais évoluer vos logiciels métier, même celui que plus personne n'ose toucher.",
     lead: "Sans l'arrêter, sans tout réécrire.",
     question: "Vous reconnaissez l'une de ces phrases ?",
   },

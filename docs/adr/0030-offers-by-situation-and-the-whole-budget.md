@@ -137,8 +137,9 @@ lead: the price-quality effect is weak for services.
   Build's prose. The Takeover's estimator keeps « Une application métier »,
   words the audit found an owner reads as meant; the meta keep their search
   words until the titles are written for search; the home page's problem title
-  is Thomas's own ([ADR 27](0027-software-engineer-and-the-workshops-as-the-way-in.md)),
-  and is put to him rather than changed.
+  was Thomas's own ([ADR 27](0027-software-engineer-and-the-workshops-as-the-way-in.md)),
+  and was put to him rather than changed: on 2026-11-21 he chose « logiciels
+  métier », for the title and the home page's description (postscript to ADR 27).
 - The test of the words the voice never uses now reads every French page.
 
 **The Takeover answers an owner a provider has left**, with Thomas's facts:

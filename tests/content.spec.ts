@@ -1224,13 +1224,15 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
   });
 
   it('calls the software an owner runs a logiciel on the pages an owner reads (ADR 30)', () => {
-    // An owner says « notre logiciel », never « application ». The meta, for
-    // search, and the Takeover's estimator, whose words the audit kept, are
-    // left as they are; the home page's problem title is Thomas's own (ADR 27).
-    for (const id of ['takeover', 'build'] as const) {
+    // An owner says « notre logiciel », never « application ». The Takeover's
+    // and the Build's meta, for search, and the Takeover's estimator, whose
+    // words the audit kept, are left as they are. The home page has no such
+    // exception: its problem title and description said « applications métier »
+    // until Thomas chose « logiciels métier » (ADR 27, postscript).
+    for (const id of ['home', 'takeover', 'build'] as const) {
       for (const [path, text] of walkStrings(contentOfPage('fr', id))) {
-        if (/^\$\.(meta|estimator)\b/.test(path)) continue;
-        expect(text, `${id} ${path}`).not.toMatch(/application métier/);
+        if (id !== 'home' && /^\$\.(meta|estimator)\b/.test(path)) continue;
+        expect(text, `${id} ${path}`).not.toMatch(/applications? métier/);
       }
     }
   });
