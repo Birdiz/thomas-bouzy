@@ -63,7 +63,6 @@ export const fr = {
         text: 'Ensuite, sur votre cas réel.',
       },
     ],
-    data: 'Vos données : en groupe, on travaille sur des cas types anonymisés ; chez vous, sur vos outils et vos comptes. Rien ne sort sans votre accord.',
     practice:
       "Je me sers de l'IA chaque jour pour construire des logiciels : je sais où elle se trompe.",
     status: 'Les dates et le prix seront annoncés ici.',

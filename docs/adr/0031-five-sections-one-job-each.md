@@ -84,3 +84,23 @@ the Workshops' place and format until the review ADR 28 set for them.
   2026-11-20: it cannot tell whether this cost anything. The check is
   qualitative: technical and Partner calls must keep coming, and a first-click
   test with a few owners, old page against new, would say more than the count.
+
+## Postscript, 2026-11-21 — the Workshops drawn as one way
+
+Thomas found the Workshops neither handsome nor coherent: three short accent
+segments that read as three bars stuck at ten per cent rather than a track, a
+third column almost empty beside two full ones, then three lines under them in
+three different types and widths. Three alternatives were drawn on a design
+canvas; he chose the one with a single diagram.
+
+- **The levels are one diagram on a wide screen**: seven owners converge on the
+  one reading, who leaves the day with a written note, then a follow-up loops
+  back to their case. It is decorative, hidden from assistive technology: the
+  list under it says the same in words. On a phone the list draws a rail
+  instead, lit from the first level to the last.
+- **The line on why an engineer runs them moves beside the title**, in the
+  column the head left empty, in his voice. Set under the levels with a rule on
+  its left, it read as someone else's quote and broke the reading.
+- **The rule on data leaves the home page.** It belongs to the Workshops' own
+  page, the one ADR 27 gives them when they become an Offer, and the home page
+  says the format, not its terms. ADR 28's D11 stands for that page.
