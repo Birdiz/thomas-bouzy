@@ -29,35 +29,35 @@
   },
   "/offres/migration/": {
     "date": "2026-11-21",
-    "hash": "df5932cafc73279eebafef2132f31f0f15feb4d976708c0cc75a0093a676d1e7"
+    "hash": "ecbfef332d52afedab2fa0a901fa62a175c0856c999534d40d423b99dedf37b2"
   },
   "/en/offers/migration/": {
     "date": "2026-11-21",
-    "hash": "311a1bda62ecf48fddcce837a3cb195408cfac58789a7d6e150c3b87c10c221a"
+    "hash": "8145736855d69e3b76ffc86783f08de9d05f35f052b449e473cb831d19d71aa4"
   },
   "/offres/fiabilisation/": {
     "date": "2026-11-21",
-    "hash": "8ab71353f2e9a5d25074fe26f847c7ea2698dc4fae2308e5e92128d6dd564557"
+    "hash": "4eb05198bf537810c61fe615511081b761b4af1221e68ffd471324790b41687d"
   },
   "/en/offers/reliability/": {
     "date": "2026-11-21",
-    "hash": "cf5cf6cbd1765db68b06cfd84504a03e02104deb4825433a75d898d9939a1fae"
+    "hash": "0e21bf80f94c16626ecc1553fec3a1e74ce2d46ba229e97a104edce91543f7ac"
   },
   "/offres/tenue-en-charge/": {
     "date": "2026-11-21",
-    "hash": "48945c016767eedd68bf3462da17c300c9a557792dfd601e0e289e532a20dbb1"
+    "hash": "2d76d87fb465c190017fde771f125a3c8ecc567e73f2d4bebd617e346f1afd4b"
   },
   "/en/offers/scaling/": {
     "date": "2026-11-21",
-    "hash": "2a707e7d5a00027662f6811c4416965159b843944754baf21cd3e06f80f23035"
+    "hash": "b6e4aa190ca5e5840774475b4586f6e67a352001749a660f422aaf466c1daad9"
   },
   "/offres/creation-sur-mesure/": {
     "date": "2026-11-21",
-    "hash": "9285128036ddacfa67e7473670107247712ae54061c61297103fb319c6a1dda8"
+    "hash": "6a818e54d14a987327420b0cab418cbce7cd165bf237eb1852ac8668fe5921f1"
   },
   "/en/offers/build/": {
     "date": "2026-11-21",
-    "hash": "9976522e27b799f35f9d9c829d7528e95d9e7ca0ddca333d677887009e3f9265"
+    "hash": "142050fb94e4e8b71d2b66c1ce445191d9c192d48d5c4812ddeadb2f61563c97"
   },
   "/offres/renfort-senior/": {
     "date": "2026-11-21",
@@ -73,6 +73,6 @@
   },
   "/collectivites/": {
     "date": "2026-11-21",
-    "hash": "de8bb48c5e6d12673f22cde28a5eefe1b37953e7bb0b4d43cdfbcdb70e3d43d5"
+    "hash": "1e308d5d9e121f6ccbad742c15566b29f3fbadb92f8d9e345330928169a66856"
   }
 }
