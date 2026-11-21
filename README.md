@@ -14,8 +14,10 @@ Built with Astro, containerised, deployed to Railway. The vocabulary is in
 [CONTEXT.md](CONTEXT.md).
 
 The home page reads job title, promise and proof → the AI Workshops, the way in →
-problem → invitation to the Audit → offer → proof → contact, with the person
-beside the call — which is the opposite of a CV, and deliberate:
+the Offers by situation, each opening on its Client sentences → proof →
+contact, with the person beside the call — five sections, one job each
+([ADR 31](docs/adr/0031-five-sections-one-job-each.md)), and the opposite of a
+CV, deliberately:
 [ADR 10](docs/adr/0010-the-site-owns-its-own-design.md) has the measurements
 behind the running order,
 [ADR 27](docs/adr/0027-software-engineer-and-the-workshops-as-the-way-in.md)
@@ -56,8 +58,8 @@ gets a CV on request. See [ADR 11](docs/adr/0011-the-page-is-not-a-cv.md) and it
 postscript, as amended by ADR 28.
 
 It also speaks in the reader's words rather than in its own: the five Client
-sentences it opens on are a fixed list under a question, each linking to the
-Offer that treats it, and the hero, every Offer and every Achievement lead with
+sentences are a fixed list under a question, each at the head of the situation
+its Offer is sold in and linking to that Offer, and the hero, every Offer and every Achievement lead with
 a plain line that names no technology. All of it is asserted —
 [ADR 12](docs/adr/0012-the-clients-sentence-first.md),
 [ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md).

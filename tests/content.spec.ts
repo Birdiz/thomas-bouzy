@@ -128,11 +128,9 @@ describe('EN/FR parity', () => {
       '$.hero.region',
       '$.hero.ctaSecondary',
       '$.hero.proof',
-      '$.problem.lead',
-      '$.problem.question',
       '$.offersSection.title',
-      '$.problem.kicker',
-      '$.problem.title',
+      '$.offersSection.question',
+      '$.offersSection.situations[0].lead',
       '$.work.kicker',
       '$.work.title',
       '$.work.intro',
@@ -431,7 +429,7 @@ describe('Chantier C — the mirror', () => {
       }
     }
     expect(fr.failureModes.map((mode) => mode.quote).join(' ')).not.toMatch(/montée de version/);
-    expect(fr.problem.question).toMatch(/\?$/);
+    expect(fr.offersSection.question).toMatch(/\?$/);
   });
 
   it('opens every achievement card in plain language, naming no technology', () => {
@@ -1227,8 +1225,9 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
     // An owner says « notre logiciel », never « application ». The Takeover's
     // and the Build's meta, for search, and the Takeover's estimator, whose
     // words the audit kept, are left as they are. The home page has no such
-    // exception: its problem title and description said « applications métier »
-    // until Thomas chose « logiciels métier » (ADR 27, postscript).
+    // exception: its promise (the problem title until ADR 31, now the first
+    // situation's lead) and description said « applications métier » until
+    // Thomas chose « logiciels métier » (ADR 27, postscript).
     for (const id of ['home', 'takeover', 'build'] as const) {
       for (const [path, text] of walkStrings(contentOfPage('fr', id))) {
         if (id !== 'home' && /^\$\.(meta|estimator)\b/.test(path)) continue;
@@ -1303,7 +1302,9 @@ describe('each Failure mode is treated by one Offer (ADR 14)', () => {
       // Nor the Build: the reader who wants something built is not suffering a
       // failure (ADR 19).
       expect(content.failureModes.some((mode) => mode.offer === 'build')).toBe(false);
-      expect(content.problem.audit.cta.trim().length).toBeGreaterThan(0);
+      // The Entry offer's card says so in place of the band that used to
+      // follow the sentences (ADR 31).
+      expect(content.offersSection.start.trim().length).toBeGreaterThan(0);
     }
   });
 
@@ -1328,7 +1329,11 @@ describe('a site short enough to be read (ADR 18)', () => {
   // assistive-only strings, its structured data or its price labels.
   // The home page's ceiling rose from 1,200 to 1,400 with the Workshops
   // section, the way in, and the old promise moved into the problem (ADR 27).
-  const BUDGET: Record<string, number> = { home: 1400, partners: 220 };
+  // It came down to 1,320 when the problem section, the Audit band, the
+  // second booking box and half of "Who picks up" left the page (ADR 31): a
+  // ceiling left where it was invites the words back. The count includes the
+  // Achievements folded under the References, which the page still serves.
+  const BUDGET: Record<string, number> = { home: 1320, partners: 220 };
   const OFFER_BUDGET = 400;
   const NOT_PROSE = /^\$\.(meta|a11y|schema|languages|footer|estimator|offerPage|offers)\b/;
 

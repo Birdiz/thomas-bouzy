@@ -1,10 +1,8 @@
 ---
 import { getImage } from 'astro:assets';
-import AuditCall from '../components/AuditCall.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Hero from '../components/Hero.astro';
 import OffersSection from '../components/OffersSection.astro';
-import ProblemSection from '../components/ProblemSection.astro';
 import ReferencesSection from '../components/ReferencesSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -37,11 +35,10 @@ const image = portrait && (await getImage({ src: portrait, width: 580, height: 5
   <SiteHeader route={route} t={t} />
   <main id="main">
     <Hero t={t} home={route.path} />
-    {/* The Workshops, the way in (ADR 27), then problem → invitation →
-        offer → proof → contact, with the person. */}
+    {/* The Workshops, the way in (ADR 27), then the Offers, each situation
+        opening on its Client sentences → proof → contact, with the person.
+        Five sections, one job each (ADR 31). */}
     <WorkshopsSection t={t} />
-    <ProblemSection locale={locale} t={t} />
-    <AuditCall locale={locale} t={t} />
     <OffersSection locale={locale} t={t} />
     <ReferencesSection t={t} />
     <ContactSection locale={locale} t={t} />

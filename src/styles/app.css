@@ -488,14 +488,61 @@ a {
 
 /* — workshops ————————————————————————————————————————————————————————————— */
 
-/* The way in (ADR 27). It borrows the hero's blurb and buttons and the Offer
-   pages' numbered cards, in the order an owner takes the levels: the CSS budget
-   (ADR 6) had 22 bytes left. */
+/* The way in (ADR 27). It borrows the hero's blurb, then draws the three levels
+   as a track an owner walks in order, not as three cards of equal weight
+   (ADR 31). */
 .workshops {
   padding-block: 72px 24px;
 }
 .workshops > p {
   margin-top: 22px;
+}
+.workshops__levels {
+  display: grid;
+  gap: 22px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: level;
+}
+.workshops__level {
+  counter-increment: level;
+  position: relative;
+  padding-top: 18px;
+  border-top: 2px solid var(--color-divider);
+}
+/* The step's number sits on the track, and the track is lit up to it. */
+.workshops__level::before {
+  content: counter(level, decimal-leading-zero);
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 40px;
+  padding-top: 16px;
+  border-top: 2px solid var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent-text);
+}
+.workshops__level-title {
+  margin: 18px 0 6px;
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.workshops__level-text {
+  margin: 0;
+  max-width: 36ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+@media (min-width: 861px) {
+  .workshops__levels {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 32px;
+  }
 }
 /* Under the levels: what happens to the owner's data, set like a note, then
    why an engineer runs them, in his voice and a size up (ADR 28). */
@@ -514,97 +561,97 @@ a {
   line-height: 1.4;
   text-wrap: pretty;
 }
-.workshops__next {
-  margin-top: 28px;
-}
 .workshops__notify {
-  margin: 0;
   font-size: 15px;
   color: var(--color-muted);
 }
 
-/* — problem ——————————————————————————————————————————————————————————————— */
+/* — offers ————————————————————————————————————————————————————————————————— */
 
-/* The page opens on what breaks, not on who fixes it. Every reference that
-   sells engineering does this, and it is the whole difference between a site
-   and a CV — see docs/adr/0010. */
-.problem {
-  padding-block: 78px 64px;
+/* The Offers grouped by situation (ADR 30), each opening on the Client
+   sentences of its Offers (ADR 31): the reader finds their own words, then the
+   Offer that answers them, with its price. On a wide screen the words are on
+   the left and the Offers on the right, as the sentences and the promise used
+   to be. */
+.offers {
+  padding-block: 88px 64px;
 }
-/* Wide: the promise on the left, the sentences answering its question on the
-   right, so the section uses the whole measure instead of its left half. */
-@media (min-width: 1024px) {
-  .problem {
-    display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-    column-gap: 72px;
-    align-items: start;
-  }
+.offers__title {
+  max-width: 24ch;
+  margin-bottom: 8px;
 }
-/* Smaller than a section title: it carries the old hero's whole promise, a
-   sentence rather than a question, and the lead under it spaces the section
-   (ADR 27). */
-.problem__title {
-  font-size: clamp(26px, 2.6vw, 34px);
-  max-width: 20ch;
-  margin-bottom: 14px;
-  text-wrap: balance;
-}
-/* The question the sentences answer, right above them: read under it, they
-   are questions to the reader, not testimonials (ADR 28). */
-.problem__question {
-  margin: 0 0 10px;
+/* The question the sentences answer: read under it, they are questions to
+   the reader, not testimonials (ADR 28). */
+.offers__question {
+  margin: 0;
   font-size: 17px;
   line-height: 1.5;
   color: var(--color-muted);
 }
-.problem__modes {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.situation {
+  margin-top: 56px;
+  padding-top: 28px;
   border-top: 1px solid var(--color-divider);
 }
-.problem__mode {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 18px;
-  padding: 18px 0;
+@media (min-width: 1024px) {
+  .situation {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    column-gap: 72px;
+    align-items: start;
+  }
+  .situation > .offers__partners {
+    grid-column: 2;
+  }
+}
+.situation__title {
+  font-size: clamp(21px, 2.2vw, 26px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 10px;
+}
+/* The promise the hero used to make, under the situation it sells to. */
+.situation__lead {
+  max-width: 44ch;
+  margin: 0 0 6px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+.situation__sentences {
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.situation__sentence {
+  padding: 14px 0;
   border-bottom: 1px solid var(--color-divider);
 }
-.problem__mode-num {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--color-accent-text);
+.situation__sentence:last-child {
+  border-bottom: 0;
 }
-/* The client's own sentence, quote marks and all. Sized as a heading rather
-   than styled as a pull quote: it is the label of the row, and a second display
-   treatment beside the numbered eyebrow would fight it. Set at 400, full ink:
-   it is someone speaking, and a sentence in the heading weight reads shouted. */
-.problem__mode-quote {
-  font-weight: 400;
-  font-size: clamp(19px, 1.9vw, 23px);
-  line-height: 1.3;
-  margin: 0;
-  text-wrap: balance;
-}
-/* The whole quote is the link: it is the largest target in the row, and the
-   sentence a reader recognises is the thing they would click. It keeps the
-   ink colour so they still read as quotes, and the Offer it leads to is
-   named underneath, in the link colour. */
-.problem__mode-quote a {
+/* The whole sentence is the link: it is the largest target in the row, and
+   the sentence a reader recognises is the thing they would click. It keeps
+   the ink colour so it still reads as a quote, set at 400: someone speaking,
+   not a heading shouting. The Offer it leads to is named underneath. */
+.situation__sentence a {
   color: inherit;
   text-decoration: none;
 }
-.problem__mode-quote a:hover {
+.situation__quote {
+  display: block;
+  font-size: clamp(19px, 1.9vw, 23px);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.situation__sentence a:hover .situation__quote {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.problem__mode-offer {
+.situation__offer {
   display: block;
   margin-top: 6px;
-  font-family: var(--font-body);
-  font-weight: 400;
   font-size: 14px;
   color: var(--color-accent-text);
 }
@@ -612,26 +659,26 @@ a {
 /* Each sentence comes in once, as it scrolls into view: it rises 48px into
    place in under half a second, those arriving together one after the other,
    and nothing loops (ADR 28, amending ADR 23's "nothing fades in on scroll").
-   The script in ProblemSection.astro arms the list, then lets each sentence in
-   with its rank in the batch; without it, or under reduced motion, the list is
-   simply there. */
+   The script in OffersSection.astro arms each list, then lets each sentence in
+   with its rank in the batch; without it, or under reduced motion, the lists
+   are simply there. */
 @media (prefers-reduced-motion: no-preference) {
-  .problem__modes.is-armed .problem__mode:not(.is-in) {
+  .situation__sentences.is-armed .situation__sentence:not(.is-in) {
     opacity: 0;
   }
-  .problem__mode.is-in {
+  .situation__sentence.is-in {
     animation: mode-in 0.45s var(--ease-out) calc(var(--rank, 0) * 0.12s) both;
   }
-  .problem__mode[data-rank="1"] {
+  .situation__sentence[data-rank="1"] {
     --rank: 1;
   }
-  .problem__mode[data-rank="2"] {
+  .situation__sentence[data-rank="2"] {
     --rank: 2;
   }
-  .problem__mode[data-rank="3"] {
+  .situation__sentence[data-rank="3"] {
     --rank: 3;
   }
-  .problem__mode[data-rank="4"] {
+  .situation__sentence[data-rank="4"] {
     --rank: 4;
   }
 }
@@ -642,138 +689,39 @@ a {
   }
 }
 
-/* — audit call ———————————————————————————————————————————————————————————— */
-
-/* The one place the page raises its voice: full-bleed, heavy sans, two lines,
-   and the whole band is the link. */
-.audit-call {
-  border-block: 1px solid var(--color-divider);
-  background: var(--color-surface);
-}
-.audit-call__link {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: 32px;
-  padding-block: clamp(44px, 6vw, 76px);
-  color: var(--color-text);
-  text-decoration: none;
-  /* Figtree at 800, the one heavy line on the page. Loud, but a step under
-     the hero's promise: it is an invitation, not the headline. */
-  font-family: var(--font-body);
-  font-weight: 800;
-  font-size: clamp(32px, 4.2vw, 52px);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-}
-.audit-call__question {
-  display: block;
-  color: var(--color-muted);
-}
-.audit-call__invite {
-  display: block;
-  text-wrap: balance;
-}
-/* The arrow sits alone at the right edge, in a ring: the band reads as one
-   wide button rather than a headline with a glyph at its end. */
-.audit-call__arrow {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  display: grid;
-  place-items: center;
-  width: clamp(64px, 7vw, 96px);
-  aspect-ratio: 1;
-  border: 2px solid var(--color-accent);
-  border-radius: 999px;
-  color: var(--color-accent-text);
-  font-size: 0.8em;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-}
-.audit-call__link:hover .audit-call__invite,
-.audit-call__link:focus-visible .audit-call__invite {
-  color: var(--color-accent-text);
-}
-.audit-call__link:hover .audit-call__arrow,
-.audit-call__link:focus-visible .audit-call__arrow {
-  transform: translateX(6px);
-  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-}
-
-/* — offers ————————————————————————————————————————————————————————————————— */
-
-/* The Offers grouped by situation (ADR 30): a question the reader answers for
-   themselves, then the cards that answer it. Each card ends on a price — the
-   plain line says what the Offer is, the "from" whether it is in reach — then
-   on the line that says the whole card opens. */
-.offers {
-  padding-block: 40px 64px;
-}
-.offers__title {
-  max-width: 24ch;
-  margin-bottom: 8px;
-}
-.situation {
-  margin-top: 40px;
-}
-.situation__title {
-  font-size: clamp(21px, 2.2vw, 26px);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  margin: 0 0 18px;
-}
+/* The Offers, as rows under a rule rather than seven cards of equal weight:
+   only the Entry offer is a card, the one place the section says "start
+   here" (ADR 31). Each row ends on its price, then on the line that says the
+   whole row opens. */
 .situation__cards {
-  display: grid;
-  gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-/* The owner a missing tool is for, in their words, beside the one card that
-   answers them. */
-.situation__sentence {
-  margin: 0 0 16px;
-  font-family: var(--font-heading);
-  font-size: clamp(22px, 2.6vw, 30px);
-  line-height: 1.25;
-  text-wrap: balance;
-}
-@media (min-width: 861px) {
-  .situation__cards,
-  .situation--sentence {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .situation--sentence {
-    display: grid;
-    column-gap: 14px;
-    align-items: center;
-  }
-  .situation--sentence .situation__title {
-    grid-column: 1 / -1;
-  }
-  .situation--sentence .situation__sentence {
-    grid-column: span 2;
-    margin: 0;
-    padding-right: 24px;
-  }
-  .situation--sentence .situation__cards {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 .offers__card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 24px 26px;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+  gap: 6px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--color-divider);
   transition:
     background-color var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out),
     transform var(--dur-base) var(--ease-out);
+}
+.offers__card:first-child:not(.offers__card--entry) {
+  padding-top: 0;
+}
+.offers__card:last-child {
+  border-bottom: 0;
+}
+.offers__card--entry {
+  margin-bottom: 4px;
+  padding: 22px 24px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 .offers__name {
   font-size: 21px;
@@ -787,18 +735,25 @@ a {
   line-height: 1.6;
   color: var(--color-muted);
   margin: 0;
-  flex: 1;
   text-wrap: pretty;
+}
+.offers__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 20px;
+  margin-top: 4px;
 }
 /* A price in a sentence is read, not scanned: the sans, in ink, at body size
    or above, with figures that keep their width. It was 14px and grey, smaller
    than the line above it (ADR 30). */
 .offers__from {
   font-variant-numeric: tabular-nums;
-  margin: 6px 0 0;
+  margin: 0;
   font-size: 17px;
 }
-/* What the whole card does when touched, said to the eye: the arrow is drawn
+/* What the whole row does when touched, said to the eye: the arrow is drawn
    at rest, and steps forward under the pointer. */
 .offers__more {
   margin: 0;
@@ -824,7 +779,7 @@ a {
   color: inherit;
   text-decoration: none;
 }
-/* The stretched link: the name's anchor covers the whole card. */
+/* The stretched link: the name's anchor covers the whole row. */
 .offers__name a::after {
   content: "";
   position: absolute;
@@ -834,36 +789,17 @@ a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-/* The whole card is the link, so the whole card answers: it lifts, its ground
-   darkens a step, an accent edge comes in, and the arrow steps forward. */
-.offers__card:is(:hover, :has(a:focus-visible)) {
-  transform: translateY(-4px);
-  background: var(--color-sunken);
-  box-shadow:
-    0 0 0 1px var(--color-accent),
-    var(--shadow-lg);
-}
 .offers__card:is(:hover, :has(a:focus-visible)) .offers__name {
   color: var(--color-accent-text);
 }
 .offers__card:is(:hover, :has(a:focus-visible)) .offers__arrow {
   transform: translateX(6px);
 }
-.offers__book {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 20px;
-  margin: 48px 0 0;
-  padding: 22px 26px;
-  border-radius: var(--radius-md);
+/* The Entry card lifts as well: it is the one with a ground to lift. */
+.offers__card--entry:is(:hover, :has(a:focus-visible)) {
+  transform: translateY(-4px);
   background: var(--color-sunken);
-  font-family: var(--font-heading);
-  font-size: clamp(20px, 2.2vw, 26px);
-  line-height: 1.25;
-}
-.offers__book .btn {
-  font-family: var(--font-body);
+  box-shadow: var(--shadow-lg);
 }
 .offers__partners {
   margin: 22px 0 0;
@@ -887,6 +823,20 @@ a {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+/* The References past the first few, one click away (ADR 31). */
+.work__more {
+  margin-top: 14px;
+}
+.work__more > summary {
+  cursor: pointer;
+  width: fit-content;
+  padding: 10px 0;
+  font-size: 15.5px;
+  color: var(--color-accent-text);
+}
+.work__more > .work__list {
+  margin-top: 10px;
 }
 
 .reference {

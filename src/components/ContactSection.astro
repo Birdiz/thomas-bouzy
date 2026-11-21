@@ -49,7 +49,9 @@ const { locale, t } = Astro.props;
       <p class="kicker">{t.about.kicker}</p>
       <h3 class="contact__about-title">{t.about.title}</h3>
       {t.about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-      {/* The rest of the voice, on its own page: the home page has no words left (ADR 18). */}
+      {/* One paragraph, then the rest of the voice on its own page: the home
+          page has no words left (ADR 18), and said twice here what About says
+          at length (ADR 31). */}
       <p class="about__more">
         <a href={linkTo('about', locale).href}>
           {t.about.more} <span aria-hidden="true">→</span>

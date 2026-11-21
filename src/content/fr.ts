@@ -67,24 +67,11 @@ export const fr = {
     practice:
       "Je me sers de l'IA chaque jour pour construire des logiciels : je sais où elle se trompe.",
     status: 'Les dates et le prix seront annoncés ici.',
-    cta: 'Réserver un appel gratuit',
     notify: {
       text: 'Être prévenu des premières sessions ?',
       label: 'Écrivez-moi.',
       subject: 'Ateliers IA : me prévenir des premières sessions',
     },
-  },
-
-  problem: {
-    audit: {
-      text: 'Vous hésitez ?',
-      cta: 'Commencez par un audit',
-    },
-    kicker: 'Votre logiciel existe déjà ?',
-    title:
-      "Je reprends et fais évoluer vos logiciels métier, même celui que plus personne n'ose toucher.",
-    lead: "Sans l'arrêter, sans tout réécrire.",
-    question: "Vous reconnaissez l'une de ces phrases ?",
   },
 
   failureModes: [
@@ -118,6 +105,7 @@ export const fr = {
     labelApproach: 'Approche',
     approachFor: 'pour les équipes techniques',
     labelResult: 'Résultat',
+    more: 'Voir les {count} autres références',
   },
 
   achievements: [
@@ -304,7 +292,6 @@ export const fr = {
     title: 'Qui décroche',
     paragraphs: [
       "Quand vous appelez, c'est moi qui décroche. Depuis une douzaine d'années, je construis et je maintiens des logiciels dont des entreprises dépendent chaque jour.",
-      "Ce qui me plaît, c'est le problème : comprendre ce dont votre métier a besoin et y répondre. La tech vient après. On me dit trop direct : pour vous, un avis sans enrobage. Je vis à la campagne, en Grand Est.",
     ],
     more: 'Lire la suite',
     careerLink: 'Mon parcours complet est sur LinkedIn.',
@@ -343,8 +330,12 @@ export const fr = {
   offersSection: {
     kicker: 'Les offres',
     title: 'Une offre par situation, chacune avec son prix.',
+    question: "Vous reconnaissez l'une de ces phrases ?",
     situations: [
-      { title: 'Votre logiciel vous pose problème' },
+      {
+        title: 'Votre logiciel vous pose problème',
+        lead: "Je reprends et fais évoluer vos logiciels métier, même celui que plus personne n'ose toucher. Sans l'arrêter, sans tout réécrire.",
+      },
       {
         title: 'Il vous manque un outil',
         sentence: '« Toute notre activité tient sur un fichier Excel. »',
@@ -361,7 +352,6 @@ export const fr = {
     followedBy: 'puis',
     start: 'Par où commencer',
     inFrench: '(en français)',
-    book: { text: "Vous savez déjà ce qu'il vous faut ?", cta: 'Réserver un appel gratuit' },
     publicSector: 'Une collectivité ?',
     publicSectorLink: 'Voir la page dédiée',
     partners: 'Agence ou société de services ?',
