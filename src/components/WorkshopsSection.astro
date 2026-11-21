@@ -17,7 +17,9 @@ const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.noti
     The format is published, with what happens to the owner's data and why an
     engineer runs them; the dates and the price are not, and nothing free is
     announced (ADR 28). No link to the software Offers: a workshop must never
-    read as hidden prospecting. French only, like the owners it is for. */}
+    read as hidden prospecting. French only, like the owners it is for. No
+    button either: the hero's, right above, books the same call, and the
+    header carries it all the way down (ADR 31). */}
 {
   w && (
     <section id="workshops" class="workshops container">
@@ -25,11 +27,13 @@ const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.noti
       <h2 class="section-title">{w.title}</h2>
       <p class="hero__blurb">{w.plain}</p>
 
-      <ol class="offer__cards offer__delivered workshops__levels">
+      {/* Three steps an owner takes in order, drawn as a track rather than
+          as three cards of equal weight (ADR 31). */}
+      <ol class="workshops__levels">
         {w.levels.map((level) => (
-          <li class="offer__card">
-            <h3 class="offer__card-title">{level.title}</h3>
-            <p class="offer__card-text">{level.text}</p>
+          <li class="workshops__level">
+            <h3 class="workshops__level-title">{level.title}</h3>
+            <p class="workshops__level-text">{level.text}</p>
           </li>
         ))}
       </ol>
@@ -37,14 +41,9 @@ const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.noti
       <p class="workshops__data">{w.data}</p>
       <p class="workshops__practice">{w.practice}</p>
 
-      <div class="hero__ctas workshops__next">
-        <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
-          {w.cta}
-        </a>
-        <p class="workshops__notify">
-          {w.status} {w.notify.text} <a href={notify}>{w.notify.label}</a>
-        </p>
-      </div>
+      <p class="workshops__notify">
+        {w.status} {w.notify.text} <a href={notify}>{w.notify.label}</a>
+      </p>
     </section>
   )
 }

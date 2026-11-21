@@ -42,18 +42,6 @@ export const en = {
       'I was on the team that kept the ERP of several ArcelorMittal plants running, then on the one that made the money of 1.5 million users traceable. I taught programming at the University of Reims.',
   },
 
-  problem: {
-    audit: {
-      text: 'Not sure?',
-      cta: 'Start with an audit',
-    },
-    kicker: 'Already have the software?',
-    title:
-      'I take over your business software and keep it moving, even the one nobody dares touch any more.',
-    lead: 'Without stopping it, without rewriting everything.',
-    question: 'Do any of these sound familiar?',
-  },
-
   failureModes: [
     {
       quote: '“The person who built our app has left, and nobody dares touch it any more.”',
@@ -85,6 +73,7 @@ export const en = {
     labelApproach: 'Approach',
     approachFor: 'for technical teams',
     labelResult: 'Result',
+    more: 'See the {count} other references',
   },
 
   achievements: [
@@ -270,7 +259,6 @@ export const en = {
     title: 'Who picks up',
     paragraphs: [
       'When you call, I am the one who picks up. For about twelve years, I have built and maintained software that companies depend on every day.',
-      'What I enjoy is the problem: understanding what your business needs and meeting it. The tech comes second. Some find me too direct: for you, that means advice with no sugar coating. I live in the Grand Est countryside.',
     ],
     more: 'Read more',
     careerLink: 'My full career is on LinkedIn.',
@@ -309,8 +297,12 @@ export const en = {
   offersSection: {
     kicker: 'Offers',
     title: 'One offer per situation, each with its price.',
+    question: 'Do any of these sound familiar?',
     situations: [
-      { title: 'Your software is giving you trouble' },
+      {
+        title: 'Your software is giving you trouble',
+        lead: 'I take over your business software and keep it moving, even the one nobody dares touch any more. Without stopping it, without rewriting everything.',
+      },
       { title: 'You are missing a tool', sentence: '“Our whole business runs on a spreadsheet.”' },
       { title: 'Do you have a technical team?' },
     ],
@@ -319,7 +311,6 @@ export const en = {
     followedBy: 'then',
     start: 'Where to start',
     inFrench: '(in French)',
-    book: { text: 'Already know what you need?', cta: 'Book a free call' },
     publicSector: 'A local authority?',
     publicSectorLink: 'See the dedicated page (in French)',
     partners: 'An agency or an IT services firm?',

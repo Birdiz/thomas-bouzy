@@ -132,6 +132,13 @@ test.describe('references accordion', () => {
     await references.nth(1).locator('.reference__summary').click();
     await expect(references.nth(1)).toHaveAttribute('open', '');
 
+    // The first four are read, the rest wait behind one closed fold (ADR 31).
+    await expect(page.locator('#work > .work__list > details.reference')).toHaveCount(4);
+    const fold = page.locator('#work details.work__more');
+    await expect(fold).not.toHaveAttribute('open', '');
+    await expect(fold.locator('details.reference')).toHaveCount(REFERENCES.length - 4);
+    await fold.locator('summary').first().click();
+
     // The last one too: `name` groups the whole list, not the first few.
     const last = references.nth(REFERENCES.length - 1);
     await last.locator('.reference__summary').click();
@@ -482,12 +489,13 @@ test.describe('motion preferences', () => {
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
 
-      // Every sentence is on the page at once: no carousel, no controls (ADR 28).
-      const list = page.locator('#problem .problem__modes');
-      const modes = list.locator('.problem__mode');
-      await expect(modes).toHaveCount(RESUME.fr.failureModes.length);
+      // Every sentence is on the page at once: no carousel, no controls (ADR 28),
+      // each at the head of its situation (ADR 31), the missing tool's too.
+      const lists = page.locator('#offers .situation__sentences');
+      const modes = lists.locator('.situation__sentence');
+      await expect(modes).toHaveCount(RESUME.fr.failureModes.length + 1);
       await expect(page.locator('.thoughts__controls')).toHaveCount(0);
-      await expect(list).toHaveClass(/is-armed/);
+      for (const list of await lists.all()) await expect(list).toHaveClass(/is-armed/);
 
       for (const mode of await modes.all()) {
         await mode.scrollIntoViewIfNeeded();
@@ -566,8 +574,10 @@ test.describe('motion preferences', () => {
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
 
       // Nothing held back: every Client sentence is simply on the page.
-      await expect(page.locator('#problem .problem__modes')).not.toHaveClass(/is-armed/);
-      for (const mode of await page.locator('.problem__mode').all()) {
+      for (const list of await page.locator('#offers .situation__sentences').all()) {
+        await expect(list).not.toHaveClass(/is-armed/);
+      }
+      for (const mode of await page.locator('.situation__sentence').all()) {
         await expect(mode).toBeVisible();
         await expect(mode).toHaveCSS('opacity', '1');
       }
@@ -625,28 +635,25 @@ test.describe('the first screen says who Thomas is (ADR 27)', () => {
 });
 
 test.describe('the AI workshops, the way in (ADR 27)', () => {
-  test('offers the call first, then an email to hear when sessions open', async ({ page }) => {
+  test('publishes its three levels, then an email to hear when sessions open', async ({ page }) => {
     const w = RESUME.fr.workshops;
     if (!w) throw new Error('The French home page has no Workshops');
     await gotoHome(page, '/');
     const section = page.locator('#workshops');
     await expect(section.locator('h2')).toHaveText(w.title);
-    await expect(section.locator('.offer__card')).toHaveCount(3);
-    const primary = section.locator('.btn-primary');
-    await expect(primary).toHaveCount(1);
-    await expect(primary).toHaveAttribute('href', CONTACT.booking);
+    await expect(section.locator('.workshops__level')).toHaveCount(3);
+    // No button of its own: the hero's, right above, books the same call, and
+    // the header carries it all the way down (ADR 31).
+    await expect(section.locator('.btn-primary')).toHaveCount(0);
     await expect(section.getByRole('link', { name: w.notify.label })).toHaveAttribute(
       'href',
       `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`,
     );
-    // The call and the email, and no way into the software Offers: a workshop
-    // must never read as hidden prospecting (ADR 28).
+    // The email, and no way into the software Offers: a workshop must never
+    // read as hidden prospecting (ADR 28).
     expect(
       await section.locator('a').evaluateAll((links) => links.map((l) => l.getAttribute('href'))),
-    ).toEqual([
-      CONTACT.booking,
-      `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`,
-    ]);
+    ).toEqual([`mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`]);
     // The header reaches it from every French page.
     await expect(page.locator(`.site-nav a[href="/#workshops"]`)).toHaveText(w.nav);
   });
@@ -662,37 +669,47 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
 
-    test(`reads workshops, problem, offers, proof, contact on ${home}`, async ({ page }) => {
+    test(`reads workshops, offers, proof, contact on ${home}`, async ({ page }) => {
       await gotoHome(page, home);
       const order = await page.$$eval('main > section[id]', (sections) =>
         sections.map((section) => section.id),
       );
       // The Workshops are the way in, before the software Offers, and exist
-      // in French only (ADR 27).
+      // in French only (ADR 27). The Client sentences open the situations
+      // rather than a section of their own (ADR 31).
       const workshops = locale === 'fr' ? ['workshops'] : [];
-      expect(order).toEqual(['top', ...workshops, 'problem', 'offers', 'work', 'contact']);
+      expect(order).toEqual(['top', ...workshops, 'offers', 'work', 'contact']);
     });
 
-    test(`links each Client sentence to its Offer, then offers the Audit, on ${home}`, async ({
+    test(`links each Client sentence to its Offer, in that Offer's situation, on ${home}`, async ({
       page,
     }) => {
       await gotoHome(page, home);
-      const modes = page.locator('#problem .problem__mode');
       const failureModes = RESUME[locale].failureModes;
-      await expect(modes).toHaveCount(failureModes.length);
-      for (const [i, mode] of failureModes.entries()) {
-        // Every sentence is a link the reader can reach at once (ADR 28): the
-        // carousel used to hide all but one from the accessibility tree.
-        const link = modes.nth(i).getByRole('link');
-        await expect(link).toContainText(mode.quote);
+      const situations = page.locator('#offers .situation');
+      for (const mode of failureModes) {
+        // Every sentence is a link the reader can reach at once (ADR 28), at
+        // the head of the situation its Offer is sold in (ADR 31).
+        const at = SITUATIONS.findIndex((ids) => (ids as readonly string[]).includes(mode.offer));
+        const link = situations
+          .nth(at)
+          .locator('.situation__sentence a', { hasText: mode.quote.slice(1, -1).trim() });
+        await expect(link).toHaveCount(1);
         await expect(link).toHaveAttribute(
           'href',
           pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
         );
       }
-      // Right after the Failure modes, for the Client who cannot yet name theirs.
-      const audit = page.locator('.audit-call a');
-      await expect(audit).toHaveAttribute('href', pathOf('audit', locale) ?? '∅');
+      // No band after them any more: the Entry offer's card says where to
+      // start, at the head of the first situation (ADR 31).
+      await expect(page.locator('.audit-call')).toHaveCount(0);
+      await expect(situations.first().locator('.offers__card').first()).toHaveAttribute(
+        'data-offer',
+        'audit',
+      );
+      await expect(situations.first().locator('.offers__badge')).toHaveText(
+        RESUME[locale].offersSection.start,
+      );
       await expect(page.locator('.concepts')).toHaveCount(0);
     });
 
@@ -736,7 +753,11 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       // A missing tool opens on its owner's words; the technical team's
       // situation ends on the Partners, who bring Thomas to a team.
       const [, missing] = t.situations;
-      await expect(situations.nth(1).locator('.situation__sentence')).toHaveText(missing.sentence);
+      await expect(situations.nth(1).locator('.situation__quote')).toHaveText(missing.sentence);
+      await expect(situations.nth(1).locator('.situation__sentence a')).toHaveAttribute(
+        'href',
+        pathOf('build', locale) ?? '∅',
+      );
       await expect(situations.last().locator(`a[href="${pathOf('partners', 'fr')}"]`)).toHaveCount(
         1,
       );

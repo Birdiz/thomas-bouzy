@@ -489,8 +489,6 @@ export interface ResumeContent {
     practice: string;
     /** Where the workshops stand: what will be announced, never a date or a price. */
     status: string;
-    /** The primary button: the 30-minute call. */
-    cta: string;
     /** For the owner who wants to hear when the first sessions open: an email. */
     notify: {
       text: string;
@@ -500,31 +498,11 @@ export interface ResumeContent {
     };
   };
 
-  /** Opens the page on what breaks, before anything about who fixes it. */
-  problem: {
-    kicker: string;
-    /**
-     * What the hero used to promise, and still sells: the Takeover and the
-     * other Offers on a running application (ADR 27).
-     */
-    title: string;
-    /** Under the title. */
-    lead: string;
-    /**
-     * Right above the Client sentences, which it turns into questions rather
-     * than testimonials: read in a carousel, they were taken for invented
-     * quotes (ADR 28).
-     */
-    question: string;
-    /**
-     * Under the Failure modes, for the Client who cannot yet name theirs:
-     * the Audit treats none of them, and is the way in for all.
-     */
-    audit: {
-      text: string;
-      cta: string;
-    };
-  };
+  /**
+   * The Client sentences, each linked to the Offer that treats it (ADR 12).
+   * The home page sets each at the head of the situation its Offer is in
+   * (ADR 31); an Offer page shows its own first.
+   */
   failureModes: FailureMode[];
 
   work: {
@@ -540,6 +518,8 @@ export interface ResumeContent {
      */
     approachFor: string;
     labelResult: string;
+    /** Opens the References past the first few (ADR 31). `{count}` is how many. */
+    more: string;
   };
   achievements: Achievement[];
   references: Record<ReferenceId, Reference>;
@@ -566,13 +546,24 @@ export interface ResumeContent {
     kicker: string;
     title: string;
     /**
+     * Right above the situations and their Client sentences, which it turns
+     * into questions rather than testimonials: read in a carousel, they were
+     * taken for invented quotes (ADR 28).
+     */
+    question: string;
+    /**
      * The situations the Offers are grouped by, in the order of `SITUATIONS`
      * in offers.ts (ADR 30): each a heading the reader answers for themselves.
      * The second carries the sentence of the owner it is for, a Client
      * sentence of the Build's.
      */
     situations: readonly [
-      { title: string },
+      /**
+       * Under its title, what the hero used to promise and still sells: the
+       * Takeover and the other Offers on a running application (ADR 27). It
+       * headed a section of its own until ADR 31.
+       */
+      { title: string; lead: string },
       { title: string; sentence: string },
       { title: string },
     ];
@@ -596,11 +587,6 @@ export interface ResumeContent {
      * another language. Never shown on a French page.
      */
     inFrench: string;
-    /**
-     * Halfway down the page, for the reader who already knows: the booking
-     * link, so they need not scroll on to Contact.
-     */
-    book: { text: string; cta: string };
     partners: string;
     partnersLink: string;
     publicSector: string;
