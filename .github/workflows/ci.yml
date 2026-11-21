@@ -13,9 +13,12 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# The Playwright suite is most of the run, so it is split across three runners
+# that start alongside the quick checks instead of after them. `npm run verify`
+# runs the same steps one after the other.
 jobs:
-  verify:
-    name: Verify
+  quality:
+    name: Quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -50,9 +53,25 @@ jobs:
       - name: Build
         run: npm run build
 
+  e2e:
+    name: End-to-end (${{ matrix.shard }}/3)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
       - name: Cache Playwright browsers
         uses: actions/cache@v4
-        id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -60,12 +79,51 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium webkit
 
+      # Each shard builds and serves its own dist/ (see playwright.config.ts).
       - name: End-to-end, accessibility and budget
-        run: npm run test:e2e
+        run: npx playwright test --shard=${{ matrix.shard }}/3
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
+
+  # Folds the three shards back into one HTML report, and stands as the single
+  # check that says whether the commit passed.
+  verify:
+    name: Verify
+    if: ${{ !cancelled() }}
+    needs: [quality, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+
+      - name: Merge Playwright reports
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - uses: actions/upload-artifact@v4
+        with:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+      - name: Every job passed
+        if: ${{ needs.quality.result != 'success' || needs.e2e.result != 'success' }}
+        run: |
+          echo "quality: ${{ needs.quality.result }}, e2e: ${{ needs.e2e.result }}"
+          exit 1

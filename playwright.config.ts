@@ -7,7 +7,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : [['list']],
+  // A CI runner has 4 vCPUs and Playwright would only use half of them.
+  ...(process.env.CI ? { workers: 4 } : {}),
+  // CI shards the suite (.github/workflows/ci.yml): each shard writes a blob,
+  // and the Verify job merges the blobs into one HTML report.
+  reporter: process.env.CI ? [['github'], ['blob']] : [['list']],
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
