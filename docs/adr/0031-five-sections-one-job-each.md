@@ -1,6 +1,7 @@
 # 31. Five sections, one job each
 
-- Status: accepted, implemented 2026-11-21
+- Status: accepted, implemented 2026-11-21; the Client sentences' links taken
+  off by [ADR 32](0032-the-sentences-are-read-and-each-offer-is-drawn.md), 2026-11-21
 - Date: 2026-11-21
 - Amends [ADR 12](0012-the-clients-sentence-first.md),
   [ADR 14](0014-three-segments-and-the-least-technical-reader.md),

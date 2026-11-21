@@ -1,4 +1,5 @@
 ---
+import { OFFER_VISUAL_VIEWBOX, OFFER_VISUALS } from '../art/offers.ts';
 import type { ResumeContent } from '../content/index.ts';
 import { ENTRY_OFFER, type OfferId, SITUATIONS } from '../content/offers.ts';
 import { fromLine } from '../lib/offer-price.ts';
@@ -24,14 +25,7 @@ const card = (id: OfferId) => ({
   ...linkTo(id, locale),
   from: fromLine(id, locale, t),
   entry: id === ENTRY_OFFER,
-});
-
-/** A Client sentence, and the way to the Offer that treats it (ADR 12). */
-const sentence = (quote: string, offer: OfferId) => ({
-  quote,
-  offer,
-  name: t.offers[offer].name,
-  ...linkTo(offer, locale),
+  visual: OFFER_VISUALS[id],
 });
 
 /**
@@ -39,15 +33,17 @@ const sentence = (quote: string, offer: OfferId) => ({
  * opening on the Client sentences of its Offers (ADR 31): the sentences used
  * to be a section of their own above, which sorted the reader once, and the
  * situations sorted them again. A sentence goes to the situation of the Offer
- * it links to; the missing tool's owner speaks in the situation's own words.
+ * that treats it; the missing tool's owner speaks in the situation's own words.
+ * The sentences are read, not clicked (ADR 32): each used to link to an Offer
+ * drawn right beside it, two links to one page side by side.
  */
 const situations = SITUATIONS.map((ids, i) => {
   const situation = t.offersSection.situations[i];
   const offers: readonly OfferId[] = ids;
   const sentences = t.failureModes
     .filter((mode) => offers.includes(mode.offer))
-    .map((mode) => sentence(mode.quote, mode.offer));
-  if (situation && 'sentence' in situation) sentences.push(sentence(situation.sentence, 'build'));
+    .map((mode) => mode.quote);
+  if (situation && 'sentence' in situation) sentences.push(situation.sentence);
   return {
     title: situation?.title,
     lead: situation && 'lead' in situation ? situation.lead : undefined,
@@ -75,44 +71,45 @@ const publicSector = linkTo('public-sector', locale);
           <h3 class="situation__title">{situation.title}</h3>
           {situation.lead && <p class="situation__lead">{situation.lead}</p>}
           <ul class="situation__sentences" data-reveal>
-            {situation.sentences.map((s) => (
-              <li class="situation__sentence">
-                {/* The client's sentence is the way in: a reader who
-                    recognises their own words has qualified themselves, and
-                    the Offer it leads to is named under it. */}
-                <a href={s.href} hreflang={s.hreflang && LOCALE_TAG[s.hreflang]}>
-                  <span class="situation__quote">{s.quote}</span>
-                  <span class="situation__offer">
-                    {s.name}
-                    {s.hreflang && ` ${t.offersSection.inFrench}`}
-                    <span aria-hidden="true"> →</span>
-                  </span>
-                </a>
-              </li>
+            {/* A reader who recognises their own words has qualified
+                themselves; the Offer that treats them is the row beside. */}
+            {situation.sentences.map((quote) => (
+              <li class="situation__sentence">{quote}</li>
             ))}
           </ul>
         </div>
         <ul class="situation__cards">
           {situation.cards.map((c) => (
             <li class:list={['offers__card', { 'offers__card--entry': c.entry }]} data-offer={c.id}>
-              {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
-              {/* The name is the link, and it covers the card: identical "See
-                  the offer" anchors told a search engine nothing. The line at
-                  the foot says it to the eye, its arrow drawn at rest: on a
-                  phone, nothing said the card could be opened (ADR 30). */}
-              <h4 class="offers__name">
-                <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
-                  {c.name}
-                </a>
-              </h4>
-              <p class="offers__plain">{c.plain}</p>
-              <div class="offers__foot">
-                <p class="offers__from">{c.from}</p>
-                <p class="offers__more">
-                  <span aria-hidden="true">{t.offersSection.more}</span>
-                  {c.hreflang && ` ${t.offersSection.inFrench}`}
-                  <span class="offers__arrow" aria-hidden="true">→</span>
-                </p>
+              {/* What the Offer sells, drawn (ADR 32): it tells seven rows
+                  apart before a word is read. */}
+              <svg
+                class="offer-visual"
+                viewBox={OFFER_VISUAL_VIEWBOX}
+                aria-hidden="true"
+                focusable="false"
+                set:html={c.visual}
+              />
+              <div class="offers__body">
+                {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
+                {/* The name is the link, and it covers the card: identical "See
+                    the offer" anchors told a search engine nothing. The line at
+                    the foot says it to the eye, its arrow drawn at rest: on a
+                    phone, nothing said the card could be opened (ADR 30). */}
+                <h4 class="offers__name">
+                  <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
+                    {c.name}
+                  </a>
+                </h4>
+                <p class="offers__plain">{c.plain}</p>
+                <div class="offers__foot">
+                  <p class="offers__from">{c.from}</p>
+                  <p class="offers__more">
+                    <span aria-hidden="true">{t.offersSection.more}</span>
+                    {c.hreflang && ` ${t.offersSection.inFrench}`}
+                    <span class="offers__arrow" aria-hidden="true">→</span>
+                  </p>
+                </div>
               </div>
             </li>
           ))}

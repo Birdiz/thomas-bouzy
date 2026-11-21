@@ -421,8 +421,9 @@ describe('Chantier C — the mirror', () => {
   it('lets each Client sentence stand alone, with the Offer that treats it', () => {
     // ADR 28: the diagnosis under each sentence, and the name it opened on,
     // left the home page with the carousel that hid them from most readers.
-    // The sentence and its link are the whole device; the names stay in the
-    // glossary (CONTEXT.md). The one technical word left among them went too.
+    // The sentence is the whole device, its Offer's row beside it (ADR 32);
+    // the names stay in the glossary (CONTEXT.md). The one technical word left
+    // among them went too.
     for (const content of [en, fr]) {
       for (const mode of content.failureModes) {
         expect(Object.keys(mode).sort(), mode.quote).toEqual(['offer', 'quote']);
