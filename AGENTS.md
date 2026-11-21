@@ -5,7 +5,8 @@ French at `/` and English under `/en/`, served by its own Node server on Railway
 
 ## Done means `npm run verify` passes
 
-It runs what CI runs, in CI's order. The e2e suite builds, then serves `dist/` on
+It runs what CI runs, one step after the other where CI runs the quick checks and
+three e2e shards side by side. The e2e suite builds, then serves `dist/` on
 port 4322 and reuses a server already listening there, so a stale one tests an old
 build. Serve `dist/` with `npm run serve:dist`: `npm run preview` daemonises under
 Astro 7.
