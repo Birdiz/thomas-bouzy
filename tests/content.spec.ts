@@ -4,17 +4,21 @@ import { describe, expect, it } from 'vitest';
 import { en } from '../src/content/en.ts';
 import { fr } from '../src/content/fr.ts';
 import { contentOfPage, RESUME, type ResumeContent } from '../src/content/index.ts';
-import { OFFER_IDS, OFFERS } from '../src/content/offers.ts';
+import { ENTRY_OFFER, OFFER_IDS, OFFERS, REFERENCES, SITUATIONS } from '../src/content/offers.ts';
 import {
   AUDIT_CREDIT,
   AUDIT_EXPRESS_FEE,
   combinationFor,
   DAY_RATE,
+  defaultOption,
+  fromPrice,
   MAX_DAYS_PER_WEEK,
   optionCombinations,
   PRICES,
+  totalOf,
 } from '../src/content/prices.ts';
 import { frenchSpacing } from '../src/lib/french-spacing.ts';
+import { fromLine } from '../src/lib/offer-price.ts';
 import { fillPrices } from '../src/lib/price-tokens.ts';
 import { PAGES } from '../src/routes.ts';
 import { LOCALES } from '../src/site.ts';
@@ -355,7 +359,7 @@ describe('content corrections applied against the design', () => {
       // Selected on the card's own prose now: the stack chips it used to be
       // found by went with the rest of the chips.
       const onChain = content.achievements.find((achievement) =>
-        /Solana|Meteora/.test(achievement.approach),
+        /Solana|Meteora/.test(achievement.approach ?? ''),
       );
       expect(onChain, 'the on-chain achievement card is present').toBeDefined();
       expect(`${onChain?.approach} ${onChain?.result}`).toMatch(
@@ -614,6 +618,9 @@ describe('Offers and the price table (ADR 17)', () => {
         expect(Boolean(page.estimator.duration), `${locale}: ${offer} duration label`).toBe(
           Boolean(table.duration),
         );
+        expect(Boolean(page.estimator.total), `${locale}: ${offer} total label`).toBe(
+          Boolean(table.total),
+        );
       }
     }
   });
@@ -661,6 +668,84 @@ describe('Offers and the price table (ADR 17)', () => {
   });
 });
 
+describe('the Offers by situation, and what their cards say (ADR 30)', () => {
+  it('puts every Offer in one situation, the Entry offer first', () => {
+    const grouped = SITUATIONS.flat();
+    expect([...grouped].sort()).toEqual([...OFFER_IDS].sort());
+    expect(new Set(grouped).size).toBe(grouped.length);
+    expect(SITUATIONS[0]?.[0]).toBe(ENTRY_OFFER);
+    for (const content of [en, fr]) {
+      expect(content.offersSection.situations).toHaveLength(SITUATIONS.length);
+    }
+  });
+
+  it("leaves the technical team's Offers last, and sells every other to an orphan application", () => {
+    // The groups follow the Segments in offers.ts: a business owner with an
+    // orphan application reads four Offers, not seven.
+    const team = SITUATIONS[SITUATIONS.length - 1] ?? [];
+    for (const offer of team) {
+      expect(OFFERS[offer].segments, offer).not.toContain('orphan-app');
+    }
+    for (const offer of SITUATIONS.slice(0, -1).flat()) {
+      expect(OFFERS[offer].segments, offer).toContain('orphan-app');
+    }
+  });
+
+  it("gives a missing tool its owner's sentence, quoted", () => {
+    const [, missing] = fr.offersSection.situations;
+    expect(missing.sentence).toMatch(/^« .*Excel\. »$/);
+    const [, missingEn] = en.offersSection.situations;
+    expect(missingEn.sentence).toMatch(/^“.*”$/);
+  });
+
+  it('names the step a two-phase Offer starts with, and its price from the table', () => {
+    // « Première étape à partir de » hid that the step was one of two.
+    for (const [locale, content] of [
+      ['en', en],
+      ['fr', fr],
+    ] as const) {
+      const offers: ResumeContent['offers'] = content.offers;
+      for (const offer of OFFER_IDS) {
+        const twoPhases = PRICES[offer].amounts[0] === 'plan';
+        expect(Boolean(offers[offer].phase), `${locale}: ${offer}`).toBe(twoPhases);
+      }
+      expect(content.offersSection.from.plan).not.toMatch(/étape|step/);
+    }
+    const nbsp = (text: string) => text.replaceAll(' ', '\u00a0');
+    expect(fromLine('build', 'fr', RESUME.fr)).toBe(
+      `cadrage dès ${nbsp(`${fromPrice('build').min.toLocaleString('fr-FR')} € HT`)}`,
+    );
+    expect(fromLine('migration', 'fr', RESUME.fr)).toMatch(/^plan dès /);
+    expect(fromLine('scaling', 'fr', RESUME.fr)).toMatch(/^diagnostic dès /);
+  });
+
+  it("fills in the prices an Offer's plain line names", () => {
+    // « 1 à {maxDays} jours » reaches the card, the page, the share card and
+    // the structured data through RESUME.
+    expect(fr.offers.reinforcement.plain).toContain('{maxDays}');
+    for (const locale of LOCALES) {
+      for (const offer of OFFER_IDS) {
+        expect(RESUME[locale].offers[offer].plain, `${locale}: ${offer}`).not.toMatch(/\{\w+\}/);
+      }
+      expect(RESUME[locale].offers.reinforcement.plain).toContain(String(MAX_DAYS_PER_WEEK));
+    }
+  });
+
+  it('keeps an Achievement without its facets off the References, where they are read', () => {
+    // An Achievement Thomas has not yet described in full is cited on an Offer
+    // page only, which shows its title and plain line (ADR 30).
+    for (const content of [en, fr]) {
+      for (const reference of REFERENCES) {
+        for (const id of reference.achievements) {
+          const achievement = content.achievements.find((candidate) => candidate.id === id);
+          expect(achievement?.approach, `${reference.id}: ${id}`).toBeTruthy();
+          expect(achievement?.result, `${reference.id}: ${id}`).toBeTruthy();
+        }
+      }
+    }
+  });
+});
+
 describe('what each Offer page has to say (ADR 17)', () => {
   const pagesOf = (content: ResumeContent) => content.offerPages;
 
@@ -668,9 +753,11 @@ describe('what each Offer page has to say (ADR 17)', () => {
     const takeover = pagesOf(fr).takeover;
     expect(takeover, 'the Takeover page exists in French').toBeDefined();
     expect(pagesOf(en).takeover, 'the Takeover is French only').toBeUndefined();
-    // The deliverables are listed in the order the Client receives them.
+    // The deliverables are listed in the order the Client receives them, and
+    // the first states the rule: the net before any change. The rules no
+    // longer repeat it; the page said it four times (ADR 30).
     expect(takeover?.delivered[0]?.title).toMatch(/filet de tests/i);
-    expect(takeover?.rules.join(' ')).toMatch(/filet de tests/i);
+    expect(takeover?.delivered[0]?.text).toMatch(/avant toute modification/);
     const delivered = takeover?.delivered.map((item) => item.title).join(' ') ?? '';
     expect(delivered).toMatch(/Veille/);
     expect(delivered).toMatch(/Évolution/);
@@ -683,11 +770,39 @@ describe('what each Offer page has to say (ADR 17)', () => {
     // Half a day of incidents a month, not half a day each (ADR 18).
     expect(takeover?.delivered[3]?.text).toMatch(/jusqu'à une demi-journée d'incidents/);
     expect(takeover?.delivered[3]?.text).not.toMatch(/chacun/);
+    // Three rules, not five (ADR 30): what each plan's tests cover, what goes
+    // beyond the plan, and the Audit's credit.
+    expect(takeover?.rules).toHaveLength(3);
     const rules = takeover?.rules.join(' ') ?? '';
+    expect(rules).toMatch(/Évolution, toute l'application/);
     expect(rules).toContain('{dayRate}');
     expect(rules).toMatch(/ne se reportent pas/);
-    expect(rules).toMatch(/de Veille à Évolution/);
     expect(rules).toContain('{credit}');
+  });
+
+  it('answers what an owner left by a provider asks, with the facts Thomas gave (ADR 30)', () => {
+    const answers = Object.fromEntries(
+      (pagesOf(fr).takeover?.faq ?? []).map((entry) => [entry.question, entry.answer]),
+    );
+    expect(answers['Et quand ça plante ?']).toMatch(/sous 48 heures ouvrées/);
+    expect(answers['Et quand ça plante ?']).toMatch(/Pas d'astreinte la nuit ni le week-end/);
+    expect(answers['Et pendant vos congés ?']).toMatch(/un mois avant/);
+    expect(answers["Faut-il récupérer le code auprès de l'ancien prestataire ?"]).toMatch(
+      /sur le serveur et dans les sauvegardes/,
+    );
+    // Not confirmed: whether a Build replaces an Access or WinDev tool. The
+    // sentence stays as Thomas wrote it until he says (ADR 30).
+    expect(answers['Est-ce de la TMA ? Pour quelles technologies ?']).toMatch(
+      /Pas de WinDev ni d'Access\.$/,
+    );
+  });
+
+  it('shows the first year of a Takeover, set-up and twelve months', () => {
+    expect(PRICES.takeover.total).toBe('firstYear');
+    const first = combinationFor(PRICES.takeover, ['small', 'watch']);
+    if (!first) throw new Error('no small Watch Takeover');
+    // The audit's figure: 2,000 € of set-up, then twelve months from 350 €.
+    expect(totalOf(PRICES.takeover, first)).toEqual({ min: 6200, max: 8400 });
   });
 
   it('shows what an Evolution month is made of: its Watch month, plus days at the day rate', () => {
@@ -703,6 +818,78 @@ describe('what each Offer page has to say (ADR 17)', () => {
       });
     }
     expect(pagesOf(fr).takeover?.estimator.daysIncluded).toContain('{days}');
+  });
+
+  it('shows the whole budget of a two-phase Offer, and ends its first phase on a written ceiling', () => {
+    // The first phase alone was 12 to 33 % of the budget a reader would end up
+    // paying (ADR 30). The total adds the second phase's weeks at the day rate,
+    // four days a week at most: the ceiling the Build's FAQ taught.
+    for (const offer of OFFER_IDS) {
+      const table = PRICES[offer];
+      const twoPhases = table.amounts[0] === 'plan' && table.duration === 'execution';
+      expect(table.total, offer).toBe(
+        twoPhases ? 'phases' : offer === 'takeover' ? 'firstYear' : undefined,
+      );
+    }
+    const build = combinationFor(PRICES.build, ['small', 'none']);
+    if (!build) throw new Error('no small Build');
+    expect(totalOf(PRICES.build, build)).toEqual({ min: 8250, max: 13200 });
+    for (const combination of PRICES.migration.combinations) {
+      const total = totalOf(PRICES.migration, combination);
+      const plan = combination.amounts.plan;
+      const weeks = combination.weeks;
+      expect(total?.min).toBe((plan?.min ?? 0) + (weeks?.min ?? 0) * MAX_DAYS_PER_WEEK * DAY_RATE);
+      expect(total?.max).toBe((plan?.max ?? 0) + (weeks?.max ?? 0) * MAX_DAYS_PER_WEEK * DAY_RATE);
+    }
+    for (const offer of ['migration', 'scaling', 'build'] as const) {
+      expect(pagesOf(fr)[offer]?.rules.join(' '), offer).toMatch(/plafond écrit/);
+      expect(pagesOf(en)[offer]?.rules.join(' '), offer).toMatch(/written ceiling/);
+    }
+  });
+
+  it('opens a technical criterion on its median case, and says how to answer it', () => {
+    // Opened on the cheapest case, the estimator gave the lowest price to the
+    // reader who did not know their coverage (ADR 30).
+    for (const offer of OFFER_IDS) {
+      for (const dimension of PRICES[offer].dimensions) {
+        expect(dimension.options, `${offer} ${dimension.id}`).toContain(defaultOption(dimension));
+      }
+    }
+    for (const [offer, id] of [
+      ['migration', 'coverage'],
+      ['scaling', 'observability'],
+    ] as const) {
+      const dimension = PRICES[offer].dimensions.find((candidate) => candidate.id === id);
+      expect(dimension && defaultOption(dimension), `${offer} ${id}`).toBe('partial');
+      expect(pagesOf(fr)[offer]?.estimator.dimensions[id]?.help).toMatch(
+        /Vous ne savez pas \? Choisissez « Aucune » : c'est l'estimation haute\.$/,
+      );
+      expect(pagesOf(en)[offer]?.estimator.dimensions[id]?.help).toMatch(/Not sure\?/);
+    }
+  });
+
+  it('proves each Offer with a line of its own, one Achievement at a time (ADR 30)', () => {
+    for (const content of [en, fr]) {
+      for (const [offer, page] of Object.entries(pagesOf(content))) {
+        for (const id of Object.keys(page.proof ?? {})) {
+          expect(
+            OFFERS[offer as keyof typeof OFFERS].achievements,
+            `${offer} proves ${id}`,
+          ).toContain(id);
+        }
+      }
+    }
+    // The audit of someone else's code, alone: the API redesign proved nothing
+    // an audit sells.
+    expect(OFFERS.audit.achievements).toEqual(['codebase-audit']);
+    expect(pagesOf(fr).migration?.proof?.['enterprise-onboarding']).toMatch(
+      /deux versions majeures sans jamais l'arrêter/,
+    );
+    expect(pagesOf(fr).scaling?.proof?.['wallet-event-sourcing']).toMatch(
+      /1 000 transactions par minute/,
+    );
+    // The application Socios.com bought is Thomas's own work: a Takeover's proof.
+    expect(OFFERS.takeover.achievements).toContain('acquired-app-migration');
   });
 
   it('sells a Migration in two phases, priced by version gap and test coverage', () => {
@@ -991,6 +1178,10 @@ describe('the Partners page (ADR 14)', () => {
     }
   });
 
+  it('speaks apart to a Referrer, who buys nothing (ADR 30)', () => {
+    expect(fr.partnersPage.referrers).toMatch(/^Cabinet comptable, intégrateur \?/);
+  });
+
   it('carries no copy of the day rate: it is read from the price table', () => {
     for (const [path, text] of walkStrings(fr.partnersPage)) {
       expect(text, `a price is copied at ${path}`).not.toMatch(new RegExp(`\\b${DAY_RATE}\\b`));
@@ -1016,16 +1207,30 @@ describe('the home page, written for the least technical reader (ADR 14)', () =>
     expect(en.hero.blurb).not.toMatch(/\bAI\b|workshop/i);
   });
 
-  it('keeps the words the voice never uses off the home and About pages', () => {
+  it('keeps the words the voice never uses off every French page', () => {
     // From the brief that defines the voice (ADR 24). "Sur mesure" is the
-    // Build's name, and nothing else.
+    // Build's name, and nothing else. The Offer pages, the Partners and the
+    // public sector joined home and About once La Cartonnerie lost its
+    // « accompagné » (ADR 30).
     const NEVER = /passionn|\bexperts?\b|\bsolutions?\b|accompagn|innovant|de A à Z|360°|synergie/i;
-    for (const id of ['home', 'about'] as const) {
+    for (const { id } of PAGES.filter((page) => page.paths.fr)) {
       for (const [path, text] of walkStrings(contentOfPage('fr', id))) {
         expect(text, `${id} ${path}`).not.toMatch(NEVER);
         expect(text.replaceAll('Création sur mesure', ''), `${id} ${path}`).not.toMatch(
           /sur mesure/i,
         );
+      }
+    }
+  });
+
+  it('calls the software an owner runs a logiciel on the pages an owner reads (ADR 30)', () => {
+    // An owner says « notre logiciel », never « application ». The meta, for
+    // search, and the Takeover's estimator, whose words the audit kept, are
+    // left as they are; the home page's problem title is Thomas's own (ADR 27).
+    for (const id of ['takeover', 'build'] as const) {
+      for (const [path, text] of walkStrings(contentOfPage('fr', id))) {
+        if (/^\$\.(meta|estimator)\b/.test(path)) continue;
+        expect(text, `${id} ${path}`).not.toMatch(/application métier/);
       }
     }
   });

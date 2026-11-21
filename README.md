@@ -1,6 +1,6 @@
 # Thomas Bouzy — freelance site
 
-Static showcase site that sells five Offers to three Segments
+Static showcase site that sells seven Offers to three Segments
 ([ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md)): a
 home page, one page per Offer with public prices and an estimator, and a page
 for Partners ([ADR 17](docs/adr/0017-offer-pages-public-prices-and-the-estimator.md)).
@@ -21,7 +21,9 @@ behind the running order,
 [ADR 27](docs/adr/0027-software-engineer-and-the-workshops-as-the-way-in.md)
 put the job title back and the Workshops first, and
 [ADR 28](docs/adr/0028-proof-on-the-first-screen-and-the-workshops-format.md)
-moved the proof under the hero's buttons. The Workshops are French only, are
+moved the proof under the hero's buttons. The Offers are grouped by the
+reader's situation, not laid out as the life of an application
+([ADR 30](docs/adr/0030-offers-by-situation-and-the-whole-budget.md)). The Workshops are French only, are
 never called a *formation*, and publish their format but never a date or a
 price. The palette is the LinkedIn cover's — dark slate, one
 terracotta, a ridge —
@@ -61,9 +63,10 @@ a plain line that names no technology. All of it is asserted —
 [ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md).
 
 Every price comes from one typed table, `src/content/prices.ts`: the static
-table on each Offer page, the estimator that turns it into sliders, the "from"
-on the home page's cards, the published day rate and the JSON-LD's
-`Service.offers` all read it, so changing a price is one edit
+table on each Offer page, the estimator that turns it into sliders, the whole
+budget it adds up under them (ADR 30), the "from" on the home page's cards, the
+published day rate and the JSON-LD's `Service.offers` all read it, so changing a
+price is one edit
 (`tests/structured-data.spec.ts` holds the JSON-LD to the table). The amounts
 are provisional, like the copy.
 
@@ -157,7 +160,11 @@ tests/
   nothing is blank; the prose is genuinely translated. Every Failure mode
   references one existing Offer, every cited Achievement exists, each Concept is
   on exactly one Offer, every option combination has a price range with its
-  minimum at most its maximum, and the day rate is 600–750 € excl. VAT.
+  minimum at most its maximum, and the day rate is 550 € excl. VAT, for
+  everyone. Every Offer is in one of the home page's three situations, the
+  technical team's last and sold to no orphan application; a two-phase card
+  names its first step; an Offer sold in two phases, or with a monthly plan,
+  shows its whole budget (ADR 30).
 - **Behaviour** — the home page's running order and its hero buttons, one
   Achievement open at a time, no track record and no CV link, the language
   switch changing the URL and never pointing at a page that does not exist,
@@ -166,8 +173,11 @@ tests/
   lines and steps aside going down; the 404 offers four ways back in; the
   Client sentences come in once, as they scroll into view (ADR 28).
 - **Offers** — each Offer page's ranges match the price table, with and without
-  JavaScript; every slider is labelled and keyboard-operable, and the result is
-  announced; the booking link is a plain outbound link.
+  JavaScript, its whole budget included; every slider is labelled and
+  keyboard-operable, opens on its default, and steps aside when it moves no
+  figure, and the result is announced; the call sits right under the price, the
+  booking block says who answers, and the booking link is a plain outbound link
+  (ADR 30).
 - **Privacy** — the phone number is in neither page's HTML source nor the
   JSON-LD, and appears only after a click.
 - **Accessibility** — axe at WCAG 2.1 AA, on every registered page, with every

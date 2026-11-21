@@ -1,6 +1,7 @@
 # 28. Proof on the first screen, the Workshops' format, and a way around
 
-- Status: accepted, implemented 2026-11-21
+- Status: accepted, implemented 2026-11-21; its open facts on the Takeover, the
+  Build and La Cartonnerie answered in part by [ADR 30](0030-offers-by-situation-and-the-whole-budget.md), 2026-11-21
 - Date: 2026-11-21
 - Amends [ADR 1](0001-astro-static-site.md) (postscript),
   [ADR 11](0011-the-page-is-not-a-cv.md),

@@ -1,6 +1,8 @@
 # 19. Two more Offers: building what does not exist, and holding the load
 
-- Status: accepted, not yet implemented
+- Status: accepted, not yet implemented; the home page's seven cards grouped by
+  situation, and Scaling's technical terms moved to its FAQ, by
+  [ADR 30](0030-offers-by-situation-and-the-whole-budget.md), 2026-11-21
 - Date: 2026-10-05
 - Amends [ADR 14](0014-three-segments-and-the-least-technical-reader.md) and
   [ADR 17](0017-offer-pages-public-prices-and-the-estimator.md)

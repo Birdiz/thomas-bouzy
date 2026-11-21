@@ -1,7 +1,8 @@
 # 23. Motion that answers
 
 - Status: accepted, implemented 2026-10-06; the carousel replaced, and the
-  Client sentences let in on scroll, by [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21
+  Client sentences let in on scroll, by [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md), 2026-11-21;
+  the journey's track gone with the journey, by [ADR 30](0030-offers-by-situation-and-the-whole-budget.md), 2026-11-21
 - Date: 2026-10-06
 - Amends [ADR 13](0013-the-site-wears-the-linkedin-cover.md): the ridge is no
   longer static

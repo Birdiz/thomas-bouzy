@@ -1,8 +1,16 @@
 ---
 import type { OfferId } from '../../content/offers.ts';
-import { combinationFor, isMonthly, optionCombinations, PRICES } from '../../content/prices.ts';
+import {
+  combinationFor,
+  defaultOption,
+  isMonthly,
+  optionCombinations,
+  PRICES,
+  totalOf,
+} from '../../content/prices.ts';
 import type { EstimatorLabels, OfferPageLabels } from '../../content/types.ts';
 import { formatEuroRange, formatSpan } from '../../lib/money.ts';
+import { fillPrices } from '../../lib/price-tokens.ts';
 import type { Locale } from '../../site.ts';
 
 interface Props {
@@ -20,6 +28,7 @@ const { offer, locale, labels, shared } = Astro.props;
  * the interaction is what they lose, never the price (ADR 17).
  */
 const table = PRICES[offer];
+const id = `estimator-${offer}`;
 
 function labelOf(dimension: string, option: string): string {
   const label = labels.dimensions[dimension]?.options[option];
@@ -40,6 +49,30 @@ function noteOf(dimension: string, option: string): string | undefined {
   return note;
 }
 const hasNotes = (dimension: string) => Boolean(labels.dimensions[dimension]?.notes);
+
+/** The line under a criterion the reader may not know how to answer (ADR 30). */
+const helpOf = (dimension: string) => labels.dimensions[dimension]?.help;
+
+/** What describes a slider: its help line, then the chosen option's note. */
+function describedBy(dimension: string): string | undefined {
+  const ids = [
+    helpOf(dimension) && `${id}-${dimension}-help`,
+    hasNotes(dimension) && `${id}-${dimension}-note`,
+  ].filter(Boolean);
+  return ids.length > 0 ? ids.join(' ') : undefined;
+}
+
+/**
+ * The whole budget of a combination, when the table declares one: a two-phase
+ * Offer's ceiling, a Takeover's first year (ADR 30). Its note says what it is
+ * made of.
+ */
+const total = table.total
+  ? (() => {
+      if (!labels.total) throw new Error(`${offer}: no ${locale} label for the total`);
+      return { label: labels.total.label, note: fillPrices(labels.total.note, locale) };
+    })()
+  : undefined;
 
 /** What a monthly amount is made of, when it includes days at the day rate. */
 function daysIncluded(days: number | undefined): string | undefined {
@@ -71,14 +104,18 @@ const rows = optionCombinations(table).map((options) => {
           combination.weeks.max > 1 ? shared.weekMany : shared.weekOne
         }`
       : undefined,
+    total: (() => {
+      const range = totalOf(table, combination);
+      return range && `${formatEuroRange(range, locale)} ${shared.excludingVat}`;
+    })(),
   };
 });
 
-const id = `estimator-${offer}`;
 const disclaimerId = `${id}-disclaimer`;
 const resultLabels = [
   ...table.amounts.map((amount) => labels.amounts[amount]),
   ...(table.duration ? [labels.duration] : []),
+  ...(total ? [total.label] : []),
 ];
 ---
 
@@ -103,16 +140,23 @@ const resultLabels = [
               {labels.dimensions[dimension.id]?.label}
               <span class="estimator__choice" data-choice aria-hidden="true" />
             </label>
+            {/* A criterion the reader may not know opens on its median case,
+                not on the cheapest (ADR 30). */}
             <input
               type="range"
               id={`${id}-${dimension.id}`}
               min="0"
               max={dimension.options.length - 1}
               step="1"
-              value="0"
+              value={dimension.options.indexOf(defaultOption(dimension))}
               data-options={dimension.options.join(' ')}
-              aria-describedby={hasNotes(dimension.id) ? `${id}-${dimension.id}-note` : undefined}
+              aria-describedby={describedBy(dimension.id)}
             />
+            {helpOf(dimension.id) && (
+              <p class="estimator__detail" id={`${id}-${dimension.id}-help`}>
+                {helpOf(dimension.id)}
+              </p>
+            )}
             {hasNotes(dimension.id) && (
               <p class="estimator__detail" id={`${id}-${dimension.id}-note`} data-note />
             )}
@@ -147,9 +191,19 @@ const resultLabels = [
       <caption class="visually-hidden">{shared.tableCaption}</caption>
       <thead>
         <tr>
-          {table.dimensions.map((dimension) => <th scope="col">{labels.dimensions[dimension.id]?.label}</th>)}
+          {
+            table.dimensions.map((dimension) => (
+              <th scope="col">
+                {labels.dimensions[dimension.id]?.label}
+                {helpOf(dimension.id) && (
+                  <span class="estimator__detail">{helpOf(dimension.id)}</span>
+                )}
+              </th>
+            ))
+          }
           {table.amounts.map((amount) => <th scope="col">{labels.amounts[amount]}</th>)}
           {table.duration && <th scope="col">{labels.duration}</th>}
+          {total && <th scope="col">{total.label}</th>}
         </tr>
       </thead>
       <tbody>
@@ -169,6 +223,12 @@ const resultLabels = [
                 </td>
               ))}
               {row.weeks && <td>{row.weeks}</td>}
+              {row.total && (
+                <td class="estimator__amount">
+                  {row.total}
+                  <span class="estimator__detail">{total?.note}</span>
+                </td>
+              )}
             </tr>
           ))
         }
@@ -184,13 +244,26 @@ const resultLabels = [
     const choices = root.querySelectorAll('[data-choice]');
     const figures = root.querySelectorAll('[data-figure]');
 
+    const rowOf = (options: (string | undefined)[]) =>
+      root.querySelector<HTMLTableRowElement>(`tr[data-options="${options.join(' ')}"]`);
+    // What a row prices, its option cells left out.
+    const figuresOf = (row: HTMLTableRowElement | null) =>
+      [...(row?.cells ?? [])].slice(sliders.length).map((cell) => cell.textContent);
+
     const update = () => {
-      const key = sliders
-        .map((slider) => slider.dataset.options?.split(' ')[slider.valueAsNumber])
-        .join(' ');
-      const row = root.querySelector<HTMLTableRowElement>(`tr[data-options="${key}"]`);
+      const chosen = sliders.map((slider) => slider.dataset.options?.split(' ')[slider.valueAsNumber]);
+      const row = rowOf(chosen);
       if (!row) return;
       const cells = [...row.cells];
+      // A slider that moves no figure, given the others, is out of the way:
+      // the size of an express Audit, whose fee is one figure (ADR 30).
+      sliders.forEach((slider, i) => {
+        const prices = (slider.dataset.options?.split(' ') ?? []).map((option) =>
+          figuresOf(rowOf(chosen.map((value, j) => (j === i ? option : value)))).join('|'),
+        );
+        const wrapper = slider.parentElement;
+        if (wrapper) wrapper.hidden = new Set(prices).size < 2;
+      });
       sliders.forEach((slider, i) => {
         const cell = cells[i];
         const text = cell?.dataset.label ?? '';

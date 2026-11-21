@@ -134,7 +134,7 @@ export const fr = {
     },
     {
       id: 'live-api-redesign',
-      title: "Refaire une API de production sans que l'utilisateur s'en aperçoive",
+      title: "Refaire un produit en service sans que ses utilisateurs s'en aperçoivent",
       org: 'Socios.com (Chiliz)',
       period: 'Mai 2022 – Avril 2026',
       plain:
@@ -169,6 +169,14 @@ export const fr = {
         'En production sur fonds réels, signature idempotente et réconciliation avec la chaîne.',
     },
     {
+      id: 'acquired-app-migration',
+      title: "Faire entrer une application rachetée dans l'écosystème de l'entreprise",
+      org: 'Socios.com (Chiliz)',
+      period: 'Mai 2022 – Avril 2026',
+      plain:
+        "Reprendre une application écrite par d'autres et la migrer vers les systèmes de l'entreprise qui l'a rachetée.",
+    },
+    {
       id: 'enterprise-onboarding',
       title: 'Démarrer un nouveau grand compte en une journée',
       org: 'Kiss The Bride',
@@ -182,7 +190,7 @@ export const fr = {
     {
       id: 'codebase-audit',
       title: "Auditer une base de code qui n'est pas la mienne",
-      org: 'Civic tech, bénévolat',
+      org: 'Projets citoyens, bénévolat',
       period: '2026',
       plain:
         'Dire à une équipe ce qui, dans son code, peut lui coûter cher, puis corriger moi-même le plus critique.',
@@ -334,14 +342,20 @@ export const fr = {
 
   offersSection: {
     kicker: 'Les offres',
-    title: 'Une offre pour chaque moment de votre application, chacune avec son prix.',
-    stages: ['Créer', 'Fiabiliser et migrer, en parallèle', 'Tenir la charge'],
-    alongside: 'À tout moment',
-    lifecycle: 'La vie de votre application',
+    title: 'Une offre par situation, chacune avec son prix.',
+    situations: [
+      { title: 'Votre logiciel vous pose problème' },
+      {
+        title: 'Il vous manque un outil',
+        sentence: '« Toute notre activité tient sur un fichier Excel. »',
+      },
+      { title: 'Vous avez une équipe technique ?' },
+    ],
+    more: "Voir l'offre et le prix",
     from: {
       fee: 'à partir de',
       setup: 'à partir de',
-      plan: 'première étape à partir de',
+      plan: 'dès',
       monthly: 'à partir de',
     },
     followedBy: 'puis',
@@ -358,36 +372,36 @@ export const fr = {
     audit: {
       name: 'Audit',
       plain:
-        'Un regard extérieur, rendu par écrit : ce qui peut vous coûter cher et par quoi commencer.',
+        'Un avis écrit, sans refonte à vendre : ce qui peut vous coûter cher et par quoi commencer.',
     },
     takeover: {
       name: 'Reprise et maintenance',
       plain:
-        "Reprendre l'application que plus personne n'ose toucher, sans rien casser, puis la faire vivre chaque mois.",
+        'Je reprends votre application sans rien casser, puis je la maintiens au mois, sans engagement.',
     },
     migration: {
       name: 'Migration sans interruption',
       plain:
-        "Faire passer un système qui tourne à une nouvelle version, sans l'arrêter, étape par étape.",
+        "Je mets votre logiciel à jour par étapes, sans l'arrêter, avant que la facture ne grossisse.",
+      phase: 'plan',
     },
     reliability: {
       name: 'Fiabilisation',
-      plain: 'Savoir expliquer un écart de stock, un solde ou un bug, au lieu de le deviner.',
+      plain: "Vous savez d'où vient un écart de stock et vous voyez un bug avant vos clients.",
     },
     scaling: {
       name: 'Tenue en charge',
-      plain:
-        'Que votre système tienne le jour où tout le monde arrive et se relève seul quand une pièce lâche.',
+      plain: 'Je reproduis votre pic avant le jour J, puis je corrige ce qui cède en premier.',
+      phase: 'diagnostic',
     },
     build: {
       name: 'Création sur mesure',
-      plain:
-        "Construire l'application qui vous manque, pensée dès le départ pour qu'un autre puisse la reprendre.",
+      plain: "Je construis l'outil qui vous manque, pensé pour que vous ne dépendiez pas de moi.",
+      phase: 'cadrage',
     },
     reinforcement: {
       name: 'Renfort senior',
-      plain:
-        'Un lead ou un architecte senior dans votre équipe, à temps partiel, facturé à la journée.',
+      plain: 'Je rejoins votre équipe 1 à {maxDays} jours par semaine, pour trancher et livrer.',
     },
   },
 
@@ -403,6 +417,7 @@ export const fr = {
     notTheRightChoice: 'Pas le bon choix si…',
     achievements: 'Ce qui le prouve',
     faq: 'Questions fréquentes',
+    who: "C'est moi qui décroche : Thomas Bouzy, ingénieur logiciel dans le Grand Est.",
     book: {
       kicker: 'Premier pas',
       title: 'Un appel de 30 minutes, gratuit.',
@@ -503,7 +518,7 @@ export const fr = {
         description:
           "Votre prestataire est parti, plus personne n'ose toucher l'application ? Reprise, filet de tests, puis maintenance mensuelle sans engagement, à prix publié.",
       },
-      heading: 'Reprise et maintenance de votre application métier',
+      heading: 'Reprise et maintenance de votre logiciel métier',
       priceHeading: "Combien coûte la maintenance d'une application ?",
       sentences: [
         '« On ne sait même plus qui a les accès au serveur. »',
@@ -545,13 +560,12 @@ export const fr = {
         amounts: { setup: '01–03 · Mise en place, une fois', monthly: '04 · Formule mensuelle' },
         duration: 'Durée de la mise en place',
         daysIncluded: 'Veille + {days} jours pour vos demandes',
+        total: { label: 'Première année', note: 'La mise en place, puis douze mois de formule.' },
       },
       rules: [
-        "Une Reprise commence toujours par un filet de tests : on ne modifie pas ce qu'on ne sait pas vérifier.",
-        "En Veille, le filet couvre les parcours critiques ; en Évolution, toute l'application, puisqu'elle va changer. C'est ce qui rend sa mise en place plus chère.",
-        "Passer de Veille à Évolution, c'est étendre le filet à toute l'application : je vous le chiffre à la journée avant de commencer.",
-        "Au-delà de la demi-journée d'incidents ou des jours de l'Évolution, c'est {dayRate} HT la journée, après votre accord. Les jours non utilisés ne se reportent pas.",
-        'Si un Audit a précédé la Reprise, {credit} de son prix sont déduits de la mise en place.',
+        "En Veille, les tests couvrent les fonctions vitales ; en Évolution, toute l'application, qui va changer : sa mise en place coûte plus cher.",
+        "Au-delà de la formule, c'est {dayRate} HT la journée, après votre accord. Les jours non utilisés ne se reportent pas.",
+        'Si un Audit a précédé, {credit} sont déduits de la mise en place.',
       ],
       notTheRightChoice: [
         {
@@ -563,6 +577,10 @@ export const fr = {
           offer: 'reinforcement',
         },
       ],
+      proof: {
+        'enterprise-onboarding':
+          "Un logiciel pour grands comptes qui n'avait aucun test, repris sans jamais l'arrêter.",
+      },
       faq: [
         {
           question: 'Est-ce de la TMA ? Pour quelles technologies ?',
@@ -571,7 +589,18 @@ export const fr = {
         },
         {
           question: "Faut-il récupérer le code auprès de l'ancien prestataire ?",
-          answer: "Oui, c'est la première chose à faire ; la carte dit ce qui manque.",
+          answer:
+            "Oui, d'abord. S'il a disparu, on cherche sur le serveur et dans les sauvegardes ; la carte dit ce qui manque.",
+        },
+        {
+          question: 'Et quand ça plante ?',
+          answer:
+            "Je réponds sous 48 heures ouvrées ; un incident bloquant passe avant le reste. Pas d'astreinte la nuit ni le week-end.",
+        },
+        {
+          question: 'Et pendant vos congés ?',
+          answer:
+            'Je vous préviens un mois avant ; les mises à jour urgentes sont faites avant mon départ.',
         },
         {
           question: 'Et si vous partez à votre tour ?',
@@ -622,24 +651,34 @@ export const fr = {
           coverage: {
             label: 'Couverture de tests existante',
             options: { good: 'Bonne', partial: 'Partielle', none: 'Aucune' },
+            help: "La part du logiciel vérifiée par des tests automatiques. Vous ne savez pas ? Choisissez « Aucune » : c'est l'estimation haute.",
           },
         },
         amounts: { plan: 'Plan, phase 1 à prix fixe' },
         duration: 'Exécution, avec votre équipe',
+        total: {
+          label: 'Budget total, au plus',
+          note: "Le plan, puis l'exécution à {maxDays} jours par semaine.",
+        },
       },
       rules: [
-        "La Migration se vend en deux phases : un plan à prix fixe, ferme avant de commencer, puis l'exécution à {dayRate} HT la journée. Vous décidez de la seconde, plan en main.",
+        "La Migration se vend en deux phases : un plan à prix fixe, ferme avant de commencer, puis l'exécution à {dayRate} HT la journée. Vous décidez de la seconde, plan et plafond écrit en main.",
         "Pendant l'exécution, je travaille jusqu'à {maxDays} jours par semaine avec votre équipe.",
       ],
       notTheRightChoice: [
         {
-          text: "Le système peut s'arrêter un week-end sans dommage : une migration classique coûtera moins cher.",
+          text: "Votre application peut s'arrêter un week-end sans dommage : sa mise à jour entre dans la {offer}, pour moins cher.",
+          offer: 'takeover',
         },
         {
           text: 'Vous voulez le remplacer plutôt que le faire évoluer : un {offer} éclairera ce choix.',
           offer: 'audit',
         },
       ],
+      proof: {
+        'enterprise-onboarding':
+          "Un logiciel sans aucun test, mis à jour de deux versions majeures sans jamais l'arrêter : les tests d'abord.",
+      },
       faq: [
         {
           question:
@@ -660,21 +699,21 @@ export const fr = {
         description:
           "Un stock, un solde ou une facturation qui ne tombe pas juste ? Traçabilité des flux et observabilité pour expliquer l'écart. Prix publics.",
       },
-      heading: 'Fiabilisation de votre application : flux traçables et écarts expliqués',
+      heading: "Savoir d'où vient chaque écart, au lieu de le deviner",
       priceHeading: "Combien coûte la fiabilisation d'une application ?",
-      sentences: ["« On a recrédité deux fois et on ne l'a vu qu'à la réconciliation. »"],
+      sentences: ["« On a facturé deux fois le même client et personne ne l'a vu. »"],
       delivered: [
         {
           title: 'Les flux qui comptent, choisis ensemble',
           text: 'Ceux où un écart coûte : stock, facturation, paiements.',
         },
         {
-          title: 'Des flux traçables',
-          text: "Chaque mouvement gardé comme un fait daté : l'historique se rejoue.",
+          title: 'Chaque mouvement gardé et daté',
+          text: "Pour chaque écart, vous retrouvez l'opération qui l'a causé.",
         },
         {
-          title: 'La double exécution, traitée',
-          text: "Une opération reçue deux fois n'est appliquée qu'une fois.",
+          title: 'Plus de doublons',
+          text: "Une commande ou un paiement reçu deux fois n'est enregistré qu'une fois.",
         },
         {
           title: 'Des alertes avant vos clients',
@@ -758,7 +797,7 @@ export const fr = {
         },
         {
           title: 'Un système qui tombe proprement',
-          text: "Contre-pression sur les files, disjoncteurs, mode dégradé : dans un système distribué, une pièce qui lâche n'emporte plus le reste. Le scénario de charge reste dans votre CI, avec un runbook d'incident.",
+          text: "Si une pièce lâche, le reste continue de tourner, en mode réduit. Vous gardez le test de charge et la marche à suivre en cas d'incident.",
         },
       ],
       estimator: {
@@ -770,14 +809,19 @@ export const fr = {
           observability: {
             label: 'Supervision existante',
             options: { good: 'Bonne', partial: 'Partielle', none: 'Aucune' },
+            help: "Ce que vous mesurez déjà du logiciel en marche : erreurs, lenteurs, alertes. Vous ne savez pas ? Choisissez « Aucune » : c'est l'estimation haute.",
           },
         },
         amounts: { plan: 'Diagnostic, phase 1 à prix fixe' },
         duration: 'Durée des corrections',
+        total: {
+          label: 'Budget total, au plus',
+          note: 'Le diagnostic, puis les corrections à {maxDays} jours par semaine.',
+        },
       },
       rules: [
         'Une Tenue en charge commence toujours par un tir de charge qui reproduit le pic, avant toute modification.',
-        'Elle se vend en deux phases : le diagnostic à prix fixe, puis les corrections à {dayRate} HT la journée. Vous décidez de la seconde, diagnostic en main.',
+        'Elle se vend en deux phases : le diagnostic à prix fixe, puis les corrections à {dayRate} HT la journée. Vous décidez de la seconde, diagnostic et plafond écrit en main.',
       ],
       notTheRightChoice: [
         {
@@ -789,6 +833,10 @@ export const fr = {
           offer: 'audit',
         },
       ],
+      proof: {
+        'wallet-event-sourcing':
+          'Plus de 1 000 transactions par minute, des pics de 10 000 à 20 000 utilisateurs testés en charge.',
+      },
       faq: [
         {
           question: 'Ajouter des serveurs ne suffit-il pas ?',
@@ -806,6 +854,11 @@ export const fr = {
             "Il se fait sur une copie fidèle, ou en production par paliers, hors des heures d'affluence, avec un arrêt prêt.",
         },
         {
+          question: 'Et techniquement ?',
+          answer:
+            "Contre-pression sur les files, disjoncteurs, mode dégradé : dans un système distribué, une pièce qui lâche n'emporte plus le reste. Le scénario de charge reste dans votre CI, avec un runbook d'incident.",
+        },
+        {
           question: 'Sur quelles technologies ?',
           answer:
             "Un tir de charge ne dépend pas du langage. Mon terrain, c'est PHP et Symfony ; je travaille aussi en Node.js, TypeScript et React. Python, pour l'instant en projets personnels.",
@@ -814,12 +867,12 @@ export const fr = {
     },
     build: {
       meta: {
-        title: "Développement d'application métier sur mesure, front et back",
+        title: 'Création sur mesure de logiciel métier, front et back',
         description:
-          'Une application métier sur mesure, front et back, construite pour être reprise : cadrage à prix fixe, puis développement à la journée. Prix publics.',
+          'Un logiciel métier neuf, front et back, construit pour être repris : cadrage à prix fixe, puis développement à la journée. Prix publics.',
       },
-      heading: "Développement d'application sur mesure",
-      priceHeading: 'Combien coûte une application sur mesure ?',
+      heading: "Création sur mesure : l'outil métier qui vous manque",
+      priceHeading: 'Combien coûte un outil métier neuf ?',
       sentences: [
         '« Toute notre activité tient sur un fichier Excel que tout le monde modifie en même temps. »',
         "« On a l'idée du service, pas l'équipe pour le construire. »",
@@ -844,7 +897,7 @@ export const fr = {
             label: "Ce qu'il faut construire",
             options: {
               small: 'Un outil interne',
-              medium: 'Une application métier',
+              medium: 'Un logiciel métier',
               large: 'Un service critique',
             },
           },
@@ -855,10 +908,14 @@ export const fr = {
         },
         amounts: { plan: 'Cadrage, phase 1 à prix fixe' },
         duration: 'Durée de la construction, à la journée',
+        total: {
+          label: 'Budget total, au plus',
+          note: 'Le cadrage, puis la construction à {maxDays} jours par semaine.',
+        },
       },
       rules: [
         "Une Création sur mesure ne remplace jamais un système qui tourne : celui-là relève d'une Migration, ou d'abord d'un Audit.",
-        'Elle se vend en deux phases : le cadrage à prix fixe, puis la construction à {dayRate} HT la journée. Vous décidez de la seconde, cadrage en main.',
+        'Elle se vend en deux phases : le cadrage à prix fixe, puis la construction à {dayRate} HT la journée. Vous décidez de la seconde, cadrage et plafond écrit en main.',
       ],
       notTheRightChoice: [
         {
@@ -873,7 +930,12 @@ export const fr = {
         {
           question: 'Combien coûte la construction ?',
           answer:
-            "Elle se facture à {dayRate} HT la journée, {maxDays} jours par semaine au plus. Multipliez les semaines de l'estimateur par {maxDays} jours : vous avez le plafond. Le cadrage le précise avant que vous décidiez de la suite.",
+            "Elle se facture à {dayRate} HT la journée, {maxDays} jours par semaine au plus : le budget total de l'estimateur est donc un plafond. Le cadrage le précise par écrit avant que vous décidiez de la suite.",
+        },
+        {
+          question: "Notre ERP vient d'un éditeur et nous n'avons pas son code. Ça bloque ?",
+          answer:
+            'Non. Je travaille autour : ses exports, des liaisons avec vos autres outils, des automatisations.',
         },
         {
           question: 'Pourquoi le nombre de systèmes à relier pèse-t-il sur le prix ?',
@@ -952,6 +1014,10 @@ export const fr = {
           offer: 'takeover',
         },
       ],
+      proof: {
+        'enterprise-onboarding':
+          'Quatre développeurs débutants encadrés pendant deux ans, sur un logiciel pour grands comptes.',
+      },
       faq: [
         {
           question: 'Combien de jours au minimum ?',
@@ -1004,7 +1070,7 @@ export const fr = {
       items: [
         {
           title: 'La Cartonnerie, à Reims',
-          text: "Pour cette scène de musiques actuelles (SMAC), j'ai accompagné le responsable artistique face au prestataire : cadrage technique des premières étapes d'une application qui suit les musiciens de l'album à la scène, et besoins du produit traduits en langage technique.",
+          text: "Pour cette scène de musiques actuelles (SMAC), j'étais aux côtés du responsable artistique face au prestataire. J'ai cadré les premières étapes de l'application, qui suit les musiciens de l'album à la scène. J'ai traduit ses besoins pour les développeurs.",
         },
         {
           title: 'Un annuaire associatif, tiré des sites publics',
@@ -1015,7 +1081,7 @@ export const fr = {
           text: 'Un village, trois langues, des actualités publiées par la mairie elle-même. En bénévolat.',
         },
         {
-          title: 'Civic tech, bénévolat',
+          title: 'Projets citoyens, bénévolat',
           text: "Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées. Et un CRM repris en entier à deux développeurs, en production : plus de 1 000 membres s'y connectent en SSO pour suivre leurs démarches.",
         },
       ],
@@ -1061,6 +1127,8 @@ export const fr = {
     },
     offers: 'Ce que vous pouvez me confier',
     offerLink: "Voir l'offre",
+    referrers:
+      "Cabinet comptable, intégrateur ? Si l'un de vos clients a un logiciel qui coince, je fais avec lui un premier point gratuit.",
     book: {
       kicker: 'Premier pas',
       title: 'Un appel de 30 minutes sur votre client.',

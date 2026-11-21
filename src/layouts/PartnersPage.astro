@@ -65,7 +65,7 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
     </section>
 
     <section class="offer__section container" aria-labelledby="partners-offers">
-      <h2 class="kicker offer__heading" id="partners-offers">{page.offers}</h2>
+      <h2 class="offer__heading" id="partners-offers">{page.offers}</h2>
       <ul class="offer__cards">
         {
           offers.map((offer) => (
@@ -81,7 +81,13 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
       </ul>
     </section>
 
-    <BookingSection labels={page.book} locale={locale} />
+    {/* For a Referrer, who sees a client's trouble first and buys nothing: an
+        accountant, an integrator (ADR 30). Addressed apart from the Partners. */}
+    <div class="offer__section container">
+      <p class="offer__referrers">{page.referrers}</p>
+    </div>
+
+    <BookingSection labels={page.book} locale={locale} who={t.offerPage.who} />
   </main>
   <SiteFooter t={t} locale={locale} />
 </BaseLayout>
