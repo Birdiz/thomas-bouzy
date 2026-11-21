@@ -11,24 +11,79 @@ const w = t.workshops;
 /* An email rather than a form: the site is static and sends nothing anywhere
    (ADR 7). The subject says what the email is for, nothing about who sends it. */
 const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.notify.subject)}`;
+
+/* The six other owners of the morning's group, around the one reading. */
+const others = [
+  [30, 30],
+  [80, 16],
+  [200, 24],
+  [40, 112],
+  [100, 140],
+  [170, 124],
+  [230, 98],
+];
 ---
 
 {/* The way in (ADR 27): right after the promise, before the software Offers.
-    The format is published, with what happens to the owner's data and why an
-    engineer runs them; the dates and the price are not, and nothing free is
-    announced (ADR 28). No link to the software Offers: a workshop must never
-    read as hidden prospecting. French only, like the owners it is for. No
-    button either: the hero's, right above, books the same call, and the
-    header carries it all the way down (ADR 31). */}
+    The format is published, and why an engineer runs them; the dates and the
+    price are not, and nothing free is announced (ADR 28). No link to the
+    software Offers: a workshop must never read as hidden prospecting. French
+    only, like the owners it is for. No button either: the hero's, right
+    above, books the same call, and the header carries it all the way down
+    (ADR 31). */}
 {
   w && (
     <section id="workshops" class="workshops container">
-      <p class="kicker">{w.kicker}</p>
-      <h2 class="section-title">{w.title}</h2>
-      <p class="hero__blurb">{w.plain}</p>
+      {/* Why an engineer runs them sits beside the promise it backs, in his
+          own voice, not set apart as a quote (ADR 31's postscript). */}
+      <div class="workshops__head">
+        <div>
+          <p class="kicker">{w.kicker}</p>
+          <h2 class="section-title">{w.title}</h2>
+          <p class="hero__blurb">{w.plain}</p>
+        </div>
+        <div class="workshops__practice">
+          <svg class="workshops__mark" viewBox="0 0 40 24" aria-hidden="true" focusable="false">
+            <polyline class="wd-accent" points="10,4 2,12 10,20" />
+            <polyline class="wd-accent" points="30,4 38,12 30,20" />
+            <line class="wd-muted" x1="23" y1="3" x2="17" y2="21" />
+          </svg>
+          <p>{w.practice}</p>
+        </div>
+      </div>
 
-      {/* Three steps an owner takes in order, drawn as a track rather than
-          as three cards of equal weight (ADR 31). */}
+      {/* The three levels drawn as one way, from the group to the owner's own
+          company, then back to it: seven owners converge on the one reading,
+          who leaves the day with a written note, then a follow-up returns to
+          their case. Decorative: the list under it says the same in words.
+          On a phone the list draws its own rail instead. */}
+      <svg
+        class="workshops__diagram"
+        viewBox="0 0 1096 160"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {others.map(([x, y]) => <line class="wd-link" x1={x} y1={y} x2="400" y2="80" />)}
+        <line class="wd-link wd-link--you" x1="140" y1="56" x2="400" y2="80" />
+        {others.map(([x, y]) => <circle class="wd-other" cx={x} cy={y} r="7" />)}
+        <circle class="wd-you" cx="140" cy="56" r="8" />
+
+        <circle class="wd-you" cx="400" cy="80" r="13" />
+        <rect class="wd-page" x="432" y="46" width="48" height="66" rx="3" />
+        <line class="wd-muted" x1="442" y1="62" x2="470" y2="62" />
+        <line class="wd-muted" x1="442" y1="73" x2="470" y2="73" />
+        <line class="wd-muted" x1="442" y1="84" x2="470" y2="84" />
+        <line class="wd-accent" x1="442" y1="96" x2="458" y2="96" />
+
+        <line class="wd-way" x1="494" y1="80" x2="762" y2="80" />
+        <circle class="wd-you" cx="800" cy="80" r="13" />
+        <path class="wd-accent" d="M 800 46 A 34 34 0 1 1 766 80" />
+        <polyline class="wd-accent" points="759,89 766,79 773,89" />
+        <line class="wd-muted" x1="868" y1="68" x2="868" y2="92" />
+        <line class="wd-faint" x1="886" y1="68" x2="886" y2="92" />
+        <line class="wd-fainter" x1="904" y1="68" x2="904" y2="92" />
+      </svg>
+
       <ol class="workshops__levels">
         {w.levels.map((level) => (
           <li class="workshops__level">
@@ -37,9 +92,6 @@ const notify = w && `mailto:${CONTACT.email}?subject=${encodeURIComponent(w.noti
           </li>
         ))}
       </ol>
-
-      <p class="workshops__data">{w.data}</p>
-      <p class="workshops__practice">{w.practice}</p>
 
       <p class="workshops__notify">
         {w.status} {w.notify.text} <a href={notify}>{w.notify.label}</a>
