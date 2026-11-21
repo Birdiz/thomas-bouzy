@@ -54,12 +54,28 @@ jobs:
         run: npm run build
 
   e2e:
-    name: End-to-end (${{ matrix.shard }}/3)
+    name: End-to-end (${{ matrix.name }})
     runs-on: ubuntu-latest
+    # WebKit is about three times slower than Chromium on a Linux runner, and
+    # `--shard` cuts the list in project order, so equal thirds left one shard
+    # with nearly all of WebKit. Both Chromium projects share one runner and
+    # WebKit gets two.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        include:
+          - name: Chromium
+            id: chromium
+            browser: chromium
+            args: --project=desktop-chromium --project=mobile-chromium
+          - name: WebKit 1/2
+            id: webkit-1
+            browser: webkit
+            args: --project=desktop-webkit --shard=1/2
+          - name: WebKit 2/2
+            id: webkit-2
+            browser: webkit
+            args: --project=desktop-webkit --shard=2/2
     steps:
       - uses: actions/checkout@v5
 
@@ -74,19 +90,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium webkit
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
       # Each shard builds and serves its own dist/ (see playwright.config.ts).
       - name: End-to-end, accessibility and budget
-        run: npx playwright test --shard=${{ matrix.shard }}/3
+        run: npx playwright test ${{ matrix.args }}
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: blob-report-${{ matrix.shard }}
+          name: blob-report-${{ matrix.id }}
           path: blob-report/
           retention-days: 1
 
