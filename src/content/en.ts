@@ -8,7 +8,7 @@ export const en = {
   meta: {
     title: 'Thomas Bouzy — Software engineer',
     description:
-      'Software engineer: I build tools for the core business of small and mid-sized companies, and I take over, stabilise and upgrade the business applications they run on, without downtime. Remote, or on site in eastern France.',
+      'Software engineer: I build tools for the core business of small and mid-sized companies, and I take over, stabilise and upgrade the business software they run on, without downtime. Remote, or on site in eastern France.',
   },
 
   a11y: {
