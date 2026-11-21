@@ -216,6 +216,6 @@ against that same server, so what is tested is what ships. See
 
 CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) verifies every push and
 pull request and publishes nothing. One job runs fonts, lint, types, assets, content
-parity and build, while the Playwright suite runs alongside it in three shards; the
-Verify job merges their reports and is the one check that says whether the commit
-passed. Railway builds from the repository.
+parity and build, while the Playwright suite runs alongside it on three runners, one
+for Chromium and two for WebKit; the Verify job merges their reports and is the one
+check that says whether the commit passed. Railway builds from the repository.
