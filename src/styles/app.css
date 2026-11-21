@@ -488,19 +488,88 @@ a {
 
 /* — workshops ————————————————————————————————————————————————————————————— */
 
-/* The way in (ADR 27). It borrows the hero's blurb, then draws the three levels
-   as a track an owner walks in order, not as three cards of equal weight
-   (ADR 31). */
+/* The way in (ADR 27). The head pairs the promise with why an engineer makes
+   it; the three levels are one way an owner walks in order, drawn as a diagram
+   on a wide screen and as a rail on a phone (ADR 31 and its postscript). */
 .workshops {
   padding-block: 72px 24px;
 }
-.workshops > p {
-  margin-top: 22px;
+.workshops__head .hero__blurb {
+  margin: 22px 0 0;
 }
+.workshops__practice {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+}
+.workshops__practice p {
+  margin: 0;
+  max-width: 40ch;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--color-neutral-200);
+  text-wrap: pretty;
+}
+.workshops__mark {
+  width: 40px;
+  height: 24px;
+}
+
+/* The diagram's strokes. One accent for the owner reading and their way, the
+   divider's grey for the others. */
+.workshops :is(line, polyline, path) {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.workshops .wd-link {
+  stroke: var(--color-divider);
+}
+.workshops .wd-link--you,
+.workshops .wd-way {
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+.workshops .wd-way {
+  stroke-dasharray: 2 8;
+}
+.workshops .wd-accent {
+  stroke: var(--color-accent-text);
+  stroke-width: 1.75;
+}
+.workshops .wd-muted {
+  stroke: var(--color-neutral-500);
+}
+.workshops .wd-faint {
+  stroke: var(--color-neutral-600);
+}
+.workshops .wd-fainter {
+  stroke: var(--color-divider);
+}
+.workshops .wd-other {
+  fill: var(--color-bg);
+  stroke: var(--color-neutral-500);
+  stroke-width: 1.5;
+}
+.workshops .wd-you {
+  fill: var(--color-accent-text);
+}
+.workshops .wd-page {
+  fill: var(--color-bg);
+  stroke: var(--color-muted);
+  stroke-width: 1.5;
+}
+.workshops__diagram {
+  display: none;
+}
+
+/* On a phone, a rail: lit from the first level to the last, a dot on each,
+   the first one filled. */
 .workshops__levels {
   display: grid;
-  gap: 22px;
-  margin: 32px 0 0;
+  margin: 36px 0 0;
   padding: 0;
   list-style: none;
   counter-reset: level;
@@ -508,24 +577,39 @@ a {
 .workshops__level {
   counter-increment: level;
   position: relative;
-  padding-top: 18px;
-  border-top: 2px solid var(--color-divider);
+  margin-left: 6px;
+  padding: 0 0 26px 24px;
+  border-left: 2px solid var(--color-accent);
 }
-/* The step's number sits on the track, and the track is lit up to it. */
+.workshops__level:last-child {
+  padding-bottom: 0;
+  border-left-color: transparent;
+}
 .workshops__level::before {
   content: counter(level, decimal-leading-zero);
-  position: absolute;
-  top: -2px;
-  left: 0;
-  width: 40px;
-  padding-top: 16px;
-  border-top: 2px solid var(--color-accent);
+  display: block;
   font-family: var(--font-mono);
   font-size: 12px;
+  line-height: 1.2;
   color: var(--color-accent-text);
 }
+.workshops__level::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-accent-text);
+  border-radius: 50%;
+  background: var(--color-bg);
+}
+.workshops__level:first-child::after {
+  background: var(--color-accent-text);
+}
 .workshops__level-title {
-  margin: 18px 0 6px;
+  margin: 6px 0;
   font-size: 18px;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -539,29 +623,43 @@ a {
   text-wrap: pretty;
 }
 @media (min-width: 861px) {
+  .workshops__head {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 32px;
+    align-items: end;
+  }
+  .workshops__head > :first-child {
+    grid-column: span 2;
+  }
+  .workshops__practice {
+    margin-top: 0;
+  }
+  /* The diagram's three stations sit over the three columns under it. */
+  .workshops__diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 56px;
+  }
   .workshops__levels {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0 32px;
+    margin-top: 28px;
+  }
+  .workshops__level {
+    margin-left: 0;
+    padding: 0;
+    border-left: 0;
+  }
+  .workshops__level::after {
+    content: none;
   }
 }
-/* Under the levels: what happens to the owner's data, set like a note, then
-   why an engineer runs them, in his voice and a size up (ADR 28). */
-.workshops__data {
-  max-width: 64ch;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--color-muted);
-  text-wrap: pretty;
-}
-.workshops__practice {
-  max-width: 46ch;
-  padding-left: 18px;
-  border-left: 2px solid var(--color-divider);
-  font-size: clamp(19px, 2vw, 23px);
-  line-height: 1.4;
-  text-wrap: pretty;
-}
 .workshops__notify {
+  margin: 44px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-divider);
   font-size: 15px;
   color: var(--color-muted);
 }

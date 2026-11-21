@@ -220,3 +220,9 @@ there later.
 - If the stop rule fires, the subtitle changes and this record gets a
   postscript; the Workshops' section stays where it is until they have a price
   and a page.
+
+## Postscript, 2026-11-21 — the rule on data waits for its page
+
+D11's rule on data is off the home page: Thomas wants it on the Workshops' own
+page, not in the section that only says their format. The rule itself stands.
+See [ADR 31](0031-five-sections-one-job-each.md)'s postscript.

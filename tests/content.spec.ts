@@ -1122,14 +1122,13 @@ describe('the AI workshops (ADR 27, ADR 28)', () => {
     }
   });
 
-  it('say what an owner takes away and what happens to their data, and announce nothing free', () => {
+  it('say what an owner takes away, and announce nothing free', () => {
     const w = fr.workshops;
-    // The four facts Thomas confirmed (ADR 28): a small group, a day at the
-    // owner's premises with a written note, the rule on data, and his own use.
+    // Three of the four facts Thomas confirmed (ADR 28): a small group, a day
+    // at the owner's premises with a written note, and his own use. The rule
+    // on data waits for the Workshops' own page (ADR 31's postscript).
     expect(w.levels[0].text).toMatch(/six à huit/);
     expect(w.levels[1].text).toMatch(/écrit/);
-    expect(w.data).toMatch(/anonymisés/);
-    expect(w.data).toMatch(/sans votre accord/);
     expect(w.practice).toMatch(/chaque jour/);
     // "Accompagnement" is one of the words the voice never uses; the third
     // level is a follow-up.

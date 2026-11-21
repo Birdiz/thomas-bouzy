@@ -483,9 +483,11 @@ export interface ResumeContent {
     plain: string;
     /** The three levels, in the order a business owner takes them. */
     levels: readonly [Titled, Titled, Titled];
-    /** What happens to the owner's data, in a group and at their premises. */
-    data: string;
-    /** Why an engineer runs them: he uses AI every day, and knows where it errs. */
+    /**
+     * Why an engineer runs them: he uses AI every day, and knows where it errs.
+     * Set beside the title, as the reason to trust the promise (ADR 31's
+     * postscript).
+     */
     practice: string;
     /** Where the workshops stand: what will be announced, never a date or a price. */
     status: string;
