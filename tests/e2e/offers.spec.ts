@@ -1,5 +1,6 @@
+import type { Page } from '@playwright/test';
 import { RESUME } from '../../src/content/index.ts';
-import { OFFER_IDS, type OfferId } from '../../src/content/offers.ts';
+import { OFFER_IDS, OFFERS, type OfferId, type SegmentId } from '../../src/content/offers.ts';
 import {
   type Combination,
   combinationFor,
@@ -11,7 +12,7 @@ import {
   totalOf,
 } from '../../src/content/prices.ts';
 import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
-import { homePath, linkTo, ROUTES } from '../../src/routes.ts';
+import { homePath, linkTo, pathOf, ROUTES } from '../../src/routes.ts';
 import { CONTACT, LOCALES } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
@@ -333,18 +334,57 @@ test('the Partners page offers white label, the day rate and a CV on request onl
   const partners = RESUME.fr.partnersPage;
   await page.goto('/partenaires/');
   await expect(page.locator('h1')).toHaveText(partners?.title ?? '∅');
+  // What decides sits in one sheet, beside the Offers (ADR 33).
+  const sheet = page.getByRole('complementary', { name: partners?.kicker ?? '∅' });
   for (const point of partners?.points ?? []) {
-    await expect(page.getByRole('heading', { name: point.title })).toBeVisible();
+    await expect(sheet.getByRole('heading', { name: point.title })).toBeVisible();
   }
-  // The same rate a Client pays (ADR 18).
-  await expect(page.locator('.offer__day-rate')).toContainText(formatEuros(DAY_RATE, 'fr'));
+  // The same rate a Client pays (ADR 18), and the sheet opens on it.
+  await expect(sheet.locator('.offer__rate')).toContainText(formatEuros(DAY_RATE, 'fr'));
+  await expect(sheet.getByRole('link', { name: partners?.book.cta ?? '∅' })).toBeVisible();
   // A Referrer buys nothing, and is addressed apart (ADR 30).
   await expect(page.locator('.offer__referrers')).toHaveText(partners?.referrers ?? '∅');
-  // Each Offer a Partner can bring Thomas into, linked to its page.
-  await expect(page.locator('.offer__card-link')).not.toHaveCount(0);
-  for (const href of await page
-    .locator('.offer__card-link')
-    .evaluateAll((links) => links.map((link) => link.getAttribute('href')))) {
-    expect(ROUTES.map((route) => route.path)).toContain(href);
+  await expectDrawnOfferRows(page, 'partners');
+});
+
+test('the public-sector page sets what public purchasing asks beside the Offers', async ({
+  page,
+}) => {
+  const publicSector = RESUME.fr.publicSectorPage;
+  await page.goto('/collectivites/');
+  const sheet = page.getByRole('complementary', { name: publicSector?.kicker ?? '∅' });
+  for (const point of publicSector?.points ?? []) {
+    await expect(sheet.getByRole('heading', { name: point.title })).toBeVisible();
+  }
+  await expectDrawnOfferRows(page, 'public-sector');
+  // Each proof sets its figure large, a figure its own sentence holds, and
+  // hidden from a screen reader, which reads it there (ADR 33).
+  const items = page.locator('.offer__proof li');
+  await expect(items).toHaveCount(publicSector?.proof.items.length ?? -1);
+  for (const [i, item] of (publicSector?.proof.items ?? []).entries()) {
+    const figure = items.nth(i).locator('.offer__figure');
+    await expect(figure).toHaveText(item.figure);
+    await expect(figure).toHaveAttribute('aria-hidden', 'true');
   }
 });
+
+/**
+ * Every Offer of the Segment, as the home page's row (ADR 33): its drawing,
+ * decorative, and its name linking to its page. The sheet comes first in the
+ * markup, so a phone shows it under the head; a wide screen moves it beside.
+ */
+async function expectDrawnOfferRows(page: Page, segment: SegmentId) {
+  const ids = OFFER_IDS.filter((id) => OFFERS[id].segments.includes(segment));
+  const rows = page.locator('.offer__rows .offers__card');
+  await expect(rows).toHaveCount(ids.length);
+  for (const [i, id] of ids.entries()) {
+    const row = rows.nth(i);
+    await expect(row).toHaveAttribute('data-offer', id);
+    await expect(row.locator('svg.offer-visual')).toHaveAttribute('aria-hidden', 'true');
+    await expect(row.locator('.offers__name a')).toHaveAttribute('href', pathOf(id, 'fr') ?? '∅');
+  }
+  const sheetFirst = await page
+    .locator('.offer__split')
+    .evaluate((split) => split.firstElementChild?.classList.contains('offer__sheet'));
+  expect(sheetFirst).toBe(true);
+}

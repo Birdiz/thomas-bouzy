@@ -46,13 +46,18 @@ import { expect, PATHS, test } from './fixtures.ts';
  * reader can see is worth a few hundred bytes (about 0.2 kB compressed); the CSS
  * limit moves 34 → 35 kB. Motion stays CSS-first, so no script limit moved.
  *
+ * Re-measured on 2026-11-22, with the sheet and the drawn rows on the Partners
+ * and public-sector pages (docs/adr/0033): CSS 34.4 → 35.9 kB, after reusing
+ * the home page's row and its classes and removing a dead rule. The pages
+ * gained a component of their own; the CSS limit moves 35 → 36 kB.
+ *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.
  */
 const BUDGET = {
   documentBytes: 50_000,
-  cssBytes: 35_000,
+  cssBytes: 36_000,
   externalJsBytes: 4_000,
   inlineJsBytes: 2_000,
   fontBytes: 60_000,

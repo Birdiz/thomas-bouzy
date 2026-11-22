@@ -1,0 +1,60 @@
+---
+import { OFFER_VISUAL_VIEWBOX, OFFER_VISUALS } from '../art/offers.ts';
+import type { OfferId } from '../content/offers.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
+
+interface Props {
+  id: OfferId;
+  name: string;
+  plain: string;
+  href: string;
+  hreflang?: Locale | undefined;
+  /** The line at the foot that says the row opens: "See the offer". */
+  more: string;
+  /** Said after `more` when the Offer's page is in another language. */
+  inLanguage?: string;
+  /** The Offer's lowest prices, on the home page. */
+  from?: string;
+  /** The Entry offer's "start here", which draws its row as a card. */
+  badge?: string | undefined;
+  /** The name's heading level, one under the heading the rows sit beneath. */
+  level?: 3 | 4;
+}
+
+const { id, name, plain, href, hreflang, more, inLanguage, from, badge, level = 3 } = Astro.props;
+const Name = level === 4 ? 'h4' : 'h3';
+---
+
+{/* One Offer as a row, on the home page and on the Partners and public-sector
+    pages (ADR 33): the same drawing, the same name and the same way to open
+    it wherever an Offer is listed. */}
+<li class:list={['offers__card', { 'offers__card--entry': badge }]} data-offer={id}>
+  {/* What the Offer sells, drawn (ADR 32): it tells the rows apart before a
+      word is read. */}
+  <svg
+    class="offer-visual"
+    viewBox={OFFER_VISUAL_VIEWBOX}
+    aria-hidden="true"
+    focusable="false"
+    set:html={OFFER_VISUALS[id]}
+  />
+  <div class="offers__body">
+    {badge && <p class="offers__badge">{badge}</p>}
+    {/* The name is the link, and it covers the row: identical "See the offer"
+        anchors told a search engine nothing. The line at the foot says it to
+        the eye, its arrow drawn at rest: on a phone, nothing said the row
+        could be opened (ADR 30). */}
+    <Name class="offers__name">
+      <a href={href} hreflang={hreflang && LOCALE_TAG[hreflang]}>{name}</a>
+    </Name>
+    <p class="offers__plain">{plain}</p>
+    <div class="offers__foot">
+      {from && <p class="offers__from">{from}</p>}
+      <p class="offers__more">
+        <span aria-hidden="true">{more}</span>
+        {hreflang && inLanguage && ` ${inLanguage}`}
+        <span class="offers__arrow" aria-hidden="true">→</span>
+      </p>
+    </div>
+  </div>
+</li>

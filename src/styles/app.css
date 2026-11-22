@@ -774,7 +774,10 @@ a {
    only the Entry offer is a card, the one place the section says "start
    here" (ADR 31). Each row ends on its price, then on the line that says the
    whole row opens. */
-.situation__cards {
+.situation__cards,
+.offer__rows,
+.offer__checks,
+.offer__proof ul {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -791,10 +794,12 @@ a {
     box-shadow var(--dur-base) var(--ease-out),
     transform var(--dur-base) var(--ease-out);
 }
-.offers__card:first-child:not(.offers__card--entry) {
+.offers__card:first-child:not(.offers__card--entry),
+.offer__proof li:first-child {
   padding-top: 0;
 }
-.offers__card:last-child {
+.offers__card:last-child,
+.offer__proof li:last-child {
   border-bottom: 0;
 }
 .offers__card--entry {
@@ -970,6 +975,9 @@ a {
   margin: 22px 0 0;
   font-size: 15.5px;
   color: var(--color-muted);
+}
+.offers__partners + .offers__partners {
+  margin-top: 8px;
 }
 
 /* — work / achievements —————————————————————————————————————————————————————— */
@@ -1537,11 +1545,6 @@ a {
   color: var(--color-muted);
   margin: 0;
 }
-.offer__card-link {
-  margin-top: auto;
-  padding-top: 6px;
-  font-size: 15px;
-}
 .offer__card-text {
   font-size: 15px;
   line-height: 1.6;
@@ -1681,18 +1684,121 @@ a {
 .offer__book {
   margin: 24px 0 0;
 }
-/* A Referrer is not a Partner: their line stands apart, on the sunken ground
-   the home page gives its call to book. */
-.offer__referrers {
-  max-width: 64ch;
-  margin: 0;
-  padding: 22px 26px;
+/* — Partners and public-sector pages ———————————————————————————————————————
+   The Offers as the home page's rows, beside a sheet of what decides (ADR 33).
+   On a phone the sheet comes first, right under the head: it is first in the
+   markup, and only a wide screen moves it to the right. */
+.offer__split {
+  display: grid;
+  gap: 40px;
+  padding-block: 34px;
+}
+@media (min-width: 1024px) {
+  .offer__split {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    column-gap: 64px;
+    align-items: start;
+  }
+  /* It stays in view while the Offers scroll past: the call is never a
+     screen away. */
+  .offer__sheet {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+}
+.offer__sheet {
+  padding: 28px;
+  border: 1px solid var(--color-divider);
   border-radius: var(--radius-md);
-  background: var(--color-sunken);
+  background: var(--color-surface);
+}
+/* The day rate opens the Partners' sheet: one sentence, its figure set large. */
+.offer__rate {
+  margin: 0 0 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-divider);
+  font-size: 15px;
+}
+.offer__rate span {
+  display: block;
+}
+.offer__rate-figure,
+.offer__figure {
   font-family: var(--font-heading);
-  font-size: clamp(19px, 2vw, 22px);
+  font-weight: var(--font-heading-weight);
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.offer__rate small {
+  font-size: 20px;
+  color: var(--color-muted);
+}
+.offer__checks {
+  display: grid;
+  gap: 16px;
+}
+.offer__check {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 2px 12px;
+}
+.offer__check svg {
+  margin-top: 2px;
+  color: var(--color-accent-text);
+}
+.offer__check h2 {
+  margin: 0;
+  font-size: 16px;
   line-height: 1.35;
-  text-wrap: pretty;
+}
+.offer__check p {
+  grid-column: 2;
+}
+.offer__sheet .btn {
+  width: 100%;
+  margin-top: 24px;
+}
+.offer__sheet-write {
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--color-muted);
+  text-align: center;
+}
+/* A Referrer is not a Partner: their line stands apart, under a rule, in the
+   quiet voice of the home page's lines to its other readers. It was set in a
+   box, larger than anything on the page but the title. */
+.offer__referrers {
+  margin: 28px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-divider);
+  font-size: 15.5px;
+  color: var(--color-muted);
+}
+.offer__proof {
+  margin-top: 56px;
+}
+.offer__proof li {
+  display: grid;
+  gap: 4px 28px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+@media (min-width: 640px) {
+  .offer__proof li {
+    grid-template-columns: 10rem minmax(0, 1fr);
+  }
+  .offer__figure {
+    grid-row: span 2;
+  }
+}
+.offer__figure {
+  margin: 0;
+  font-size: 30px;
+  color: var(--color-accent-text);
 }
 
 .offer__fit-list {

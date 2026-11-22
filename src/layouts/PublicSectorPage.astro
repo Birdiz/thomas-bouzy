@@ -1,6 +1,8 @@
 ---
 import Breadcrumb from '../components/Breadcrumb.astro';
+import OfferRow from '../components/OfferRow.astro';
 import BookingSection from '../components/offer/BookingSection.astro';
+import OfferSheet from '../components/offer/OfferSheet.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
@@ -21,7 +23,7 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the public-s
 
 /* The Offers a public buyer can order, from the Segments in offers.ts. */
 const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('public-sector')).map(
-  (id) => ({ ...t.offers[id], href: linkTo(id, locale).href }),
+  (id) => ({ id, ...t.offers[id], href: linkTo(id, locale).href }),
 );
 ---
 
@@ -40,49 +42,57 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('public-sec
       <p class="offer__plain">{page.plain}</p>
     </header>
 
-    <section class="offer__section container" aria-label={page.kicker}>
-      <ul class="offer__cards">
-        {
-          page.points.map((point) => (
-            <li class="offer__card">
-              <h2 class="offer__card-title">{point.title}</h2>
-              <p class="offer__card-text">{point.text}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+    <div class="offer__split container">
+      {/* What public purchasing asks of a provider, as a sheet a buyer checks
+          beside the Offers (ADR 33). */}
+      <OfferSheet
+        label={page.kicker}
+        points={page.points}
+        cta={page.book.cta}
+        orWrite={page.book.orWrite}
+      />
 
-    <section class="offer__section container" aria-labelledby="public-proof">
-      <h2 class="offer__heading" id="public-proof">{page.proof.heading}</h2>
-      <ul class="offer__cards">
-        {
-          page.proof.items.map((item) => (
-            <li class="offer__card">
-              <h3 class="offer__card-title">{item.title}</h3>
-              <p class="offer__card-text">{item.text}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+      <div class="offer__main">
+        {/* What a buyer can order first, then the proof: the proof answers
+            "can he?", once the reader knows what they would order (ADR 33). */}
+        <section aria-labelledby="public-offers">
+          <h2 class="offer__heading" id="public-offers">{page.offers}</h2>
+          <ul class="offer__rows">
+            {
+              offers.map((offer) => (
+                <OfferRow
+                  id={offer.id}
+                  name={offer.name}
+                  plain={offer.plain}
+                  href={offer.href}
+                  more={page.offerLink}
+                />
+              ))
+            }
+          </ul>
+        </section>
 
-    <section class="offer__section container" aria-labelledby="public-offers">
-      <h2 class="offer__heading" id="public-offers">{page.offers}</h2>
-      <ul class="offer__cards">
-        {
-          offers.map((offer) => (
-            <li class="offer__card">
-              <h3 class="offer__card-title">{offer.name}</h3>
-              <p class="offer__card-text">{offer.plain}</p>
-              <a class="offer__card-link" href={offer.href}>
-                {page.offerLink} <span aria-hidden="true">→</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+        <section class="offer__proof" aria-labelledby="public-proof">
+          <h2 class="offer__heading" id="public-proof">{page.proof.heading}</h2>
+          <ul>
+            {
+              page.proof.items.map((item) => (
+                <li>
+                  {/* The figure its text already holds, set large: the proof
+                      reads at a glance. Hidden from a screen reader, which
+                      reads it in the sentence. */}
+                  <p class="offer__figure" aria-hidden="true">
+                    {item.figure}
+                  </p>
+                  <h3 class="offer__card-title">{item.title}</h3>
+                  <p class="offers__plain">{item.text}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+    </div>
 
     <BookingSection labels={page.book} locale={locale} who={t.offerPage.who} />
   </main>

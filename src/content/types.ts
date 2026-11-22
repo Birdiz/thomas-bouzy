@@ -305,8 +305,9 @@ export interface OfferPageLabels {
  * for their own client. French only, like the Segment.
  */
 /**
- * Local authorities, public bodies and publicly funded organisations: what
- * public purchasing asks of a provider, then the proof, then the Offers.
+ * Local authorities, public bodies and publicly funded organisations: the
+ * Offers, beside what public purchasing asks of a provider, then the proof
+ * (ADR 33).
  */
 export interface PublicSectorPage {
   meta: {
@@ -320,7 +321,12 @@ export interface PublicSectorPage {
   points: Titled[];
   proof: {
     heading: string;
-    items: Titled[];
+    /**
+     * Each with the figure its text holds, set large beside it so the proof
+     * reads at a glance (ADR 33). The figure repeats the text, never adds to
+     * it.
+     */
+    items: (Titled & { figure: string })[];
   };
   /** Heading over the Offers a public buyer can order. */
   offers: string;

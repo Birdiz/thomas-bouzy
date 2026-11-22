@@ -1059,14 +1059,17 @@ export const fr = {
       items: [
         {
           title: 'Un annuaire associatif, tiré des sites publics',
+          figure: '31 273',
           text: "31 273 associations d'Ille-et-Vilaine recensées en 40 secondes, depuis les données ouvertes et les sites des communes.",
         },
         {
           title: 'Le site officiel de Grandrupt',
+          figure: '3 langues',
           text: 'Un village, trois langues, des actualités publiées par la mairie elle-même. En bénévolat.',
         },
         {
           title: 'Projets citoyens, bénévolat',
+          figure: '1 000+',
           text: "Trois applications associatives auditées, dont une boutique qui encaisse des paiements ; les failles critiques corrigées. Et un CRM repris en entier à deux développeurs, en production : plus de 1 000 membres s'y connectent en SSO pour suivre leurs démarches.",
         },
       ],
