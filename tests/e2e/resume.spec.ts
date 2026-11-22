@@ -681,25 +681,29 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       expect(order).toEqual(['top', ...workshops, 'offers', 'work', 'contact']);
     });
 
-    test(`links each Client sentence to its Offer, in that Offer's situation, on ${home}`, async ({
+    test(`puts each Client sentence in its Offer's situation, as words, on ${home}`, async ({
       page,
     }) => {
       await gotoHome(page, home);
       const failureModes = RESUME[locale].failureModes;
       const situations = page.locator('#offers .situation');
       for (const mode of failureModes) {
-        // Every sentence is a link the reader can reach at once (ADR 28), at
-        // the head of the situation its Offer is sold in (ADR 31).
+        // Every sentence is on the page at once (ADR 28), at the head of the
+        // situation its Offer is sold in (ADR 31), and is read, not clicked:
+        // its Offer's row, the one link to that page, is beside it (ADR 32).
         const at = SITUATIONS.findIndex((ids) => (ids as readonly string[]).includes(mode.offer));
-        const link = situations
+        const sentence = situations
           .nth(at)
-          .locator('.situation__sentence a', { hasText: mode.quote.slice(1, -1).trim() });
-        await expect(link).toHaveCount(1);
-        await expect(link).toHaveAttribute(
-          'href',
-          pathOf(mode.offer, locale) ?? pathOf(mode.offer, 'fr') ?? '∅',
-        );
+          .locator('.situation__sentence', { hasText: mode.quote });
+        await expect(sentence).toHaveCount(1);
+        await expect(sentence.locator('a')).toHaveCount(0);
+        await expect(
+          situations.nth(at).locator(`.offers__card[data-offer="${mode.offer}"]`),
+        ).toHaveCount(1);
       }
+      // One link per Offer in the section, plus the Partners and the public
+      // sector: two links to one page side by side told the reader nothing.
+      await expect(page.locator('#offers a')).toHaveCount(OFFER_IDS.length + 2);
       // No band after them any more: the Entry offer's card says where to
       // start, at the head of the first situation (ADR 31).
       await expect(page.locator('.audit-call')).toHaveCount(0);
@@ -753,17 +757,18 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
       // A missing tool opens on its owner's words; the technical team's
       // situation ends on the Partners, who bring Thomas to a team.
       const [, missing] = t.situations;
-      await expect(situations.nth(1).locator('.situation__quote')).toHaveText(missing.sentence);
-      await expect(situations.nth(1).locator('.situation__sentence a')).toHaveAttribute(
-        'href',
-        pathOf('build', locale) ?? '∅',
-      );
+      await expect(situations.nth(1).locator('.situation__sentence')).toHaveText(missing.sentence);
       await expect(situations.last().locator(`a[href="${pathOf('partners', 'fr')}"]`)).toHaveCount(
         1,
       );
-      // Every card says it opens, with its arrow drawn at rest, and is still
-      // one link: its name.
+      // Every card opens on its drawing, decorative since its name and line
+      // say it in words (ADR 32); says it opens, with its arrow drawn at rest;
+      // and is still one link: its name.
       for (const card of await page.locator('#offers .offers__card').all()) {
+        const visual = card.locator('svg.offer-visual');
+        await expect(visual).toBeVisible();
+        await expect(visual).toHaveAttribute('aria-hidden', 'true');
+        expect(await visual.locator('.a, .f, .pa').count()).toBeGreaterThan(0);
         await expect(card.locator('.offers__more')).toContainText(t.more);
         await expect(card.locator('.offers__arrow')).toHaveCSS('opacity', '1');
         await expect(card.getByRole('link')).toHaveCount(1);

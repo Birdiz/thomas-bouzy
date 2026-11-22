@@ -670,7 +670,7 @@ a {
    sentences of its Offers (ADR 31): the reader finds their own words, then the
    Offer that answers them, with its price. On a wide screen the words are on
    the left and the Offers on the right, as the sentences and the promise used
-   to be. */
+   to be. The rows take the wider column: each opens on its drawing (ADR 32). */
 .offers {
   padding-block: 88px 64px;
 }
@@ -694,8 +694,8 @@ a {
 @media (min-width: 1024px) {
   .situation {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    column-gap: 72px;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: 64px;
     align-items: start;
   }
   .situation > .offers__partners {
@@ -717,41 +717,24 @@ a {
   color: var(--color-muted);
   text-wrap: pretty;
 }
+/* The Client sentences, read rather than clicked (ADR 32): each used to link
+   to the Offer drawn right beside it, at the size of a heading. Now a short
+   list in body size, a step brighter than the lead, with nothing between the
+   lines: the reader recognises one and moves to the rows. */
 .situation__sentences {
-  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 24px;
   padding: 0;
   list-style: none;
 }
 .situation__sentence {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--color-divider);
-}
-.situation__sentence:last-child {
-  border-bottom: 0;
-}
-/* The whole sentence is the link: it is the largest target in the row, and
-   the sentence a reader recognises is the thing they would click. It keeps
-   the ink colour so it still reads as a quote, set at 400: someone speaking,
-   not a heading shouting. The Offer it leads to is named underneath. */
-.situation__sentence a {
-  color: inherit;
-  text-decoration: none;
-}
-.situation__quote {
-  display: block;
-  font-size: clamp(19px, 1.9vw, 23px);
-  line-height: 1.3;
-  text-wrap: balance;
-}
-.situation__sentence a:hover .situation__quote {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.situation__offer {
-  display: block;
-  margin-top: 6px;
-  font-size: 14px;
-  color: var(--color-accent-text);
+  max-width: 44ch;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--color-neutral-200);
+  text-wrap: pretty;
 }
 
 /* Each sentence comes in once, as it scrolls into view: it rises 48px into
@@ -799,8 +782,8 @@ a {
 .offers__card {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 20px;
   padding: 18px 0;
   border-bottom: 1px solid var(--color-divider);
   transition:
@@ -820,6 +803,90 @@ a {
   border: 1px solid var(--color-accent);
   border-radius: var(--radius-md);
   background: var(--color-surface);
+}
+.offers__body {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+/* What the Offer sells, drawn (ADR 32): a thumbnail at the head of the row,
+   on a ground a step up from the page, or down from the Entry card's. */
+.offer-visual {
+  flex: 0 0 auto;
+  width: 112px;
+  height: 70px;
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+.offers__card--entry .offer-visual {
+  background: var(--color-bg);
+}
+/* On a phone the drawing sits beside the name only, and the line and the
+   price under both take the whole width: beside the whole row, it pushed the
+   text into a column a third narrower and a line longer. */
+@media (max-width: 479px) {
+  .offers__card {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: center;
+    gap: 6px 14px;
+  }
+  .offers__body {
+    display: contents;
+  }
+  .offer-visual {
+    width: 72px;
+    height: 45px;
+    border-radius: 8px;
+  }
+  .offers__card--entry .offer-visual {
+    grid-row: span 2;
+  }
+  .offers__plain,
+  .offers__foot {
+    grid-column: 1 / -1;
+  }
+}
+.offer-visual :is(.l, .d) {
+  fill: none;
+  stroke: var(--color-neutral-500);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.offer-visual .d {
+  stroke-dasharray: 3 5;
+}
+.offer-visual .p {
+  fill: var(--color-sunken);
+  stroke: var(--color-neutral-600);
+  stroke-width: 1.5;
+}
+.offer-visual .a {
+  fill: none;
+  stroke: var(--color-accent-text);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.offer-visual .w {
+  stroke-width: 3.5;
+}
+.offer-visual .f {
+  fill: var(--color-accent-text);
+}
+.offer-visual .k {
+  fill: var(--color-neutral-600);
+}
+.offer-visual .z {
+  fill: color-mix(in srgb, var(--color-accent-text) 14%, transparent);
+}
+.offer-visual .pa {
+  fill: var(--color-sunken);
+  stroke: var(--color-accent-text);
+  stroke-width: 2.25;
 }
 .offers__name {
   font-size: 21px;
