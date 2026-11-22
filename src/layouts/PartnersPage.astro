@@ -1,6 +1,8 @@
 ---
 import Breadcrumb from '../components/Breadcrumb.astro';
+import OfferRow from '../components/OfferRow.astro';
 import BookingSection from '../components/offer/BookingSection.astro';
+import OfferSheet from '../components/offer/OfferSheet.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
@@ -24,6 +26,7 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the Partners
 
 /* The Offers a Partner can bring Thomas into, from the Segments in offers.ts. */
 const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')).map((id) => ({
+  id,
   ...t.offers[id],
   href: linkTo(id, locale).href,
 }));
@@ -44,47 +47,49 @@ const offers = OFFER_IDS.filter((id) => OFFERS[id].segments.includes('partners')
       <p class="offer__plain">{page.plain}</p>
     </header>
 
-    <section class="offer__section container" aria-label={page.kicker}>
-      <ul class="offer__cards">
-        {
-          page.points.map((point) => (
-            <li class="offer__card">
-              <h2 class="offer__card-title">{point.title}</h2>
-              <p class="offer__card-text">{point.text}</p>
-            </li>
-          ))
-        }
-      </ul>
-      {/* Read from the price table, like Reinforcement's: one number, one place.
-          The same number: a Partner pays what a Client pays (ADR 18). */}
-      <p class="offer__day-rate">
-        <strong>{page.dayRate.label}</strong>{' '}
-        {formatEuros(DAY_RATE, locale)} {t.offerPage.excludingVat},{' '}
-        {fillPrices(page.dayRate.note, locale)}
-      </p>
-    </section>
+    <div class="offer__split container">
+      <OfferSheet
+        label={page.kicker}
+        points={page.points}
+        cta={page.book.cta}
+        orWrite={page.book.orWrite}
+      >
+        {/* Read from the price table, like Reinforcement's: one number, one
+            place. The same number: a Partner pays what a Client pays (ADR 18).
+            The figure an agency asks first, so the sheet opens on it (ADR 33). */}
+        <p class="offer__rate">
+          <span class="offers__plain">{page.dayRate.label}</span>
+          <span class="offer__rate-figure">
+            {formatEuros(DAY_RATE, locale)} <small>{t.offerPage.excludingVat}</small>
+          </span>
+          <span>{fillPrices(page.dayRate.note, locale)}</span>
+        </p>
+      </OfferSheet>
 
-    <section class="offer__section container" aria-labelledby="partners-offers">
-      <h2 class="offer__heading" id="partners-offers">{page.offers}</h2>
-      <ul class="offer__cards">
-        {
-          offers.map((offer) => (
-            <li class="offer__card">
-              <h3 class="offer__card-title">{offer.name}</h3>
-              <p class="offer__card-text">{offer.plain}</p>
-              <a class="offer__card-link" href={offer.href}>
-                {page.offerLink} <span aria-hidden="true">→</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+      <div class="offer__main">
+        <section aria-labelledby="partners-offers">
+          <h2 class="offer__heading" id="partners-offers">{page.offers}</h2>
+          <ul class="offer__rows">
+            {
+              offers.map((offer) => (
+                <OfferRow
+                  id={offer.id}
+                  name={offer.name}
+                  plain={offer.plain}
+                  href={offer.href}
+                  more={page.offerLink}
+                />
+              ))
+            }
+          </ul>
+        </section>
 
-    {/* For a Referrer, who sees a client's trouble first and buys nothing: an
-        accountant, an integrator (ADR 30). Addressed apart from the Partners. */}
-    <div class="offer__section container">
-      <p class="offer__referrers">{page.referrers}</p>
+        {/* For a Referrer, who sees a client's trouble first and buys nothing:
+            an accountant, an integrator (ADR 30). Addressed apart from the
+            Partners, under their Offers, in the quiet voice the home page gives
+            its other readers (ADR 33). */}
+        <p class="offer__referrers">{page.referrers}</p>
+      </div>
     </div>
 
     <BookingSection labels={page.book} locale={locale} who={t.offerPage.who} />

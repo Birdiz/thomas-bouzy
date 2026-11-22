@@ -1,10 +1,10 @@
 ---
-import { OFFER_VISUAL_VIEWBOX, OFFER_VISUALS } from '../art/offers.ts';
 import type { ResumeContent } from '../content/index.ts';
 import { ENTRY_OFFER, type OfferId, SITUATIONS } from '../content/offers.ts';
 import { fromLine } from '../lib/offer-price.ts';
 import { linkTo } from '../routes.ts';
 import { LOCALE_TAG, type Locale } from '../site.ts';
+import OfferRow from './OfferRow.astro';
 
 interface Props {
   locale: Locale;
@@ -25,7 +25,6 @@ const card = (id: OfferId) => ({
   ...linkTo(id, locale),
   from: fromLine(id, locale, t),
   entry: id === ENTRY_OFFER,
-  visual: OFFER_VISUALS[id],
 });
 
 /**
@@ -50,6 +49,7 @@ const situations = SITUATIONS.map((ids, i) => {
     sentences,
     cards: ids.map(card),
     team: i === SITUATIONS.length - 1,
+    last: i === SITUATIONS.length - 1,
   };
 });
 
@@ -80,42 +80,24 @@ const publicSector = linkTo('public-sector', locale);
         </div>
         <ul class="situation__cards">
           {situation.cards.map((c) => (
-            <li class:list={['offers__card', { 'offers__card--entry': c.entry }]} data-offer={c.id}>
-              {/* What the Offer sells, drawn (ADR 32): it tells seven rows
-                  apart before a word is read. */}
-              <svg
-                class="offer-visual"
-                viewBox={OFFER_VISUAL_VIEWBOX}
-                aria-hidden="true"
-                focusable="false"
-                set:html={c.visual}
-              />
-              <div class="offers__body">
-                {c.entry && <p class="offers__badge">{t.offersSection.start}</p>}
-                {/* The name is the link, and it covers the card: identical "See
-                    the offer" anchors told a search engine nothing. The line at
-                    the foot says it to the eye, its arrow drawn at rest: on a
-                    phone, nothing said the card could be opened (ADR 30). */}
-                <h4 class="offers__name">
-                  <a href={c.href} hreflang={c.hreflang && LOCALE_TAG[c.hreflang]}>
-                    {c.name}
-                  </a>
-                </h4>
-                <p class="offers__plain">{c.plain}</p>
-                <div class="offers__foot">
-                  <p class="offers__from">{c.from}</p>
-                  <p class="offers__more">
-                    <span aria-hidden="true">{t.offersSection.more}</span>
-                    {c.hreflang && ` ${t.offersSection.inFrench}`}
-                    <span class="offers__arrow" aria-hidden="true">→</span>
-                  </p>
-                </div>
-              </div>
-            </li>
+            <OfferRow
+              id={c.id}
+              name={c.name}
+              plain={c.plain}
+              href={c.href}
+              hreflang={c.hreflang}
+              more={t.offersSection.more}
+              inLanguage={t.offersSection.inFrench}
+              from={c.from}
+              badge={c.entry ? t.offersSection.start : undefined}
+              level={4}
+            />
           ))}
         </ul>
         {/* The Partners, who bring Thomas to a team, under the technical
-            team's Offers (ADR 30). */}
+            team's Offers (ADR 30), and the public sector under the last
+            situation, in the same column: a line out of the grid started at
+            the section's edge, under nothing. */}
         {situation.team && (
           <p class="offers__partners">
             {t.offersSection.partners}{' '}
@@ -124,19 +106,21 @@ const publicSector = linkTo('public-sector', locale);
             </a>
           </p>
         )}
+        {situation.last && (
+          <p class="offers__partners">
+            {t.offersSection.publicSector}{' '}
+            <a
+              href={publicSector.href}
+              hreflang={publicSector.hreflang && LOCALE_TAG[publicSector.hreflang]}
+            >
+              {t.offersSection.publicSectorLink}
+            </a>
+          </p>
+        )}
       </div>
     ))
   }
 
-  <p class="offers__partners">
-    {t.offersSection.publicSector}{' '}
-    <a
-      href={publicSector.href}
-      hreflang={publicSector.hreflang && LOCALE_TAG[publicSector.hreflang]}
-    >
-      {t.offersSection.publicSectorLink}
-    </a>
-  </p>
 </section>
 
 <script>

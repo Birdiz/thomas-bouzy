@@ -1,0 +1,53 @@
+---
+import type { Titled } from '../../content/types.ts';
+import { CONTACT } from '../../site.ts';
+
+interface Props {
+  /** Names the sheet for assistive technology: the page's kicker. */
+  label: string;
+  points: Titled[];
+  /** The booking button's words. */
+  cta: string;
+  /** The words before the address. */
+  orWrite: string;
+}
+
+const { label, points, cta, orWrite } = Astro.props;
+---
+
+{/* What decides, beside the Offers on a wide screen and under the head on a
+    phone (ADR 33): the three or four facts a Partner or a public buyer checks
+    before anything else, then the call. It was a grid of cards of its own, as
+    heavy as the Offers and the proof. A slot opens the sheet, for the day
+    rate. */}
+<aside class="offer__sheet" aria-label={label}>
+  <slot />
+  <ul class="offer__checks">
+    {
+      points.map((point) => (
+        <li class="offer__check">
+          <svg
+            viewBox="0 0 20 20"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M4 10.5 8 14.5 16 6" />
+          </svg>
+          <h2>{point.title}</h2>
+          <p class="offers__plain">{point.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+  <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">{cta}</a>
+  <p class="offer__sheet-write">
+    {orWrite} <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+  </p>
+</aside>

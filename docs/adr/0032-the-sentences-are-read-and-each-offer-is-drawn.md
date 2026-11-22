@@ -1,6 +1,8 @@
 # 32. The sentences are read, and each Offer is drawn
 
-- Status: accepted, implemented 2026-11-21
+- Status: accepted, implemented 2026-11-21; the drawings carried to the
+  Partners and public-sector pages by
+  [ADR 33](0033-a-sheet-beside-the-offers.md), 2026-11-22
 - Date: 2026-11-21
 - Amends [ADR 12](0012-the-clients-sentence-first.md),
   [ADR 28](0028-proof-on-the-first-screen-and-the-workshops-format.md) and
@@ -61,5 +63,6 @@ No copy changed.
   situation.
 - The home page's word count drops by the Offer names that followed the
   sentences.
-- The drawings are the site's first pictures of what it sells. Offer pages and
-  the share card could use them; that waits on the owner.
+- The drawings are the site's first pictures of what it sells. The Partners
+  and public-sector pages list their Offers with them since ADR 33; the Offer
+  pages and the share card could use them too, which waits on the owner.
