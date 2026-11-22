@@ -12,9 +12,17 @@ export const NARROW_NO_BREAK_SPACE = ' ';
  * the page, and the next sentence written cannot forget it. The widths follow
  * the Imprimerie nationale: a thin space before `;`, `?` and `!`, a word space
  * before `:` and inside the guillemets.
+ *
+ * A number keeps its groups together with a thin space, the one Intl puts in
+ * the prices: « 1 000 membres » broke between 1 and 000. Only thousands are
+ * joined, a group of one to three digits then groups of exactly three, so a
+ * phone number or a year beside a number stays as typed.
  */
 export function frenchSpacing(text: string): string {
   return text
+    .replace(/(?<!\d)\d{1,3}(?: \d{3})+(?!\d)/g, (number) =>
+      number.replaceAll(' ', NARROW_NO_BREAK_SPACE),
+    )
     .replace(/ ([;?!])/g, `${NARROW_NO_BREAK_SPACE}$1`)
     .replace(/ ([:»])/g, `${NO_BREAK_SPACE}$1`)
     .replace(/« /g, `«${NO_BREAK_SPACE}`);

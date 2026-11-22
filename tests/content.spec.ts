@@ -199,6 +199,18 @@ describe('French typography', () => {
       '«\u00a0Et ça\u202f; et ça\u202f? Oui\u202f! Enfin\u00a0: non.\u00a0»',
     );
   });
+
+  it('keeps a number in one piece, with the thin space Intl puts in prices', () => {
+    // « plus de 1 000 membres » broke between 1 and 000 on a phone.
+    expect(frenchSpacing('31 273 associations, plus de 1 000 membres, 1 234 567 lignes')).toBe(
+      '31 273 associations, plus de 1 000 membres, 1 234 567 lignes',
+    );
+    expect(new Intl.NumberFormat('fr-FR').format(1000)).toBe('1 000');
+    // Only thousands: a phone number, a year beside a number, a range stay as typed.
+    for (const text of ['06 32 13 45 47', 'en 2019 300 personnes', '1 à 4 jours', '12 3456']) {
+      expect(frenchSpacing(text)).toBe(text);
+    }
+  });
 });
 
 describe('content corrections applied against the design', () => {
