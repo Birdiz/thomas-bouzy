@@ -486,6 +486,15 @@ a {
   margin: 0;
 }
 
+/* — field study ——————————————————————————————————————————————————————————— */
+/* In place of the catalogue while it is hidden (ADR 34): one ask. */
+.field-study {
+  padding-block: 72px 24px;
+}
+.field-study .hero__blurb {
+  margin: 22px 0 28px;
+}
+
 /* — workshops ————————————————————————————————————————————————————————————— */
 
 /* The way in (ADR 27). The head pairs the promise with why an engineer makes

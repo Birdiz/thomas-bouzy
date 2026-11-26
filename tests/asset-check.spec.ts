@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { OG_CARDS } from '../src/lib/og.ts';
-import { ROUTES } from '../src/routes.ts';
+import { PAGES, routesOf } from '../src/routes.ts';
 import { LEGAL } from '../src/site.ts';
 
 /**
@@ -46,8 +46,8 @@ describe('the Open Graph cards (issue #30)', () => {
   if (!card) throw new Error('No Audit card in OG_CARDS');
   const file = `public${card.src}`;
 
-  it('gives every route a card of its own', () => {
-    expect(new Set(OG_CARDS.map((candidate) => candidate.src)).size).toBe(ROUTES.length);
+  it('gives every route a card of its own, the hidden catalogue included (ADR 34)', () => {
+    expect(new Set(OG_CARDS.map((candidate) => candidate.src)).size).toBe(routesOf(PAGES).length);
   });
 
   it('fails the check when a route has no card', () => {

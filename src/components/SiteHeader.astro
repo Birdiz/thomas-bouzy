@@ -8,6 +8,7 @@ import {
   LOCALE_LABEL,
   LOCALE_TAG,
   LOCALES,
+  OFFERS_PUBLISHED,
   SITE,
 } from '../site.ts';
 
@@ -20,6 +21,7 @@ interface Props {
 const { route, t } = Astro.props;
 const locale = route?.locale ?? DEFAULT_LOCALE;
 const home = homePath(locale);
+const survey = linkTo('survey', locale);
 
 /* The same page in each locale it exists in. */
 const versions = route ? alternatesOf(route.page) : [];
@@ -39,8 +41,20 @@ const elsewhere = versions.length === 0 ? LOCALES.filter((other) => other !== lo
     <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
       {/* The sections spelled from the home page, so they work from every
           page; About goes to its own page (ADR 28). */}
-      {t.workshops && <a href={`${home}#workshops`}>{t.workshops.nav}</a>}
-      <a href={`${home}#offers`}>{t.nav.offers}</a>
+      {OFFERS_PUBLISHED && t.workshops && <a href={`${home}#workshops`}>{t.workshops.nav}</a>}
+      {OFFERS_PUBLISHED && <a href={`${home}#offers`}>{t.nav.offers}</a>}
+      {/* While the catalogue is hidden, the field study takes its place
+          (ADR 34): its page in French, its section on the English home page. */}
+      {
+        !OFFERS_PUBLISHED && (
+          <a
+            href={survey.hreflang ? `${home}#field-study` : survey.href}
+            aria-current={route?.page.id === 'survey' ? 'page' : undefined}
+          >
+            {t.fieldStudy.nav}
+          </a>
+        )
+      }
       <a href={`${home}#work`}>{t.nav.work}</a>
       <a
         href={linkTo('about', locale).href}

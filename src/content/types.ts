@@ -614,6 +614,15 @@ export interface ResumeContent {
   publicSectorPage?: PublicSectorPage;
   aboutPage: AboutPage;
 
+  /**
+   * What the home page says in place of the catalogue while it is hidden
+   * (`OFFERS_PUBLISHED`, ADR 34): its head, the hero's line and second button,
+   * the menu entry and the section that invites the reader to the field study.
+   */
+  fieldStudy: FieldStudy;
+  /** The field study's page. French only, like the registry entry (ADR 34). */
+  surveyPage?: SurveyPage;
+
   contact: {
     kicker: string;
     title: string;
@@ -644,4 +653,75 @@ export interface ResumeContent {
     /** Accessible name of the <footer> landmark. */
     landmark: string;
   };
+}
+
+/** The home page's copy while the catalogue is hidden (ADR 34). */
+export interface FieldStudy {
+  /** Replaces `meta`: the head must not describe Offers the page no longer shows. */
+  meta: { title: string; description: string };
+  /** Replace the hero's blurb and second button, which led to the Workshops or the Offers. */
+  hero: { blurb: string; ctaSecondary: string };
+  /** The menu entry to the field study. */
+  nav: string;
+  /** The home page's section in place of the Workshops and the Offers. */
+  section: { kicker: string; title: string; text: string; cta: string };
+}
+
+/** The field study's page: why it exists, the form, and what happens to the answers (ADR 34). */
+export interface SurveyPage {
+  meta: { title: string; description: string };
+  kicker: string;
+  title: string;
+  plain: string;
+  /** Why the study, how long it takes, what the respondent gets back. */
+  paragraphs: string[];
+  /** What is collected, who reads it, how long it is kept, how to have it erased. */
+  privacy: { title: string; paragraphs: string[] };
+  /** The form's interface. Labels, not prose: they are not counted in the page's words. */
+  form: SurveyFormLabels;
+}
+
+/** Every word of the form's interface; the questions themselves come from the back office. */
+export interface SurveyFormLabels {
+  /** Accessible name of the form region. */
+  name: string;
+  loading: string;
+  /** No JavaScript: the form cannot run without it. */
+  noScript: string;
+  /** The back office could not be reached. */
+  unreachable: string;
+  retry: string;
+  /** The questionnaire is closed or not published. */
+  closed: string;
+  /** The booking link offered when the questionnaire is closed. */
+  book: string;
+  /** `{current}` and `{total}`. */
+  progress: string;
+  back: string;
+  next: string;
+  submit: string;
+  sending: string;
+  optional: string;
+  selectPlaceholder: string;
+  noOpinion: string;
+  /** `{count}` characters typed and `{max}`. */
+  counter: string;
+  /** `{max}` choices at most. */
+  maxSelections: string;
+  /** Announced when a step has errors. */
+  fixErrors: string;
+  contact: {
+    title: string;
+    intro: string;
+    name: string;
+    organisation: string;
+    role: string;
+    email: string;
+    phone: string;
+    wantsMeeting: string;
+    consent: string;
+    /** Under the consent box: the short form of the privacy section. */
+    notice: string;
+  };
+  thanks: { title: string; text: string; booking: string };
 }

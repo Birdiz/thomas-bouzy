@@ -1,5 +1,5 @@
-import type { OfferId } from './content/offers.ts';
-import { DEFAULT_LOCALE, LOCALES, type Locale } from './site.ts';
+import { OFFER_IDS, type OfferId } from './content/offers.ts';
+import { DEFAULT_LOCALE, LOCALES, type Locale, OFFERS_PUBLISHED } from './site.ts';
 
 /**
  * Every page the site serves, and the locales it exists in.
@@ -16,7 +16,7 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from './site.ts';
  * does not exist: its header links to the other language's home page instead,
  * and says so (ADR 28).
  */
-export type PageId = 'home' | 'about' | OfferId | 'partners' | 'public-sector';
+export type PageId = 'home' | 'about' | OfferId | 'partners' | 'public-sector' | 'survey';
 
 export interface Page {
   id: PageId;
@@ -47,7 +47,25 @@ export const PAGES: readonly Page[] = [
   { id: 'partners', paths: { fr: '/partenaires/' } },
   // Local authorities and public bodies: French, like the buyers.
   { id: 'public-sector', paths: { fr: '/collectivites/' } },
+  // The field study: French only, like the organisations it asks (ADR 34).
+  { id: 'survey', paths: { fr: '/enquete/' } },
 ];
+
+/**
+ * The pages that sell: every Offer, the Partners and the public sector. They
+ * are built only while the catalogue is published (`OFFERS_PUBLISHED`, ADR 34).
+ */
+export const CATALOGUE: readonly PageId[] = [...OFFER_IDS, 'partners', 'public-sector'];
+
+/** The pages a build serves, given whether the catalogue is published. */
+export function publishedPages(offersPublished: boolean): readonly Page[] {
+  return PAGES.filter((page) => offersPublished || !CATALOGUE.includes(page.id));
+}
+
+/** Whether a page is served by this build. */
+export function isPublished(id: PageId): boolean {
+  return OFFERS_PUBLISHED || !CATALOGUE.includes(id);
+}
 
 /** One served URL: a page, in one of its locales. */
 export interface Route {
@@ -56,13 +74,18 @@ export interface Route {
   path: string;
 }
 
+/** The URLs of some pages, in their order, locales in `LOCALES` order. */
+export function routesOf(pages: readonly Page[]): Route[] {
+  return pages.flatMap((page) =>
+    LOCALES.flatMap((locale) => {
+      const path = page.paths[locale];
+      return path ? [{ page, locale, path }] : [];
+    }),
+  );
+}
+
 /** Every URL the build emits, in registry order, locales in `LOCALES` order. */
-export const ROUTES: readonly Route[] = PAGES.flatMap((page) =>
-  LOCALES.flatMap((locale) => {
-    const path = page.paths[locale];
-    return path ? [{ page, locale, path }] : [];
-  }),
-);
+export const ROUTES: readonly Route[] = routesOf(publishedPages(OFFERS_PUBLISHED));
 
 export function getPage(id: PageId): Page {
   const page = PAGES.find((candidate) => candidate.id === id);
@@ -70,9 +93,13 @@ export function getPage(id: PageId): Page {
   return page;
 }
 
-/** Where a page lives in a locale, or undefined if it does not exist there. */
+/**
+ * Where a page lives in a locale, or undefined if it does not exist there —
+ * nor in this build: a hidden catalogue page has no path, so a link left to
+ * one fails the build in `linkTo` instead of shipping a dead end.
+ */
 export function pathOf(id: PageId, locale: Locale): string | undefined {
-  return getPage(id).paths[locale];
+  return isPublished(id) ? getPage(id).paths[locale] : undefined;
 }
 
 /** The home page always exists in every locale; the header and the 404 lean on it. */

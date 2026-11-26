@@ -1,0 +1,36 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { linkTo } from '../routes.ts';
+import { LOCALE_TAG, type Locale } from '../site.ts';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+}
+
+const { locale, t } = Astro.props;
+const s = t.fieldStudy.section;
+/* French only: from the English home page the link lands in French and says so. */
+const survey = linkTo('survey', locale);
+---
+
+{/* In place of the Workshops and the Offers while the catalogue is hidden
+    (ADR 34): the page asks before it sells. The two empty anchors keep the
+    addresses people guess, /offres/ and /ateliers/ (ADR 29), landing on the
+    section that says why there is nothing to buy yet. */}
+<section id="field-study" class="field-study container">
+  <span id="offers"></span>
+  {t.workshops && <span id="workshops"></span>}
+  <p class="kicker">{s.kicker}</p>
+  <h2 class="section-title">{s.title}</h2>
+  <p class="hero__blurb">{s.text}</p>
+  <p>
+    <a
+      class="btn btn-primary"
+      href={survey.href}
+      hreflang={survey.hreflang && LOCALE_TAG[survey.hreflang]}
+    >
+      {s.cta}
+    </a>
+  </p>
+</section>

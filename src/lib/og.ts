@@ -1,5 +1,5 @@
 import { RESUME } from '../content/index.ts';
-import { ROUTES, type Route } from '../routes.ts';
+import { PAGES, type Route, routesOf } from '../routes.ts';
 import { type Locale, SITE } from '../site.ts';
 
 /** What the home page's title says after the name; short enough to stay on one line after it. */
@@ -53,6 +53,11 @@ export function ogCard(route: Route): OgCard {
     return { src, title: content.kicker, line: content.plain, foot, home: false };
   }
 
+  if (page.id === 'survey') {
+    if (!t.surveyPage) throw new Error(`${path}: no ${locale} content for the survey page`);
+    return { src, title: t.surveyPage.kicker, line: t.surveyPage.plain, foot, home: false };
+  }
+
   const offer = t.offers[page.id];
   return { src, title: offer.name, line: offer.plain, foot, home: false };
 }
@@ -66,5 +71,9 @@ export function ogImageAlt(card: OgCard): string {
   return `${card.title} — ${card.line} ${card.foot}.`;
 }
 
-/** Every route's card, in registry order. */
-export const OG_CARDS: readonly OgCard[] = ROUTES.map(ogCard);
+/**
+ * Every registered route's card, in registry order, whether or not this build
+ * serves the page: the catalogue's cards are kept drawn while it is hidden
+ * (ADR 34), so that publishing it again needs no other change.
+ */
+export const OG_CARDS: readonly OgCard[] = routesOf(PAGES).map(ogCard);

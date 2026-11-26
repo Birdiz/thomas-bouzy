@@ -3,11 +3,14 @@ import { RESUME } from '../src/content/index.ts';
 import { OFFER_IDS, type OfferId } from '../src/content/offers.ts';
 import { DAY_RATE, PRICES } from '../src/content/prices.ts';
 import { pageGraph } from '../src/lib/structured-data.ts';
-import { ROUTES, type Route } from '../src/routes.ts';
+import { PAGES, type Route, routesOf } from '../src/routes.ts';
 import { SITE } from '../src/site.ts';
 
 /**
- * The JSON-LD, built for every route the registry serves (issue #29). What is
+ * The JSON-LD, built for every route the registry declares (issue #29),
+ * whether or not this build serves it: the catalogue's pages are hidden while
+ * `OFFERS_PUBLISHED` is false (ADR 34), and their graph must be right the day
+ * they return. What is
  * held here is what a crawler is told: the prices the table holds, where each
  * Service is sold, and no business before there is one.
  */
@@ -24,16 +27,30 @@ function nodeOf(route: Route, type: string, options?: Parameters<typeof pageGrap
   return found[0] as Node;
 }
 
+const ALL_ROUTES = routesOf(PAGES);
+
 const isOffer = (route: Route) => (OFFER_IDS as readonly string[]).includes(route.page.id);
-// The home page and the About page are about the person; every other page sells a Service.
-const SERVICE_ROUTES = ROUTES.filter((route) => !['home', 'about'].includes(route.page.id));
+// The home page and the About page are about the person, the field study's
+// page sells nothing (ADR 34); every other page sells a Service.
+const SERVICE_ROUTES = ALL_ROUTES.filter(
+  (route) => !['home', 'about', 'survey'].includes(route.page.id),
+);
 
 const UNREGISTERED = { businessName: '', siret: '', isComplete: false };
 const REGISTERED = { businessName: 'Thomas Bouzy EI', siret: '00000000000000', isComplete: true };
 
 describe('structured data', () => {
+  it('describes the field study as a page, run by the person, that sells nothing (ADR 34)', () => {
+    const route = ALL_ROUTES.find((candidate) => candidate.page.id === 'survey');
+    if (!route) throw new Error('no survey route');
+    const page = nodeOf(route, 'WebPage');
+    expect(page.author).toEqual({ '@id': `${SITE.origin}/#person` });
+    expect(page.breadcrumb).toEqual({ '@id': nodeOf(route, 'BreadcrumbList')['@id'] });
+    expect(nodes(route).some((node) => node['@type'] === 'Service')).toBe(false);
+  });
+
   it('names the site on every page', () => {
-    for (const route of ROUTES) {
+    for (const route of ALL_ROUTES) {
       const website = nodeOf(route, 'WebSite');
       expect(website['@id']).toBe(`${SITE.origin}/#website`);
       expect(website.name).toBe('Thomas Bouzy');
@@ -44,7 +61,7 @@ describe('structured data', () => {
   it('prices every Offer with exactly what prices.ts holds', () => {
     // Read from the table, independently of how the graph reads it: every
     // amount an Offer charges spans its combinations' lowest min to highest max.
-    for (const route of ROUTES.filter(isOffer)) {
+    for (const route of ALL_ROUTES.filter(isOffer)) {
       const table = PRICES[route.page.id as OfferId];
       const expected = table.amounts.map((amount) => {
         const ranges = table.combinations.map((combination) => combination.amounts[amount]);
@@ -83,7 +100,7 @@ describe('structured data', () => {
 
   it('sells the local Offers in the Service area, the rest in France, and English to the EU', () => {
     const area = (path: string) => {
-      const route = ROUTES.find((candidate) => candidate.path === path);
+      const route = ALL_ROUTES.find((candidate) => candidate.path === path);
       if (!route) throw new Error(`no route at ${path}`);
       return (nodeOf(route, 'Service').areaServed as Node[]).map((place) => place.name);
     };
@@ -124,7 +141,7 @@ describe('structured data', () => {
   });
 
   it('searches an Offer by its heading, and walks Home › Offers › the Offer', () => {
-    for (const route of ROUTES.filter(isOffer)) {
+    for (const route of ALL_ROUTES.filter(isOffer)) {
       const t = RESUME[route.locale];
       const id = route.page.id as OfferId;
       expect(nodeOf(route, 'Service').serviceType).toBe(t.offerPages[id]?.heading);
@@ -136,7 +153,7 @@ describe('structured data', () => {
   });
 
   it('describes the home page as a profile of the person', () => {
-    for (const route of ROUTES.filter((candidate) => candidate.page.id === 'home')) {
+    for (const route of ALL_ROUTES.filter((candidate) => candidate.page.id === 'home')) {
       const profile = nodeOf(route, 'ProfilePage', { portrait: '/_astro/portrait.webp' });
       expect(profile.mainEntity).toEqual({ '@id': `${SITE.origin}/#person` });
       const person = nodeOf(route, 'Person', { portrait: '/_astro/portrait.webp' });
@@ -146,7 +163,7 @@ describe('structured data', () => {
   });
 
   it('describes the About page as a page about the person, walking Home › About', () => {
-    for (const route of ROUTES.filter((candidate) => candidate.page.id === 'about')) {
+    for (const route of ALL_ROUTES.filter((candidate) => candidate.page.id === 'about')) {
       const t = RESUME[route.locale];
       const about = nodeOf(route, 'AboutPage');
       expect(about.mainEntity).toEqual({ '@id': `${SITE.origin}/#person` });
@@ -159,12 +176,12 @@ describe('structured data', () => {
   });
 
   it('names no business before registration, and the business as provider after', () => {
-    for (const route of ROUTES) {
+    for (const route of ALL_ROUTES) {
       const graph = nodes(route, { legal: UNREGISTERED });
       expect(graph.some((node) => node['@type'] === 'ProfessionalService')).toBe(false);
     }
 
-    for (const route of ROUTES) {
+    for (const route of ALL_ROUTES) {
       const business = nodeOf(route, 'ProfessionalService', { legal: REGISTERED });
       expect(business['@id']).toBe(`${SITE.origin}/#business`);
       expect(business.identifier).toMatchObject({ propertyID: 'SIRET', value: REGISTERED.siret });

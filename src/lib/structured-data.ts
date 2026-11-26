@@ -47,7 +47,9 @@ export function pageGraph(route: Route, { legal = LEGAL, portrait }: GraphOption
       ? homeNodes(route, portrait)
       : id === 'about'
         ? aboutNodes(route)
-        : serviceNodes(route, provider);
+        : id === 'survey'
+          ? surveyNodes(route)
+          : serviceNodes(route, provider);
   return {
     '@context': 'https://schema.org',
     '@graph': [website(provider), ...nodes, ...(legal.isComplete ? [business(legal)] : [])],
@@ -179,6 +181,36 @@ function aboutNodes(route: Route) {
   ];
 }
 
+/**
+ * The field study's page sells nothing either (ADR 34): a WebPage, the trail
+ * to it, and the Person who runs the study, by reference.
+ */
+function surveyNodes(route: Route) {
+  const content = RESUME[route.locale].surveyPage;
+  if (!content) throw new Error(`${route.path}: no ${route.locale} content for the survey page`);
+  const url = absoluteUrl(route.path);
+  return [
+    {
+      '@type': 'WebPage',
+      '@id': url,
+      url,
+      name: content.meta.title,
+      description: content.meta.description,
+      inLanguage: LOCALE_TAG[route.locale],
+      isPartOf: ref(WEBSITE_ID),
+      breadcrumb: ref(`${url}#breadcrumb`),
+      author: ref(PERSON_ID),
+    },
+    breadcrumbList(route),
+    {
+      '@type': 'Person',
+      '@id': PERSON_ID,
+      name: SITE.author,
+      url: absoluteUrl(homePath(route.locale)),
+    },
+  ];
+}
+
 function breadcrumbList(route: Route) {
   const url = absoluteUrl(route.path);
   return {
@@ -197,7 +229,9 @@ function breadcrumbList(route: Route) {
 function describe(route: Route) {
   const { page, locale, path } = route;
   const t = RESUME[locale];
-  if (page.id === 'home' || page.id === 'about') throw new Error(`${path} sells no Service`);
+  if (page.id === 'home' || page.id === 'about' || page.id === 'survey') {
+    throw new Error(`${path} sells no Service`);
+  }
   if (page.id === 'partners' || page.id === 'public-sector') {
     const content = page.id === 'partners' ? t.partnersPage : t.publicSectorPage;
     if (!content) throw new Error(`${path}: no ${locale} content for the ${page.id} page`);
@@ -268,7 +302,7 @@ function serviceNodes(route: Route, provider: string) {
   ];
 }
 
-type ServicePageId = Exclude<PageId, 'home' | 'about'>;
+type ServicePageId = Exclude<PageId, 'home' | 'about' | 'survey'>;
 
 /**
  * Where each page's Service is bought in person, in the Service area, or from

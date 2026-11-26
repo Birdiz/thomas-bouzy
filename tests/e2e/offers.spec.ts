@@ -13,7 +13,7 @@ import {
 } from '../../src/content/prices.ts';
 import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
 import { homePath, linkTo, pathOf, ROUTES } from '../../src/routes.ts';
-import { CONTACT, LOCALES } from '../../src/site.ts';
+import { CONTACT, LOCALES, OFFERS_PUBLISHED } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
 /**
@@ -22,6 +22,9 @@ import { expect, test } from './fixtures.ts';
  * labelled as an order of magnitude, and a way to book a call that keeps the
  * page on its own origin.
  */
+/** Why the catalogue's own tests do not run while it is hidden (ADR 34). */
+const HIDDEN = 'The catalogue is hidden while OFFERS_PUBLISHED is false (ADR 34)';
+
 const OFFER_ROUTES = ROUTES.filter((route) =>
   (OFFER_IDS as readonly string[]).includes(route.page.id),
 );
@@ -246,6 +249,7 @@ for (const route of OFFER_ROUTES) {
 test('the Audit states that its fee is deducted, and its due diligence variant', async ({
   page,
 }) => {
+  test.skip(!OFFERS_PUBLISHED, HIDDEN);
   await page.goto('/en/offers/audit/');
   await expect(page.locator('main')).toContainText(/deducted/);
   await expect(page.getByRole('heading', { name: /due diligence/i })).toBeVisible();
@@ -290,6 +294,7 @@ test.describe('languages on every page but the home page', () => {
 test('the Takeover starts with the test safety net and is proven by the industrial ERP', async ({
   page,
 }) => {
+  test.skip(!OFFERS_PUBLISHED, HIDDEN);
   const takeover = RESUME.fr.offerPages.takeover;
   const erp = RESUME.fr.achievements.find((achievement) => achievement.id === 'industrial-erp');
   await page.goto('/offres/reprise-et-maintenance/');
@@ -312,6 +317,7 @@ test('the Takeover starts with the test safety net and is proven by the industri
 });
 
 test('Reinforcement shows the day rate the price table holds', async ({ page }) => {
+  test.skip(!OFFERS_PUBLISHED, HIDDEN);
   for (const [path, locale] of [
     ['/offres/renfort-senior/', 'fr'],
     ['/en/offers/reinforcement/', 'en'],
@@ -331,6 +337,7 @@ test('Reinforcement shows the day rate the price table holds', async ({ page }) 
 test('the Partners page offers white label, the day rate and a CV on request only', async ({
   page,
 }) => {
+  test.skip(!OFFERS_PUBLISHED, HIDDEN);
   const partners = RESUME.fr.partnersPage;
   await page.goto('/partenaires/');
   await expect(page.locator('h1')).toHaveText(partners?.title ?? '∅');
@@ -350,6 +357,7 @@ test('the Partners page offers white label, the day rate and a CV on request onl
 test('the public-sector page sets what public purchasing asks beside the Offers', async ({
   page,
 }) => {
+  test.skip(!OFFERS_PUBLISHED, HIDDEN);
   const publicSector = RESUME.fr.publicSectorPage;
   await page.goto('/collectivites/');
   const sheet = page.getByRole('complementary', { name: publicSector?.kicker ?? '∅' });

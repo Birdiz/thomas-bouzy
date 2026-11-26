@@ -2,19 +2,30 @@
 import { Image } from 'astro:assets';
 import type { ResumeContent } from '../content/index.ts';
 import { portrait } from '../lib/portrait.ts';
-import { CONTACT, SITE } from '../site.ts';
+import { linkTo } from '../routes.ts';
+import { CONTACT, type Locale, OFFERS_PUBLISHED, SITE } from '../site.ts';
 import Ridge from './Ridge.astro';
 
 interface Props {
   t: ResumeContent;
   /** The home page's own path, so the button's anchor is spelled like the header's. */
   home: string;
+  locale: Locale;
 }
 
-const { t, home } = Astro.props;
+const { t, home, locale } = Astro.props;
 /* The secondary button leads to the way in: the Workshops where this locale
-   has them, the Offers otherwise (ADR 27). */
-const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
+   has them, the Offers otherwise (ADR 27). While the catalogue is hidden it
+   leads to the field study: its page where it exists in this locale, its
+   section of the home page otherwise (ADR 34). */
+const survey = linkTo('survey', locale);
+const secondary = OFFERS_PUBLISHED
+  ? `${home}#${t.workshops ? 'workshops' : 'offers'}`
+  : survey.hreflang
+    ? `${home}#field-study`
+    : survey.href;
+const blurb = OFFERS_PUBLISHED ? t.hero.blurb : t.fieldStudy.hero.blurb;
+const ctaSecondary = OFFERS_PUBLISHED ? t.hero.ctaSecondary : t.fieldStudy.hero.ctaSecondary;
 ---
 
 <section id="top" class="hero">
@@ -38,7 +49,7 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
           <span class="visually-hidden">{SITE.author} — </span>
           <span class="hero__promise">{t.hero.title}</span>
         </h1>
-        <p class="hero__blurb">{t.hero.blurb}</p>
+        <p class="hero__blurb">{blurb}</p>
 
         {/* The call is the page's one primary action, from the first screen.
             The Offers are the secondary way in, for the reader who wants to
@@ -47,7 +58,7 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
           <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
             {t.hero.ctaBook}
           </a>
-          <a class="btn btn-secondary" href={secondary}>{t.hero.ctaSecondary}</a>
+          <a class="btn btn-secondary" href={secondary}>{ctaSecondary}</a>
         </div>
 
         {/* The proof under the buttons, where most of the reading happens
