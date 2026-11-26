@@ -913,8 +913,7 @@ export const en = {
   contact: {
     kicker: 'Contact',
     title: "Let's talk about your business.",
-    blurb:
-      'A free 30-minute call: I tell you plainly whether I can help. Worst case, you lose half an hour.',
+    blurb: 'A free 30-minute call: I learn more about what you do and we see whether we click.',
     cta: 'Book a call',
     orReach: 'Or, if you prefer:',
     revealPhone: 'Show phone number',

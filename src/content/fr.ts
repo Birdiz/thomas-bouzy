@@ -1162,7 +1162,7 @@ export const fr = {
     kicker: 'Contact',
     title: 'Parlons de votre entreprise.',
     blurb:
-      'Un appel de 30 minutes, gratuit : je vous dis franchement si je peux aider. Au pire, vous avez perdu une demi-heure.',
+      "Un appel de 30 minutes, gratuit : j'en apprends plus sur ce que vous faites et on voit si on a des atomes crochus.",
     cta: 'Réserver un appel',
     orReach: 'Ou, si vous préférez :',
     revealPhone: 'Afficher le numéro',
