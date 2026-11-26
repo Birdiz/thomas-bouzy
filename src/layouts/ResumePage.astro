@@ -1,6 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import ContactSection from '../components/ContactSection.astro';
+import FieldStudySection from '../components/FieldStudySection.astro';
 import Hero from '../components/Hero.astro';
 import OffersSection from '../components/OffersSection.astro';
 import ReferencesSection from '../components/ReferencesSection.astro';
@@ -11,6 +12,7 @@ import { RESUME } from '../content/index.ts';
 import { portrait } from '../lib/portrait.ts';
 import { pageGraph } from '../lib/structured-data.ts';
 import type { Route } from '../routes.ts';
+import { OFFERS_PUBLISHED } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -20,6 +22,9 @@ interface Props {
 const { route } = Astro.props;
 const { locale } = route;
 const t = RESUME[locale];
+/* While the catalogue is hidden (ADR 34), the head describes what the page
+   shows: who Thomas is and the field study, not the Offers. */
+const meta = OFFERS_PUBLISHED ? t.meta : t.fieldStudy.meta;
 
 /* The Person's image: the portrait at the largest size the hero serves. */
 const image = portrait && (await getImage({ src: portrait, width: 580, height: 580 }));
@@ -27,19 +32,27 @@ const image = portrait && (await getImage({ src: portrait, width: 580, height: 5
 
 <BaseLayout
   route={route}
-  title={t.meta.title}
-  description={t.meta.description}
+  title={meta.title}
+  description={meta.description}
   ogType="profile"
   structuredData={pageGraph(route, { portrait: image?.src })}
 >
   <SiteHeader route={route} t={t} />
   <main id="main">
-    <Hero t={t} home={route.path} />
+    <Hero t={t} home={route.path} locale={locale} />
     {/* The Workshops, the way in (ADR 27), then the Offers, each situation
         opening on its Client sentences → proof → contact, with the person.
         Five sections, one job each (ADR 31). */}
-    <WorkshopsSection t={t} />
-    <OffersSection locale={locale} t={t} />
+    {
+      OFFERS_PUBLISHED ? (
+        <>
+          <WorkshopsSection t={t} />
+          <OffersSection locale={locale} t={t} />
+        </>
+      ) : (
+        <FieldStudySection locale={locale} t={t} />
+      )
+    }
     <ReferencesSection t={t} />
     <ContactSection locale={locale} t={t} />
   </main>

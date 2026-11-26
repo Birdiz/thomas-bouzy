@@ -910,6 +910,25 @@ export const en = {
     },
   },
 
+  fieldStudy: {
+    meta: {
+      title: 'Thomas Bouzy — Software engineer, field study in eastern France',
+      description:
+        'Software engineer in eastern France, running a field study on what companies, manufacturers, healthcare providers and public bodies in the region actually need from software.',
+    },
+    hero: {
+      blurb: 'Before offering anything, I want to understand what your organisation needs.',
+      ctaSecondary: 'About the field study',
+    },
+    nav: 'Field study',
+    section: {
+      kicker: 'Field study',
+      title: 'What do local organisations actually need?',
+      text: "I'm not selling anything for now. I'm asking local companies, manufacturers, healthcare providers and public bodies about their real software needs. The questionnaire is in French.",
+      cta: 'Answer the questionnaire, in French',
+    },
+  },
+
   contact: {
     kicker: 'Contact',
     title: "Let's talk about your business.",

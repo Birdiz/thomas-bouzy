@@ -5,6 +5,7 @@ import OfferPage from '../layouts/OfferPage.astro';
 import PartnersPage from '../layouts/PartnersPage.astro';
 import PublicSectorPage from '../layouts/PublicSectorPage.astro';
 import ResumePage from '../layouts/ResumePage.astro';
+import SurveyPage from '../layouts/SurveyPage.astro';
 import { ROUTES, type Route } from '../routes.ts';
 
 /**
@@ -36,6 +37,8 @@ const { id } = route.page;
     <PartnersPage route={route} />
   ) : id === 'public-sector' ? (
     <PublicSectorPage route={route} />
+  ) : id === 'survey' ? (
+    <SurveyPage route={route} />
   ) : (
     <OfferPage route={route} offer={id} />
   )

@@ -1158,6 +1158,93 @@ export const fr = {
     },
   },
 
+  fieldStudy: {
+    meta: {
+      title: 'Thomas Bouzy — Ingénieur logiciel, enquête de terrain dans le Grand Est',
+      description:
+        "Ingénieur logiciel dans le Grand Est, je mène une enquête de terrain : ce dont les entreprises, l'industrie, la santé et les collectivités du territoire ont réellement besoin côté numérique.",
+    },
+    hero: {
+      blurb:
+        'Avant de vous proposer quoi que ce soit, je veux comprendre ce dont votre organisation a besoin.',
+      ctaSecondary: "Répondre à l'enquête",
+    },
+    nav: 'Enquête',
+    section: {
+      kicker: 'Enquête de terrain',
+      title: 'Dites-moi ce qui vous manque.',
+      text: "Je ne vends rien pour l'instant. J'interroge les entreprises, l'industrie, la santé et les collectivités du territoire sur leurs vrais besoins numériques. Cinq minutes, et je vous envoie la synthèse.",
+      cta: "Répondre à l'enquête",
+    },
+  },
+
+  surveyPage: {
+    meta: {
+      title: 'Enquête de terrain : vos besoins numériques',
+      description:
+        'Cinq minutes pour dire ce qui vous fait perdre du temps et ce qui vous manque. Entreprises, industrie, santé, collectivités : la synthèse est envoyée aux participants.',
+    },
+    kicker: 'Enquête de terrain',
+    title: 'Vos besoins numériques, en cinq minutes',
+    plain:
+      'Avant de proposer quoi que ce soit, je veux savoir ce dont vous avez réellement besoin.',
+    paragraphs: [
+      "Je suis ingénieur logiciel dans le Grand Est. Plutôt que d'arriver avec une offre toute faite, je pose des questions : ce qui vous fait perdre du temps, ce que vous avez déjà essayé, ce qui vous manque.",
+      "Les questions s'adaptent à votre activité : entreprise, industrie, santé ou collectivité. Vous pouvez sauter celles qui ne vous parlent pas.",
+      'Je publierai une synthèse anonyme des réponses. Laissez un contact à la fin si vous voulez la recevoir, ou en parler de vive voix.',
+    ],
+    privacy: {
+      title: 'Ce que deviennent vos réponses',
+      paragraphs: [
+        'Vos réponses servent à une seule chose : comprendre les besoins numériques du territoire et en publier une synthèse anonyme. Je suis le seul à les lire. Elles ne sont ni vendues, ni cédées, ni utilisées pour de la publicité.',
+        "Le contact est facultatif. Si vous en laissez un, avec votre accord, je m'en sers uniquement pour vous envoyer la synthèse ou vous proposer l'échange que vous avez demandé. Tout est conservé 24 mois au plus, puis effacé.",
+        "Pour consulter, corriger ou faire effacer vos réponses et votre contact, écrivez-moi à l'adresse en bas de page : c'est fait sous un mois.",
+      ],
+    },
+    form: {
+      name: 'Questionnaire',
+      loading: 'Chargement du questionnaire…',
+      noScript:
+        "Le questionnaire a besoin de JavaScript. Vous pouvez aussi me répondre par écrit à l'adresse en bas de page.",
+      unreachable:
+        "Le questionnaire n'a pas pu être chargé. Vérifiez votre connexion, puis réessayez.",
+      retry: 'Réessayer',
+      closed:
+        "L'enquête est close. Merci de votre intérêt : vous pouvez toujours réserver un appel.",
+      book: 'Réserver un appel',
+      progress: 'Étape {current} sur {total}',
+      back: 'Précédent',
+      next: 'Suivant',
+      submit: 'Envoyer mes réponses',
+      sending: 'Envoi…',
+      optional: 'facultatif',
+      selectPlaceholder: 'Choisir…',
+      noOpinion: 'Sans avis',
+      counter: '{count} sur {max} caractères',
+      maxSelections: '{max} choix au plus',
+      fixErrors: 'Certaines réponses sont à reprendre.',
+      contact: {
+        title: 'Pour aller plus loin',
+        intro:
+          'Facultatif. Laissez un contact pour recevoir la synthèse, ou pour un échange de vive voix.',
+        name: 'Nom',
+        organisation: 'Organisation',
+        role: 'Fonction',
+        email: 'E-mail',
+        phone: 'Téléphone',
+        wantsMeeting: "Je suis d'accord pour un échange de 20 minutes",
+        consent: "J'accepte que Thomas Bouzy me recontacte à ce sujet",
+        notice:
+          "Votre contact sert uniquement à vous envoyer la synthèse ou à organiser l'échange demandé. Je suis le seul à le lire. Il est effacé au plus tard 24 mois après, ou plus tôt sur simple demande.",
+      },
+      thanks: {
+        title: 'Merci.',
+        text: 'Vos réponses sont bien arrivées. Si vous avez laissé un contact, vous recevrez la synthèse.',
+        booking: 'Vous voulez en parler tout de suite ? Réservez un appel',
+      },
+    },
+  },
+
   contact: {
     kicker: 'Contact',
     title: 'Parlons de votre entreprise.',

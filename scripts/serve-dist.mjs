@@ -208,6 +208,23 @@ function countRequest(req, pathname, hit) {
   }
 }
 
+/**
+ * The back office the field study's page talks to (ADR 34, FIELD_STUDY in
+ * src/site.ts): the one origin outside this one that a page may reach, and
+ * only with fetch. Unset, the page calls its own origin and nothing is added.
+ * Anything but a bare https origin stops the server rather than widening the
+ * policy to something nobody meant.
+ */
+function surveyApiOrigin() {
+  const value = (process.env.PUBLIC_SURVEY_API_ORIGIN ?? '').trim();
+  if (!value) return '';
+  const url = new URL(value);
+  if (url.protocol !== 'https:' || url.origin !== value.replace(/\/$/, '')) {
+    throw new Error(`PUBLIC_SURVEY_API_ORIGIN must be an https origin, got "${value}"`);
+  }
+  return url.origin;
+}
+
 const CSP = [
   "default-src 'none'",
   `script-src 'self' ${inlineHashes.scripts.join(' ')}`.trim(),
@@ -217,7 +234,7 @@ const CSP = [
   `style-src 'self' ${inlineHashes.styles.join(' ')}`.trim(),
   "img-src 'self' data:",
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self' ${surveyApiOrigin()}`.trim(),
   "form-action 'none'",
   "frame-ancestors 'none'",
   "base-uri 'none'",

@@ -27,6 +27,11 @@ export function breadcrumbOf(route: Route): Crumb[] {
     return [home, { name: content.kicker, href: path }];
   }
 
+  if (page.id === 'survey') {
+    if (!t.surveyPage) throw new Error(`${path}: no ${locale} content for the survey page`);
+    return [home, { name: t.surveyPage.kicker, href: path }];
+  }
+
   // An Offer sits under the Offers, which live on the home page.
   return [
     home,

@@ -3,9 +3,12 @@ import { RESUME } from '../../src/content/index.ts';
 import { ACHIEVEMENT_IDS, OFFER_IDS, REFERENCES, SITUATIONS } from '../../src/content/offers.ts';
 import { fromPrice } from '../../src/content/prices.ts';
 import { formatEuros } from '../../src/lib/money.ts';
-import { homePath, pathOf } from '../../src/routes.ts';
-import { CONTACT } from '../../src/site.ts';
+import { CATALOGUE, getPage, homePath, pathOf } from '../../src/routes.ts';
+import { CONTACT, OFFERS_PUBLISHED } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
+
+/** Why a test of the catalogue does not run while it is hidden. */
+const HIDDEN = 'The catalogue is hidden while OFFERS_PUBLISHED is false (ADR 34)';
 
 const PHONE_PATTERNS = [/\+33632134547/, /0632134547/, /06 32 13 45 47/, /\+33 6 32 13 45 47/];
 
@@ -15,7 +18,8 @@ async function gotoHome(page: Page, path: string) {
 }
 
 /**
- * Follows the home page's link to the Audit and reports whether the new page was
+ * Follows the home page's link to the Audit (to the field study, while the
+ * catalogue is hidden, ADR 34) and reports whether the new page was
  * revealed through a view transition. `pagereveal` carries it, and fires before
  * the page's own scripts run, hence the init script.
  */
@@ -28,8 +32,13 @@ async function revealedWithTransition(page: Page): Promise<boolean> {
     });
   });
   await gotoHome(page, '/');
-  await page.locator('[data-offer="audit"] .offers__name a').first().click();
-  await page.waitForURL(`**${pathOf('audit', 'fr')}`);
+  if (OFFERS_PUBLISHED) {
+    await page.locator('[data-offer="audit"] .offers__name a').first().click();
+    await page.waitForURL(`**${pathOf('audit', 'fr')}`);
+  } else {
+    await page.locator('#field-study .btn-primary').click();
+    await page.waitForURL(`**${pathOf('survey', 'fr')}`);
+  }
   // `load` can come before the first rendering opportunity, which is when
   // `pagereveal` fires: wait for the flag rather than read it at once.
   await page.waitForFunction(() => 'revealedWith' in window);
@@ -214,11 +223,18 @@ test.describe('the page is not a CV', () => {
 
   test('leads the hero with the call, and offers the way in second', async ({ page }) => {
     // The way in is the Workshops in French, the Offers in English, where there
-    // are no Workshops (ADR 27).
-    for (const [path, book, second, anchor] of [
-      ['/', 'Réserver un appel gratuit', 'Voir les ateliers', 'workshops'],
-      ['/en/', 'Book a free call', 'See the offers', 'offers'],
-    ] as const) {
+    // are no Workshops (ADR 27). While the catalogue is hidden, the field
+    // study: its page in French, its section on the English home page (ADR 34).
+    const ways = OFFERS_PUBLISHED
+      ? ([
+          ['/', 'Réserver un appel gratuit', 'Voir les ateliers', '/#workshops'],
+          ['/en/', 'Book a free call', 'See the offers', '/en/#offers'],
+        ] as const)
+      : ([
+          ['/', 'Réserver un appel gratuit', RESUME.fr.fieldStudy.hero.ctaSecondary, '/enquete/'],
+          ['/en/', 'Book a free call', RESUME.en.fieldStudy.hero.ctaSecondary, '/en/#field-study'],
+        ] as const);
+    for (const [path, book, second, target] of ways) {
       await gotoHome(page, path);
       const ctas = page.locator('.hero a');
       await expect(ctas).toHaveCount(2);
@@ -228,8 +244,10 @@ test.describe('the page is not a CV', () => {
       await expect(ctas.first()).toHaveClass(/btn-primary/);
       await expect(ctas.nth(1)).toHaveText(second);
       await ctas.nth(1).click();
-      await expect(page).toHaveURL(new RegExp(`${path}#${anchor}$`));
-      await expect(page.locator(`#${anchor}`)).toBeInViewport();
+      await expect(page).toHaveURL(new RegExp(`${target}$`));
+      const anchor = target.split('#')[1];
+      if (anchor) await expect(page.locator(`#${anchor}`)).toBeInViewport();
+      else await expect(page.locator('h1')).toHaveText(RESUME.fr.surveyPage?.title ?? '∅');
     }
   });
 
@@ -341,7 +359,7 @@ test.describe('navigation', () => {
   test('takes About to its own page, from the menu of every page (ADR 28)', async ({ page }) => {
     for (const [from, about, locale] of [
       ['/', '/a-propos/', 'fr'],
-      ['/offres/reprise-et-maintenance/', '/a-propos/', 'fr'],
+      [OFFERS_PUBLISHED ? '/offres/reprise-et-maintenance/' : '/enquete/', '/a-propos/', 'fr'],
       ['/en/', '/en/about/', 'en'],
     ] as const) {
       await page.goto(from);
@@ -448,7 +466,7 @@ test.describe('layout integrity', () => {
   test('fits the phone header on two lines, the whole menu in sight', async ({ page }) => {
     // It took three lines, 127px, at 360px (ADR 28).
     await page.setViewportSize({ width: 360, height: 740 });
-    for (const path of ['/', '/en/', '/partenaires/']) {
+    for (const path of ['/', '/en/', OFFERS_PUBLISHED ? '/partenaires/' : '/enquete/']) {
       await gotoHome(page, path);
       const header = await page.locator('.site-header').boundingBox();
       expect(header?.height ?? 0, path).toBeLessThanOrEqual(96);
@@ -486,6 +504,7 @@ test.describe('motion preferences', () => {
     test('scrolls smoothly, and brings each Client sentence in once, as it comes into view', async ({
       page,
     }) => {
+      test.skip(!OFFERS_PUBLISHED, HIDDEN);
       await gotoHome(page, '/');
       await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'smooth');
 
@@ -636,6 +655,7 @@ test.describe('the first screen says who Thomas is (ADR 27)', () => {
 
 test.describe('the AI workshops, the way in (ADR 27)', () => {
   test('publishes its three levels, then an email to hear when sessions open', async ({ page }) => {
+    test.skip(!OFFERS_PUBLISHED, HIDDEN);
     const w = RESUME.fr.workshops;
     if (!w) throw new Error('The French home page has no Workshops');
     await gotoHome(page, '/');
@@ -666,6 +686,7 @@ test.describe('the AI workshops, the way in (ADR 27)', () => {
 });
 
 test.describe('the home page sells the Offers (ADR 14)', () => {
+  test.skip(!OFFERS_PUBLISHED, HIDDEN);
   for (const locale of ['fr', 'en'] as const) {
     const home = homePath(locale);
 
@@ -773,6 +794,41 @@ test.describe('the home page sells the Offers (ADR 14)', () => {
         await expect(card.locator('.offers__arrow')).toHaveCSS('opacity', '1');
         await expect(card.getByRole('link')).toHaveCount(1);
       }
+    });
+  }
+});
+
+test.describe('while the catalogue is hidden, the home page asks (ADR 34)', () => {
+  test.skip(OFFERS_PUBLISHED, 'The catalogue is published');
+
+  for (const locale of ['fr', 'en'] as const) {
+    const home = homePath(locale);
+    const t = RESUME[locale];
+
+    test(`reads the field study, proof, contact on ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const order = await page.$$eval('main > section[id]', (sections) =>
+        sections.map((section) => section.id),
+      );
+      expect(order).toEqual(['top', 'field-study', 'work', 'contact']);
+      await expect(page.locator('.offers__card, .workshops, .situation')).toHaveCount(0);
+      await expect(page.locator('#field-study h2')).toHaveText(t.fieldStudy.section.title);
+      // The French page, from the English home page too, which says it is French.
+      const cta = page.locator('#field-study .btn-primary');
+      await expect(cta).toHaveAttribute('href', '/enquete/');
+      if (locale === 'en') await expect(cta).toHaveAttribute('hreflang', 'fr');
+      await expect(page).toHaveTitle(t.fieldStudy.meta.title);
+      await expect(page.locator('.hero__blurb').first()).toHaveText(t.fieldStudy.hero.blurb);
+    });
+
+    test(`links no hidden page from the menu or the footer of ${home}`, async ({ page }) => {
+      await gotoHome(page, home);
+      const hrefs = await page
+        .locator('a[href]')
+        .evaluateAll((links) => links.map((link) => link.getAttribute('href') ?? ''));
+      const hidden = CATALOGUE.flatMap((id) => Object.values(getPage(id).paths));
+      expect(hrefs.filter((href) => hidden.includes(href.split('#')[0] ?? ''))).toEqual([]);
+      await expect(page.locator('.site-nav a', { hasText: t.fieldStudy.nav })).toHaveCount(1);
     });
   }
 });

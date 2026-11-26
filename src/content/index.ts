@@ -39,11 +39,13 @@ export const RESUME: Record<Locale, ResumeContent> = {
 export function contentOfPage(locale: Locale, id: PageId): unknown {
   // The Offer pages and the other pages are their own; everything else in the
   // module is the home page and the chrome every page shares.
-  const { offerPages, partnersPage, publicSectorPage, aboutPage, ...home } = RESUME[locale];
+  const { offerPages, partnersPage, publicSectorPage, aboutPage, surveyPage, ...home } =
+    RESUME[locale];
   if (id === 'home') return home;
   if (id === 'about') return aboutPage;
   if (id === 'partners') return partnersPage;
   if (id === 'public-sector') return publicSectorPage;
+  if (id === 'survey') return surveyPage;
   return offerPages[id];
 }
 
