@@ -95,12 +95,17 @@ const SHORTCUTS = new Map([
   ['/en/offers/', '/en/#offers'],
 ]);
 
-/** The shortcuts that lead into the catalogue, and the home page each falls back to. */
+/**
+ * The shortcuts while the catalogue is hidden, and where each falls back to:
+ * the home page, which then serves the field study alone (ADR 35), so that
+ * none leads to a section, or an English page, the build left out.
+ */
 const CATALOGUE_SHORTCUTS = new Map([
   ['/offres/', '/'],
   ['/tarifs/', '/'],
   ['/ateliers/', '/'],
-  ['/en/offers/', '/en/'],
+  ['/contact/', '/'],
+  ['/en/offers/', '/'],
 ]);
 
 /**

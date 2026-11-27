@@ -43,7 +43,6 @@ export interface FormConfig {
   /** '' to call the page's own origin. */
   apiOrigin: string;
   slug: string;
-  booking: string;
   labels: SurveyFormLabels;
 }
 
@@ -154,25 +153,12 @@ export function mountSurvey(config: FormConfig): void {
     return node;
   }
 
-  const bookingLink = (text: string) =>
-    el('a', {
-      href: config.booking,
-      target: '_blank',
-      rel: 'noopener',
-      class: 'btn btn-primary',
-      text,
-    });
-
   /** A state with no form: loading, closed, unreachable. Returns what to focus. */
   function status(text: string, action?: { label: string; run: () => void }) {
     const message = el('p', { class: 'survey__message', tabindex: '-1', text });
     view.replaceChildren(
       message,
-      el(
-        'p',
-        {},
-        action ? button(action.label, 'btn btn-secondary', action.run) : bookingLink(labels.book),
-      ),
+      ...(action ? [el('p', {}, button(action.label, 'btn btn-secondary', action.run))] : []),
     );
     return message;
   }
@@ -871,12 +857,7 @@ export function mountSurvey(config: FormConfig): void {
 
   function thanks() {
     const heading = el('h2', { class: 'survey__title', tabindex: '-1', text: labels.thanks.title });
-    view.replaceChildren(
-      heading,
-      el('p', { class: 'survey__message', text: labels.thanks.text }),
-      el('p', { class: 'survey__help', text: labels.thanks.bookingLead }),
-      el('p', {}, bookingLink(labels.thanks.booking)),
-    );
+    view.replaceChildren(heading, el('p', { class: 'survey__message', text: labels.thanks.text }));
     heading.focus();
   }
 

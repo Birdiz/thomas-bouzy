@@ -126,8 +126,9 @@ framework the workshops do not use); *accompagnement* for the third level
 
 **Field study** (FR *Enquête de terrain*):
 The questionnaire Thomas runs to learn what local organisations need before he
-sells them anything. While it runs, the Offers and the Workshops are hidden and
-the site asks instead of selling (ADR 34). The questionnaire and its answers are
+sells them anything. While it runs, it is the whole site: its page at the home
+page's address, and nothing of the Offers, the Workshops or Thomas's career
+(ADR 34, ADR 35). The questionnaire and its answers are
 served and stored by the back office, not by the site.
 _Avoid_: survey (as a term on the page), poll, market research, *sondage*
 

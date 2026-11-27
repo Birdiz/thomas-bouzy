@@ -1,3 +1,4 @@
+import { pathOf } from '../../src/routes.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 /**
@@ -73,7 +74,9 @@ const BUDGET = {
 
 /** The pages that gained something the others did not, and the limit it moved. */
 const PAGE_BUDGET: Record<string, Partial<Record<keyof typeof BUDGET, number>>> = {
-  '/enquete/': { externalJsBytes: 18_000 },
+  // The field study's form (ADR 34), at the home page's address while the
+  // catalogue is hidden (ADR 35).
+  [pathOf('survey', 'fr') ?? '/enquete/']: { externalJsBytes: 18_000 },
 };
 
 for (const path of PATHS) {

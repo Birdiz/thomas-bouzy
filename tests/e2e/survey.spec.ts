@@ -2,11 +2,13 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Page, Route } from '@playwright/test';
 import { RESUME } from '../../src/content/index.ts';
 import type { SurveyStructure } from '../../src/lib/survey/types.ts';
+import { pathOf } from '../../src/routes.ts';
 import { FIELD_STUDY } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
 /**
- * The field study's page (ADR 34), with the back office mocked: the page asks
+ * The field study's page (ADR 34), at the home page's address while the
+ * catalogue is hidden (ADR 35), with the back office mocked: the page asks
  * it for the questionnaire and posts the answers to it. What is asserted is
  * what a respondent sees, and what reaches the back office.
  */
@@ -14,6 +16,9 @@ import { expect, test } from './fixtures.ts';
 const form = RESUME.fr.surveyPage?.form;
 if (!form) throw new Error('The French content has no survey page');
 const labels = form;
+
+const SURVEY = pathOf('survey', 'fr') ?? '';
+if (!SURVEY) throw new Error('This build serves no field study');
 
 const API = `**/api/surveys/${FIELD_STUDY.slug}`;
 
@@ -154,7 +159,7 @@ test('opens on the questionnaire’s own introduction, and says neither how long
   page,
 }) => {
   await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await expect(page.locator('.survey__intro h2')).toHaveText('Une enquête inventée');
   await expect(page.locator('.survey__intro')).toContainText('ses lieux et ses gens');
   // No duration and no count: neither the 7 minutes the questionnaire sets,
@@ -171,7 +176,7 @@ test('walks a manufacturer through its branch, then sends the answers and the co
   page,
 }) => {
   const mock = await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await expect(title(page)).toHaveText('Votre organisation');
   // Before the profile, the steps are those everyone sees, and the contact.
   await expect(step(page)).toHaveText('Étape 1 sur 3');
@@ -213,8 +218,8 @@ test('walks a manufacturer through its branch, then sends the answers and the co
 
   const thanks = page.getByRole('heading', { name: labels.thanks.title });
   await expect(thanks).toBeFocused();
-  const booking = page.locator('.survey__app').getByRole('link', { name: labels.thanks.booking });
-  await expect(booking).toHaveAttribute('href', '/rdv/');
+  // Nothing to book: the page says nothing of what Thomas sells (ADR 35).
+  await expect(page.locator('.survey__app a')).toHaveCount(0);
   expect(mock.posted).toEqual([
     {
       answers: {
@@ -244,7 +249,7 @@ test('drops the branch a changed answer leaves, and sends no contact unless give
   page,
 }) => {
   const mock = await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await page.getByLabel('Un industriel').check();
   await next(page).click();
   await page.getByLabel('Le stock').check();
@@ -261,7 +266,7 @@ test('drops the branch a changed answer leaves, and sends no contact unless give
 
 test('keeps the text an option reveals, on a single question too', async ({ page }) => {
   const mock = await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await expect(page.getByLabel('Laquelle ?')).toBeHidden();
   await page.getByLabel('Une autre structure').check();
   await page.getByLabel('Laquelle ?').fill('Une SCOP');
@@ -278,7 +283,7 @@ test('says what is missing, on the question, and keeps the respondent on the ste
   page,
 }) => {
   await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await next(page).click();
   const question = page.locator('[data-question="A1"]');
   await expect(question.locator('.survey__error')).toHaveText('Cette question est obligatoire.');
@@ -296,7 +301,7 @@ test('says what is missing, on the question, and keeps the respondent on the ste
 
 test('holds each box of the contact step to what the back office asks of it', async ({ page }) => {
   const mock = await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await toContactStep(page);
 
   // The synthesis needs an address.
@@ -336,7 +341,7 @@ test('holds each box of the contact step to what the back office asks of it', as
 
 test('carries the notice under the consent box, and a field nobody sees', async ({ page }) => {
   await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await toContactStep(page);
   const consent = page.getByLabel(c.contactConsent);
   await expect(consent).toHaveAccessibleDescription(/24 mois/);
@@ -357,7 +362,7 @@ test('puts the errors the back office returns back on the step they belong to', 
       'contact.email': 'Cette adresse e-mail n’est pas valide.',
     },
   });
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await toContactStep(page);
   await page.getByLabel(c.wantsSynthesis).check();
   await page.getByLabel(c.email).fill('camille@example.org');
@@ -374,7 +379,7 @@ test('puts a refused contact back on the contact step', async ({ page }) => {
     post: 422,
     errors: { 'contact.email': 'Cette adresse e-mail n’est pas valide.' },
   });
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await toContactStep(page);
   await page.getByLabel(c.wantsSynthesis).check();
   await page.getByLabel(c.email).fill('camille@exemple.invalid');
@@ -389,11 +394,9 @@ test('puts a refused contact back on the contact step', async ({ page }) => {
 test('says the study is closed when the back office says so', async ({ page }) => {
   for (const status of [404, 410]) {
     await mockApi(page, { get: status });
-    await page.goto('/enquete/');
+    await page.goto(SURVEY);
     await expect(page.locator('.survey__message')).toHaveText(labels.closed);
-    await expect(
-      page.locator('.survey__app').getByRole('link', { name: labels.book }),
-    ).toHaveAttribute('href', '/rdv/');
+    await expect(page.locator('.survey__app a')).toHaveCount(0);
     await expect(page.locator('.survey__form')).toHaveCount(0);
     await page.unrouteAll();
   }
@@ -401,7 +404,7 @@ test('says the study is closed when the back office says so', async ({ page }) =
 
 test('says the study is closed when it closes while the respondent answers', async ({ page }) => {
   await mockApi(page, { post: 410 });
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await toContactStep(page);
   await submit(page).click();
   await expect(page.locator('.survey__message')).toHaveText(labels.closed);
@@ -414,7 +417,7 @@ test('offers to try again when the questionnaire cannot be loaded', async ({ pag
     calls += 1;
     return calls === 1 ? route.abort() : route.fulfill({ json: STRUCTURE });
   });
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await expect(page.locator('.survey__message')).toHaveText(labels.unreachable);
   await page.getByRole('button', { name: labels.retry }).click();
   await expect(title(page)).toHaveText('Votre organisation');
@@ -429,7 +432,7 @@ test('keeps the answers on the page when they cannot be sent, and sends them on 
     if (failures-- > 0) return route.abort();
     return route.fallback();
   });
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await toContactStep(page);
   await submit(page).click();
   await expect(page.getByRole('alert')).toHaveText(labels.sendFailed);
@@ -441,7 +444,7 @@ test('keeps the answers on the page when they cannot be sent, and sends them on 
 
 test('keeps the answers given when the page is reloaded', async ({ page }) => {
   await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await page.getByLabel('Un industriel').check();
   await next(page).click();
   await page.reload();
@@ -454,7 +457,7 @@ test('is usable from the keyboard alone', async ({ page, browserName }) => {
   // WebKit does not tab to form controls by default, as Safari does not.
   test.skip(browserName === 'webkit', 'Tab skips controls in WebKit by default');
   await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   await expect(title(page)).toBeVisible();
   await page.getByLabel('Une entreprise').focus();
   await page.keyboard.press('ArrowDown');
@@ -467,7 +470,7 @@ test('groups each choice under its question, as a fieldset named by its legend',
   page,
 }) => {
   await mockApi(page);
-  await page.goto('/enquete/');
+  await page.goto(SURVEY);
   const group = page.getByRole('group', { name: 'Vous êtes :' });
   await expect(group).toHaveCount(1);
   await expect(group.getByRole('radio')).toHaveCount(4);
@@ -479,9 +482,9 @@ for (const at of [
   'contact step, with its errors',
   'thanks',
 ] as const) {
-  test(`has no accessibility violation on /enquete/ at the ${at}`, async ({ page }) => {
+  test(`has no accessibility violation on ${SURVEY} at the ${at}`, async ({ page }) => {
     await mockApi(page);
-    await page.goto('/enquete/');
+    await page.goto(SURVEY);
     await expect(title(page)).toBeVisible();
     if (at === 'first step, with its errors') {
       await next(page).click();

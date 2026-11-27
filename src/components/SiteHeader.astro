@@ -1,6 +1,6 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { alternatesOf, homePath, linkTo, pathOf, type Route } from '../routes.ts';
+import { alternatesOf, homePath, linkTo, type Route } from '../routes.ts';
 import {
   CONTACT,
   DEFAULT_LOCALE,
@@ -21,9 +21,6 @@ interface Props {
 const { route, t } = Astro.props;
 const locale = route?.locale ?? DEFAULT_LOCALE;
 const home = homePath(locale);
-/* The field study's page, where it exists in this locale (ADR 34). */
-const study = OFFERS_PUBLISHED ? undefined : t.fieldStudy.survey;
-const studyPath = study && pathOf('survey', locale);
 
 /* The same page in each locale it exists in. */
 const versions = route ? alternatesOf(route.page) : [];
@@ -31,6 +28,8 @@ const versions = route ? alternatesOf(route.page) : [];
    the other language had no way back to it (ADR 28): the link goes to that
    language's home page, and its name says so. */
 const elsewhere = versions.length === 0 ? LOCALES.filter((other) => other !== locale) : [];
+/* While the catalogue is hidden, the field study is the whole site (ADR 35):
+   the header keeps the name, with no menu, no other language and no call. */
 ---
 
 <header class="site-header">
@@ -40,68 +39,67 @@ const elsewhere = versions.length === 0 ? LOCALES.filter((other) => other !== lo
       <span>{SITE.author}</span>
     </a>
 
-    <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
-      {/* The sections spelled from the home page, so they work from every
-          page; About goes to its own page (ADR 28). */}
-      {OFFERS_PUBLISHED && t.workshops && <a href={`${home}#workshops`}>{t.workshops.nav}</a>}
-      {OFFERS_PUBLISHED && <a href={`${home}#offers`}>{t.nav.offers}</a>}
-      {/* While the catalogue is hidden, the field study takes its place
-          where it exists in this locale (ADR 34). */}
-      {
-        study && studyPath && (
-          <a href={studyPath} aria-current={route?.page.id === 'survey' ? 'page' : undefined}>
-            {study.nav}
+    {
+      OFFERS_PUBLISHED && (
+        <nav class="site-nav" aria-label={t.a11y.mainNavigation}>
+          {/* The sections spelled from the home page, so they work from every
+              page; About goes to its own page (ADR 28). */}
+          {t.workshops && <a href={`${home}#workshops`}>{t.workshops.nav}</a>}
+          <a href={`${home}#offers`}>{t.nav.offers}</a>
+          <a href={`${home}#work`}>{t.nav.work}</a>
+          <a
+            href={linkTo('about', locale).href}
+            aria-current={route?.page.id === 'about' ? 'page' : undefined}
+          >
+            {t.nav.about}
           </a>
-        )
-      }
-      <a href={`${home}#work`}>{t.nav.work}</a>
-      <a
-        href={linkTo('about', locale).href}
-        aria-current={route?.page.id === 'about' ? 'page' : undefined}
-      >
-        {t.nav.about}
-      </a>
-    </nav>
+        </nav>
+      )
+    }
 
-    <div class="site-header__actions">
-      {
-        versions.length > 0 && (
-          <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
-            {versions.map((version) => (
-              <a
-                href={version.path}
-                hreflang={LOCALE_TAG[version.locale]}
-                lang={LOCALE_TAG[version.locale]}
-                aria-label={LOCALE_ENDONYM[version.locale]}
-                aria-current={version.locale === locale ? 'true' : undefined}
-              >
-                {LOCALE_LABEL[version.locale]}
-              </a>
-            ))}
-          </nav>
-        )
-      }
-      {
-        elsewhere.length > 0 && (
-          <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
-            {elsewhere.map((other) => (
-              <a
-                href={homePath(other)}
-                hreflang={LOCALE_TAG[other]}
-                lang={LOCALE_TAG[other]}
-                aria-label={t.a11y.otherHome}
-              >
-                {LOCALE_LABEL[other]}
-              </a>
-            ))}
-          </nav>
-        )
-      }
-      {/* The booking page itself, one click from every page (ADR 28). */}
-      <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
-        {t.nav.contact}
-      </a>
-    </div>
+    {
+      OFFERS_PUBLISHED && (
+        <div class="site-header__actions">
+          {
+            versions.length > 0 && (
+              <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
+                {versions.map((version) => (
+                  <a
+                    href={version.path}
+                    hreflang={LOCALE_TAG[version.locale]}
+                    lang={LOCALE_TAG[version.locale]}
+                    aria-label={LOCALE_ENDONYM[version.locale]}
+                    aria-current={version.locale === locale ? 'true' : undefined}
+                  >
+                    {LOCALE_LABEL[version.locale]}
+                  </a>
+                ))}
+              </nav>
+            )
+          }
+          {
+            elsewhere.length > 0 && (
+              <nav class="lang-switch" aria-label={t.a11y.languageSwitcher}>
+                {elsewhere.map((other) => (
+                  <a
+                    href={homePath(other)}
+                    hreflang={LOCALE_TAG[other]}
+                    lang={LOCALE_TAG[other]}
+                    aria-label={t.a11y.otherHome}
+                  >
+                    {LOCALE_LABEL[other]}
+                  </a>
+                ))}
+              </nav>
+            )
+          }
+          {/* The booking page itself, one click from every page (ADR 28). */}
+          <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
+            {t.nav.contact}
+          </a>
+        </div>
+      )
+    }
   </div>
 </header>
 

@@ -1,7 +1,7 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
 import { OFFER_IDS } from '../content/offers.ts';
-import { homePath, linkTo, type PageLink, pathOf } from '../routes.ts';
+import { homePath, linkTo, type PageLink } from '../routes.ts';
 import { CONTACT, LEGAL, LOCALE_TAG, type Locale, OFFERS_PUBLISHED, SITE } from '../site.ts';
 
 interface Props {
@@ -13,22 +13,19 @@ const { t, locale } = Astro.props;
 
 /* Every page from every page: the Workshops where this locale has them, every
    Offer, the Partners and public-sector pages, and About (ADR 28). The header
-   reaches the home page's sections, and an Offer page was otherwise a dead end. */
-const catalogue = (): (PageLink & { name: string })[] => [
-  ...(t.workshops ? [{ href: `${homePath(locale)}#workshops`, name: t.workshops.nav }] : []),
-  ...OFFER_IDS.map((id) => ({ ...linkTo(id, locale), name: t.offers[id].name })),
-  { ...linkTo('partners', locale), name: t.nav.partners },
-  { ...linkTo('public-sector', locale), name: t.nav.publicSector },
-];
-/* While the catalogue is hidden, the field study stands in its place where
-   it exists in this locale, and nothing does elsewhere (ADR 34). */
-const study = t.fieldStudy.survey;
-const studyPath = pathOf('survey', locale);
-const fieldStudy = study && studyPath ? [{ href: studyPath, name: study.nav }] : [];
-const pages: (PageLink & { name: string })[] = [
-  ...(OFFERS_PUBLISHED ? catalogue() : fieldStudy),
-  { ...linkTo('about', locale), name: t.nav.about },
-];
+   reaches the home page's sections, and an Offer page was otherwise a dead end.
+   While the catalogue is hidden, the field study is the whole site (ADR 35):
+   the footer keeps the name, the address the privacy notice points to, and
+   the legal notice, and says nothing of what Thomas does. */
+const pages: (PageLink & { name: string })[] = OFFERS_PUBLISHED
+  ? [
+      ...(t.workshops ? [{ href: `${homePath(locale)}#workshops`, name: t.workshops.nav }] : []),
+      ...OFFER_IDS.map((id) => ({ ...linkTo(id, locale), name: t.offers[id].name })),
+      { ...linkTo('partners', locale), name: t.nav.partners },
+      { ...linkTo('public-sector', locale), name: t.nav.publicSector },
+      { ...linkTo('about', locale), name: t.nav.about },
+    ]
+  : [];
 
 /**
  * The legal block only renders once LEGAL is filled in — see site.ts. A notice
@@ -45,25 +42,43 @@ const legal = LEGAL.isComplete ? LEGAL : null;
   <div class="site-footer__inner">
     <div class="site-footer__identity">
       <span class="site-footer__name">{SITE.author}</span>
-      <span class="site-footer__role">{t.footer.role}</span>
-      <span class="site-footer__region">{SITE.region}</span>
+      {
+        OFFERS_PUBLISHED && (
+          <>
+            <span class="site-footer__role">{t.footer.role}</span>
+            <span class="site-footer__region">{SITE.region}</span>
+          </>
+        )
+      }
     </div>
 
-    <nav class="site-footer__links" aria-label={t.footer.pages}>
-      {
-        pages.map((page) => (
-          <a href={page.href} hreflang={page.hreflang && LOCALE_TAG[page.hreflang]}>
-            {page.name}
-            {page.hreflang && ` ${t.offersSection.inFrench}`}
-          </a>
-        ))
-      }
-    </nav>
+    {
+      pages.length > 0 && (
+        <nav class="site-footer__links" aria-label={t.footer.pages}>
+          {pages.map((page) => (
+            <a href={page.href} hreflang={page.hreflang && LOCALE_TAG[page.hreflang]}>
+              {page.name}
+              {page.hreflang && ` ${t.offersSection.inFrench}`}
+            </a>
+          ))}
+        </nav>
+      )
+    }
 
     <nav class="site-footer__links" aria-label={t.contact.kicker}>
       <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
-      <a href={CONTACT.github} target="_blank" rel="noopener">GitHub</a>
-      <a href={CONTACT.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      {
+        OFFERS_PUBLISHED && (
+          <>
+            <a href={CONTACT.github} target="_blank" rel="noopener">
+              GitHub
+            </a>
+            <a href={CONTACT.linkedin} target="_blank" rel="noopener">
+              LinkedIn
+            </a>
+          </>
+        )
+      }
     </nav>
 
     {

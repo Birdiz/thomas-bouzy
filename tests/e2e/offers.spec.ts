@@ -12,7 +12,7 @@ import {
   totalOf,
 } from '../../src/content/prices.ts';
 import { formatEuroRange, formatEuros } from '../../src/lib/money.ts';
-import { homePath, linkTo, pathOf, ROUTES } from '../../src/routes.ts';
+import { homePath, isServed, linkTo, pathOf, ROUTES } from '../../src/routes.ts';
 import { CONTACT, LOCALES, OFFERS_PUBLISHED } from '../../src/site.ts';
 import { expect, test } from './fixtures.ts';
 
@@ -266,8 +266,11 @@ test.describe('languages on every page but the home page', () => {
         await page.goto(route.path);
         await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(0);
         // Nothing to switch to, but a reader who came from the other language
-        // gets back to it, and the link says it leads to a home page (ADR 28).
-        const others = LOCALES.filter((locale) => locale !== route.locale);
+        // gets back to it, and the link says it leads to a home page (ADR 28),
+        // where this build serves one: the field study alone does not (ADR 35).
+        const others = LOCALES.filter(
+          (locale) => locale !== route.locale && isServed(homePath(locale)),
+        );
         const links = page.locator('.lang-switch a');
         await expect(links).toHaveCount(others.length);
         for (const [i, other] of others.entries()) {
