@@ -57,15 +57,21 @@ export const PAGES: readonly Page[] = [
  */
 export const CATALOGUE: readonly PageId[] = [...OFFER_IDS, 'partners', 'public-sector'];
 
+/**
+ * The site while the catalogue is hidden: the field study alone, its page
+ * served at the French home page's address (ADR 35). Every other page and
+ * locale is set aside with the catalogue, About and the English home page
+ * included: all they said was who Thomas is and what he sells.
+ */
+const FIELD_STUDY_SITE: readonly Page[] = [{ id: 'survey', paths: { fr: '/' } }];
+
 /** The pages a build serves, given whether the catalogue is published. */
 export function publishedPages(offersPublished: boolean): readonly Page[] {
-  return PAGES.filter((page) => offersPublished || !CATALOGUE.includes(page.id));
+  return offersPublished ? PAGES : FIELD_STUDY_SITE;
 }
 
-/** Whether a page is served by this build. */
-export function isPublished(id: PageId): boolean {
-  return OFFERS_PUBLISHED || !CATALOGUE.includes(id);
-}
+/** The pages this build serves. */
+const PUBLISHED = publishedPages(OFFERS_PUBLISHED);
 
 /** One served URL: a page, in one of its locales. */
 export interface Route {
@@ -85,21 +91,24 @@ export function routesOf(pages: readonly Page[]): Route[] {
 }
 
 /** Every URL the build emits, in registry order, locales in `LOCALES` order. */
-export const ROUTES: readonly Route[] = routesOf(publishedPages(OFFERS_PUBLISHED));
+export const ROUTES: readonly Route[] = routesOf(PUBLISHED);
 
 /**
- * Where each registered page this build does not serve sends its readers: the
- * home page in its locale. The addresses of the hidden catalogue were shared
- * before it was hidden (ADR 34); a 404 would tell those readers the page is
- * gone for good. The build writes this map for the server (astro.config.mjs),
- * which answers each path with a 302.
+ * Where each registered address this build does not serve sends its readers:
+ * the home page in its locale, or the French one where that locale has none
+ * in this build. The addresses of the hidden pages were shared before they
+ * were hidden (ADR 34); a 404 would tell those readers the page is gone for
+ * good. The build writes this map for the server (astro.config.mjs), which
+ * answers each path with a 302.
  */
 export function hiddenRedirects(offersPublished: boolean): Record<string, string> {
   const served = new Set(routesOf(publishedPages(offersPublished)).map((route) => route.path));
+  const home = (locale: Locale) =>
+    served.has(homePath(locale)) ? homePath(locale) : homePath(DEFAULT_LOCALE);
   return Object.fromEntries(
     routesOf(PAGES)
       .filter((route) => !served.has(route.path))
-      .map((route) => [route.path, homePath(route.locale)]),
+      .map((route) => [route.path, home(route.locale)]),
   );
 }
 
@@ -111,18 +120,28 @@ export function getPage(id: PageId): Page {
 
 /**
  * Where a page lives in a locale, or undefined if it does not exist there —
- * nor in this build: a hidden catalogue page has no path, so a link left to
- * one fails the build in `linkTo` instead of shipping a dead end.
+ * nor in this build: a hidden page has no path, so a link left to one fails
+ * the build in `linkTo` instead of shipping a dead end. While the catalogue is
+ * hidden, the field study's page lives at the root (ADR 35).
  */
 export function pathOf(id: PageId, locale: Locale): string | undefined {
-  return isPublished(id) ? getPage(id).paths[locale] : undefined;
+  return PUBLISHED.find((page) => page.id === id)?.paths[locale];
 }
 
-/** The home page always exists in every locale; the header and the 404 lean on it. */
+/**
+ * The address of a locale's home page: the root of that locale, whichever page
+ * this build serves there, or none (`isServed`). The header and the 404 lean
+ * on it.
+ */
 export function homePath(locale: Locale): string {
-  const path = pathOf('home', locale);
+  const path = getPage('home').paths[locale];
   if (!path) throw new Error(`The home page has no ${locale} path`);
   return path;
+}
+
+/** Whether this build serves a page at a root-relative path. */
+export function isServed(path: string): boolean {
+  return routeAt(path) !== undefined;
 }
 
 /** Where a link to a page goes from a page in `locale`, and in which language it lands. */

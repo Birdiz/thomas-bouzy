@@ -1,6 +1,7 @@
 # 34. The catalogue hidden behind a field study
 
-- Status: accepted, implemented 2026-11-27
+- Status: accepted, implemented 2026-11-27; its home page and its English
+  pages superseded by [ADR 35](0035-the-field-study-is-the-whole-site.md)
 - Date: 2026-11-27
 - Suspends, while `OFFERS_PUBLISHED` is not true, the home page's running order
   of [ADR 31](0031-five-sections-one-job-each.md) and the Workshops as the way

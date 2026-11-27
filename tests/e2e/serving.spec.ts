@@ -1,4 +1,4 @@
-import { hiddenRedirects } from '../../src/routes.ts';
+import { hiddenRedirects, isServed } from '../../src/routes.ts';
 import { CONTACT, OFFERS_PUBLISHED } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
@@ -56,9 +56,13 @@ test('pins every inline script in the CSP instead of allowing unsafe-inline', as
     await expect(page.locator('h1')).toBeVisible();
   }
 
-  await page.goto('/en/');
-  await page.getByRole('button', { name: 'Show phone number' }).click();
-  await expect(page.getByRole('link', { name: '+33 6 32 13 45 47' })).toBeVisible();
+  // The phone number's reveal runs a script too, on the page that has it: the
+  // field study, alone while the catalogue is hidden, has none (ADR 35).
+  if (isServed('/en/')) {
+    await page.goto('/en/');
+    await page.getByRole('button', { name: 'Show phone number' }).click();
+    await expect(page.getByRole('link', { name: '+33 6 32 13 45 47' })).toBeVisible();
+  }
   expect(violations).toEqual([]);
 });
 
@@ -99,15 +103,28 @@ test('serves a real 404 page, with a 404 status', async ({ page, request }) => {
   await page.goto('/definitely-not-a-page');
   await expect(page.getByRole('heading', { name: 'Rien ici' })).toBeVisible();
   // Not a dead end (ADR 28): the site's header, menu and booking button, then
-  // the ways back in: the catalogue's, or the field study while it is hidden
-  // (ADR 34).
-  await expect(page.locator('.site-header .site-nav a')).not.toHaveCount(0);
-  await expect(page.locator('.site-header .btn-primary')).toHaveAttribute('href', CONTACT.booking);
+  // the ways back in. While the catalogue is hidden, the field study is the
+  // whole site (ADR 35): the name, and the way back to it.
   const ways = page.locator('main a');
-  expect(await ways.evaluateAll((links) => links.map((l) => l.getAttribute('href')))).toEqual(
-    OFFERS_PUBLISHED ? ['/', '/#workshops', '/#offers', '/en/'] : ['/', '/enquete/', '/en/'],
-  );
-  await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
+  if (OFFERS_PUBLISHED) {
+    await expect(page.locator('.site-header .site-nav a')).not.toHaveCount(0);
+    await expect(page.locator('.site-header .btn-primary')).toHaveAttribute(
+      'href',
+      CONTACT.booking,
+    );
+    expect(await ways.evaluateAll((links) => links.map((l) => l.getAttribute('href')))).toEqual([
+      '/',
+      '/#workshops',
+      '/#offers',
+      '/en/',
+    ]);
+    await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
+  } else {
+    await expect(page.locator('.site-header a')).toHaveCount(1);
+    expect(await ways.evaluateAll((links) => links.map((l) => l.getAttribute('href')))).toEqual([
+      '/',
+    ]);
+  }
 });
 
 test('refuses to serve anything outside the site root', async ({ request }) => {
@@ -133,10 +150,14 @@ test('answers a malformed URL with 400 and keeps serving', async ({ request }) =
 test('serves one URL per page, and 301s the other spellings', async ({ baseURL, request }) => {
   const redirects: Record<string, string> = {
     '/index.html': '/',
-    '/en': '/en/',
-    '/en/index.html': '/en/',
-    '/en//': '/en/',
-    '//en/': '/en/',
+    // The English pages, where this build serves them: while the catalogue is
+    // hidden, their addresses answer a 302 to the home page (ADR 35).
+    ...(isServed('/en/') && {
+      '/en': '/en/',
+      '/en/index.html': '/en/',
+      '/en//': '/en/',
+      '//en/': '/en/',
+    }),
     '///': '/',
     // French moved from /fr/ to the root (ADR 15): the old spellings follow it.
     '/fr': '/',
@@ -173,15 +194,14 @@ test('sends the addresses people guess to their section of the home page', async
 }) => {
   // The audit found them answering 404 (ADR 29). None is a page: a page
   // registered at one of them would be shadowed by the redirect.
-  // While the catalogue is hidden, those that lead into it go to the home
-  // page instead, with a 302 (ADR 34): the next test holds them.
+  // While the catalogue is hidden, they go to the home page instead, which
+  // has no section to land on, with a 302 (ADR 35): the next test holds them.
+  test.skip(!OFFERS_PUBLISHED, 'The home page is the field study while the catalogue is hidden');
   const shortcuts: Record<string, string> = {
-    ...(OFFERS_PUBLISHED && {
-      '/offres/': '/#offers',
-      '/tarifs/': '/#offers',
-      '/ateliers/': '/#workshops',
-      '/en/offers/': '/en/#offers',
-    }),
+    '/offres/': '/#offers',
+    '/tarifs/': '/#offers',
+    '/ateliers/': '/#workshops',
+    '/en/offers/': '/en/#offers',
     '/contact/': '/#contact',
   };
 
@@ -205,7 +225,7 @@ test('sends the addresses people guess to their section of the home page', async
   expect(tagged.headers().location).toBe('/?utm_source=card#contact');
 });
 
-test('sends every address of the hidden catalogue to the home page, for now (ADR 34)', async ({
+test('sends every address the field study set aside to the home page, for now (ADR 35)', async ({
   request,
 }) => {
   test.skip(OFFERS_PUBLISHED, 'The catalogue is published');
@@ -214,11 +234,16 @@ test('sends every address of the hidden catalogue to the home page, for now (ADR
     '/offres/': '/',
     '/tarifs/': '/',
     '/ateliers/': '/',
-    '/en/offers/': '/en/',
+    '/contact/': '/',
+    '/en/offers/': '/',
   };
   expect(Object.keys(hidden)).toContain('/offres/audit/');
-  expect(hidden['/en/offers/audit/']).toBe('/en/');
   expect(hidden['/partenaires/']).toBe('/');
+  // About, the English pages and the field study's own address go too: the
+  // field study is served at the home page's (ADR 35).
+  for (const path of ['/a-propos/', '/en/', '/en/about/', '/en/offers/audit/', '/enquete/']) {
+    expect(hidden[path], path).toBe('/');
+  }
 
   for (const [from, to] of Object.entries(hidden)) {
     expect(PATHS, `${from} is still served`).not.toContain(from);
@@ -262,7 +287,7 @@ test('counts the booking click on its way to cal.com, and nothing caches the hop
 
 test('keeps the query string across a normalising redirect', async ({ request }) => {
   for (const [from, to] of [
-    ['/en?utm_source=x', '/en/?utm_source=x'],
+    ...(isServed('/en/') ? ([['/en?utm_source=x', '/en/?utm_source=x']] as const) : []),
     ['/fr/?utm_source=x', '/?utm_source=x'],
   ] as const) {
     const response = await request.get(from, { maxRedirects: 0 });

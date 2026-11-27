@@ -1,11 +1,13 @@
 ---
+import { Image } from 'astro:assets';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
+import { portrait } from '../lib/portrait.ts';
 import { pageGraph } from '../lib/structured-data.ts';
-import type { Route } from '../routes.ts';
-import { CONTACT, FIELD_STUDY } from '../site.ts';
+import { homePath, type Route } from '../routes.ts';
+import { FIELD_STUDY } from '../site.ts';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -17,10 +19,14 @@ const { locale } = route;
 const t = RESUME[locale];
 const page = t.surveyPage;
 if (!page) throw new Error(`${route.path}: no ${locale} content for the survey page`);
+/* While the catalogue is hidden, this page is the home page (ADR 35): no trail
+   leads to it. */
+const isHome = route.path === homePath(locale);
 ---
 
-{/* The field study (ADR 34): one line, the questionnaire, and what happens
-    to the answers. The questionnaire is served and stored by the back office,
+{/* The field study (ADR 34): one line, who asks, the questionnaire, and what
+    happens to the answers. While the catalogue is hidden it is the whole site,
+    at the home page's address (ADR 35), and says nothing of what Thomas does. The questionnaire is served and stored by the back office,
     a separate application; this page only renders it, its introduction
     included, which is where the study says what it is about. Without
     JavaScript the page says so and offers the address instead. */}
@@ -34,9 +40,26 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the survey p
   <SiteHeader route={route} t={t} />
   <main id="main" class="offer">
     <header class="offer__head container">
-      <Breadcrumb route={route} t={t} />
+      {isHome ? <p class="kicker">{page.kicker}</p> : <Breadcrumb route={route} t={t} />}
       <h1 class="offer__name">{page.title}</h1>
       <p class="offer__plain">{page.plain}</p>
+      <p class="survey__byline">
+        {
+          portrait && (
+            <Image
+              src={portrait}
+              alt=""
+              class="washed"
+              width={128}
+              height={128}
+              widths={[64, 128]}
+              sizes="64px"
+              loading="eager"
+            />
+          )
+        }
+        <span>{page.byline}</span>
+      </p>
     </header>
 
     <section class="offer__section container" aria-label={page.form.name}>
@@ -45,7 +68,6 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the survey p
         data-survey
         data-api={FIELD_STUDY.apiOrigin}
         data-slug={FIELD_STUDY.slug}
-        data-booking={CONTACT.booking}
         data-labels={JSON.stringify(page.form)}
       >
         <p class="survey__message survey__noscript">{page.form.noScript}</p>
@@ -70,7 +92,6 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the survey p
       root,
       apiOrigin: root.dataset.api ?? '',
       slug: root.dataset.slug ?? '',
-      booking: root.dataset.booking ?? '',
       labels: JSON.parse(root.dataset.labels ?? '{}') as SurveyFormLabels,
     });
   }
@@ -80,6 +101,22 @@ if (!page) throw new Error(`${route.path}: no ${locale} content for the survey p
   /* The field study's form (ADR 34). Global, because its fields are built by
      script and carry no scope attribute. Kept small: the one route component
      ships it with every page's inline styles. */
+  .survey__byline {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 52ch;
+    margin: 20px 0 0;
+    font-size: 15.5px;
+    text-wrap: pretty;
+  }
+  .survey__byline img {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    object-fit: cover;
+  }
   .survey__app {
     max-width: 44rem;
     padding: clamp(16px, 4vw, 28px);

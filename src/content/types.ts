@@ -615,13 +615,9 @@ export interface ResumeContent {
   aboutPage: AboutPage;
 
   /**
-   * What the home page says in place of the catalogue while it is hidden
-   * (`OFFERS_PUBLISHED`, ADR 34): its description, the hero's line and
-   * buttons, and in French the menu entry and the section that invites the
-   * reader to the field study.
+   * The field study's page. French only, like the registry entry (ADR 34);
+   * the home page itself while the catalogue is hidden (ADR 35).
    */
-  fieldStudy: FieldStudy;
-  /** The field study's page. French only, like the registry entry (ADR 34). */
   surveyPage?: SurveyPage;
 
   contact: {
@@ -656,29 +652,6 @@ export interface ResumeContent {
   };
 }
 
-/** The home page's copy while the catalogue is hidden (ADR 34). */
-export interface FieldStudy {
-  /**
-   * Replaces `meta.description`, in the head and in the JSON-LD: it described
-   * the Workshops and the Offers. Who Thomas is, and no Offer.
-   */
-  description: string;
-  /** Replaces the hero's line, which promised a Workshop or an Offer. */
-  blurb: string;
-  /**
-   * Where the field study exists in this locale (French only, like its page):
-   * the menu entry, the hero's primary button and the home page's section.
-   * Absent, the home page does not mention the study.
-   */
-  survey?: {
-    nav: string;
-    cta: string;
-    section: { kicker: string; title: string; text: string };
-  };
-  /** Where there is no study to point to: the hero's second button, to the References. */
-  seeWork: string;
-}
-
 /**
  * The field study's page: a line on what it is, the questionnaire, and what
  * happens to the answers (ADR 34). What the study is about, and every word
@@ -692,6 +665,11 @@ export interface SurveyPage {
   kicker: string;
   title: string;
   plain: string;
+  /**
+   * Beside the portrait: who asks, by name, and nothing of what he does
+   * (ADR 35). The notice says a single person reads the answers; this says who.
+   */
+  byline: string;
   /** What is collected, who reads it, how long it is kept, how to have it erased. */
   privacy: { title: string; paragraphs: string[] };
   /** The form's interface. Labels, not prose: they are not counted in the page's words. */
@@ -710,8 +688,6 @@ export interface SurveyFormLabels {
   retry: string;
   /** The questionnaire is closed or not published (404, 410). */
   closed: string;
-  /** The booking link offered when the questionnaire is closed. */
-  book: string;
   /** `{current}` and `{total}`: steps, never questions. */
   progress: string;
   back: string;
@@ -750,5 +726,5 @@ export interface SurveyFormLabels {
     name: string;
     organisation: string;
   };
-  thanks: { title: string; text: string; bookingLead: string; booking: string };
+  thanks: { title: string; text: string };
 }

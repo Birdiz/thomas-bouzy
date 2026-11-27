@@ -12,12 +12,13 @@ export interface Crumb {
  * breadcrumb and the BreadcrumbList in the JSON-LD both read it, so the two
  * cannot name a step differently or point it somewhere else.
  *
- * Empty for the home page: every trail starts there.
+ * Empty for the page at the home page's address: every trail starts there,
+ * the field study's included while it stands in for the home page (ADR 35).
  */
 export function breadcrumbOf(route: Route): Crumb[] {
   const { page, locale, path } = route;
   const t = RESUME[locale];
-  if (page.id === 'home') return [];
+  if (page.id === 'home' || path === homePath(locale)) return [];
 
   const home = { name: t.nav.home, href: homePath(locale) };
   if (page.id === 'about') return [home, { name: t.aboutPage.kicker, href: path }];

@@ -55,7 +55,15 @@ export function ogCard(route: Route): OgCard {
 
   if (page.id === 'survey') {
     if (!t.surveyPage) throw new Error(`${path}: no ${locale} content for the survey page`);
-    return { src, title: t.surveyPage.kicker, line: t.surveyPage.plain, foot, home: false };
+    // The name alone: the home page's card while the catalogue is hidden, and
+    // that page says nothing of what Thomas does (ADR 35).
+    return {
+      src,
+      title: t.surveyPage.kicker,
+      line: t.surveyPage.plain,
+      foot: SITE.author,
+      home: false,
+    };
   }
 
   const offer = t.offers[page.id];

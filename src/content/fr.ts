@@ -1158,32 +1158,17 @@ export const fr = {
     },
   },
 
-  fieldStudy: {
-    description:
-      'Ingénieur logiciel, je construis et je maintiens des logiciels dont des entreprises dépendent chaque jour. En ce moment, je ne vends rien : je mène une enquête de terrain sur vos besoins numériques.',
-    blurb:
-      'En ce moment, je ne vends rien. Je mène une enquête de terrain sur vos besoins numériques.',
-    seeWork: 'Voir mes références',
-    survey: {
-      nav: 'Enquête',
-      cta: "Répondre à l'enquête",
-      section: {
-        kicker: 'Enquête de terrain',
-        title: "Qu'est-ce qui vous manque ?",
-        text: "Ce qui vous fait perdre du temps, ce qui vous inquiète, ce qui vous manque côté logiciel : c'est ce que je cherche à comprendre. Si vous le souhaitez, je vous envoie la synthèse des réponses.",
-      },
-    },
-  },
-
   surveyPage: {
     meta: {
       title: 'Enquête de terrain : vos besoins numériques',
       description:
-        'Une enquête de terrain sur les besoins numériques des organisations : ce qui vous fait perdre du temps, ce qui vous manque. Je ne vends rien, je pose des questions.',
+        'Une enquête de terrain sur les besoins numériques des organisations : ce qui vous fait perdre du temps, ce qui vous manque.',
     },
     kicker: 'Enquête de terrain',
     title: 'Vos besoins numériques',
-    plain: 'Une enquête de terrain. Je ne vends rien : je pose des questions.',
+    plain:
+      "Ce qui vous fait perdre du temps, ce qui vous manque côté logiciel : c'est ce que je cherche à comprendre.",
+    byline: "Je m'appelle Thomas Bouzy et je mène cette enquête dans la région.",
     privacy: {
       title: 'Ce que deviennent vos réponses',
       paragraphs: [
@@ -1201,7 +1186,6 @@ export const fr = {
         "Le questionnaire n'a pas pu être chargé. Vérifiez votre connexion, puis réessayez.",
       retry: 'Réessayer',
       closed: 'Cette enquête est close. Merci de votre intérêt.',
-      book: 'Réserver un appel',
       progress: 'Étape {current} sur {total}',
       back: 'Précédent',
       next: 'Suivant',
@@ -1234,8 +1218,6 @@ export const fr = {
       thanks: {
         title: 'Merci.',
         text: 'Vos réponses sont bien arrivées.',
-        bookingLead: "Envie d'en parler de vive voix ?",
-        booking: 'Réserver un appel',
       },
     },
   },
