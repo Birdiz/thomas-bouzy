@@ -95,6 +95,44 @@ const SHORTCUTS = new Map([
   ['/en/offers/', '/en/#offers'],
 ]);
 
+/** The shortcuts that lead into the catalogue, and the home page each falls back to. */
+const CATALOGUE_SHORTCUTS = new Map([
+  ['/offres/', '/'],
+  ['/tarifs/', '/'],
+  ['/ateliers/', '/'],
+  ['/en/offers/', '/en/'],
+]);
+
+/**
+ * What the build did with the catalogue (ADR 34), from the manifest it writes
+ * next to the pages (astro.config.mjs). While the catalogue is hidden, every
+ * address it had, the shortcuts into it included, answers a 302 to the home
+ * page: temporary, because the pages come back once the field study has
+ * spoken, and no-store, so that no browser remembers it. No manifest, as in a
+ * build older than the switch, means the catalogue is published.
+ */
+const CATALOGUE_MANIFEST = '/_catalogue.json';
+
+function readCatalogue(dir) {
+  try {
+    const manifest = JSON.parse(readFileSync(join(dir, CATALOGUE_MANIFEST), 'utf8'));
+    return {
+      published: manifest.published !== false,
+      redirects: new Map(Object.entries(manifest.redirects ?? {})),
+    };
+  } catch {
+    return { published: true, redirects: new Map() };
+  }
+}
+
+const CATALOGUE = readCatalogue(root);
+
+/** Where a hidden catalogue address sends the reader, or undefined. */
+function hiddenTarget(slashed) {
+  if (CATALOGUE.published) return undefined;
+  return CATALOGUE.redirects.get(slashed) ?? CATALOGUE_SHORTCUTS.get(slashed);
+}
+
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -208,6 +246,23 @@ function countRequest(req, pathname, hit) {
   }
 }
 
+/**
+ * The back office the field study's page talks to (ADR 34, FIELD_STUDY in
+ * src/site.ts): the one origin outside this one that a page may reach, and
+ * only with fetch. Unset, the page calls its own origin and nothing is added.
+ * Anything but a bare https origin stops the server rather than widening the
+ * policy to something nobody meant.
+ */
+function surveyApiOrigin() {
+  const value = (process.env.PUBLIC_SURVEY_API_ORIGIN ?? '').trim();
+  if (!value) return '';
+  const url = new URL(value);
+  if (url.protocol !== 'https:' || url.origin !== value.replace(/\/$/, '')) {
+    throw new Error(`PUBLIC_SURVEY_API_ORIGIN must be an https origin, got "${value}"`);
+  }
+  return url.origin;
+}
+
 const CSP = [
   "default-src 'none'",
   `script-src 'self' ${inlineHashes.scripts.join(' ')}`.trim(),
@@ -217,7 +272,7 @@ const CSP = [
   `style-src 'self' ${inlineHashes.styles.join(' ')}`.trim(),
   "img-src 'self' data:",
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self' ${surveyApiOrigin()}`.trim(),
   "form-action 'none'",
   "frame-ancestors 'none'",
   "base-uri 'none'",
@@ -408,12 +463,18 @@ async function handle(req, res) {
 
   const canonical = canonicalise(decoded);
 
-  // The booking hop and the shortcuts come before the spelling redirect below,
-  // so `/offres`, `//offres/` or `/fr/offres/` reach the section in one hop.
+  // The booking hop, the hidden catalogue and the shortcuts come before the
+  // spelling redirect below, so `/offres`, `//offres/` or `/fr/offres/` reach
+  // their target in one hop.
   const slashed = canonical.endsWith('/') ? canonical : `${canonical}/`;
   if (slashed === BOOKING_PATH) {
     countBooking(req);
     send(res, 302, { location: BOOKING_URL, 'cache-control': 'no-store' }, '');
+    return;
+  }
+  const hidden = hiddenTarget(slashed);
+  if (hidden) {
+    send(res, 302, { location: `${hidden}${search}`, 'cache-control': 'no-store' }, '');
     return;
   }
   const shortcut = SHORTCUTS.get(slashed);
@@ -440,7 +501,8 @@ async function handle(req, res) {
     return;
   }
 
-  const hit = await resolveFile(canonical);
+  // The manifest is for this server, not for readers.
+  const hit = canonical === CATALOGUE_MANIFEST ? null : await resolveFile(canonical);
 
   // `/en` is a directory: it is spelled `/en/`, the way src/routes.ts and the
   // canonical link spell it.

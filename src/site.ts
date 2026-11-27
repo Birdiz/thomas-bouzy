@@ -53,6 +53,41 @@ export const SITE = {
   timezone: 'Europe/Paris',
 } as const;
 
+/**
+ * Whether the catalogue is on the site: the Offers, their pages and prices,
+ * the Partners and public-sector pages, and the Workshops.
+ *
+ * Read from `OFFERS_PUBLISHED` at BUILD time, like SITE_DOMAIN, and hidden
+ * unless it says true (ADR 34): the field study's launch depends on no setting
+ * someone could forget. While hidden, the home page keeps who Thomas is, the
+ * proof and the call, and asks the reader to answer the field study instead of
+ * selling. Nothing is deleted: set the variable to true on the service and
+ * redeploy, and every page, section, link, sitemap entry and card returns.
+ */
+export const OFFERS_PUBLISHED = /^(1|true|yes)$/i.test((process.env.OFFERS_PUBLISHED ?? '').trim());
+
+/**
+ * The field study (ADR 34): a questionnaire served and stored by the back
+ * office, a separate application. The page fetches the questionnaire from
+ * `${apiOrigin}/api/surveys/${slug}` and posts the answers back.
+ *
+ * `PUBLIC_SURVEY_API_ORIGIN` is read at BUILD time, like SITE_DOMAIN, and also
+ * by scripts/serve-dist.mjs at start, to let the page reach that origin in its
+ * CSP. Unset, the page calls its own origin, which is what the e2e suite mocks.
+ */
+export const FIELD_STUDY = {
+  slug: 'besoins-numeriques-2026',
+  get apiOrigin(): string {
+    const value = (process.env.PUBLIC_SURVEY_API_ORIGIN ?? '').trim();
+    if (!value) return '';
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || url.origin !== value.replace(/\/$/, '')) {
+      throw new Error(`PUBLIC_SURVEY_API_ORIGIN must be an https origin, got "${value}"`);
+    }
+    return url.origin;
+  },
+} as const;
+
 export const CONTACT = {
   email: 'birdiz@proton.me',
   /** Never rendered into the HTML source — see components/RevealPhone.astro. */

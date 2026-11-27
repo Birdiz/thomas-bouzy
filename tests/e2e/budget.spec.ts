@@ -51,6 +51,13 @@ import { expect, PATHS, test } from './fixtures.ts';
  * the home page's row and its classes and removing a dead rule. The pages
  * gained a component of their own; the CSS limit moves 35 → 36 kB.
  *
+ * Measured on 2026-11-26, with the field study's page (docs/adr/0034): its
+ * form is the site's first script of any size, 15.4 kB uncompressed, its own
+ * logic and the same validation the back office runs again, no library. It is
+ * loaded on that page only, so that page alone gets a script limit of 18 kB;
+ * every other page keeps 4 kB. Its styles ride in the inline block every page
+ * already carried, which stays under Vite's 4 kB inlining limit.
+ *
  * The limit is raised only for content the page actually gained. It is not a
  * dial to turn when a library or an unoptimised asset pushes a number over —
  * that is the failure this file exists to produce.
@@ -63,6 +70,11 @@ const BUDGET = {
   fontBytes: 60_000,
   requests: 12,
 } as const;
+
+/** The pages that gained something the others did not, and the limit it moved. */
+const PAGE_BUDGET: Record<string, Partial<Record<keyof typeof BUDGET, number>>> = {
+  '/enquete/': { externalJsBytes: 18_000 },
+};
 
 for (const path of PATHS) {
   test(`${path} stays within the performance budget`, async ({ page }) => {
@@ -120,7 +132,7 @@ for (const path of PATHS) {
       BUDGET.cssBytes,
     );
     expect(sizes.js, `external js too large: ${JSON.stringify(report)}`).toBeLessThanOrEqual(
-      BUDGET.externalJsBytes,
+      PAGE_BUDGET[path]?.externalJsBytes ?? BUDGET.externalJsBytes,
     );
     expect(inlineJs, `inline js too large: ${JSON.stringify(report)}`).toBeLessThanOrEqual(
       BUDGET.inlineJsBytes,

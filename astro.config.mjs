@@ -1,9 +1,10 @@
 // @ts-check
+import { writeFileSync } from 'node:fs';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import { lastmodOf, readManifest } from './scripts/lastmod.mjs';
-import { alternatesOf, routeAt } from './src/routes.ts';
-import { LOCALE_TAG, SITE } from './src/site.ts';
+import { alternatesOf, hiddenRedirects, routeAt } from './src/routes.ts';
+import { LOCALE_TAG, OFFERS_PUBLISHED, SITE } from './src/site.ts';
 
 // The day each page's text last changed, as scripts/lastmod.json records it
 // (ADR 28). The hour of the build said "now" for every page on every deploy,
@@ -12,6 +13,26 @@ const lastmods = readManifest();
 
 /** The registry route behind a sitemap URL. */
 const routeOf = (url) => routeAt(new URL(url).pathname);
+
+/**
+ * Tells the server what this build did with the catalogue (ADR 34): whether
+ * it is published and, when it is not, where each of its addresses now sends
+ * the reader. The server reads `dist/_catalogue.json` at start and never
+ * serves it (scripts/serve-dist.mjs); it cannot read the registry itself,
+ * since the runtime image carries dist/ and the server alone.
+ */
+const catalogueManifest = () => ({
+  name: 'catalogue-manifest',
+  hooks: {
+    'astro:build:done': ({ dir }) => {
+      const manifest = {
+        published: OFFERS_PUBLISHED,
+        redirects: hiddenRedirects(OFFERS_PUBLISHED),
+      };
+      writeFileSync(new URL('_catalogue.json', dir), `${JSON.stringify(manifest, null, 2)}\n`);
+    },
+  },
+});
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,6 +48,7 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   integrations: [
+    catalogueManifest(),
     // The pages and their alternates come from src/routes.ts, not from URL
     // prefixes: the sitemap's own i18n mode pairs pages by path, and cannot
     // pair a page with a translation that lives at another slug, or know that

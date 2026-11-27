@@ -614,6 +614,16 @@ export interface ResumeContent {
   publicSectorPage?: PublicSectorPage;
   aboutPage: AboutPage;
 
+  /**
+   * What the home page says in place of the catalogue while it is hidden
+   * (`OFFERS_PUBLISHED`, ADR 34): its description, the hero's line and
+   * buttons, and in French the menu entry and the section that invites the
+   * reader to the field study.
+   */
+  fieldStudy: FieldStudy;
+  /** The field study's page. French only, like the registry entry (ADR 34). */
+  surveyPage?: SurveyPage;
+
   contact: {
     kicker: string;
     title: string;
@@ -644,4 +654,101 @@ export interface ResumeContent {
     /** Accessible name of the <footer> landmark. */
     landmark: string;
   };
+}
+
+/** The home page's copy while the catalogue is hidden (ADR 34). */
+export interface FieldStudy {
+  /**
+   * Replaces `meta.description`, in the head and in the JSON-LD: it described
+   * the Workshops and the Offers. Who Thomas is, and no Offer.
+   */
+  description: string;
+  /** Replaces the hero's line, which promised a Workshop or an Offer. */
+  blurb: string;
+  /**
+   * Where the field study exists in this locale (French only, like its page):
+   * the menu entry, the hero's primary button and the home page's section.
+   * Absent, the home page does not mention the study.
+   */
+  survey?: {
+    nav: string;
+    cta: string;
+    section: { kicker: string; title: string; text: string };
+  };
+  /** Where there is no study to point to: the hero's second button, to the References. */
+  seeWork: string;
+}
+
+/**
+ * The field study's page: a line on what it is, the questionnaire, and what
+ * happens to the answers (ADR 34). What the study is about, and every word
+ * that names a place or a person, comes from the questionnaire the back office
+ * serves, never from here; nothing here says how long it takes or how many
+ * questions it asks.
+ */
+export interface SurveyPage {
+  meta: { title: string; description: string };
+  /** The breadcrumb, the Open Graph card's title. */
+  kicker: string;
+  title: string;
+  plain: string;
+  /** What is collected, who reads it, how long it is kept, how to have it erased. */
+  privacy: { title: string; paragraphs: string[] };
+  /** The form's interface. Labels, not prose: they are not counted in the page's words. */
+  form: SurveyFormLabels;
+}
+
+/** Every word of the form's interface; the questions themselves come from the back office. */
+export interface SurveyFormLabels {
+  /** Accessible name of the form region. */
+  name: string;
+  loading: string;
+  /** No JavaScript: the form cannot run without it. */
+  noScript: string;
+  /** The questionnaire could not be loaded. */
+  unreachable: string;
+  retry: string;
+  /** The questionnaire is closed or not published (404, 410). */
+  closed: string;
+  /** The booking link offered when the questionnaire is closed. */
+  book: string;
+  /** `{current}` and `{total}`: steps, never questions. */
+  progress: string;
+  back: string;
+  next: string;
+  submit: string;
+  sending: string;
+  /** The answers could not be sent; they stay on the page. */
+  sendFailed: string;
+  optional: string;
+  selectPlaceholder: string;
+  noOpinion: string;
+  /** `{count}` characters typed and `{max}`. */
+  counter: string;
+  /** `{max}` choices at most. */
+  maxSelections: string;
+  /** Announced when a step has errors. */
+  fixErrors: string;
+  /**
+   * The optional last step. The three boxes are independent, as the back
+   * office holds them: the synthesis needs an e-mail and no consent, the
+   * meeting needs both, and the consent comes with its notice.
+   */
+  contact: {
+    title: string;
+    intro: string;
+    wantsSynthesis: string;
+    synthesisHelp: string;
+    wantsMeeting: string;
+    meetingHelp: string;
+    contactConsent: string;
+    /** Under the consent box: purpose, a single reader, 24 months, erasure on request. */
+    notice: string;
+    email: string;
+    emailHelp: string;
+    /** Asked only once the consent box is ticked: the back office keeps them on no other ground. */
+    name: string;
+    organisation: string;
+  };
+  thanks: { title: string; text: string; bookingLead: string; booking: string };
 }

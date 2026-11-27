@@ -1,8 +1,8 @@
 ---
 import SiteHeader from '../components/SiteHeader.astro';
 import { RESUME } from '../content/index.ts';
-import { homePath } from '../routes.ts';
-import { SITE } from '../site.ts';
+import { homePath, pathOf } from '../routes.ts';
+import { OFFERS_PUBLISHED, SITE } from '../site.ts';
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/app.css';
@@ -15,6 +15,9 @@ import '../styles/app.css';
 const title = 'Page introuvable · Page not found';
 const t = RESUME.fr;
 const home = homePath('fr');
+/* While the catalogue is hidden, the field study is the way in (ADR 34). */
+const study = t.fieldStudy.survey;
+const studyPath = pathOf('survey', 'fr');
 ---
 
 <!doctype html>
@@ -54,8 +57,21 @@ const home = homePath('fr');
       </p>
       <div class="notfound__actions">
         <a class="btn btn-primary" href={home}>Revenir à l'accueil</a>
-        <a class="btn btn-secondary" href={`${home}#workshops`}>Voir les ateliers</a>
-        <a class="btn btn-secondary" href={`${home}#offers`}>Voir les offres et les prix</a>
+        {
+          OFFERS_PUBLISHED ? (
+            <>
+              <a class="btn btn-secondary" href={`${home}#workshops`}>Voir les ateliers</a>
+              <a class="btn btn-secondary" href={`${home}#offers`}>Voir les offres et les prix</a>
+            </>
+          ) : (
+            study &&
+            studyPath && (
+              <a class="btn btn-secondary" href={studyPath}>
+                {study.cta}
+              </a>
+            )
+          )
+        }
         <a class="btn btn-secondary" href={homePath('en')} lang="en">Back to the home page</a>
       </div>
     </main>

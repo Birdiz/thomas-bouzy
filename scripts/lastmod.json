@@ -1,11 +1,11 @@
 {
   "/": {
-    "date": "2026-11-26",
-    "hash": "a94cd7b505575ea77f1d4f8befa80e316fba716d7bdd98a9b72e0246d356adc4"
+    "date": "2026-11-27",
+    "hash": "4201f1c7601e7e3c7885dffdaa441b1b7a75c77c063f18a904bc1942119e97c0"
   },
   "/en/": {
-    "date": "2026-11-26",
-    "hash": "da3e5538e3db54759103227dbc94e66e33f0b328bf71e24f5bea86e86c5b1b2a"
+    "date": "2026-11-27",
+    "hash": "dd01027725cdf3c6f591b38942ccccc20abeef25339dc5f92d46670e76f20652"
   },
   "/a-propos/": {
     "date": "2026-11-21",
@@ -14,6 +14,10 @@
   "/en/about/": {
     "date": "2026-11-21",
     "hash": "1272da3dc647b29e04a0a39af5ecbedbe3ac2b8d8f57ced6b97be16fc4ce31a9"
+  },
+  "/enquete/": {
+    "date": "2026-11-27",
+    "hash": "c77cd7bb494a959526cc78dde91bfa6a031c6a5e452e9de3cd0a30bb81f32c96"
   },
   "/offres/audit/": {
     "date": "2026-11-21",

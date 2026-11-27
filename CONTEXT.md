@@ -124,6 +124,13 @@ published; it is not yet an Offer: it has no price or date (ADR 27, ADR 28).
 _Avoid_: formation, training, course (in France a *formation* is a regulated
 framework the workshops do not use); *accompagnement* for the third level
 
+**Field study** (FR *Enquête de terrain*):
+The questionnaire Thomas runs to learn what local organisations need before he
+sells them anything. While it runs, the Offers and the Workshops are hidden and
+the site asks instead of selling (ADR 34). The questionnaire and its answers are
+served and stored by the back office, not by the site.
+_Avoid_: survey (as a term on the page), poll, market research, *sondage*
+
 **Day rate** (FR *Taux journalier*):
 The one price of a day of Thomas's work, the same for a Client and for a Partner.
 _Avoid_: TJM (as a term), partner rate

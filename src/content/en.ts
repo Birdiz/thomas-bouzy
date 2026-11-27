@@ -910,6 +910,13 @@ export const en = {
     },
   },
 
+  fieldStudy: {
+    description:
+      'Software engineer: I build and maintain the software companies depend on every day. Remote, or on site in eastern France.',
+    blurb: "I like digging into other people's problems more than chasing perfect code.",
+    seeWork: 'See my work',
+  },
+
   contact: {
     kicker: 'Contact',
     title: "Let's talk about your business.",

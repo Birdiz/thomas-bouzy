@@ -1,8 +1,8 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
 import { OFFER_IDS } from '../content/offers.ts';
-import { homePath, linkTo, type PageLink } from '../routes.ts';
-import { CONTACT, LEGAL, LOCALE_TAG, type Locale, SITE } from '../site.ts';
+import { homePath, linkTo, type PageLink, pathOf } from '../routes.ts';
+import { CONTACT, LEGAL, LOCALE_TAG, type Locale, OFFERS_PUBLISHED, SITE } from '../site.ts';
 
 interface Props {
   t: ResumeContent;
@@ -14,11 +14,19 @@ const { t, locale } = Astro.props;
 /* Every page from every page: the Workshops where this locale has them, every
    Offer, the Partners and public-sector pages, and About (ADR 28). The header
    reaches the home page's sections, and an Offer page was otherwise a dead end. */
-const pages: (PageLink & { name: string })[] = [
+const catalogue = (): (PageLink & { name: string })[] => [
   ...(t.workshops ? [{ href: `${homePath(locale)}#workshops`, name: t.workshops.nav }] : []),
   ...OFFER_IDS.map((id) => ({ ...linkTo(id, locale), name: t.offers[id].name })),
   { ...linkTo('partners', locale), name: t.nav.partners },
   { ...linkTo('public-sector', locale), name: t.nav.publicSector },
+];
+/* While the catalogue is hidden, the field study stands in its place where
+   it exists in this locale, and nothing does elsewhere (ADR 34). */
+const study = t.fieldStudy.survey;
+const studyPath = pathOf('survey', locale);
+const fieldStudy = study && studyPath ? [{ href: studyPath, name: study.nav }] : [];
+const pages: (PageLink & { name: string })[] = [
+  ...(OFFERS_PUBLISHED ? catalogue() : fieldStudy),
   { ...linkTo('about', locale), name: t.nav.about },
 ];
 

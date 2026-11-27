@@ -27,6 +27,13 @@ ARG SITE_DOMAIN
 ARG SITE_INDEXABLE
 ENV SITE_DOMAIN=${SITE_DOMAIN}
 ENV SITE_INDEXABLE=${SITE_INDEXABLE}
+# The catalogue is hidden unless OFFERS_PUBLISHED is true (ADR 34); the build
+# tells the server which addresses that hides, in dist/_catalogue.json.
+ARG OFFERS_PUBLISHED
+ENV OFFERS_PUBLISHED=${OFFERS_PUBLISHED}
+# The field study's back office (ADR 34): baked into /enquete/ at build.
+ARG PUBLIC_SURVEY_API_ORIGIN
+ENV PUBLIC_SURVEY_API_ORIGIN=${PUBLIC_SURVEY_API_ORIGIN}
 
 # Turns "SITE_DOMAIN is missing" from a site that silently canonicalises itself
 # to a placeholder domain into a failed build. See scripts/check-assets.mjs.
@@ -49,6 +56,9 @@ ENV HOST=0.0.0.0
 # The server reads this at runtime too, for the X-Robots-Tag header.
 ARG SITE_INDEXABLE
 ENV SITE_INDEXABLE=${SITE_INDEXABLE}
+# And this one for the CSP's connect-src, which must name the origin the page calls.
+ARG PUBLIC_SURVEY_API_ORIGIN
+ENV PUBLIC_SURVEY_API_ORIGIN=${PUBLIC_SURVEY_API_ORIGIN}
 
 RUN addgroup --system --gid 1001 web \
   && adduser --system --uid 1001 --ingroup web web

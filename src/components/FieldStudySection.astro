@@ -1,0 +1,32 @@
+---
+import type { ResumeContent } from '../content/index.ts';
+import { pathOf } from '../routes.ts';
+import type { Locale } from '../site.ts';
+
+interface Props {
+  locale: Locale;
+  t: ResumeContent;
+}
+
+const { locale, t } = Astro.props;
+const study = t.fieldStudy.survey;
+const path = pathOf('survey', locale);
+---
+
+{/* In place of the Workshops and the Offers while the catalogue is hidden
+    (ADR 34): the page asks before it sells. Only where the study exists in
+    this locale: the English home page says nothing of a French questionnaire. */}
+{
+  study && path && (
+    <section id="field-study" class="field-study container">
+      <p class="kicker">{study.section.kicker}</p>
+      <h2 class="section-title">{study.section.title}</h2>
+      <p class="hero__blurb">{study.section.text}</p>
+      <p>
+        <a class="btn btn-primary" href={path}>
+          {study.cta}
+        </a>
+      </p>
+    </section>
+  )
+}

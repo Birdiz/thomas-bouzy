@@ -2,19 +2,42 @@
 import { Image } from 'astro:assets';
 import type { ResumeContent } from '../content/index.ts';
 import { portrait } from '../lib/portrait.ts';
-import { CONTACT, SITE } from '../site.ts';
+import { pathOf } from '../routes.ts';
+import { CONTACT, type Locale, OFFERS_PUBLISHED, SITE } from '../site.ts';
 import Ridge from './Ridge.astro';
 
 interface Props {
   t: ResumeContent;
   /** The home page's own path, so the button's anchor is spelled like the header's. */
   home: string;
+  locale: Locale;
 }
 
-const { t, home } = Astro.props;
-/* The secondary button leads to the way in: the Workshops where this locale
-   has them, the Offers otherwise (ADR 27). */
-const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
+const { t, home, locale } = Astro.props;
+
+interface Button {
+  href: string;
+  label: string;
+  /** The booking page opens in a tab of its own; the site's own links do not. */
+  external?: boolean;
+}
+
+const book: Button = { href: CONTACT.booking, label: t.hero.ctaBook, external: true };
+/* While the catalogue is hidden (ADR 34), the field study is the page's ask
+   where it exists in this locale: its button comes first, and the call second.
+   Elsewhere the call stays first and the second button leads to the proof.
+   With the catalogue, the call comes first and the second button leads to the
+   way in: the Workshops where this locale has them, the Offers otherwise
+   (ADR 27). */
+const study = OFFERS_PUBLISHED ? undefined : t.fieldStudy.survey;
+const studyPath = study && pathOf('survey', locale);
+const [primary, secondary]: [Button, Button] = OFFERS_PUBLISHED
+  ? [book, { href: `${home}#${t.workshops ? 'workshops' : 'offers'}`, label: t.hero.ctaSecondary }]
+  : study && studyPath
+    ? [{ href: studyPath, label: study.cta }, book]
+    : [book, { href: `${home}#work`, label: t.fieldStudy.seeWork }];
+const blurb = OFFERS_PUBLISHED ? t.hero.blurb : t.fieldStudy.blurb;
+const target = (button: Button) => (button.external ? { target: '_blank', rel: 'noopener' } : {});
 ---
 
 <section id="top" class="hero">
@@ -38,16 +61,15 @@ const secondary = `${home}#${t.workshops ? 'workshops' : 'offers'}`;
           <span class="visually-hidden">{SITE.author} — </span>
           <span class="hero__promise">{t.hero.title}</span>
         </h1>
-        <p class="hero__blurb">{t.hero.blurb}</p>
+        <p class="hero__blurb">{blurb}</p>
 
-        {/* The call is the page's one primary action, from the first screen.
-            The Offers are the secondary way in, for the reader who wants to
-            look before talking. No years badge, no CV. */}
+        {/* One primary action from the first screen, and one secondary way
+            in for the reader who wants to look first. No years badge, no CV. */}
         <div class="hero__ctas">
-          <a class="btn btn-primary" href={CONTACT.booking} target="_blank" rel="noopener">
-            {t.hero.ctaBook}
+          <a class="btn btn-primary" href={primary.href} {...target(primary)}>{primary.label}</a>
+          <a class="btn btn-secondary" href={secondary.href} {...target(secondary)}>
+            {secondary.label}
           </a>
-          <a class="btn btn-secondary" href={secondary}>{t.hero.ctaSecondary}</a>
         </div>
 
         {/* The proof under the buttons, where most of the reading happens

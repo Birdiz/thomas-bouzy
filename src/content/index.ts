@@ -1,7 +1,7 @@
 import { withFrenchSpacing } from '../lib/french-spacing.ts';
 import { fillPrices } from '../lib/price-tokens.ts';
 import type { PageId } from '../routes.ts';
-import type { Locale } from '../site.ts';
+import { type Locale, OFFERS_PUBLISHED } from '../site.ts';
 import { en } from './en.ts';
 import { fr } from './fr.ts';
 import type { ResumeContent } from './types.ts';
@@ -29,6 +29,15 @@ export const RESUME: Record<Locale, ResumeContent> = {
 };
 
 /**
+ * What the home page says of itself, in its head and in its JSON-LD: the
+ * Offers it sells, or, while the catalogue is hidden, who Thomas is (ADR 34).
+ */
+export function homeDescription(locale: Locale): string {
+  const t = RESUME[locale];
+  return OFFERS_PUBLISHED ? t.meta.description : t.fieldStudy.description;
+}
+
+/**
  * The part of a locale's content that one page renders, or undefined when that
  * locale has none for it.
  *
@@ -39,11 +48,13 @@ export const RESUME: Record<Locale, ResumeContent> = {
 export function contentOfPage(locale: Locale, id: PageId): unknown {
   // The Offer pages and the other pages are their own; everything else in the
   // module is the home page and the chrome every page shares.
-  const { offerPages, partnersPage, publicSectorPage, aboutPage, ...home } = RESUME[locale];
+  const { offerPages, partnersPage, publicSectorPage, aboutPage, surveyPage, ...home } =
+    RESUME[locale];
   if (id === 'home') return home;
   if (id === 'about') return aboutPage;
   if (id === 'partners') return partnersPage;
   if (id === 'public-sector') return publicSectorPage;
+  if (id === 'survey') return surveyPage;
   return offerPages[id];
 }
 

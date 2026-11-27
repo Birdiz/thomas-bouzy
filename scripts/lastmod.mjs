@@ -64,7 +64,7 @@ export function lastmodOf(path, manifest = readManifest()) {
 
 // npm run lastmod: record today against every page whose text changed.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const { ROUTES } = await import('../src/routes.ts');
+  const { PAGES, ROUTES } = await import('../src/routes.ts');
   const { SITE } = await import('../src/site.ts');
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: SITE.timezone }).format(new Date());
   const before = readManifest();
@@ -78,6 +78,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const unchanged = before[path]?.hash === hash;
     after[path] = unchanged ? before[path] : { date: today, hash };
     if (!unchanged) console.log(`${path}: changed, dated ${today}`);
+  }
+  // A registered page this build hides (the catalogue, ADR 34) keeps its
+  // record, so that publishing it again does not re-date text that never changed.
+  const registered = new Set(PAGES.flatMap((page) => Object.values(page.paths)));
+  for (const [path, entry] of Object.entries(before)) {
+    if (!(path in after) && registered.has(path)) after[path] = entry;
   }
   writeFileSync(LASTMOD_MANIFEST, `${JSON.stringify(after, null, 2)}\n`);
 }

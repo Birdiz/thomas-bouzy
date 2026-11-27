@@ -21,7 +21,7 @@ import { frenchSpacing } from '../src/lib/french-spacing.ts';
 import { fromLine } from '../src/lib/offer-price.ts';
 import { fillPrices } from '../src/lib/price-tokens.ts';
 import { PAGES } from '../src/routes.ts';
-import { LOCALES } from '../src/site.ts';
+import { LOCALES, OFFERS_PUBLISHED } from '../src/site.ts';
 
 /**
  * The TypeScript contract (src/content/types.ts) already guarantees that both
@@ -67,12 +67,14 @@ function walkStrings(value: unknown, path = '$', out = new Map<string, string>()
 /**
  * The home page's French-only sections, left out of the comparison: the
  * Workshops are for French owners and exist in French only (ADR 27), as the
- * Partners page does. Their own test below holds them to that.
+ * Partners page does, and so does the field study (ADR 34). Their own tests
+ * below hold them to that.
  */
 function withoutFrenchOnly(content: unknown): unknown {
   if (!content || typeof content !== 'object' || !('workshops' in content)) return content;
-  const { workshops: _, ...rest } = content as Record<string, unknown>;
-  return rest;
+  const { workshops: _, fieldStudy, ...rest } = content as Record<string, unknown>;
+  const { survey: _survey, ...study } = (fieldStudy ?? {}) as Record<string, unknown>;
+  return { ...rest, fieldStudy: study };
 }
 
 describe('EN/FR parity', () => {
@@ -1357,9 +1359,28 @@ describe('a site short enough to be read (ADR 18)', () => {
   // second booking box and half of "Who picks up" left the page (ADR 31): a
   // ceiling left where it was invites the words back. The count includes the
   // Achievements folded under the References, which the page still serves.
-  const BUDGET: Record<string, number> = { home: 1320, partners: 220 };
+  // The field study's page has its own ceiling, its form's labels left out: they
+  // are an interface, not prose (ADR 34).
+  const BUDGET: Record<string, number> = { home: 1320, partners: 220, survey: 260 };
   const OFFER_BUDGET = 400;
-  const NOT_PROSE = /^\$\.(meta|a11y|schema|languages|footer|estimator|offerPage|offers)\b/;
+  const NOT_PROSE = /^\$\.(meta|a11y|schema|languages|footer|estimator|offerPage|offers|form)\b/;
+
+  /**
+   * The home page renders either the catalogue or the field study, never both
+   * (ADR 34): it is held to the words of the half it shows.
+   */
+  const rendered = (id: string, content: unknown) => {
+    if (id !== 'home' || !content || typeof content !== 'object') return content;
+    const {
+      fieldStudy,
+      workshops: _w,
+      offersSection: _o,
+      failureModes: _f,
+      ...rest
+    } = content as Record<string, unknown>;
+    const { fieldStudy: _hidden, ...catalogue } = content as Record<string, unknown>;
+    return OFFERS_PUBLISHED ? catalogue : { ...rest, fieldStudy };
+  };
 
   const wordsOf = (content: unknown) =>
     [...walkStrings(content)]
@@ -1377,7 +1398,9 @@ describe('a site short enough to be read (ADR 18)', () => {
       if (!page.paths[locale]) continue;
       const budget = BUDGET[page.id] ?? OFFER_BUDGET;
       it(`keeps ${page.id} (${locale}) under ${budget} words`, () => {
-        expect(wordsOf(contentOfPage(locale, page.id))).toBeLessThanOrEqual(budget);
+        expect(wordsOf(rendered(page.id, contentOfPage(locale, page.id)))).toBeLessThanOrEqual(
+          budget,
+        );
       });
     }
   }
