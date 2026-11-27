@@ -1,10 +1,12 @@
 # Thomas Bouzy — freelance site
 
 **While the field study runs, the catalogue is hidden**
-([ADR 34](docs/adr/0034-the-catalogue-hidden-behind-a-field-study.md)):
-`OFFERS_PUBLISHED` in `src/site.ts` is false, the home page asks instead of
-selling, and `/enquete/` renders a questionnaire served by the back office
-(`PUBLIC_SURVEY_API_ORIGIN`). What follows describes the site with the switch on.
+([ADR 34](docs/adr/0034-the-catalogue-hidden-behind-a-field-study.md)): unless
+`OFFERS_PUBLISHED=true` at build, the Offers, the Workshops and every price are
+left out, their addresses answer a 302 to the home page, the home page asks
+instead of selling, and `/enquete/` renders a questionnaire served by the back
+office (`PUBLIC_SURVEY_API_ORIGIN`). What follows describes the site with the
+catalogue published.
 
 Static showcase site that sells seven Offers to three Segments
 ([ADR 14](docs/adr/0014-three-segments-and-the-least-technical-reader.md)): a
@@ -88,7 +90,8 @@ is still missing.
 | --- | --- | --- |
 | A portrait of at least 580×580 | `src/assets/portrait.png` (`.jpg` / `.webp` / `.avif` also work) — see [src/assets/README.md](src/assets/README.md) | Absent: the hero shows a labelled placeholder. Too small: the largest variant is upscaled, and `assets:check` says so |
 | Domain | `SITE_DOMAIN`, a Railway service variable | A deployment build **fails** rather than canonicalising the site to a domain that does not resolve |
-| Field study back office | `PUBLIC_SURVEY_API_ORIGIN`, a Railway service variable: the back office's https origin, read at build and at server start (ADR 34) | `/enquete/` calls its own origin, which answers 404: the page says the study is closed |
+| Catalogue | `OFFERS_PUBLISHED=true`, a Railway service variable read at build (ADR 34) | The catalogue is hidden: no Offer, Workshop or price, and its addresses 302 to the home page |
+| Field study back office | `PUBLIC_SURVEY_API_ORIGIN`, a Railway service variable: the back office's https origin, read at build and at server start (ADR 34) | A deployment build that hides the catalogue **fails**. Locally, `/enquete/` calls its own origin, which answers 404: the page says the study is closed |
 | Indexing | `SITE_INDEXABLE=true`, once `SITE_DOMAIN` is the real domain **and** `LEGAL` in `src/site.ts` is complete | `robots.txt` lets crawlers in so they can read the `noindex` every page carries, and every response carries `X-Robots-Tag`. Railway's `*.up.railway.app` hostname redirects to `SITE_DOMAIN` ([ADR 18](docs/adr/0018-one-day-rate-and-half-the-words.md)). Setting it while `LEGAL` is incomplete **fails** the build ([ADR 16](docs/adr/0016-the-legal-notice-and-a-number-meant-to-be-public.md)) |
 
 ## Going live on a real domain

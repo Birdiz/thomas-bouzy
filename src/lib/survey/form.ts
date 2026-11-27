@@ -1,6 +1,17 @@
 import type { SurveyFormLabels } from '../../content/types.ts';
 import { frenchSpacing } from '../french-spacing.ts';
-import { validateContact } from './contact.ts';
+import {
+  CONTACT_FIELDS,
+  CONTACT_FLAGS,
+  CONTACT_MAXLENGTHS,
+  type ContactField,
+  type ContactFlag,
+  type ContactKey,
+  lengthOf,
+  NO_CONTACT,
+  shownContact,
+  validateContact,
+} from './contact.ts';
 import { orderOptions } from './options.ts';
 import type {
   Answer,
@@ -15,13 +26,16 @@ import { validateAnswers } from './validation.ts';
 import { conditionMet, groupForDisplay, visibleSections } from './visibility.ts';
 
 /**
- * The field study's form (ADR 34), in plain DOM: one section of the
- * questionnaire per step, then an optional contact step. The questionnaire
- * comes from the back office at runtime; nothing here knows its questions.
+ * The field study's form (ADR 34), in plain DOM: the questionnaire's
+ * introduction, one section per step, then an optional contact step. The
+ * questionnaire comes from the back office at runtime; nothing here knows its
+ * questions, and nothing here says how long it takes: `estimatedMinutes` is
+ * never read.
  *
  * What the browser checks, the back office checks again: this is a comfort,
  * not a guard. Answers to questions a later answer hides are dropped before
- * sending (validateAnswers). Progress survives a reload in sessionStorage.
+ * sending (validateAnswers). Progress survives a reload in sessionStorage, and
+ * is forgotten once sent.
  */
 
 export interface FormConfig {
@@ -33,21 +47,16 @@ export interface FormConfig {
   labels: SurveyFormLabels;
 }
 
-type Contact = SurveyContact;
-type ContactField = Exclude<keyof Contact, 'wantsMeeting' | 'contactConsent'>;
-const CONTACT_FIELDS: readonly ContactField[] = ['name', 'organisation', 'role', 'email', 'phone'];
 const CONTACT_INPUT: Record<ContactField, { type: string; autocomplete: string }> = {
   name: { type: 'text', autocomplete: 'name' },
   organisation: { type: 'text', autocomplete: 'organization' },
-  role: { type: 'text', autocomplete: 'organization-title' },
   email: { type: 'email', autocomplete: 'email' },
-  phone: { type: 'tel', autocomplete: 'tel' },
 };
 const DEFAULT_TEXT_MAXLENGTH = 1000;
 
 interface Saved {
   answers: Answers;
-  contact: Contact;
+  contact: SurveyContact;
   step: number;
 }
 
@@ -69,6 +78,9 @@ function el<K extends keyof HTMLElementTagNameMap>(
   return node;
 }
 
+const describedBy = (...ids: (string | false | undefined)[]) =>
+  ids.filter(Boolean).join(' ') || undefined;
+
 export function mountSurvey(config: FormConfig): void {
   const { root, labels, slug } = config;
   const endpoint = `${config.apiOrigin}/api/surveys/${encodeURIComponent(slug)}`;
@@ -76,10 +88,12 @@ export function mountSurvey(config: FormConfig): void {
 
   let structure: SurveyStructure | undefined;
   let answers: Answers = {};
-  let contact: Contact = { wantsMeeting: false, contactConsent: false };
+  let contact: SurveyContact = { ...NO_CONTACT };
   let step = 0;
   let errors: Record<string, string> = {};
-  let contactErrors: Partial<Record<keyof Contact, string>> = {};
+  let contactErrors: Partial<Record<ContactKey, string>> = {};
+  /** A refusal the back office tied to no question nor field (`answers`, `contact`). */
+  let formError = '';
   /** Each question's options in the order first shown: a re-render must not reshuffle them. */
   const orders = new Map<string, SurveyOption[]>();
 
@@ -94,6 +108,8 @@ export function mountSurvey(config: FormConfig): void {
       live.textContent = text;
     });
   };
+
+  // — progress kept in the tab ————————————————————————————————————————————
 
   function save() {
     try {
@@ -132,31 +148,33 @@ export function mountSurvey(config: FormConfig): void {
   const sections = (): SurveySection[] => (structure ? visibleSections(structure, answers) : []);
   const total = () => sections().length + 1;
 
-  function status(text: string, action?: { label: string; run: () => void }) {
-    const heading = el('p', { class: 'survey__message', tabindex: '-1', text });
-    view.replaceChildren(
-      heading,
-      action
-        ? el('p', {}, button(action.label, 'btn btn-secondary', action.run))
-        : el(
-            'p',
-            {},
-            el('a', {
-              href: config.booking,
-              target: '_blank',
-              rel: 'noopener',
-              class: 'btn btn-primary',
-              text: labels.book,
-            }),
-          ),
-    );
-    return heading;
-  }
-
-  function button(text: string, cls: string, onClick: () => void, type = 'button') {
-    const node = el('button', { type, class: cls, text });
+  function button(text: string, cls: string, onClick: () => void) {
+    const node = el('button', { type: 'button', class: cls, text });
     node.addEventListener('click', onClick);
     return node;
+  }
+
+  const bookingLink = (text: string) =>
+    el('a', {
+      href: config.booking,
+      target: '_blank',
+      rel: 'noopener',
+      class: 'btn btn-primary',
+      text,
+    });
+
+  /** A state with no form: loading, closed, unreachable. Returns what to focus. */
+  function status(text: string, action?: { label: string; run: () => void }) {
+    const message = el('p', { class: 'survey__message', tabindex: '-1', text });
+    view.replaceChildren(
+      message,
+      el(
+        'p',
+        {},
+        action ? button(action.label, 'btn btn-secondary', action.run) : bookingLink(labels.book),
+      ),
+    );
+    return message;
   }
 
   async function load() {
@@ -190,6 +208,23 @@ export function mountSurvey(config: FormConfig): void {
 
   // — rendering ———————————————————————————————————————————————————————————
 
+  /**
+   * The questionnaire's own introduction, above the first step: it is where
+   * the study says what it is about and whom it asks, words the page itself
+   * never holds (ADR 34).
+   */
+  function intro(): HTMLElement | null {
+    const heading = structure?.intro.heading;
+    const body = structure?.intro.body ?? [];
+    if (!heading && body.length === 0) return null;
+    return el(
+      'div',
+      { class: 'survey__intro' },
+      heading ? el('h2', { class: 'survey__intro-heading', text: fr(heading) }) : null,
+      ...body.map((paragraph) => el('p', { text: fr(paragraph) })),
+    );
+  }
+
   function render(moveFocus: boolean) {
     const list = sections();
     const isContact = step >= list.length;
@@ -199,14 +234,10 @@ export function mountSurvey(config: FormConfig): void {
       tabindex: '-1',
       text: isContact ? labels.contact.title : fr(section?.title),
     });
-    const current = String(step + 1);
     const progress = el(
       'div',
       { class: 'survey__progress' },
-      el('p', {
-        class: 'survey__step',
-        text: labels.progress.replace('{current}', current).replace('{total}', String(total())),
-      }),
+      el('p', { class: 'survey__step' }),
       el('div', { class: 'survey__bar', 'aria-hidden': 'true' }, el('span')),
     );
 
@@ -230,6 +261,10 @@ export function mountSurvey(config: FormConfig): void {
       }
     }
 
+    if (formError) {
+      form.append(el('p', { class: 'survey__error survey__form-error', text: fr(formError) }));
+    }
+
     const nav = el('div', { class: 'survey__nav' });
     if (step > 0) nav.append(button(labels.back, 'btn btn-secondary', back));
     nav.append(
@@ -241,24 +276,35 @@ export function mountSurvey(config: FormConfig): void {
     );
     form.append(nav);
 
-    view.replaceChildren(progress, heading, form);
-    refreshVisibility();
+    view.replaceChildren(...[step === 0 ? intro() : null, progress, heading, form].filter(isNode));
+    refresh();
     if (moveFocus) heading.focus();
   }
 
-  /** Shows or hides the questions of the step that depend on answers given on it. */
-  function refreshVisibility() {
-    if (!structure) return;
-    for (const section of structure.sections) {
-      for (const question of section.questions) {
-        const node = view.querySelector<HTMLElement>(`[data-question="${question.code}"]`);
-        if (!node) continue;
-        node.hidden = !(
-          conditionMet(section.displayIf, answers) && conditionMet(question.displayIf, answers)
-        );
+  /**
+   * Shows or hides what depends on answers given on this step: the questions
+   * a condition hides, the field an option reveals, the contact fields the
+   * consent shows. A branch taken here also adds or removes steps after it.
+   */
+  function refresh() {
+    if (structure) {
+      for (const section of structure.sections) {
+        for (const question of section.questions) {
+          const node = view.querySelector<HTMLElement>(`[data-question="${question.code}"]`);
+          if (!node) continue;
+          node.hidden = !(
+            conditionMet(section.displayIf, answers) && conditionMet(question.displayIf, answers)
+          );
+        }
       }
     }
-    // A branch taken on this step can add or remove steps after it.
+    for (const reveal of view.querySelectorAll<HTMLElement>('[data-reveals]')) {
+      const [code, value] = (reveal.dataset.reveals ?? '').split(':');
+      reveal.hidden = !(code && value && answers[code]?.options?.includes(value));
+    }
+    for (const node of view.querySelectorAll<HTMLElement>('[data-consent-only]')) {
+      node.hidden = !contact.contactConsent;
+    }
     const stepText = view.querySelector('.survey__step');
     if (stepText) {
       stepText.textContent = labels.progress
@@ -274,29 +320,65 @@ export function mountSurvey(config: FormConfig): void {
   function setAnswer(code: string, answer: Answer | undefined) {
     if (answer && Object.keys(answer).length > 0) answers[code] = answer;
     else delete answers[code];
-    if (errors[code]) clearError(code);
-    refreshVisibility();
+    if (errors[code]) clearError(`[data-question="${code}"]`, () => delete errors[code]);
+    refresh();
     save();
   }
 
-  function clearError(code: string) {
-    delete errors[code];
-    const node = view.querySelector<HTMLElement>(`[data-question="${code}"]`);
+  function setContact(key: ContactKey, value: string | boolean) {
+    contact = { ...contact, [key]: value };
+    if (contactErrors[key]) {
+      clearError(`[data-contact="${key}"]`, () => delete contactErrors[key]);
+    }
+    refresh();
+    save();
+  }
+
+  function clearError(selector: string, forgetIt: () => void) {
+    forgetIt();
+    const node = view.querySelector<HTMLElement>(selector);
     node?.querySelector('.survey__error')?.replaceChildren();
     for (const input of node?.querySelectorAll('[aria-invalid]') ?? []) {
       input.removeAttribute('aria-invalid');
     }
   }
 
-  function describedBy(...ids: (string | false | undefined)[]) {
-    return ids.filter(Boolean).join(' ') || undefined;
+  /** The text field an option opens, shown only while that option is chosen. */
+  function revealField(
+    question: SurveyQuestion,
+    option: SurveyOption,
+    read: () => Answer | undefined,
+    errorId: string,
+  ): HTMLElement {
+    const id = `q-${question.code}-text`;
+    const input = el('input', {
+      type: 'text',
+      id,
+      maxlength: String(option.textMaxlength ?? DEFAULT_TEXT_MAXLENGTH),
+      'aria-describedby': errorId,
+      class: 'survey__reveal-input',
+    });
+    input.value = answers[question.code]?.texte ?? '';
+    input.dataset.revealText = question.code;
+    input.addEventListener('input', () => setAnswer(question.code, read()));
+    return el(
+      'div',
+      { class: 'survey__reveal', 'data-reveals': `${question.code}:${option.value}` },
+      el('label', { for: id, class: 'survey__help', text: fr(option.textHelp ?? option.label) }),
+      input,
+    );
   }
+
+  /** The revealed text of a question, if its field is on the page and filled. */
+  const revealedText = (code: string) =>
+    view.querySelector<HTMLInputElement>(`[data-reveal-text="${code}"]`)?.value ?? '';
 
   function field(question: SurveyQuestion): HTMLElement {
     const id = `q-${question.code}`;
     const helpId = question.help ? `${id}-help` : undefined;
     const errorId = `${id}-error`;
     const error = errors[question.code];
+    const invalid = error ? 'true' : undefined;
     const marker = question.required
       ? null
       : el('span', { class: 'survey__optional', text: ` (${labels.optional})` });
@@ -304,13 +386,14 @@ export function mountSurvey(config: FormConfig): void {
       ? el('p', { id: helpId, class: 'survey__help', text: fr(question.help) })
       : null;
     const errorNode = el('p', { id: errorId, class: 'survey__error' }, error ? fr(error) : '');
-    const invalid = error ? 'true' : undefined;
     const answer = answers[question.code] ?? {};
-    const wrapper = (inner: HTMLElement) => {
+    const wrap = (inner: HTMLElement) => {
       inner.dataset.question = question.code;
       inner.classList.add('survey__question');
       return inner;
     };
+    const label = () =>
+      el('label', { for: id, class: 'survey__label' }, fr(question.label), marker);
 
     switch (question.type) {
       case 'text': {
@@ -329,7 +412,7 @@ export function mountSurvey(config: FormConfig): void {
         const counter = el('p', { id: counterId, class: 'survey__counter' });
         const count = () => {
           counter.textContent = labels.counter
-            .replace('{count}', String(area.value.length))
+            .replace('{count}', String(lengthOf(area.value)))
             .replace('{max}', String(max));
         };
         count();
@@ -337,20 +420,11 @@ export function mountSurvey(config: FormConfig): void {
           count();
           setAnswer(question.code, area.value.trim() ? { texte: area.value } : undefined);
         });
-        return wrapper(
-          el(
-            'div',
-            {},
-            el('label', { for: id, class: 'survey__label' }, fr(question.label), marker),
-            help,
-            area,
-            counter,
-            errorNode,
-          ),
-        );
+        return wrap(el('div', {}, label(), help, area, counter, errorNode));
       }
 
       case 'select': {
+        const revealing = question.options.find((option) => option.revealsText);
         const select = el(
           'select',
           {
@@ -366,16 +440,20 @@ export function mountSurvey(config: FormConfig): void {
           ),
         );
         select.value = answer.options?.[0] ?? '';
-        select.addEventListener('change', () => {
-          setAnswer(question.code, select.value ? { options: [select.value] } : undefined);
-        });
-        return wrapper(
+        const read = (): Answer | undefined => {
+          if (!select.value) return undefined;
+          const texte = select.value === revealing?.value ? revealedText(question.code) : '';
+          return { options: [select.value], ...(texte.trim() && { texte }) };
+        };
+        select.addEventListener('change', () => setAnswer(question.code, read()));
+        return wrap(
           el(
             'div',
             {},
-            el('label', { for: id, class: 'survey__label' }, fr(question.label), marker),
+            label(),
             help,
             select,
+            revealing ? revealField(question, revealing, read, errorId) : null,
             errorNode,
           ),
         );
@@ -393,7 +471,7 @@ export function mountSurvey(config: FormConfig): void {
         box.addEventListener('change', () => {
           setAnswer(question.code, box.checked ? { booleen: true } : undefined);
         });
-        return wrapper(
+        return wrap(
           el(
             'div',
             {},
@@ -410,15 +488,7 @@ export function mountSurvey(config: FormConfig): void {
       }
 
       default:
-        return wrapper(
-          choices(question, {
-            legend: el('legend', { class: 'survey__label' }, fr(question.label), marker),
-            help,
-            errorNode,
-            describedBy: describedBy(helpId, errorId),
-            invalid,
-          }),
-        );
+        return wrap(choices(question, { marker, help, errorNode, helpId, errorId, invalid }));
     }
   }
 
@@ -431,30 +501,32 @@ export function mountSurvey(config: FormConfig): void {
     return order;
   }
 
-  /** Radios or checkboxes in a fieldset: single, multi, scale, single_with_text. */
+  /** Radios or checkboxes in a fieldset, named by its legend: single, multi, scale, single_with_text. */
   function choices(
     question: SurveyQuestion,
     parts: {
-      legend: HTMLElement;
+      marker: HTMLElement | null;
       help: HTMLElement | null;
       errorNode: HTMLElement;
-      describedBy: string | undefined;
+      helpId: string | undefined;
+      errorId: string;
       invalid: string | undefined;
     },
   ): HTMLElement {
     const id = `q-${question.code}`;
     const answer = answers[question.code] ?? {};
     const multi = question.type === 'multi';
-    const set = el('fieldset', {
-      class: 'survey__fieldset',
-      'aria-describedby': parts.describedBy,
-      'aria-invalid': parts.invalid,
-    });
-    set.append(parts.legend);
-    if (parts.help) set.append(parts.help);
-    if (multi && question.maxSelections) {
+    const set = el(
+      'fieldset',
+      { class: 'survey__fieldset' },
+      el('legend', { class: 'survey__label' }, fr(question.label), parts.marker),
+      parts.help,
+    );
+    const limitId = multi && question.maxSelections ? `${id}-limit` : undefined;
+    if (limitId) {
       set.append(
         el('p', {
+          id: limitId,
           class: 'survey__help',
           text: labels.maxSelections.replace('{max}', String(question.maxSelections)),
         }),
@@ -465,13 +537,7 @@ export function mountSurvey(config: FormConfig): void {
       class: question.type === 'scale' ? 'survey__scale' : 'survey__choices',
     });
     const inputs: HTMLInputElement[] = [];
-    /** The free-text box an option opens (single_with_text), open only while that option is picked. */
-    let reveal: HTMLInputElement | undefined;
-    let revealOwner: HTMLInputElement | undefined;
-    let revealBox: HTMLElement | undefined;
-    const syncReveal = () => {
-      if (revealBox) revealBox.hidden = !revealOwner?.checked;
-    };
+    const revealing = question.options.find((option) => option.revealsText);
 
     const read = (): Answer | undefined => {
       if (question.type === 'scale') {
@@ -481,12 +547,9 @@ export function mountSurvey(config: FormConfig): void {
       }
       const values = inputs.filter((input) => input.checked).map((input) => input.value);
       if (values.length === 0) return undefined;
-      const result: Answer = { options: values };
-      const option = question.options.find((candidate) => candidate.value === values[0]);
-      if (question.type === 'single_with_text' && option?.revealsText && reveal?.value.trim()) {
-        result.texte = reveal.value;
-      }
-      return result;
+      const texte =
+        revealing && values.includes(revealing.value) ? revealedText(question.code) : '';
+      return { options: values, ...(texte.trim() && { texte }) };
     };
 
     const options: { value: string; label: string; option?: SurveyOption }[] =
@@ -505,13 +568,16 @@ export function mountSurvey(config: FormConfig): void {
         id: inputId,
         name: question.code,
         value: choice.value,
+        required: !multi && question.required,
+        'aria-describedby': describedBy(parts.helpId, limitId, parts.errorId),
+        'aria-invalid': parts.invalid,
       });
-      if (question.type === 'scale') {
-        input.checked =
-          choice.value === '' ? answer.sansAvis === true : answer.echelle === Number(choice.value);
-      } else {
-        input.checked = (answer.options ?? []).includes(choice.value);
-      }
+      input.checked =
+        question.type === 'scale'
+          ? choice.value === ''
+            ? answer.sansAvis === true
+            : answer.echelle === Number(choice.value)
+          : (answer.options ?? []).includes(choice.value);
       inputs.push(input);
       const item = el(
         'div',
@@ -523,31 +589,8 @@ export function mountSurvey(config: FormConfig): void {
           el('span', { text: choice.label }),
         ),
       );
-
       if (choice.option?.revealsText) {
-        const textId = `${inputId}-text`;
-        const max = choice.option.textMaxlength ?? DEFAULT_TEXT_MAXLENGTH;
-        const input2 = el('input', {
-          type: 'text',
-          id: textId,
-          maxlength: String(max),
-          class: 'survey__reveal-input',
-        });
-        input2.value = answer.texte ?? '';
-        input2.addEventListener('input', () => setAnswer(question.code, read()));
-        reveal = input2;
-        revealOwner = input;
-        revealBox = el(
-          'div',
-          { class: 'survey__reveal' },
-          el('label', {
-            for: textId,
-            class: 'survey__help',
-            text: fr(choice.option.textHelp ?? choice.option.label),
-          }),
-          input2,
-        );
-        item.append(revealBox);
+        item.append(revealField(question, choice.option, read, parts.errorId));
       }
 
       input.addEventListener('change', () => {
@@ -559,12 +602,10 @@ export function mountSurvey(config: FormConfig): void {
             if (exclusive || options[j]?.option?.exclusive) other.checked = false;
           }
         }
-        syncReveal();
         setAnswer(question.code, read());
       });
       list.append(item);
     });
-    syncReveal();
     set.append(list, parts.errorNode);
     return set;
   }
@@ -587,74 +628,78 @@ export function mountSurvey(config: FormConfig): void {
     return items;
   }
 
+  /**
+   * The optional last step: three independent boxes, then the address they
+   * need, and, once the consent box is ticked, a name and an organisation.
+   * Each box says what it implies, and the consent box carries its notice.
+   */
   function contactStep(): DocumentFragment {
+    const text = labels.contact;
     const fragment = document.createDocumentFragment();
-    fragment.append(el('p', { class: 'survey__help', text: labels.contact.intro }));
+    fragment.append(el('p', { class: 'survey__help', text: text.intro }));
+
+    const help: Record<ContactFlag, string> = {
+      wantsSynthesis: text.synthesisHelp,
+      wantsMeeting: text.meetingHelp,
+      contactConsent: text.notice,
+    };
+    for (const key of CONTACT_FLAGS) {
+      const id = `contact-${key}`;
+      const helpId = `${id}-help`;
+      const errorId = `${id}-error`;
+      const box = el('input', {
+        type: 'checkbox',
+        id,
+        name: key,
+        'aria-describedby': describedBy(helpId, errorId),
+        'aria-invalid': contactErrors[key] ? 'true' : undefined,
+      });
+      box.checked = contact[key];
+      box.addEventListener('change', () => setContact(key, box.checked));
+      fragment.append(
+        el(
+          'div',
+          { class: 'survey__question', 'data-contact': key },
+          el('label', { class: 'survey__choice', for: id }, box, el('span', { text: text[key] })),
+          el('p', { id: helpId, class: 'survey__help survey__aside', text: help[key] }),
+          el('p', { id: errorId, class: 'survey__error', text: contactErrors[key] }),
+        ),
+      );
+    }
+
     for (const key of CONTACT_FIELDS) {
       const id = `contact-${key}`;
+      const helpId = key === 'email' ? `${id}-help` : undefined;
       const errorId = `${id}-error`;
       const input = el('input', {
         id,
         name: key,
         type: CONTACT_INPUT[key].type,
         autocomplete: CONTACT_INPUT[key].autocomplete,
-        maxlength: '200',
-        'aria-describedby': errorId,
+        maxlength: String(CONTACT_MAXLENGTHS[key]),
+        'aria-describedby': describedBy(helpId, errorId),
         'aria-invalid': contactErrors[key] ? 'true' : undefined,
       });
       input.value = contact[key] ?? '';
-      input.addEventListener('input', () => {
-        contact = { ...contact, [key]: input.value };
-        save();
-      });
+      input.addEventListener('input', () => setContact(key, input.value));
       fragment.append(
         el(
           'div',
-          { class: 'survey__question', 'data-contact': key },
-          el('label', { for: id, class: 'survey__label', text: labels.contact[key] }),
+          {
+            class: 'survey__question',
+            'data-contact': key,
+            'data-consent-only': key === 'email' ? undefined : '',
+          },
+          el('label', { for: id, class: 'survey__label', text: text[key] }),
+          helpId ? el('p', { id: helpId, class: 'survey__help', text: text.emailHelp }) : null,
           input,
           el('p', { id: errorId, class: 'survey__error', text: contactErrors[key] }),
         ),
       );
     }
 
-    for (const key of ['wantsMeeting', 'contactConsent'] as const) {
-      const id = `contact-${key}`;
-      const errorId = `${id}-error`;
-      const noticeId = key === 'contactConsent' ? 'contact-notice' : undefined;
-      const box = el('input', {
-        type: 'checkbox',
-        id,
-        name: key,
-        'aria-describedby': describedBy(noticeId, errorId),
-        'aria-invalid': contactErrors[key] ? 'true' : undefined,
-      });
-      box.checked = contact[key];
-      box.addEventListener('change', () => {
-        contact = { ...contact, [key]: box.checked };
-        save();
-      });
-      fragment.append(
-        el(
-          'div',
-          { class: 'survey__question', 'data-contact': key },
-          el(
-            'label',
-            { class: 'survey__choice', for: id },
-            box,
-            el('span', {
-              text: key === 'wantsMeeting' ? labels.contact.wantsMeeting : labels.contact.consent,
-            }),
-          ),
-          noticeId
-            ? el('p', { id: noticeId, class: 'survey__help', text: labels.contact.notice })
-            : null,
-          el('p', { id: errorId, class: 'survey__error', text: contactErrors[key] }),
-        ),
-      );
-    }
-
-    // A field no person sees or reaches: a bot that fills it is refused.
+    // A field no person sees or reaches: a bot that fills it is told all went
+    // well by the back office, and nothing is kept.
     fragment.append(
       el(
         'div',
@@ -678,19 +723,22 @@ export function mountSurvey(config: FormConfig): void {
     return new Set(sections()[index]?.questions.map((question) => question.code) ?? []);
   }
 
+  /** Re-renders the step with its errors, says so, and puts the cursor on the first. */
   function showErrors() {
     render(false);
     announce(labels.fixErrors);
-    const first = view.querySelector<HTMLElement>('[aria-invalid="true"]');
-    const target =
-      first?.tagName === 'FIELDSET' ? first.querySelector<HTMLElement>('input') : first;
-    target?.focus();
+    const first =
+      view.querySelector<HTMLElement>('[aria-invalid="true"]') ??
+      view.querySelector<HTMLElement>('.survey__form-error');
+    if (first?.classList.contains('survey__form-error')) first.tabIndex = -1;
+    first?.focus();
   }
 
   function next() {
     if (!structure) return;
     const result = validateAnswers(structure, answers, stepCodes(step));
     errors = result.errors;
+    formError = '';
     if (Object.keys(errors).length > 0) {
       showErrors();
       return;
@@ -701,12 +749,13 @@ export function mountSurvey(config: FormConfig): void {
   }
 
   function back() {
+    formError = '';
     step = Math.max(step - 1, 0);
     save();
     render(true);
   }
 
-  /** The first step holding one of these errors, or the contact step. */
+  /** The first step holding one of these question codes, or the contact step. */
   function stepOf(codes: string[]): number {
     const list = sections();
     const index = list.findIndex((section) =>
@@ -715,17 +764,23 @@ export function mountSurvey(config: FormConfig): void {
     return index === -1 ? list.length : index;
   }
 
+  /** Puts the cursor back on the step where the errors are. */
+  function goToErrors() {
+    step = Object.keys(errors).length > 0 ? stepOf(Object.keys(errors)) : sections().length;
+    showErrors();
+  }
+
   let sending = false;
 
   async function submit() {
     if (!structure || sending) return;
     const checked = validateAnswers(structure, answers);
-    const checkedContact = validateContact(contact);
+    const checkedContact = validateContact(shownContact(contact));
     errors = checked.errors;
     contactErrors = checkedContact.errors;
+    formError = '';
     if (Object.keys(errors).length > 0 || Object.keys(contactErrors).length > 0) {
-      step = Object.keys(errors).length > 0 ? stepOf(Object.keys(errors)) : sections().length;
-      showErrors();
+      goToErrors();
       return;
     }
 
@@ -748,31 +803,30 @@ export function mountSurvey(config: FormConfig): void {
           website: trap?.value ?? '',
         }),
       });
-      if (response.status !== 422) void response.body?.cancel();
-      if (response.status === 201 || response.ok) {
+      if (response.status === 201) {
+        void response.body?.cancel();
         forget();
         thanks();
         return;
       }
       if (response.status === 404 || response.status === 410) {
+        void response.body?.cancel();
         forget();
         status(labels.closed).focus();
         return;
       }
-      if (response.status === 422) {
-        const body = (await response.json().catch(() => ({}))) as {
-          errors?: Record<string, string>;
-        };
-        receiveErrors(body.errors ?? {});
+      const body = (await response.json().catch(() => ({}))) as {
+        errors?: Record<string, string>;
+        error?: string;
+      };
+      if (response.status === 422 && body.errors) {
+        receiveErrors(body.errors);
         return;
       }
-      throw new Error(String(response.status));
+      // 429 and the like: the back office says why, in French, ready to show.
+      sendFailed(typeof body.error === 'string' ? body.error : labels.sendFailed);
     } catch {
-      announce(labels.unreachable);
-      const nav = view.querySelector('.survey__nav');
-      const message = el('p', { class: 'survey__error', role: 'alert', text: labels.unreachable });
-      view.querySelector('.survey__form > .survey__error[role="alert"]')?.remove();
-      nav?.before(message);
+      sendFailed(labels.sendFailed);
     } finally {
       sending = false;
       if (submitButton?.isConnected) {
@@ -782,41 +836,51 @@ export function mountSurvey(config: FormConfig): void {
     }
   }
 
-  /** Errors from the back office: by question code, or by contact field (`email` or `contact.email`). */
+  /** The answers are still on the page: say what went wrong, above the buttons. */
+  function sendFailed(message: string) {
+    view.querySelector('.survey__send-error')?.remove();
+    const alert = el('p', {
+      class: 'survey__error survey__send-error',
+      role: 'alert',
+      text: fr(message),
+    });
+    view.querySelector('.survey__nav')?.before(alert);
+  }
+
+  /**
+   * The back office's refusals, each put back where it belongs: a question
+   * code on its step, `contact.<field>` on the contact step, and anything else
+   * (`answers`, `contact`, a question no step shows) above the buttons of the
+   * contact step.
+   */
   function receiveErrors(received: Record<string, string>) {
     errors = {};
     contactErrors = {};
+    const shown = new Set(sections().flatMap((section) => section.questions.map((q) => q.code)));
+    const keys = new Set<string>([...CONTACT_FIELDS, ...CONTACT_FLAGS]);
+    const loose: string[] = [];
     for (const [key, message] of Object.entries(received)) {
-      const field = key.replace(/^contact\./, '');
-      if ((CONTACT_FIELDS as readonly string[]).includes(field) || field === 'contactConsent') {
-        contactErrors[field as keyof Contact] = message;
-      } else {
-        errors[key] = message;
-      }
+      const field = key.startsWith('contact.') ? key.slice('contact.'.length) : undefined;
+      if (field && keys.has(field)) contactErrors[field as ContactKey] = message;
+      else if (shown.has(key)) errors[key] = message;
+      else loose.push(message);
     }
-    step = Object.keys(errors).length > 0 ? stepOf(Object.keys(errors)) : sections().length;
-    showErrors();
+    formError = loose.join(' ');
+    goToErrors();
   }
 
   function thanks() {
     const heading = el('h2', { class: 'survey__title', tabindex: '-1', text: labels.thanks.title });
     view.replaceChildren(
       heading,
-      el('p', { class: 'survey__help', text: labels.thanks.text }),
-      el(
-        'p',
-        {},
-        el('a', {
-          href: config.booking,
-          target: '_blank',
-          rel: 'noopener',
-          class: 'btn btn-primary',
-          text: labels.thanks.booking,
-        }),
-      ),
+      el('p', { class: 'survey__message', text: labels.thanks.text }),
+      el('p', { class: 'survey__help', text: labels.thanks.bookingLead }),
+      el('p', {}, bookingLink(labels.thanks.booking)),
     );
     heading.focus();
   }
 
   void load();
 }
+
+const isNode = (node: HTMLElement | null): node is HTMLElement => node !== null;

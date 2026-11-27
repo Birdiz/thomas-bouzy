@@ -1,5 +1,17 @@
+import { lengthOf } from './contact.ts';
 import type { Answer, Answers, SurveyQuestion, SurveyStructure } from './types.ts';
 import { keepVisibleAnswers, visibleQuestions } from './visibility.ts';
+
+/*
+ * Ported from Thomas's survey engine (`validation.ts`), with the two changes
+ * the back office made to it (its `App\Survey\AnswersValidation`), so that the
+ * browser and the back office agree:
+ *
+ * - an option that reveals a text field keeps its text whatever the question's
+ *   type, since « Autre, précisez » sits on single and multi questions too;
+ * - a text's length is counted in characters, not in UTF-16 units: an emoji is
+ *   one character to the back office, two to `String.length`.
+ */
 
 export interface ValidationResult {
   /** French messages, keyed by question code. */
@@ -58,7 +70,7 @@ function validateText(
   const clean = text?.trim();
   if (!clean) return {};
   const limit = maxlength ?? DEFAULT_TEXT_MAXLENGTH;
-  if (clean.length > limit) return { error: `${limit} caractères au maximum.` };
+  if (lengthOf(clean) > limit) return { error: `${limit} caractères au maximum.` };
   return { text: clean };
 }
 
@@ -88,19 +100,17 @@ function validateQuestion(
       }
       return { answer: { echelle: answer.echelle } };
     }
-    case 'single_with_text': {
+    default: {
+      // single, select, multi and single_with_text: options, and the text of
+      // the one option that reveals a field, when it is chosen.
       const { error, values } = validateOptions(question, answer.options ?? []);
       if (error) return { error, answer: {} };
-      const picked = question.options.find((option) => option.value === values[0]);
-      if (!picked?.revealsText) return { answer: values.length ? { options: values } : {} };
-      const text = validateText(answer.texte, picked.textMaxlength);
+      if (values.length === 0) return { answer: {} };
+      const revealing = question.options.find((option) => option.revealsText);
+      if (!revealing || !values.includes(revealing.value)) return { answer: { options: values } };
+      const text = validateText(answer.texte, revealing.textMaxlength);
       if (text.error) return { error: text.error, answer: {} };
       return { answer: { options: values, ...(text.text ? { texte: text.text } : {}) } };
-    }
-    default: {
-      const { error, values } = validateOptions(question, answer.options ?? []);
-      if (error) return { error, answer: {} };
-      return { answer: values.length ? { options: values } : {} };
     }
   }
 }

@@ -1,7 +1,7 @@
 import { withFrenchSpacing } from '../lib/french-spacing.ts';
 import { fillPrices } from '../lib/price-tokens.ts';
 import type { PageId } from '../routes.ts';
-import type { Locale } from '../site.ts';
+import { type Locale, OFFERS_PUBLISHED } from '../site.ts';
 import { en } from './en.ts';
 import { fr } from './fr.ts';
 import type { ResumeContent } from './types.ts';
@@ -27,6 +27,15 @@ export const RESUME: Record<Locale, ResumeContent> = {
   fr: withOfferPrices(withFrenchSpacing(fr), 'fr'),
   en: withOfferPrices(en, 'en'),
 };
+
+/**
+ * What the home page says of itself, in its head and in its JSON-LD: the
+ * Offers it sells, or, while the catalogue is hidden, who Thomas is (ADR 34).
+ */
+export function homeDescription(locale: Locale): string {
+  const t = RESUME[locale];
+  return OFFERS_PUBLISHED ? t.meta.description : t.fieldStudy.description;
+}
 
 /**
  * The part of a locale's content that one page renders, or undefined when that

@@ -22,7 +22,12 @@ const STRUCTURE: SurveyStructure = {
   slug: FIELD_STUDY.slug,
   title: 'Test',
   status: 'published',
-  intro: {},
+  // Set, and never shown: the page announces no duration (ADR 34).
+  estimatedMinutes: 7,
+  intro: {
+    heading: 'Une enquête inventée',
+    body: ['Elle nomme ses lieux et ses gens, que la page ne connaît pas.'],
+  },
   sections: [
     {
       code: 'A',
@@ -37,6 +42,12 @@ const STRUCTURE: SurveyStructure = {
             { value: 'entreprise', label: 'Une entreprise' },
             { value: 'industrie', label: 'Un industriel' },
             { value: 'sante', label: 'Un établissement de santé' },
+            {
+              value: 'autre',
+              label: 'Une autre structure',
+              revealsText: true,
+              textHelp: 'Laquelle ?',
+            },
           ],
         },
       ],
@@ -127,6 +138,34 @@ async function mockApi(
 const step = (page: Page) => page.locator('.survey__step');
 const title = (page: Page) => page.locator('.survey__title');
 const next = (page: Page) => page.getByRole('button', { name: labels.next });
+const submit = (page: Page) => page.getByRole('button', { name: labels.submit });
+const c = labels.contact;
+
+/** Answers the first step as a business and walks to the contact step. */
+async function toContactStep(page: Page) {
+  await page.getByLabel('Une entreprise').check();
+  await next(page).click();
+  await expect(title(page)).toHaveText('Votre avis');
+  await next(page).click();
+  await expect(title(page)).toHaveText(c.title);
+}
+
+test('opens on the questionnaire’s own introduction, and says neither how long nor how many', async ({
+  page,
+}) => {
+  await mockApi(page);
+  await page.goto('/enquete/');
+  await expect(page.locator('.survey__intro h2')).toHaveText('Une enquête inventée');
+  await expect(page.locator('.survey__intro')).toContainText('ses lieux et ses gens');
+  // No duration and no count: neither the 7 minutes the questionnaire sets,
+  // nor a number of questions, though the steps are counted.
+  const text = await page.locator('main').innerText();
+  expect(text).not.toMatch(/\d+\s*(min\b|minutes?|questions?)|\b7\b/i);
+  // The introduction belongs to the start: it does not follow the respondent.
+  await page.getByLabel('Une entreprise').check();
+  await next(page).click();
+  await expect(page.locator('.survey__intro')).toHaveCount(0);
+});
 
 test('walks a manufacturer through its branch, then sends the answers and the contact', async ({
   page,
@@ -152,20 +191,30 @@ test('walks a manufacturer through its branch, then sends the answers and the co
   await next(page).click();
 
   await expect(title(page)).toHaveText('Votre avis');
-  await page.getByLabel('4').check();
+  await page.getByLabel('4', { exact: true }).check();
   await expect(page.getByLabel('Lequel ?')).toBeHidden();
   await page.getByLabel('Oui').check();
   await page.getByLabel('Lequel ?').fill('Un suivi des commandes');
   await next(page).click();
 
-  await expect(title(page)).toHaveText(labels.contact.title);
-  await page.getByLabel(labels.contact.email).fill('camille@example.org');
-  await page.getByLabel(labels.contact.wantsMeeting).check();
-  await page.getByLabel(labels.contact.consent).check();
-  await page.getByRole('button', { name: labels.submit }).click();
+  await expect(title(page)).toHaveText(c.title);
+  await expect(title(page)).toBeFocused();
+  await expect(step(page)).toHaveText('Étape 4 sur 4');
+  // The name and the organisation are asked only with the consent.
+  await expect(page.getByLabel(c.name)).toBeHidden();
+  await page.getByLabel(c.wantsSynthesis).check();
+  await page.getByLabel(c.wantsMeeting).check();
+  await page.getByLabel(c.contactConsent).check();
+  await expect(page.getByLabel(c.name)).toBeVisible();
+  await page.getByLabel(c.email).fill('camille@example.org');
+  await page.getByLabel(c.name).fill('Camille');
+  await page.getByLabel(c.organisation).fill('Scierie Exemple');
+  await submit(page).click();
 
-  await expect(page.getByRole('heading', { name: labels.thanks.title })).toBeFocused();
-  await expect(page.locator('.survey__app a.btn-primary')).toHaveAttribute('href', '/rdv/');
+  const thanks = page.getByRole('heading', { name: labels.thanks.title });
+  await expect(thanks).toBeFocused();
+  const booking = page.locator('.survey__app').getByRole('link', { name: labels.thanks.booking });
+  await expect(booking).toHaveAttribute('href', '/rdv/');
   expect(mock.posted).toEqual([
     {
       answers: {
@@ -174,10 +223,21 @@ test('walks a manufacturer through its branch, then sends the answers and the co
         D1: { echelle: 4 },
         D2: { options: ['oui'], texte: 'Un suivi des commandes' },
       },
-      contact: { email: 'camille@example.org', wantsMeeting: true, contactConsent: true },
+      contact: {
+        email: 'camille@example.org',
+        name: 'Camille',
+        organisation: 'Scierie Exemple',
+        wantsSynthesis: true,
+        wantsMeeting: true,
+        contactConsent: true,
+      },
       website: '',
     },
   ]);
+  // Sent, so forgotten: a reload starts afresh.
+  await page.reload();
+  await expect(title(page)).toHaveText('Votre organisation');
+  await expect(page.getByLabel('Un industriel')).not.toBeChecked();
 });
 
 test('drops the branch a changed answer leaves, and sends no contact unless given', async ({
@@ -189,13 +249,29 @@ test('drops the branch a changed answer leaves, and sends no contact unless give
   await next(page).click();
   await page.getByLabel('Le stock').check();
   await page.getByRole('button', { name: labels.back }).click();
+  await expect(title(page)).toBeFocused();
   await page.getByLabel('Une entreprise').check();
   await next(page).click();
   await expect(title(page)).toHaveText('Votre avis');
   await next(page).click();
-  await page.getByRole('button', { name: labels.submit }).click();
+  await submit(page).click();
   await expect(page.getByRole('heading', { name: labels.thanks.title })).toBeVisible();
   expect(mock.posted).toEqual([{ answers: { A1: { options: ['entreprise'] } }, website: '' }]);
+});
+
+test('keeps the text an option reveals, on a single question too', async ({ page }) => {
+  const mock = await mockApi(page);
+  await page.goto('/enquete/');
+  await expect(page.getByLabel('Laquelle ?')).toBeHidden();
+  await page.getByLabel('Une autre structure').check();
+  await page.getByLabel('Laquelle ?').fill('Une SCOP');
+  await next(page).click();
+  await next(page).click();
+  await submit(page).click();
+  await expect(page.getByRole('heading', { name: labels.thanks.title })).toBeVisible();
+  expect(mock.posted).toEqual([
+    { answers: { A1: { options: ['autre'], texte: 'Une SCOP' } }, website: '' },
+  ]);
 });
 
 test('says what is missing, on the question, and keeps the respondent on the step', async ({
@@ -205,48 +281,134 @@ test('says what is missing, on the question, and keeps the respondent on the ste
   await page.goto('/enquete/');
   await next(page).click();
   const question = page.locator('[data-question="A1"]');
-  await expect(question).toHaveAttribute('aria-invalid', 'true');
   await expect(question.locator('.survey__error')).toHaveText('Cette question est obligatoire.');
-  await expect(page.getByLabel('Une entreprise')).toBeFocused();
+  const first = page.getByLabel('Une entreprise');
+  await expect(first).toHaveAttribute('aria-invalid', 'true');
+  // The error is read with the field, and the cursor is put on it.
+  await expect(first).toHaveAccessibleDescription(/Cette question est obligatoire/);
+  await expect(first).toBeFocused();
+  await expect(page.locator('[aria-live="polite"]')).toHaveText(labels.fixErrors);
   await expect(title(page)).toHaveText('Votre organisation');
+  // Answering clears it.
+  await first.check();
+  await expect(question.locator('.survey__error')).toBeEmpty();
 });
 
-test('asks for a way to reach them and their consent once a contact is started', async ({
-  page,
-}) => {
+test('holds each box of the contact step to what the back office asks of it', async ({ page }) => {
   const mock = await mockApi(page);
   await page.goto('/enquete/');
-  await page.getByLabel('Une entreprise').check();
-  await next(page).click();
-  await next(page).click();
-  await page.getByLabel(labels.contact.name).fill('Camille');
-  await page.getByRole('button', { name: labels.submit }).click();
-  await expect(page.locator('#contact-email-error')).not.toBeEmpty();
-  await expect(page.locator('#contact-contactConsent-error')).not.toBeEmpty();
+  await toContactStep(page);
+
+  // The synthesis needs an address.
+  await page.getByLabel(c.wantsSynthesis).check();
+  await submit(page).click();
+  await expect(page.locator('#contact-email-error')).toHaveText(
+    'Indiquez votre adresse e-mail pour recevoir la synthèse.',
+  );
+  await expect(page.getByLabel(c.email)).toBeFocused();
+
+  // The meeting needs the consent too.
+  await page.getByLabel(c.email).fill('camille@example.org');
+  await page.getByLabel(c.wantsMeeting).check();
+  await submit(page).click();
+  await expect(page.locator('#contact-contactConsent-error')).toHaveText(
+    'Votre accord est nécessaire pour être recontacté.',
+  );
   expect(mock.posted).toEqual([]);
+
+  // The synthesis alone is no consent to be contacted again.
+  await page.getByLabel(c.wantsMeeting).uncheck();
+  await submit(page).click();
+  await expect(page.getByRole('heading', { name: labels.thanks.title })).toBeVisible();
+  expect(mock.posted).toEqual([
+    {
+      answers: { A1: { options: ['entreprise'] } },
+      contact: {
+        email: 'camille@example.org',
+        wantsSynthesis: true,
+        wantsMeeting: false,
+        contactConsent: false,
+      },
+      website: '',
+    },
+  ]);
 });
 
-test('shows the errors the back office returns, on the step they belong to', async ({ page }) => {
-  await mockApi(page, { post: 422, errors: { A1: 'Réponse refusée.' } });
+test('carries the notice under the consent box, and a field nobody sees', async ({ page }) => {
+  await mockApi(page);
   await page.goto('/enquete/');
-  await page.getByLabel('Une entreprise').check();
-  await next(page).click();
-  await next(page).click();
-  await page.getByRole('button', { name: labels.submit }).click();
+  await toContactStep(page);
+  const consent = page.getByLabel(c.contactConsent);
+  await expect(consent).toHaveAccessibleDescription(/24 mois/);
+  await expect(consent).toHaveAccessibleDescription(/seul à lire/);
+  const trap = page.locator('input[name="website"]');
+  await expect(trap).toHaveCount(1);
+  await expect(trap).not.toBeInViewport();
+  await expect(trap).toHaveAttribute('tabindex', '-1');
+});
+
+test('puts the errors the back office returns back on the step they belong to', async ({
+  page,
+}) => {
+  await mockApi(page, {
+    post: 422,
+    errors: {
+      A1: 'Réponse refusée.',
+      'contact.email': 'Cette adresse e-mail n’est pas valide.',
+    },
+  });
+  await page.goto('/enquete/');
+  await toContactStep(page);
+  await page.getByLabel(c.wantsSynthesis).check();
+  await page.getByLabel(c.email).fill('camille@example.org');
+  await submit(page).click();
+  // The question's step first, where the cursor goes.
   await expect(title(page)).toHaveText('Votre organisation');
   await expect(page.locator('[data-question="A1"] .survey__error')).toHaveText('Réponse refusée.');
+  await expect(page.getByLabel('Une entreprise')).toBeFocused();
+  await expect(page.locator('[aria-live="polite"]')).toHaveText(labels.fixErrors);
+});
+
+test('puts a refused contact back on the contact step', async ({ page }) => {
+  await mockApi(page, {
+    post: 422,
+    errors: { 'contact.email': 'Cette adresse e-mail n’est pas valide.' },
+  });
+  await page.goto('/enquete/');
+  await toContactStep(page);
+  await page.getByLabel(c.wantsSynthesis).check();
+  await page.getByLabel(c.email).fill('camille@exemple.invalid');
+  await submit(page).click();
+  await expect(title(page)).toHaveText(c.title);
+  await expect(page.locator('#contact-email-error')).toHaveText(
+    'Cette adresse e-mail n’est pas valide.',
+  );
+  await expect(page.getByLabel(c.email)).toBeFocused();
 });
 
 test('says the study is closed when the back office says so', async ({ page }) => {
-  await mockApi(page, { get: 410 });
-  await page.goto('/enquete/');
-  await expect(page.locator('.survey__message')).toHaveText(labels.closed);
-  await expect(
-    page.locator('.survey__app').getByRole('link', { name: labels.book }),
-  ).toHaveAttribute('href', '/rdv/');
+  for (const status of [404, 410]) {
+    await mockApi(page, { get: status });
+    await page.goto('/enquete/');
+    await expect(page.locator('.survey__message')).toHaveText(labels.closed);
+    await expect(
+      page.locator('.survey__app').getByRole('link', { name: labels.book }),
+    ).toHaveAttribute('href', '/rdv/');
+    await expect(page.locator('.survey__form')).toHaveCount(0);
+    await page.unrouteAll();
+  }
 });
 
-test('offers to try again when the back office cannot be reached', async ({ page }) => {
+test('says the study is closed when it closes while the respondent answers', async ({ page }) => {
+  await mockApi(page, { post: 410 });
+  await page.goto('/enquete/');
+  await toContactStep(page);
+  await submit(page).click();
+  await expect(page.locator('.survey__message')).toHaveText(labels.closed);
+  await expect(page.locator('.survey__message')).toBeFocused();
+});
+
+test('offers to try again when the questionnaire cannot be loaded', async ({ page }) => {
   let calls = 0;
   await page.route(API, (route) => {
     calls += 1;
@@ -256,6 +418,25 @@ test('offers to try again when the back office cannot be reached', async ({ page
   await expect(page.locator('.survey__message')).toHaveText(labels.unreachable);
   await page.getByRole('button', { name: labels.retry }).click();
   await expect(title(page)).toHaveText('Votre organisation');
+});
+
+test('keeps the answers on the page when they cannot be sent, and sends them on retry', async ({
+  page,
+}) => {
+  const mock = await mockApi(page);
+  let failures = 1;
+  await page.route(`${API}/responses`, (route) => {
+    if (failures-- > 0) return route.abort();
+    return route.fallback();
+  });
+  await page.goto('/enquete/');
+  await toContactStep(page);
+  await submit(page).click();
+  await expect(page.getByRole('alert')).toHaveText(labels.sendFailed);
+  await expect(title(page)).toHaveText(c.title);
+  await submit(page).click();
+  await expect(page.getByRole('heading', { name: labels.thanks.title })).toBeVisible();
+  expect(mock.posted).toHaveLength(1);
 });
 
 test('keeps the answers given when the page is reloaded', async ({ page }) => {
@@ -282,27 +463,46 @@ test('is usable from the keyboard alone', async ({ page, browserName }) => {
   await expect(title(page)).toHaveText('Votre production');
 });
 
-for (const at of ['first step', 'contact step'] as const) {
-  test(`has no serious accessibility violation at the ${at}`, async ({ page }) => {
+test('groups each choice under its question, as a fieldset named by its legend', async ({
+  page,
+}) => {
+  await mockApi(page);
+  await page.goto('/enquete/');
+  const group = page.getByRole('group', { name: 'Vous êtes :' });
+  await expect(group).toHaveCount(1);
+  await expect(group.getByRole('radio')).toHaveCount(4);
+});
+
+for (const at of [
+  'first step',
+  'first step, with its errors',
+  'contact step, with its errors',
+  'thanks',
+] as const) {
+  test(`has no accessibility violation on /enquete/ at the ${at}`, async ({ page }) => {
     await mockApi(page);
     await page.goto('/enquete/');
-    if (at === 'contact step') {
-      await page.getByLabel('Une entreprise').check();
+    await expect(title(page)).toBeVisible();
+    if (at === 'first step, with its errors') {
       await next(page).click();
-      await next(page).click();
-      // With its errors showing, which is when it is hardest to read.
-      await page.getByLabel(labels.contact.name).fill('Camille');
-      await page.getByRole('button', { name: labels.submit }).click();
-    } else {
-      await next(page).click();
+      await expect(page.locator('.survey__error:not(:empty)').first()).toBeVisible();
+    } else if (at === 'contact step, with its errors') {
+      await toContactStep(page);
+      await page.getByLabel(c.wantsMeeting).check();
+      await submit(page).click();
+      await expect(page.locator('.survey__error:not(:empty)').first()).toBeVisible();
+    } else if (at === 'thanks') {
+      await toContactStep(page);
+      await submit(page).click();
+      await expect(page.getByRole('heading', { name: labels.thanks.title })).toBeVisible();
     }
-    await expect(page.locator('.survey__error:not(:empty)').first()).toBeVisible();
     const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
       .analyze();
-    const blocking = results.violations.filter(
-      (v) => v.impact === 'serious' || v.impact === 'critical',
-    );
-    expect(blocking.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
+    expect(
+      results.violations.map(
+        (v) => `${v.id} (${v.impact}): ${v.nodes.map((n) => n.target).join(', ')}`,
+      ),
+    ).toEqual([]);
   });
 }

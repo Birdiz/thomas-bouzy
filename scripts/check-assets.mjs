@@ -15,7 +15,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { OG_CARDS } from '../src/lib/og.ts';
-import { LEGAL, SITE } from '../src/site.ts';
+import { FIELD_STUDY, LEGAL, OFFERS_PUBLISHED, SITE } from '../src/site.ts';
 import { cardHash, OG_MANIFEST } from './og-card.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -67,6 +67,18 @@ if (process.env.SITE_STRICT === '1' && !process.env.SITE_DOMAIN?.trim()) {
   errors.push(
     'SITE_DOMAIN is empty in a deployment build — canonical URLs, hreflang, the ' +
       `sitemap and the JSON-LD would all point at the placeholder "${SITE.domain}"`,
+  );
+}
+
+// While the catalogue is hidden, the field study is what the home page asks
+// for (ADR 34), and its form calls the back office named here. Unset, the page
+// calls its own origin, which only the e2e suite answers: a deployment would
+// ship a questionnaire that cannot load, behind a QR code printed for a fair.
+// FIELD_STUDY.apiOrigin throws on anything but an https origin.
+if (process.env.SITE_STRICT === '1' && !OFFERS_PUBLISHED && !FIELD_STUDY.apiOrigin) {
+  errors.push(
+    'PUBLIC_SURVEY_API_ORIGIN is empty in a deployment build that hides the catalogue — ' +
+      'the field study page could not load its questionnaire',
   );
 }
 

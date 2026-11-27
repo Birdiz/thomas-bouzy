@@ -1159,22 +1159,19 @@ export const fr = {
   },
 
   fieldStudy: {
-    meta: {
-      title: 'Thomas Bouzy — Ingénieur logiciel, enquête de terrain dans le Grand Est',
-      description:
-        "Ingénieur logiciel dans le Grand Est, je mène une enquête de terrain : ce dont les entreprises, l'industrie, la santé et les collectivités du territoire ont réellement besoin côté numérique.",
-    },
-    hero: {
-      blurb:
-        'Avant de vous proposer quoi que ce soit, je veux comprendre ce dont votre organisation a besoin.',
-      ctaSecondary: "Répondre à l'enquête",
-    },
-    nav: 'Enquête',
-    section: {
-      kicker: 'Enquête de terrain',
-      title: 'Dites-moi ce qui vous manque.',
-      text: "Je ne vends rien pour l'instant. J'interroge les entreprises, l'industrie, la santé et les collectivités du territoire sur leurs vrais besoins numériques. Cinq minutes, et je vous envoie la synthèse.",
+    description:
+      'Ingénieur logiciel, je construis et je maintiens des logiciels dont des entreprises dépendent chaque jour. En ce moment, je ne vends rien : je mène une enquête de terrain sur vos besoins numériques.',
+    blurb:
+      'En ce moment, je ne vends rien. Je mène une enquête de terrain sur vos besoins numériques.',
+    seeWork: 'Voir mes références',
+    survey: {
+      nav: 'Enquête',
       cta: "Répondre à l'enquête",
+      section: {
+        kicker: 'Enquête de terrain',
+        title: "Qu'est-ce qui vous manque ?",
+        text: "Ce qui vous fait perdre du temps, ce qui vous inquiète, ce qui vous manque côté logiciel : c'est ce que je cherche à comprendre. Si vous le souhaitez, je vous envoie la synthèse des réponses.",
+      },
     },
   },
 
@@ -1182,41 +1179,36 @@ export const fr = {
     meta: {
       title: 'Enquête de terrain : vos besoins numériques',
       description:
-        'Cinq minutes pour dire ce qui vous fait perdre du temps et ce qui vous manque. Entreprises, industrie, santé, collectivités : la synthèse est envoyée aux participants.',
+        'Une enquête de terrain sur les besoins numériques des organisations : ce qui vous fait perdre du temps, ce qui vous manque. Je ne vends rien, je pose des questions.',
     },
     kicker: 'Enquête de terrain',
-    title: 'Vos besoins numériques, en cinq minutes',
-    plain:
-      'Avant de proposer quoi que ce soit, je veux savoir ce dont vous avez réellement besoin.',
-    paragraphs: [
-      "Je suis ingénieur logiciel dans le Grand Est. Plutôt que d'arriver avec une offre toute faite, je pose des questions : ce qui vous fait perdre du temps, ce que vous avez déjà essayé, ce qui vous manque.",
-      "Les questions s'adaptent à votre activité : entreprise, industrie, santé ou collectivité. Vous pouvez sauter celles qui ne vous parlent pas.",
-      'Je publierai une synthèse anonyme des réponses. Laissez un contact à la fin si vous voulez la recevoir, ou en parler de vive voix.',
-    ],
+    title: 'Vos besoins numériques',
+    plain: 'Une enquête de terrain. Je ne vends rien : je pose des questions.',
     privacy: {
       title: 'Ce que deviennent vos réponses',
       paragraphs: [
-        'Vos réponses servent à une seule chose : comprendre les besoins numériques du territoire et en publier une synthèse anonyme. Je suis le seul à les lire. Elles ne sont ni vendues, ni cédées, ni utilisées pour de la publicité.',
-        "Le contact est facultatif. Si vous en laissez un, avec votre accord, je m'en sers uniquement pour vous envoyer la synthèse ou vous proposer l'échange que vous avez demandé. Tout est conservé 24 mois au plus, puis effacé.",
-        "Pour consulter, corriger ou faire effacer vos réponses et votre contact, écrivez-moi à l'adresse en bas de page : c'est fait sous un mois.",
+        'Vos réponses servent à une seule chose : comprendre les besoins exprimés et en tirer une synthèse qui ne cite personne. Je suis le seul à les lire. Elles ne sont ni vendues ni cédées.',
+        "Vos coordonnées sont facultatives. Elles ne servent qu'à ce que vous cochez à la fin : recevoir la synthèse, convenir d'un échange, être recontacté·e. Réponses et coordonnées sont effacées au plus tard 24 mois après l'envoi.",
+        "Pour les consulter, les corriger ou les faire effacer, écrivez-moi à l'adresse en bas de page. Je ne garde pas votre adresse IP. L'hébergeur la voit passer dans ses journaux techniques, comme pour toute page web.",
       ],
     },
     form: {
       name: 'Questionnaire',
       loading: 'Chargement du questionnaire…',
       noScript:
-        "Le questionnaire a besoin de JavaScript. Vous pouvez aussi me répondre par écrit à l'adresse en bas de page.",
+        "Le questionnaire a besoin de JavaScript. Vous pouvez aussi m'écrire à l'adresse en bas de page.",
       unreachable:
         "Le questionnaire n'a pas pu être chargé. Vérifiez votre connexion, puis réessayez.",
       retry: 'Réessayer',
-      closed:
-        "L'enquête est close. Merci de votre intérêt : vous pouvez toujours réserver un appel.",
+      closed: 'Cette enquête est close. Merci de votre intérêt.',
       book: 'Réserver un appel',
       progress: 'Étape {current} sur {total}',
       back: 'Précédent',
       next: 'Suivant',
       submit: 'Envoyer mes réponses',
       sending: 'Envoi…',
+      sendFailed:
+        "L'envoi n'a pas abouti. Vérifiez votre connexion, puis réessayez : vos réponses sont toujours là.",
       optional: 'facultatif',
       selectPlaceholder: 'Choisir…',
       noOpinion: 'Sans avis',
@@ -1224,23 +1216,26 @@ export const fr = {
       maxSelections: '{max} choix au plus',
       fixErrors: 'Certaines réponses sont à reprendre.',
       contact: {
-        title: 'Pour aller plus loin',
-        intro:
-          'Facultatif. Laissez un contact pour recevoir la synthèse, ou pour un échange de vive voix.',
+        title: 'Pour la suite',
+        intro: 'Facultatif. Cochez ce que vous souhaitez, ou envoyez vos réponses telles quelles.',
+        wantsSynthesis: 'Je souhaite recevoir la synthèse des résultats',
+        synthesisHelp:
+          "Votre e-mail sert seulement à vous l'envoyer. Je ne vous recontacterai pas pour autant.",
+        wantsMeeting: "Je suis d'accord pour un échange de 20 minutes",
+        meetingHelp: "Je vous écris pour convenir d'un moment. Cochez aussi la case suivante.",
+        contactConsent: "J'accepte d'être recontacté·e à ce sujet",
+        notice:
+          "Je suis le seul à lire vos coordonnées. Elles servent uniquement à vous recontacter au sujet de cette enquête. Elles sont effacées au plus tard 24 mois après votre réponse, ou avant, sur simple demande à l'adresse en bas de page.",
+        email: 'E-mail',
+        emailHelp: "Pour la synthèse ou pour l'échange.",
         name: 'Nom',
         organisation: 'Organisation',
-        role: 'Fonction',
-        email: 'E-mail',
-        phone: 'Téléphone',
-        wantsMeeting: "Je suis d'accord pour un échange de 20 minutes",
-        consent: "J'accepte que Thomas Bouzy me recontacte à ce sujet",
-        notice:
-          "Votre contact sert uniquement à vous envoyer la synthèse ou à organiser l'échange demandé. Je suis le seul à le lire. Il est effacé au plus tard 24 mois après, ou plus tôt sur simple demande.",
       },
       thanks: {
         title: 'Merci.',
-        text: 'Vos réponses sont bien arrivées. Si vous avez laissé un contact, vous recevrez la synthèse.',
-        booking: 'Vous voulez en parler tout de suite ? Réservez un appel',
+        text: 'Vos réponses sont bien arrivées.',
+        bookingLead: "Envie d'en parler de vive voix ?",
+        booking: 'Réserver un appel',
       },
     },
   },

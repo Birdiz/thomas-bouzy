@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   groupForDisplay,
+  NO_CONTACT,
   orderOptions,
   type SurveyQuestion,
   type SurveyStructure,
+  shownContact,
   validateAnswers,
   validateContact,
   visibleQuestions,
@@ -12,8 +14,10 @@ import {
 
 /*
  * The field study's form logic (src/lib/survey), ported from Thomas's own
- * survey engine with its tests. The back office runs the same rules again on
- * what it receives; the two must agree, so these cases are the contract.
+ * survey engine with its tests, and the back office's two changes to it. The
+ * back office runs the same rules again on what it receives (its
+ * AnswersValidationTest and ContactTest); the two must agree, so these cases
+ * are the contract.
  */
 
 const question = (partial: Partial<SurveyQuestion> & { code: string }): SurveyQuestion => ({
@@ -50,7 +54,15 @@ const structure = (): SurveyStructure => ({
           options: [
             { value: 'tableur', label: 'Tableur' },
             { value: 'erp', label: 'ERP' },
+            { value: 'autre', label: 'Autre', revealsText: true, textMaxlength: 10 },
             { value: 'aucun', label: 'Aucun outil', exclusive: true },
+          ],
+        }),
+        question({
+          code: 'A3',
+          options: [
+            { value: 'seul', label: 'Seul' },
+            { value: 'autre', label: 'Autre', revealsText: true },
           ],
         }),
       ],
@@ -120,6 +132,10 @@ describe('the field study form: which questions show (src/lib/survey)', () => {
   it('shows a follow-up question only on the option that opens it', () => {
     expect(codes({ C2: { options: ['oui'] } })).toContain('C5');
     expect(codes({ C2: { options: ['non'] } })).not.toContain('C5');
+  });
+
+  it('ignores a condition on a question nobody answered', () => {
+    expect(codes({})).not.toContain('C5');
   });
 
   it('keeps a follow-up with the question it belongs to', () => {
@@ -196,6 +212,33 @@ describe('the field study form: what it accepts (src/lib/survey)', () => {
     );
   });
 
+  it('keeps the text an option reveals, on a single or a multi question too (back office)', () => {
+    expect(
+      validate({ ...base, A3: { options: ['autre'], texte: ' Une SCOP ' } }).answers.A3,
+    ).toEqual({ options: ['autre'], texte: 'Une SCOP' });
+    expect(
+      validate({ ...base, A2: { options: ['erp', 'autre'], texte: 'Un MES' } }).answers.A2,
+    ).toEqual({ options: ['erp', 'autre'], texte: 'Un MES' });
+    expect(validate({ ...base, A2: { options: ['erp'], texte: 'glissé' } }).answers.A2).toEqual({
+      options: ['erp'],
+    });
+    expect(validate({ ...base, A2: { options: ['autre'], texte: 'x'.repeat(11) } }).errors.A2).toBe(
+      '10 caractères au maximum.',
+    );
+  });
+
+  it('counts a text in characters, as the back office does, not in UTF-16 units', () => {
+    expect(validate({ ...base, C2: { options: ['oui'], texte: '🙂'.repeat(20) } }).errors).toEqual(
+      {},
+    );
+  });
+
+  it('keeps the revealed text it was given, trimmed', () => {
+    expect(
+      validate({ ...base, C2: { options: ['oui'], texte: ' il manque X ' } }).answers.C2,
+    ).toEqual({ options: ['oui'], texte: 'il manque X' });
+  });
+
   it('ignores unknown question codes and an unticked box', () => {
     const { answers } = validate({ ...base, ZZ: { options: ['x'] }, C4: { booleen: false } });
     expect(answers.ZZ).toBeUndefined();
@@ -237,6 +280,16 @@ describe('the field study form: the order of options (src/lib/survey)', () => {
     ]);
   });
 
+  it('changes the order from one call to the next', () => {
+    const sequence = [0.9, 0.1, 0.5, 0.2, 0.7, 0.3];
+    let i = 0;
+    const order = orderOptions(q(true), () => sequence[i++ % sequence.length] ?? 0).map(
+      (o) => o.value,
+    );
+    expect(order).not.toEqual(['a', 'b', 'c', 'autre', 'aucun']);
+    expect(order).toHaveLength(5);
+  });
+
   it('shuffles, and keeps the pinned options last, in their order, without touching the question', () => {
     const original = q(true);
     const order = orderOptions(original, () => 0).map((o) => o.value);
@@ -247,36 +300,91 @@ describe('the field study form: the order of options (src/lib/survey)', () => {
 });
 
 describe('the field study form: the optional contact (src/lib/survey)', () => {
-  const empty = { wantsMeeting: false, contactConsent: false };
-
-  it('asks nothing of a respondent who leaves no contact', () => {
-    expect(validateContact(empty)).toEqual({ errors: {} });
+  it('asks nothing of a respondent who leaves nothing', () => {
+    expect(validateContact(NO_CONTACT)).toEqual({ errors: {} });
+    expect(validateContact({ ...NO_CONTACT, name: '  ' })).toEqual({ errors: {} });
   });
 
-  it('wants a way to reach them, and their consent, once they leave anything', () => {
-    const { errors } = validateContact({ ...empty, wantsMeeting: true });
-    expect(Object.keys(errors).sort()).toEqual(['contactConsent', 'email']);
+  it('sends the synthesis on an e-mail address alone, which is no consent to be contacted', () => {
     expect(
-      validateContact({ ...empty, email: 'pas-un-mail', contactConsent: true }).errors.email,
-    ).toBeDefined();
-  });
-
-  it('returns the trimmed contact when it is complete', () => {
-    expect(
-      validateContact({
-        name: '  Camille ',
-        phone: '03 29 00 00 00',
-        wantsMeeting: true,
-        contactConsent: true,
-      }),
+      validateContact({ ...NO_CONTACT, email: ' camille@example.com ', wantsSynthesis: true }),
     ).toEqual({
       errors: {},
-      contact: {
-        name: 'Camille',
-        phone: '03 29 00 00 00',
-        wantsMeeting: true,
-        contactConsent: true,
-      },
+      contact: { ...NO_CONTACT, email: 'camille@example.com', wantsSynthesis: true },
     });
+  });
+
+  it('takes a meeting with an e-mail address and the consent', () => {
+    const meeting = {
+      email: 'camille@example.com',
+      name: 'Camille Exemple',
+      wantsSynthesis: false,
+      wantsMeeting: true,
+      contactConsent: true,
+    };
+    expect(validateContact(meeting)).toEqual({ errors: {}, contact: meeting });
+  });
+
+  it('takes a name and an organisation on the consent alone', () => {
+    const consent = {
+      ...NO_CONTACT,
+      name: 'Camille',
+      organisation: 'CCI Exemple',
+      contactConsent: true,
+    };
+    expect(validateContact(consent)).toEqual({ errors: {}, contact: consent });
+  });
+
+  const refusals: [string, Parameters<typeof validateContact>[0], Record<string, string>][] = [
+    [
+      'the synthesis without an address',
+      { ...NO_CONTACT, wantsSynthesis: true },
+      { email: 'Indiquez votre adresse e-mail pour recevoir la synthèse.' },
+    ],
+    [
+      'a meeting without an address nor the consent',
+      { ...NO_CONTACT, wantsMeeting: true },
+      {
+        email: 'Indiquez votre adresse e-mail pour être recontacté.',
+        contactConsent: 'Votre accord est nécessaire pour être recontacté.',
+      },
+    ],
+    [
+      'a meeting without the consent',
+      { ...NO_CONTACT, wantsMeeting: true, email: 'a@example.com' },
+      { contactConsent: 'Votre accord est nécessaire pour être recontacté.' },
+    ],
+    [
+      'a name without the consent',
+      { ...NO_CONTACT, name: 'Camille', email: 'a@example.com', wantsSynthesis: true },
+      { contactConsent: 'Votre accord est nécessaire pour conserver ces coordonnées.' },
+    ],
+    [
+      'an address for nothing',
+      { ...NO_CONTACT, email: 'a@example.com' },
+      { email: 'Cochez ce que vous souhaitez recevoir, ou retirez l’adresse.' },
+    ],
+    [
+      'an address that is not one',
+      { ...NO_CONTACT, email: 'pas une adresse', wantsSynthesis: true },
+      { email: 'Cette adresse e-mail n’est pas valide.' },
+    ],
+    [
+      'an organisation too long',
+      { ...NO_CONTACT, organisation: 'o'.repeat(161), contactConsent: true },
+      { organisation: '160 caractères au maximum.' },
+    ],
+  ];
+  for (const [name, input, errors] of refusals) {
+    it(`refuses ${name}, as the back office does`, () => {
+      expect(validateContact(input)).toEqual({ errors });
+    });
+  }
+
+  it('drops the name and the organisation once the consent box that shows them is unticked', () => {
+    const typed = { ...NO_CONTACT, email: 'a@example.com', wantsSynthesis: true };
+    expect(shownContact({ ...typed, name: 'Camille', organisation: 'CCI' })).toEqual(typed);
+    const consented = { ...typed, name: 'Camille', contactConsent: true };
+    expect(shownContact(consented)).toEqual(consented);
   });
 });

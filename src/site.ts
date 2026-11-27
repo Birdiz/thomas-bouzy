@@ -57,12 +57,14 @@ export const SITE = {
  * Whether the catalogue is on the site: the Offers, their pages and prices,
  * the Partners and public-sector pages, and the Workshops.
  *
- * False while Thomas calibrates them against a field study (ADR 34): the home
- * page keeps who he is, the proof and the call, and asks the reader for their
- * needs instead of selling. Nothing is deleted. Set it back to true and every
- * page, section, link, sitemap entry and card returns as it was.
+ * Read from `OFFERS_PUBLISHED` at BUILD time, like SITE_DOMAIN, and hidden
+ * unless it says true (ADR 34): the field study's launch depends on no setting
+ * someone could forget. While hidden, the home page keeps who Thomas is, the
+ * proof and the call, and asks the reader to answer the field study instead of
+ * selling. Nothing is deleted: set the variable to true on the service and
+ * redeploy, and every page, section, link, sitemap entry and card returns.
  */
-export const OFFERS_PUBLISHED = false;
+export const OFFERS_PUBLISHED = /^(1|true|yes)$/i.test((process.env.OFFERS_PUBLISHED ?? '').trim());
 
 /**
  * The field study (ADR 34): a questionnaire served and stored by the back

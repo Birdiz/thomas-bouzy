@@ -1,4 +1,5 @@
-import { CONTACT } from '../../src/site.ts';
+import { hiddenRedirects } from '../../src/routes.ts';
+import { CONTACT, OFFERS_PUBLISHED } from '../../src/site.ts';
 import { expect, PATHS, test } from './fixtures.ts';
 
 /**
@@ -98,16 +99,14 @@ test('serves a real 404 page, with a 404 status', async ({ page, request }) => {
   await page.goto('/definitely-not-a-page');
   await expect(page.getByRole('heading', { name: 'Rien ici' })).toBeVisible();
   // Not a dead end (ADR 28): the site's header, menu and booking button, then
-  // four ways back in.
+  // the ways back in: the catalogue's, or the field study while it is hidden
+  // (ADR 34).
   await expect(page.locator('.site-header .site-nav a')).not.toHaveCount(0);
   await expect(page.locator('.site-header .btn-primary')).toHaveAttribute('href', CONTACT.booking);
   const ways = page.locator('main a');
-  expect(await ways.evaluateAll((links) => links.map((l) => l.getAttribute('href')))).toEqual([
-    '/',
-    '/#workshops',
-    '/#offers',
-    '/en/',
-  ]);
+  expect(await ways.evaluateAll((links) => links.map((l) => l.getAttribute('href')))).toEqual(
+    OFFERS_PUBLISHED ? ['/', '/#workshops', '/#offers', '/en/'] : ['/', '/enquete/', '/en/'],
+  );
   await expect(page.getByRole('link', { name: 'Back to the home page' })).toBeVisible();
 });
 
@@ -174,12 +173,16 @@ test('sends the addresses people guess to their section of the home page', async
 }) => {
   // The audit found them answering 404 (ADR 29). None is a page: a page
   // registered at one of them would be shadowed by the redirect.
+  // While the catalogue is hidden, those that lead into it go to the home
+  // page instead, with a 302 (ADR 34): the next test holds them.
   const shortcuts: Record<string, string> = {
-    '/offres/': '/#offers',
-    '/tarifs/': '/#offers',
-    '/ateliers/': '/#workshops',
+    ...(OFFERS_PUBLISHED && {
+      '/offres/': '/#offers',
+      '/tarifs/': '/#offers',
+      '/ateliers/': '/#workshops',
+      '/en/offers/': '/en/#offers',
+    }),
     '/contact/': '/#contact',
-    '/en/offers/': '/en/#offers',
   };
 
   for (const [from, to] of Object.entries(shortcuts)) {
@@ -198,8 +201,44 @@ test('sends the addresses people guess to their section of the home page', async
   }
 
   // The query string survives, before the fragment where it still means something.
-  const tagged = await request.get('/offres/?utm_source=card', { maxRedirects: 0 });
-  expect(tagged.headers().location).toBe('/?utm_source=card#offers');
+  const tagged = await request.get('/contact/?utm_source=card', { maxRedirects: 0 });
+  expect(tagged.headers().location).toBe('/?utm_source=card#contact');
+});
+
+test('sends every address of the hidden catalogue to the home page, for now (ADR 34)', async ({
+  request,
+}) => {
+  test.skip(OFFERS_PUBLISHED, 'The catalogue is published');
+  const hidden: Record<string, string> = {
+    ...hiddenRedirects(false),
+    '/offres/': '/',
+    '/tarifs/': '/',
+    '/ateliers/': '/',
+    '/en/offers/': '/en/',
+  };
+  expect(Object.keys(hidden)).toContain('/offres/audit/');
+  expect(hidden['/en/offers/audit/']).toBe('/en/');
+  expect(hidden['/partenaires/']).toBe('/');
+
+  for (const [from, to] of Object.entries(hidden)) {
+    expect(PATHS, `${from} is still served`).not.toContain(from);
+    for (const spelling of [from, from.slice(0, -1), `/fr${from}`]) {
+      const response = await request.get(spelling, { maxRedirects: 0 });
+      // Temporary: the pages come back once the field study has spoken.
+      expect(response.status(), `${spelling} was not redirected`).toBe(302);
+      expect(response.headers().location).toBe(to);
+      expect(response.headers()['cache-control']).toBe('no-store');
+    }
+  }
+
+  const tagged = await request.get('/offres/audit/?utm_source=card', { maxRedirects: 0 });
+  expect(tagged.headers().location).toBe('/?utm_source=card');
+});
+
+test('keeps the catalogue manifest to itself', async ({ request }) => {
+  const response = await request.get('/_catalogue.json', { maxRedirects: 0 });
+  expect(response.status()).toBe(404);
+  expect(await response.text()).not.toContain('redirects');
 });
 
 test('counts the booking click on its way to cal.com, and nothing caches the hop', async ({

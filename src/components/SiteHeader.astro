@@ -1,6 +1,6 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
-import { alternatesOf, homePath, linkTo, type Route } from '../routes.ts';
+import { alternatesOf, homePath, linkTo, pathOf, type Route } from '../routes.ts';
 import {
   CONTACT,
   DEFAULT_LOCALE,
@@ -21,7 +21,9 @@ interface Props {
 const { route, t } = Astro.props;
 const locale = route?.locale ?? DEFAULT_LOCALE;
 const home = homePath(locale);
-const survey = linkTo('survey', locale);
+/* The field study's page, where it exists in this locale (ADR 34). */
+const study = OFFERS_PUBLISHED ? undefined : t.fieldStudy.survey;
+const studyPath = study && pathOf('survey', locale);
 
 /* The same page in each locale it exists in. */
 const versions = route ? alternatesOf(route.page) : [];
@@ -44,14 +46,11 @@ const elsewhere = versions.length === 0 ? LOCALES.filter((other) => other !== lo
       {OFFERS_PUBLISHED && t.workshops && <a href={`${home}#workshops`}>{t.workshops.nav}</a>}
       {OFFERS_PUBLISHED && <a href={`${home}#offers`}>{t.nav.offers}</a>}
       {/* While the catalogue is hidden, the field study takes its place
-          (ADR 34): its page in French, its section on the English home page. */}
+          where it exists in this locale (ADR 34). */}
       {
-        !OFFERS_PUBLISHED && (
-          <a
-            href={survey.hreflang ? `${home}#field-study` : survey.href}
-            aria-current={route?.page.id === 'survey' ? 'page' : undefined}
-          >
-            {t.fieldStudy.nav}
+        study && studyPath && (
+          <a href={studyPath} aria-current={route?.page.id === 'survey' ? 'page' : undefined}>
+            {study.nav}
           </a>
         )
       }

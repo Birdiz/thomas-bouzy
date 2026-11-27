@@ -1,7 +1,7 @@
 ---
 import type { ResumeContent } from '../content/index.ts';
 import { OFFER_IDS } from '../content/offers.ts';
-import { homePath, linkTo, type PageLink } from '../routes.ts';
+import { homePath, linkTo, type PageLink, pathOf } from '../routes.ts';
 import { CONTACT, LEGAL, LOCALE_TAG, type Locale, OFFERS_PUBLISHED, SITE } from '../site.ts';
 
 interface Props {
@@ -20,9 +20,13 @@ const catalogue = (): (PageLink & { name: string })[] => [
   { ...linkTo('partners', locale), name: t.nav.partners },
   { ...linkTo('public-sector', locale), name: t.nav.publicSector },
 ];
-/* While the catalogue is hidden, the field study stands in its place (ADR 34). */
+/* While the catalogue is hidden, the field study stands in its place where
+   it exists in this locale, and nothing does elsewhere (ADR 34). */
+const study = t.fieldStudy.survey;
+const studyPath = pathOf('survey', locale);
+const fieldStudy = study && studyPath ? [{ href: studyPath, name: study.nav }] : [];
 const pages: (PageLink & { name: string })[] = [
-  ...(OFFERS_PUBLISHED ? catalogue() : [{ ...linkTo('survey', locale), name: t.fieldStudy.nav }]),
+  ...(OFFERS_PUBLISHED ? catalogue() : fieldStudy),
   { ...linkTo('about', locale), name: t.nav.about },
 ];
 

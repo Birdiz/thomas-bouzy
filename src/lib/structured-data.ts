@@ -1,4 +1,4 @@
-import { RESUME } from '../content/index.ts';
+import { homeDescription, RESUME } from '../content/index.ts';
 import { OFFER_IDS, type OfferId } from '../content/offers.ts';
 import { DAY_RATE, isMonthly, PRICES } from '../content/prices.ts';
 import { homePath, type PageId, type Route } from '../routes.ts';
@@ -82,7 +82,7 @@ function homeNodes(route: Route, portrait: string | undefined) {
       '@id': url,
       url,
       name: t.meta.title,
-      description: t.meta.description,
+      description: homeDescription(route.locale),
       inLanguage: LOCALE_TAG[route.locale],
       isPartOf: ref(WEBSITE_ID),
       mainEntity: ref(PERSON_ID),
@@ -100,7 +100,7 @@ function person(locale: Locale, portrait: string | undefined) {
     givenName: 'Thomas',
     familyName: 'Bouzy',
     jobTitle: t.schema.jobTitle,
-    description: t.meta.description,
+    description: homeDescription(locale),
     url: absoluteUrl(homePath(locale)),
     // The portrait, not the Open Graph card: a card with his name on it is not a picture of him.
     ...(portrait && { image: absoluteUrl(portrait) }),

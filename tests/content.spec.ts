@@ -67,12 +67,14 @@ function walkStrings(value: unknown, path = '$', out = new Map<string, string>()
 /**
  * The home page's French-only sections, left out of the comparison: the
  * Workshops are for French owners and exist in French only (ADR 27), as the
- * Partners page does. Their own test below holds them to that.
+ * Partners page does, and so does the field study (ADR 34). Their own tests
+ * below hold them to that.
  */
 function withoutFrenchOnly(content: unknown): unknown {
   if (!content || typeof content !== 'object' || !('workshops' in content)) return content;
-  const { workshops: _, ...rest } = content as Record<string, unknown>;
-  return rest;
+  const { workshops: _, fieldStudy, ...rest } = content as Record<string, unknown>;
+  const { survey: _survey, ...study } = (fieldStudy ?? {}) as Record<string, unknown>;
+  return { ...rest, fieldStudy: study };
 }
 
 describe('EN/FR parity', () => {

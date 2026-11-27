@@ -5,7 +5,8 @@
  * validates the answers again against the same rules, and the two must agree.
  *
  * The answer keys (`options`, `texte`, `echelle`, `sansAvis`, `booleen`) are
- * the API contract, kept as the engine names them.
+ * the API contract, kept as the engine names them. `estimatedMinutes` is read
+ * and never shown: the page announces no duration (ADR 34).
  */
 
 export type QuestionType =
@@ -92,13 +93,18 @@ export interface Answer {
 /** Keyed by question code (`A1`, `B4`…). */
 export type Answers = Record<string, Answer>;
 
-/** The optional last step: who to call back, if they say so. */
+/**
+ * The optional last step, as the back office reads it (`contact` in the POST).
+ * The three boxes are independent: the synthesis needs an e-mail address and
+ * no consent, the meeting needs the address and the consent, and the name and
+ * organisation are kept only with the consent. The back office also takes a
+ * role and a phone number; this form does not ask for them.
+ */
 export interface SurveyContact {
   name?: string;
   organisation?: string;
-  role?: string;
   email?: string;
-  phone?: string;
+  wantsSynthesis: boolean;
   wantsMeeting: boolean;
   contactConsent: boolean;
 }

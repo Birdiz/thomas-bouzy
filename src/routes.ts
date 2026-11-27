@@ -87,6 +87,22 @@ export function routesOf(pages: readonly Page[]): Route[] {
 /** Every URL the build emits, in registry order, locales in `LOCALES` order. */
 export const ROUTES: readonly Route[] = routesOf(publishedPages(OFFERS_PUBLISHED));
 
+/**
+ * Where each registered page this build does not serve sends its readers: the
+ * home page in its locale. The addresses of the hidden catalogue were shared
+ * before it was hidden (ADR 34); a 404 would tell those readers the page is
+ * gone for good. The build writes this map for the server (astro.config.mjs),
+ * which answers each path with a 302.
+ */
+export function hiddenRedirects(offersPublished: boolean): Record<string, string> {
+  const served = new Set(routesOf(publishedPages(offersPublished)).map((route) => route.path));
+  return Object.fromEntries(
+    routesOf(PAGES)
+      .filter((route) => !served.has(route.path))
+      .map((route) => [route.path, homePath(route.locale)]),
+  );
+}
+
 export function getPage(id: PageId): Page {
   const page = PAGES.find((candidate) => candidate.id === id);
   if (!page) throw new Error(`No page "${id}" in the registry`);
